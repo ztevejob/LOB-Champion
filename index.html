@@ -18,6 +18,7 @@
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --accent: #6366f1;
+            --header-bg: #0f172a;
         }
 
         .light-mode {
@@ -28,6 +29,7 @@
             --text-main: #0f172a;
             --text-sub: #475569;
             --accent: #4f46e5;
+            --header-bg: #f1f5f9;
         }
 
         body {
@@ -65,6 +67,10 @@
             background-color: rgba(99, 102, 241, 0.3) !important;
             color: #818cf8 !important;
             border: 1px solid rgba(99, 102, 241, 0.4) !important;
+        }
+
+        .sticky-header-bg {
+            background-color: var(--header-bg) !important;
         }
 
         ::-webkit-scrollbar {
@@ -262,15 +268,15 @@
                             </h3>
                             <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
                         </div>
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto max-h-[400px]">
                             <table class="w-full text-xs text-left border-collapse">
-                                <thead class="opacity-70 border-b border-white/10 uppercase">
+                                <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                     <tr>
-                                        <th class="p-2">Rank</th>
-                                        <th class="p-2">Nama Sales</th>
-                                        <th class="p-2">LOB</th>
-                                        <th class="p-2">Store</th>
-                                        <th class="p-2 text-center">Total Unit</th>
+                                        <th class="p-2 sticky-header-bg">Rank</th>
+                                        <th class="p-2 sticky-header-bg">Nama Sales</th>
+                                        <th class="p-2 sticky-header-bg">LOB</th>
+                                        <th class="p-2 sticky-header-bg">Store</th>
+                                        <th class="p-2 text-center sticky-header-bg">Total Unit</th>
                                     </tr>
                                 </thead>
                                 <tbody id="top10-sales-body" class="divide-y divide-white/5"></tbody>
@@ -285,13 +291,13 @@
                             </h3>
                             <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
                         </div>
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto max-h-[400px]">
                             <table class="w-full text-xs text-left border-collapse">
-                                <thead class="opacity-70 border-b border-white/10 uppercase">
+                                <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                     <tr>
-                                        <th class="p-2">Rank</th>
-                                        <th class="p-2">Nama Store</th>
-                                        <th class="p-2 text-center">Total Unit</th>
+                                        <th class="p-2 sticky-header-bg">Rank</th>
+                                        <th class="p-2 sticky-header-bg">Nama Store</th>
+                                        <th class="p-2 text-center sticky-header-bg">Total Unit</th>
                                     </tr>
                                 </thead>
                                 <tbody id="top10-stores-body" class="divide-y divide-white/5"></tbody>
@@ -315,16 +321,16 @@
                     <h3 class="font-bold text-sm mb-4 flex items-center gap-2">
                         <i data-lucide="store" class="w-4 h-4 text-purple-400"></i> Detail Komparasi per Store (This Week vs Last Week)
                     </h3>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse">
-                            <thead class="opacity-70 border-b border-white/10 uppercase">
+                            <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
-                                    <th class="p-2.5">Nama Store</th>
-                                    <th class="p-2.5 text-center">Mac (LW / TW)</th>
-                                    <th class="p-2.5 text-center">iPhone (LW / TW)</th>
-                                    <th class="p-2.5 text-center">iPad (LW / TW)</th>
-                                    <th class="p-2.5 text-center">Watch (LW / TW)</th>
-                                    <th class="p-2.5 text-center">Growth Total</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama Store</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Mac (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPhone (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPad (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Watch (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Growth Total</th>
                                 </tr>
                             </thead>
                             <tbody id="wow-store-table-body" class="divide-y divide-white/5"></tbody>
@@ -348,23 +354,23 @@
                         <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store</h3>
                         <span class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Total 91 Toko</span>
                     </div>
-                    <div id="compliance-matrix-container" class="overflow-x-auto"></div>
+                    <div id="compliance-matrix-container" class="overflow-x-auto max-h-[550px] relative"></div>
                 </div>
             </div>
 
             <div id="sec-raw-data" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <h3 class="font-bold text-sm mb-4">Log Transaksi Masuk</h3>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse">
-                            <thead class="opacity-70 border-b border-white/10 uppercase">
+                            <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
-                                    <th class="p-2">Tanggal</th>
-                                    <th class="p-2">Nama</th>
-                                    <th class="p-2">Store</th>
-                                    <th class="p-2">LOB</th>
-                                    <th class="p-2 text-center">Qty</th>
-                                    <th class="p-2">Shift</th>
+                                    <th class="p-2 sticky-header-bg">Tanggal</th>
+                                    <th class="p-2 sticky-header-bg">Nama</th>
+                                    <th class="p-2 sticky-header-bg">Store</th>
+                                    <th class="p-2 sticky-header-bg">LOB</th>
+                                    <th class="p-2 text-center sticky-header-bg">Qty</th>
+                                    <th class="p-2 sticky-header-bg">Shift</th>
                                 </tr>
                             </thead>
                             <tbody id="raw-data-body" class="divide-y divide-white/5"></tbody>
@@ -667,7 +673,7 @@
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            // Chart LOB
+            // Chart LOB dengan warna unik berbeda tiap batang
             const lobCounts = {};
             data.forEach(item => {
                 const lob = extractLOB(item);
@@ -675,17 +681,29 @@
                 lobCounts[lob] = (lobCounts[lob] || 0) + qty;
             });
 
+            const lobPalette = [
+                '#6366f1', // Indigo (Mac)
+                '#3b82f6', // Blue (iPhone)
+                '#06b6d4', // Cyan (iPad)
+                '#10b981', // Emerald (Watch)
+                '#f59e0b', // Amber
+                '#ec4899', // Pink
+                '#8b5cf6', // Purple
+                '#14b8a6'  // Teal
+            ];
+
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
+                const labels = Object.keys(lobCounts);
                 chartInstances.lob = new Chart(ctxLOB, {
                     type: 'bar',
                     data: {
-                        labels: Object.keys(lobCounts),
+                        labels: labels,
                         datasets: [{
                             label: 'Unit Terjual',
                             data: Object.values(lobCounts),
-                            backgroundColor: '#6366f1',
+                            backgroundColor: lobPalette.slice(0, labels.length),
                             borderRadius: 6
                         }]
                     },
@@ -945,17 +963,17 @@
 
             let html = `
                 <table class="w-full text-xs text-center border-collapse border border-white/10">
-                    <thead>
-                        <tr class="bg-white/5 border-b border-white/10">
-                            <th class="p-2 text-left border-r border-white/10 min-w-[220px]">Nama Store</th>
+                    <thead class="sticky top-0 z-20 sticky-header-bg shadow-md">
+                        <tr class="border-b border-white/10">
+                            <th class="p-2 text-left border-r border-white/10 min-w-[220px] sticky left-0 z-30 sticky-header-bg">Nama Store</th>
             `;
 
             fullMonthDates.forEach(d => {
-                html += `<th class="p-1.5 border-r border-white/10 min-w-[36px] text-[10px] font-mono">${d.label}</th>`;
+                html += `<th class="p-1.5 border-r border-white/10 min-w-[36px] text-[10px] font-mono sticky-header-bg">${d.label}</th>`;
             });
 
             html += `
-                            <th class="p-2 min-w-[70px]">Kepatuhan</th>
+                            <th class="p-2 min-w-[70px] sticky-header-bg">Kepatuhan</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -965,7 +983,7 @@
                 let reportedDays = 0;
                 const cleanStoreName = store.toLowerCase().trim();
 
-                html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap">${store}</td>`;
+                html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap sticky left-0 z-10 sticky-header-bg">${store}</td>`;
 
                 fullMonthDates.forEach(d => {
                     let hasReported = false;
