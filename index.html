@@ -381,75 +381,135 @@
         let rawCSVData = [];
         let filteredData = [];
 
-        // Fungsi parsing quantity serba guna untuk mengatasi angka string/format khusus
+        // Parsing angka robust untuk quantity
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
-            if (typeof val === 'number') return val;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
             
             let str = String(val).trim();
             if (str === '') return 0;
 
-            // Bersihkan format titik/koma ribuan jika ada
             str = str.replace(/[^0-9.-]/g, '');
             const parsed = parseInt(str, 10);
             return isNaN(parsed) ? 0 : parsed;
         }
 
-        // Ekstraksi LOB secara aman & fleksibel
+        // Parsing Tanggal Andal (Mendukung ISO & DD/MM/YYYY)
+        function parseCustomDate(dateStr) {
+            if (!dateStr) return null;
+            let str = String(dateStr).trim();
+            if (!str) return null;
+
+            // Jika mengandung spasi (misal: "25/08/2026 14:30:00"), ambil bagian tanggalnya saja
+            if (str.includes(' ')) str = str.split(' ')[0];
+
+            // Cek format DD/MM/YYYY atau DD-MM-YYYY
+            if (str.includes('/') || str.includes('-')) {
+                const parts = str.split(/[\/\-]/);
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) {
+                        // Format YYYY-MM-DD
+                        return new Date(parts[0], parts[1] - 1, parts[2]);
+                    } else {
+                        // Format DD/MM/YYYY
+                        return new Date(parts[2], parts[1] - 1, parts[0]);
+                    }
+                }
+            }
+
+            const standardDate = new Date(dateStr);
+            return isNaN(standardDate.getTime()) ? null : standardDate;
+        }
+
+        // Ekstraksi LOB (Champion LOB)
         function extractLOB(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
 
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('lob champion') || cleanKey.includes('produk')) {
+                if (cleanKey === 'champion lob' || cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('produk')) {
                     const val = item[k];
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
-            return '-';
+            return item['Champion LOB'] || item.LOB || '-';
         }
 
-        // Ekstraksi Nama Staff secara fleksibel
+        // Ekstraksi Nama Staff / Champion
         function extractName(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
 
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey.includes('nama') || cleanKey.includes('champion') || cleanKey.includes('sales') || cleanKey.includes('staff')) {
+                if (cleanKey.includes('nama champion') || cleanKey.includes('nama sa') || cleanKey.includes('nama') || cleanKey.includes('sales')) {
                     const val = item[k];
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
-            return '-';
+            return item['Nama Champion/ SA'] || item.Nama || '-';
         }
 
+        // Ekstraksi Store (Presisi menangani M221 & kode alfanumerik)
         function extractStore(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
 
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey.includes('store') || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
+                if (cleanKey === 'store' || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
                     const val = item[k];
-                    if (val && String(val).trim() !== '') return String(val).trim();
+                    if (val !== undefined && val !== null && String(val).trim() !== '') {
+                        return String(val).trim().toUpperCase();
+                    }
                 }
             }
-            return '-';
+            return item.Store ? String(item.Store).trim().toUpperCase() : '-';
         }
 
+        // Ekstraksi Quantity (Total Qty)
         function extractQuantity(item) {
             if (!item) return 0;
             const keys = Object.keys(item);
 
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah') || cleanKey.includes('penjualan')) {
+                if (cleanKey === 'total qty' || cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah')) {
                     return parseQuantity(item[k]);
                 }
             }
-            return parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
+            return parseQuantity(item['Total Qty'] || item.Qty || item.Quantity || 0);
+        }
+
+        // Ekstraksi Shift
+        function extractShift(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'shift' || cleanKey.includes('shift kerja')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item.Shift || '-';
+        }
+
+        // Ekstraksi Tanggal Transaksi
+        function extractDate(item) {
+            if (!item) return '';
+            const keys = Object.keys(item);
+
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('tanggal transaksi') || cleanKey.includes('tanggal') || cleanKey.includes('timestamp')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Tanggal Transaksi'] || item.Tanggal || item.Timestamp || '';
         }
 
         function showSection(sectionId) {
@@ -514,15 +574,20 @@
         function populateDropdownFilters(data) {
             const storeSelect = document.getElementById('filter-store');
             const lobSelect = document.getElementById('filter-lob');
+            const shiftSelect = document.getElementById('filter-shift');
 
             const stores = new Set();
             const lobs = new Set();
+            const shifts = new Set();
 
             data.forEach(item => {
                 const store = extractStore(item);
                 const lob = extractLOB(item);
+                const shift = extractShift(item);
+
                 if (store && store !== '-') stores.add(store);
                 if (lob && lob !== '-') lobs.add(lob);
+                if (shift && shift !== '-') shifts.add(shift);
             });
 
             if (storeSelect) {
@@ -538,24 +603,31 @@
                     lobSelect.innerHTML += `<option value="${lob}">${lob}</option>`;
                 });
             }
+
+            if (shiftSelect) {
+                shiftSelect.innerHTML = '<option value="ALL">Semua Shift</option>';
+                Array.from(shifts).sort().forEach(shift => {
+                    shiftSelect.innerHTML += `<option value="${shift}">${shift}</option>`;
+                });
+            }
         }
 
         function applyFilters() {
             const monthVal = document.getElementById('filter-month')?.value || 'ALL';
-            const storeVal = document.getElementById('filter-store')?.value || 'ALL';
+            const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toUpperCase();
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
             filteredData = rawCSVData.filter(row => {
                 const rowStore = extractStore(row);
                 const rowLOB = extractLOB(row);
-                const rowShift = (row.Shift || row['Shift Kerja'] || '').trim();
-                const rowDate = row.Tanggal || row.Timestamp || '';
+                const rowShift = extractShift(row);
+                const rowDateStr = extractDate(row);
 
                 let matchMonth = true;
-                if (monthVal !== 'ALL' && rowDate) {
-                    const parsedDate = new Date(rowDate);
-                    if (!isNaN(parsedDate.getTime())) {
+                if (monthVal !== 'ALL' && rowDateStr) {
+                    const parsedDate = parseCustomDate(rowDateStr);
+                    if (parsedDate) {
                         const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
                         matchMonth = (m === monthVal);
                     }
@@ -596,7 +668,7 @@
                 const store = extractStore(item);
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
-                const rowDate = new Date(item.Tanggal || item.Timestamp);
+                const rowDate = parseCustomDate(extractDate(item));
 
                 if (!storeWoW[store]) {
                     storeWoW[store] = {
@@ -610,7 +682,7 @@
                 }
 
                 let period = null;
-                if (!isNaN(rowDate.getTime())) {
+                if (rowDate) {
                     if (rowDate >= oneWeekAgo) {
                         period = 'tw';
                     } else if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) {
@@ -674,13 +746,13 @@
 
             data.forEach(item => {
                 const store = extractStore(item);
-                const rawDate = item.Tanggal || item.Timestamp;
+                const rawDateStr = extractDate(item);
                 
-                if (store && store !== '-' && rawDate) {
+                if (store && store !== '-' && rawDateStr) {
                     storeSet.add(store);
 
-                    const parsedDate = new Date(rawDate);
-                    if (!isNaN(parsedDate.getTime())) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate) {
                         const dateKey = parsedDate.toISOString().split('T')[0];
                         if (!dateMap[dateKey]) dateMap[dateKey] = new Set();
                         dateMap[dateKey].add(store);
@@ -838,15 +910,15 @@
                 const lobVal = extractLOB(item);
                 const nameVal = extractName(item);
                 const storeVal = extractStore(item);
-                const shiftVal = item.Shift || item['Shift Kerja'] || '-';
-                const dateVal = item.Tanggal || item.Timestamp || '-';
+                const shiftVal = extractShift(item);
+                const dateVal = extractDate(item) || '-';
 
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-white/5 transition';
                 row.innerHTML = `
                     <td class="p-2 opacity-70">${dateVal}</td>
                     <td class="p-2 font-medium text-indigo-300">${nameVal}</td>
-                    <td class="p-2">${storeVal}</td>
+                    <td class="p-2 font-semibold">${storeVal}</td>
                     <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300">${lobVal}</span></td>
                     <td class="p-2 text-center font-bold ${qty > 0 ? 'text-emerald-400' : 'text-slate-400'}">${qty}</td>
                     <td class="p-2">${shiftVal}</td>
@@ -868,7 +940,7 @@
 
                 const champName = extractName(row);
                 const storeName = extractStore(row);
-                const dateVal = row.Tanggal || row.Timestamp;
+                const dateVal = extractDate(row);
 
                 if (champName && champName !== '-') champions.add(champName);
                 if (storeName && storeName !== '-') stores.add(storeName);
