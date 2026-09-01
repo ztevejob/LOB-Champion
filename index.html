@@ -387,6 +387,26 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
+        // Helper universal untuk mengekstrak LOB dengan fleksibel
+        function extractLOB(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            
+            // Cek pencocokan kunci secara eksak terlebih dahulu
+            const exactMatch = item.LOB || item['Kategori LOB'] || item['LOB Champion'] || item['Kategori'] || item['Produk'];
+            if (exactMatch && String(exactMatch).trim() !== '') return String(exactMatch).trim();
+
+            // Cek pencocokan kunci secara case-insensitive & abaikan spasi tersembunyi
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('lob champion')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return '-';
+        }
+
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
@@ -455,9 +475,9 @@
 
             data.forEach(item => {
                 const store = item.Store || item['Nama Store'] || item['Lokasi'];
-                const lob = item.LOB || item['Kategori LOB'];
+                const lob = extractLOB(item);
                 if (store) stores.add(store.trim());
-                if (lob) lobs.add(lob.trim());
+                if (lob && lob !== '-') lobs.add(lob);
             });
 
             if (storeSelect) {
@@ -483,7 +503,7 @@
 
             filteredData = rawCSVData.filter(row => {
                 const rowStore = (row.Store || row['Nama Store'] || row['Lokasi'] || '').trim();
-                const rowLOB = (row.LOB || row['Kategori LOB'] || '').trim();
+                const rowLOB = extractLOB(row);
                 const rowShift = (row.Shift || row['Shift Kerja'] || '').trim();
                 const rowDate = row.Tanggal || row.Timestamp || '';
 
@@ -529,8 +549,8 @@
 
             data.forEach(item => {
                 const store = item.Store || item['Nama Store'] || item['Lokasi'] || 'Unknown Store';
-                const lob = (item.LOB || item['Kategori LOB'] || '').toLowerCase();
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
                 const rowDate = new Date(item.Tanggal || item.Timestamp);
 
                 if (!storeWoW[store]) {
@@ -683,10 +703,10 @@
 
             const salesMap = {};
             data.forEach(item => {
-                const name = item.Nama || item.Champion || item['Nama Sales'] || 'Unknown';
-                const lob = item.LOB || item['Kategori LOB'] || 'Other';
+                const name = item.Nama || item.Champion || item['Nama Sales'] || item['Nama Staff'] || 'Unknown';
+                const lob = extractLOB(item);
                 const store = item.Store || item['Nama Store'] || 'Unknown Store';
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
 
                 if (!salesMap[name]) {
                     salesMap[name] = { name, lob, store, totalQty: 0 };
@@ -726,8 +746,8 @@
             const storeMap = {};
             data.forEach(item => {
                 const store = item.Store || item['Nama Store'] || 'Unknown Store';
-                const champion = item.Nama || item.Champion || 'Unknown';
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
+                const champion = item.Nama || item.Champion || item['Nama Sales'] || item['Nama Staff'] || 'Unknown';
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
 
                 if (!storeMap[store]) {
                     storeMap[store] = { store, champions: new Set(), totalQty: 0 };
@@ -770,16 +790,22 @@
             }
 
             data.slice(0, 50).forEach(item => {
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY'] || item['JUMLAH']);
+                const lobVal = extractLOB(item);
+                const nameVal = item.Nama || item.Champion || item['Nama Sales'] || item['Nama Staff'] || '-';
+                const storeVal = item.Store || item['Nama Store'] || item['Lokasi'] || '-';
+                const shiftVal = item.Shift || item['Shift Kerja'] || '-';
+                const dateVal = item.Tanggal || item.Timestamp || '-';
+
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-white/5 transition';
                 row.innerHTML = `
-                    <td class="p-2 opacity-70">${item.Tanggal || item.Timestamp || '-'}</td>
-                    <td class="p-2 font-medium text-indigo-300">${item.Nama || item.Champion || '-'}</td>
-                    <td class="p-2">${item.Store || item['Nama Store'] || '-'}</td>
-                    <td class="p-2">${item.LOB || item['Kategori LOB'] || '-'}</td>
+                    <td class="p-2 opacity-70">${dateVal}</td>
+                    <td class="p-2 font-medium text-indigo-300">${nameVal}</td>
+                    <td class="p-2">${storeVal}</td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300">${lobVal}</span></td>
                     <td class="p-2 text-center font-bold ${qty > 0 ? 'text-emerald-400' : 'text-slate-400'}">${qty}</td>
-                    <td class="p-2">${item.Shift || '-'}</td>
+                    <td class="p-2">${shiftVal}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -793,10 +819,10 @@
             const dates = new Set();
 
             data.forEach(row => {
-                const qty = parseQuantity(row.Qty || row.Quantity || row.Unit);
+                const qty = parseQuantity(row.Qty || row.Quantity || row.Unit || row['QTY']);
                 totalQty += qty;
 
-                const champName = row.Nama || row.Champion || row['Nama Sales'];
+                const champName = row.Nama || row.Champion || row['Nama Sales'] || row['Nama Staff'];
                 const storeName = row.Store || row['Nama Store'];
                 const dateVal = row.Tanggal || row.Timestamp;
 
