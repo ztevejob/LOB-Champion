@@ -239,7 +239,7 @@
                 </div>
             </div>
 
-            <!-- Average / Hari per LOB (Kalkulasi Diperbaiki) -->
+            <!-- Average / Hari per LOB -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-semibold uppercase tracking-wider text-purple-400">Average / Hari / LOB</p>
@@ -291,19 +291,21 @@
 
         </section>
 
-        <!-- Summary Store Unsubmitted Banner -->
+        <!-- PERBAIKAN POIN 2: Summary Store Unsubmitted Kemarin (Action Area) -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-rose-500/20 text-rose-400 rounded-lg shrink-0">
                     <i data-lucide="alert-circle" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400">Store Belum Submit Hari Ini (<span id="unsubmitted-count">0</span> Toko)</h4>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400">
+                        Action Area: Store Belum Submit Laporan Kemarin (<span id="unsubmitted-date-label">H-1</span>) - <span id="unsubmitted-count">0</span> Store
+                    </h4>
                     <p class="text-xs text-slate-300 mt-0.5 line-clamp-2" id="unsubmitted-list-text">Memuat data...</p>
                 </div>
             </div>
-            <button onclick="toggleUnsubmittedModal()" class="w-full sm:w-auto px-3 py-1.5 bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 text-xs rounded-lg transition shrink-0 font-medium text-center">
-                Lihat Detail Store
+            <button onclick="toggleUnsubmittedModal()" class="w-full sm:w-auto px-3.5 py-2 bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 text-xs rounded-lg transition shrink-0 font-medium text-center flex items-center justify-center gap-1.5">
+                <i data-lucide="list-checks" class="w-4 h-4"></i> Lihat Detail & Follow Up
             </button>
         </div>
 
@@ -421,11 +423,14 @@
                 </div>
             </div>
 
-            <!-- Section 4: Matriks Kedisiplinan -->
+            <!-- PERBAIKAN POIN 1: Section 4 - Matriks Kedisiplinan Pelaporan Harian Store -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
-                        <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
+                        <div>
+                            <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
+                            <p class="text-[11px] opacity-60 mt-0.5">Persentase kepatuhan dihitung berdasarkan jumlah hari aktif transaksi pada periode terfilter</p>
+                        </div>
                         <span class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Total 91 Toko</span>
                     </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto max-h-[550px] relative"></div>
@@ -461,20 +466,26 @@
         </div>
     </main>
 
-    <!-- Modal Store Belum Submit -->
+    <!-- Modal Store Belum Submit (Action Area) -->
     <div id="unsubmitted-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-lg p-6 max-h-[80vh] flex flex-col justify-between">
+        <div class="glass-panel w-full max-w-lg p-6 max-h-[85vh] flex flex-col justify-between shadow-2xl">
             <div>
-                <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-                    <h3 class="font-bold text-base text-rose-400 flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-5 h-5"></i> Store Belum Submit Laporan Hari Ini
-                    </h3>
-                    <button onclick="toggleUnsubmittedModal()" class="text-slate-400 hover:text-white">&times;</button>
+                <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
+                    <div>
+                        <h3 class="font-bold text-base text-rose-400 flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-5 h-5"></i> Action Area: Store Belum Submit Laporan
+                        </h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Daftar toko yang tidak mengirimkan laporan pada tanggal <b id="unsubmitted-modal-date" class="text-rose-300"></b></p>
+                    </div>
+                    <button onclick="toggleUnsubmittedModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
                 </div>
-                <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[50vh] space-y-2 text-xs"></div>
+                <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[45vh] space-y-1.5 text-xs pr-1"></div>
             </div>
-            <div class="mt-4 pt-3 border-t border-white/10 text-right">
-                <button onclick="toggleUnsubmittedModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition">Tutup</button>
+            <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                <button onclick="copyUnsubmittedList()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1.5">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Salin List Follow-Up
+                </button>
+                <button onclick="toggleUnsubmittedModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-lg transition">Tutup</button>
             </div>
         </div>
     </div>
@@ -525,6 +536,7 @@
         let filteredData = [];
         let chartInstances = {};
         let unsubmittedStoresList = [];
+        let formattedYesterdayDate = "";
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
@@ -536,7 +548,6 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
-        // Improved Robust Date Parser for Accurate Day Count Calculation
         function parseCustomDate(dateStr) {
             if (!dateStr) return null;
             let str = String(dateStr).trim();
@@ -775,18 +786,28 @@
             });
 
             updateMetricsAndCharts(filteredData);
-            calculateUnsubmittedToday(rawCSVData);
+            calculateUnsubmittedYesterday(rawCSVData); // PERBAIKAN POIN 2: Evaluasi H-1 Kemarin
             renderWoWStoreTable(filteredData);
-            renderComplianceMatrix(filteredData);
+            renderComplianceMatrix(filteredData);      // PERBAIKAN POIN 1: Matriks Kedisiplinan Diperbaiki
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
 
-        function calculateUnsubmittedToday(data) {
-            const now = new Date();
-            const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        // PERBAIKAN POIN 2: Kalkulasi Store Belum Submit KEMARIN (H-1)
+        function calculateUnsubmittedYesterday(data) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
             
-            const submittedStoresToday = new Set();
+            const yYear = yesterday.getFullYear();
+            const yMonthStr = String(yesterday.getMonth() + 1).padStart(2, '0');
+            const yDayStr = String(yesterday.getDate()).padStart(2, '0');
+            const yesterdayKey = `${yYear}-${yMonthStr}-${yDayStr}`;
+
+            formattedYesterdayDate = `${yDayStr}/${yMonthStr}/${yYear}`;
+            document.getElementById('unsubmitted-date-label').innerText = formattedYesterdayDate;
+            document.getElementById('unsubmitted-modal-date').innerText = formattedYesterdayDate;
+            
+            const submittedStoresYesterday = new Set();
             data.forEach(item => {
                 const rawDateStr = extractDate(item);
                 const store = extractStore(item);
@@ -794,8 +815,8 @@
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        if (dateKey === todayKey) {
-                            submittedStoresToday.add(store.toLowerCase().trim());
+                        if (dateKey === yesterdayKey) {
+                            submittedStoresYesterday.add(store.toLowerCase().trim());
                         }
                     }
                 }
@@ -803,7 +824,7 @@
 
             unsubmittedStoresList = MASTER_STORES.filter(store => {
                 const cleanStore = store.toLowerCase().trim();
-                for (let subStore of submittedStoresToday) {
+                for (let subStore of submittedStoresYesterday) {
                     if (subStore.includes(cleanStore) || cleanStore.includes(subStore)) return false;
                 }
                 return true;
@@ -812,10 +833,10 @@
             document.getElementById('unsubmitted-count').innerText = unsubmittedStoresList.length;
             
             if (unsubmittedStoresList.length === 0) {
-                document.getElementById('unsubmitted-list-text').innerText = "Luar biasa! Seluruh store telah mengirimkan laporan hari ini.";
+                document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah mengirimkan laporan kemarin (${formattedYesterdayDate}).`;
             } else {
-                const preview = unsubmittedStoresList.slice(0, 4).join(', ');
-                const extra = unsubmittedStoresList.length > 4 ? ` dan ${unsubmittedStoresList.length - 4} store lainnya.` : '.';
+                const preview = unsubmittedStoresList.slice(0, 3).join(', ');
+                const extra = unsubmittedStoresList.length > 3 ? ` dan ${unsubmittedStoresList.length - 3} store lainnya.` : '.';
                 document.getElementById('unsubmitted-list-text').innerText = `${preview}${extra}`;
             }
 
@@ -823,10 +844,174 @@
             modalBody.innerHTML = '';
             unsubmittedStoresList.forEach((store, idx) => {
                 const item = document.createElement('div');
-                item.className = 'p-2 rounded bg-white/5 border border-white/5 flex items-center gap-2';
-                item.innerHTML = `<span class="font-mono opacity-50 text-[10px]">${idx + 1}.</span> <span>${store}</span>`;
+                item.className = 'p-2 rounded bg-white/5 border border-white/5 flex items-center justify-between text-xs hover:bg-white/10 transition';
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono opacity-50 text-[10px] w-5 text-right">${idx + 1}.</span> 
+                        <span class="font-medium text-slate-200">${store}</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-300 font-semibold border border-rose-500/30">Belum Submit</span>
+                `;
                 modalBody.appendChild(item);
             });
+        }
+
+        // PERBAIKAN POIN 2 (Action Area): Salin Daftar Toko Belum Submit Ke Clipboard
+        function copyUnsubmittedList() {
+            if (unsubmittedStoresList.length === 0) {
+                alert('Tidak ada store yang perlu di follow up!');
+                return;
+            }
+
+            let text = `*REMINDER: BELUM SUBMIT LAPORAN CHAMPION LOB (${formattedYesterdayDate})*\n`;
+            text += `Total: ${unsubmittedStoresList.length} Store\n\n`;
+            unsubmittedStoresList.forEach((store, i) => {
+                text += `${i + 1}. ${store}\n`;
+            });
+            text += `\nMohon tim Store Trainer / LOB Champion terkait segera melengkapi laporan. Terima kasih!`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Daftar store belum submit berhasil disalin! Anda bisa langsung menempelkannya ke WhatsApp/Telegram.');
+            }).catch(err => {
+                console.error('Gagal menyalin:', err);
+            });
+        }
+
+        // PERBAIKAN POIN 1: Penyesuaian Matriks Kedisiplinan Pelaporan
+        function renderComplianceMatrix(data) {
+            const container = document.getElementById('compliance-matrix-container');
+            if (!container) return;
+
+            const reportedMap = {};
+            const activeDatesSet = new Set();
+            let sampleDate = null;
+
+            // 1. Memetakan laporan per tanggal & mendeteksi daftar tanggal yang aktif memiliki transaksi
+            data.forEach(item => {
+                const store = extractStore(item);
+                const rawDateStr = extractDate(item);
+                const shift = extractShift(item).toLowerCase();
+
+                if (rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate) {
+                        if (!sampleDate) sampleDate = parsedDate;
+                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                        
+                        activeDatesSet.add(dateKey);
+
+                        if (!reportedMap[dateKey]) reportedMap[dateKey] = { pagi: new Set(), siang: new Set() };
+                        
+                        if (store && store !== '-') {
+                            if (shift.includes('pagi') || shift.includes('1') || shift.includes('morning')) {
+                                reportedMap[dateKey].pagi.add(store.toLowerCase().trim());
+                            } else {
+                                reportedMap[dateKey].siang.add(store.toLowerCase().trim());
+                            }
+                        }
+                    }
+                }
+            });
+
+            const stores = [...MASTER_STORES];
+            const monthVal = document.getElementById('filter-month')?.value;
+            let year, monthIndex;
+
+            if (monthVal && monthVal !== 'ALL') {
+                monthIndex = parseInt(monthVal, 10) - 1;
+                year = sampleDate ? sampleDate.getFullYear() : new Date().getFullYear();
+            } else if (sampleDate) {
+                year = sampleDate.getFullYear();
+                monthIndex = sampleDate.getMonth();
+            } else {
+                const now = new Date();
+                year = now.getFullYear();
+                monthIndex = now.getMonth();
+            }
+
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            const fullMonthDates = [];
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayStr = String(day).padStart(2, '0');
+                const monthStr = String(monthIndex + 1).padStart(2, '0');
+                const dateKey = `${year}-${monthStr}-${dayStr}`;
+                fullMonthDates.push({ key: dateKey, label: `${dayStr}/${monthStr}`, isActive: activeDatesSet.has(dateKey) });
+            }
+
+            // Hitung total slot hari aktif yang valid (Active Days * 2 Shift)
+            const activeDaysCount = activeDatesSet.size > 0 ? activeDatesSet.size : fullMonthDates.length;
+            const totalActiveSlots = activeDaysCount * 2;
+
+            let html = `
+                <table class="w-full text-xs text-center border-collapse border border-white/10 min-w-[750px]">
+                    <thead class="sticky top-0 z-20 sticky-header-bg shadow-md">
+                        <tr class="border-b border-white/10">
+                            <th rowspan="2" class="p-2 text-center w-10 border-r border-white/10 sticky left-0 z-30 sticky-header-bg">No.</th>
+                            <th rowspan="2" class="p-2 text-left border-r border-white/10 min-w-[180px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
+            `;
+
+            fullMonthDates.forEach(d => {
+                const colHeaderStyle = d.isActive ? 'text-indigo-300 font-bold' : 'opacity-40';
+                html += `<th colspan="2" class="p-1 border-r border-white/10 min-w-[44px] text-[10px] font-mono sticky-header-bg ${colHeaderStyle}">${d.label}</th>`;
+            });
+
+            html += `
+                            <th rowspan="2" class="p-2 min-w-[90px] sticky-header-bg">Kepatuhan</th>
+                        </tr>
+                        <tr class="border-b border-white/10 text-[9px]">
+            `;
+
+            fullMonthDates.forEach(() => {
+                html += `<th class="p-0.5 border-r border-white/5 bg-slate-800/50">P</th><th class="p-0.5 border-r border-white/10 bg-slate-800/50">S</th>`;
+            });
+
+            html += `</tr></thead><tbody class="divide-y divide-white/5">`;
+
+            stores.forEach((store, idx) => {
+                let totalReportSlots = 0;
+                const cleanStoreName = store.toLowerCase().trim();
+
+                html += `<tr>
+                    <td class="p-2 text-center font-mono opacity-60 border-r border-white/10 sticky left-0 z-10 sticky-header-bg">${idx + 1}</td>
+                    <td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap sticky left-10 z-10 sticky-header-bg">${store}</td>`;
+
+                fullMonthDates.forEach(d => {
+                    let hasPagi = false, hasSiang = false;
+                    
+                    if (reportedMap[d.key]) {
+                        for (let repStore of reportedMap[d.key].pagi) {
+                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasPagi = true; break; }
+                        }
+                        for (let repStore of reportedMap[d.key].siang) {
+                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasSiang = true; break; }
+                        }
+                    }
+
+                    if (hasPagi) totalReportSlots++;
+                    if (hasSiang) totalReportSlots++;
+
+                    html += `<td class="p-0.5 border-r border-white/5 ${hasPagi ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasPagi ? '✓' : '✗'}</td>`;
+                    html += `<td class="p-0.5 border-r border-white/10 ${hasSiang ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasSiang ? '✓' : '✗'}</td>`;
+                });
+
+                // Perhitungan persentase kepatuhan yang adil & realistis
+                const complianceRate = Math.min(100, Math.round((totalReportSlots / totalActiveSlots) * 100));
+                
+                let rateBadgeClass = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+                if (complianceRate < 50) {
+                    rateBadgeClass = 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+                } else if (complianceRate < 80) {
+                    rateBadgeClass = 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+                }
+
+                html += `<td class="p-2 text-center font-bold">
+                    <span class="px-2 py-0.5 rounded border text-[11px] inline-block ${rateBadgeClass}">${complianceRate}%</span>
+                </td></tr>`;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
         }
 
         function renderCharts(data) {
@@ -1095,123 +1280,6 @@
             });
         }
 
-        function renderComplianceMatrix(data) {
-            const container = document.getElementById('compliance-matrix-container');
-            if (!container) return;
-
-            const reportedMap = {};
-            let sampleDate = null;
-
-            data.forEach(item => {
-                const store = extractStore(item);
-                const rawDateStr = extractDate(item);
-                const shift = extractShift(item).toLowerCase();
-
-                if (rawDateStr) {
-                    const parsedDate = parseCustomDate(rawDateStr);
-                    if (parsedDate) {
-                        if (!sampleDate) sampleDate = parsedDate;
-                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        if (!reportedMap[dateKey]) reportedMap[dateKey] = { pagi: new Set(), siang: new Set() };
-                        
-                        if (store && store !== '-') {
-                            if (shift.includes('pagi') || shift.includes('1') || shift.includes('morning')) {
-                                reportedMap[dateKey].pagi.add(store.toLowerCase().trim());
-                            } else {
-                                reportedMap[dateKey].siang.add(store.toLowerCase().trim());
-                            }
-                        }
-                    }
-                }
-            });
-
-            const stores = [...MASTER_STORES];
-            const monthVal = document.getElementById('filter-month')?.value;
-            let year, monthIndex;
-
-            if (monthVal && monthVal !== 'ALL') {
-                monthIndex = parseInt(monthVal, 10) - 1;
-                year = sampleDate ? sampleDate.getFullYear() : new Date().getFullYear();
-            } else if (sampleDate) {
-                year = sampleDate.getFullYear();
-                monthIndex = sampleDate.getMonth();
-            } else {
-                const now = new Date();
-                year = now.getFullYear();
-                monthIndex = now.getMonth();
-            }
-
-            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-            const fullMonthDates = [];
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayStr = String(day).padStart(2, '0');
-                const monthStr = String(monthIndex + 1).padStart(2, '0');
-                fullMonthDates.push({ key: `${year}-${monthStr}-${dayStr}`, label: `${dayStr}/${monthStr}` });
-            }
-
-            let html = `
-                <table class="w-full text-xs text-center border-collapse border border-white/10 min-w-[750px]">
-                    <thead class="sticky top-0 z-20 sticky-header-bg shadow-md">
-                        <tr class="border-b border-white/10">
-                            <th rowspan="2" class="p-2 text-center w-10 border-r border-white/10 sticky left-0 z-30 sticky-header-bg">No.</th>
-                            <th rowspan="2" class="p-2 text-left border-r border-white/10 min-w-[180px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
-            `;
-
-            fullMonthDates.forEach(d => {
-                html += `<th colspan="2" class="p-1 border-r border-white/10 min-w-[44px] text-[10px] font-mono sticky-header-bg">${d.label}</th>`;
-            });
-
-            html += `
-                            <th rowspan="2" class="p-2 min-w-[70px] sticky-header-bg">Kepatuhan</th>
-                        </tr>
-                        <tr class="border-b border-white/10 text-[9px]">
-            `;
-
-            fullMonthDates.forEach(() => {
-                html += `<th class="p-0.5 border-r border-white/5 bg-slate-800/50">P</th><th class="p-0.5 border-r border-white/10 bg-slate-800/50">S</th>`;
-            });
-
-            html += `</tr></thead><tbody class="divide-y divide-white/5">`;
-
-            stores.forEach((store, idx) => {
-                let totalReportSlots = 0;
-                const cleanStoreName = store.toLowerCase().trim();
-
-                html += `<tr>
-                    <td class="p-2 text-center font-mono opacity-60 border-r border-white/10 sticky left-0 z-10 sticky-header-bg">${idx + 1}</td>
-                    <td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap sticky left-10 z-10 sticky-header-bg">${store}</td>`;
-
-                fullMonthDates.forEach(d => {
-                    let hasPagi = false, hasSiang = false;
-                    
-                    if (reportedMap[d.key]) {
-                        for (let repStore of reportedMap[d.key].pagi) {
-                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasPagi = true; break; }
-                        }
-                        for (let repStore of reportedMap[d.key].siang) {
-                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasSiang = true; break; }
-                        }
-                    }
-
-                    if (hasPagi) totalReportSlots++;
-                    if (hasSiang) totalReportSlots++;
-
-                    html += `<td class="p-0.5 border-r border-white/5 ${hasPagi ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasPagi ? '✓' : '✗'}</td>`;
-                    html += `<td class="p-0.5 border-r border-white/10 ${hasSiang ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasSiang ? '✓' : '✗'}</td>`;
-                });
-
-                const maxSlots = daysInMonth * 2;
-                const complianceRate = Math.round((totalReportSlots / maxSlots) * 100);
-                const rateColor = complianceRate >= 80 ? 'text-emerald-400' : (complianceRate >= 50 ? 'text-amber-400' : 'text-rose-400');
-
-                html += `<td class="p-2 font-bold ${rateColor}">${complianceRate}%</td></tr>`;
-            });
-
-            html += `</tbody></table>`;
-            container.innerHTML = html;
-        }
-
         function renderTop10Sales(data) {
             const tbody = document.getElementById('top10-sales-body');
             if (!tbody) return;
@@ -1339,7 +1407,6 @@
             });
         }
 
-        // Calculation Fix applied to ensure Average / Day differs from Total
         function updateMetricsAndCharts(data) {
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             const reports = data.length;
@@ -1368,16 +1435,13 @@
                 }
             });
 
-            // Make sure activeDaysCount is at least 1, or count unique valid dates found
             const activeDaysCount = Math.max(1, uniqueDates.size);
 
-            // Update Total per LOB
             document.getElementById('kpi-total-mac').innerText = totalMac.toLocaleString('id-ID');
             document.getElementById('kpi-total-iphone').innerText = totalIphone.toLocaleString('id-ID');
             document.getElementById('kpi-total-ipad').innerText = totalIpad.toLocaleString('id-ID');
             document.getElementById('kpi-total-watch').innerText = totalWatch.toLocaleString('id-ID');
 
-            // Update Average / Hari per LOB (Disesuaikan dengan pembagian jumlah hari)
             document.getElementById('kpi-avg-mac').innerText = (totalMac / activeDaysCount).toFixed(1);
             document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeDaysCount).toFixed(1);
             document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeDaysCount).toFixed(1);
