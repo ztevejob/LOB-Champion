@@ -344,7 +344,10 @@
 
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm mb-4">Matriks Kedisiplinan Pelaporan Harian Store</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store</h3>
+                        <span class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Total 91 Toko</span>
+                    </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto"></div>
                 </div>
             </div>
@@ -377,6 +380,108 @@
         lucide.createIcons();
 
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
+
+        // Master List 91 Toko Digimap
+        const MASTER_STORES = [
+            "M108 Digimap Trans Studio Mall Bandung",
+            "M116 Digimap Beachwalk Bali",
+            "M117 Digimap Plaza Senayan",
+            "M118 Digimap Pondok Indah Mall 3",
+            "M119 Digimap Centrepoint Mall Medan",
+            "M120 Digimap Sun Plaza Medan",
+            "M121 Digimap Tunjungan Plaza 3 Surabaya",
+            "M122 Digimap Galaxy Mall Surabaya",
+            "M123 Digimap Mall Bali Galeria",
+            "M124 Digimap Pacific Place",
+            "M125 Digimap Supermall Karawaci",
+            "M126 Digimap Ciputra World Surabaya",
+            "M127 Digimap Lotte Shopping Avenue",
+            "M128 Digimap Emporium Mall",
+            "M129 Digimap Mall Puri Indah",
+            "M130 Digimap Sunset Road",
+            "M131 Digimap Grand Indonesia",
+            "M201 Digimap Trans Studio Mall Cibubur",
+            "M203 Digimap AEON Mall BSD",
+            "M205 Digimap Paskal 23 Bandung",
+            "M206 Digimap Pakuwon Mall Surabaya",
+            "M212 Digimap Sunter Mall",
+            "M214 Digimap AEON Mall Sentul",
+            "M215 Digimap Mall Taman Anggrek",
+            "M216 Digimap Tentrem Mall Semarang",
+            "M217 Digimap Blok M Plaza",
+            "M218 Digimap Plaza Balikpapan",
+            "M219 Digimap Basko Padang",
+            "M220 Digimap Malioboro Mall",
+            "M221 Digimap A Yani Pontianak",
+            "M222 Digimap Palembang Indah Mall",
+            "M223 Digimap Roxy Square Jember",
+            "M224 Digimap WTC Jambi",
+            "M225 Digimap Citimall Dumai",
+            "M226 Digimap Ambon City Center",
+            "M227 Digimap AEON Tanjung Barat",
+            "M228 Digimap Citimall Cianjur 2",
+            "M229 Digimap Trans Icon Surabaya",
+            "M230 Digimap The Park Kendari",
+            "M231 Digimap Gress Mall Gresik",
+            "M232 Digimap Pakuwon Mall Solo",
+            "M233 Digimap Unimas District Sidoarjo",
+            "M234 Digimap Citra Grand Cibubur",
+            "M235 Digimap Lippo Plaza Kramat Jati",
+            "M236 Digimap Palu Grand Mall",
+            "M237 Digimap Solo Square",
+            "M238 Digimap Pondok Indah Mall 2",
+            "M239 Digimap Icon Mall Bali",
+            "M240 Digimap Pasific Mall Tegal",
+            "M241 Digimap Revo Mall",
+            "M243 Digimap Aeon Mall Delta Mas",
+            "M244 Digimap Java Mall Semarang",
+            "M245 Digimap Living World Kota Wisata",
+            "M246 Digimap Malang Town Square",
+            "M247 Digimap Lippo Plaza Jambi",
+            "M248 Digimap Suncity Mall Sidoarjo",
+            "M249 Digimap Lippo Plaza Palangkaraya",
+            "M250 Digimap Lippo Plaza Batu",
+            "M251 Digimap The Kings Shopping Centre",
+            "M252 Digimap Binjai Mall",
+            "M253 Digimap Plaza Surabaya",
+            "M254 Digimap basko city mall",
+            "M255 Digimap Antasari Place",
+            "M256 Digimap Lippo Plaza Lubuklinggau",
+            "M257 Digimap City Plaza Jatinegara",
+            "M258 Digimap Lippo Plaza Manado",
+            "M259 Digimap Jatinangor Town Square",
+            "M260 Digimap Kudus Extention Mall",
+            "M261 Digimap PIK Elang Laut",
+            "M262 Digimap Suzuya Merdeka Square Siantar",
+            "M263 Digimap Citimall Sampit",
+            "M264 Digimap Plaza Semanggi",
+            "M265 Digimap IRH Soekarno MERR",
+            "M266 Digimap HIVE Harapan Indah",
+            "M267 Digimap Mall Cijantung",
+            "M268 Digimap Diana Mall Timika",
+            "M269 Digimap Tenth Avenue",
+            "M270 Digimap Citymall Lahat",
+            "M271 Digimap Mall Indramayu",
+            "M272 Digimap Kota Baru Parahyangan",
+            "M273 Digimap Metro Lampung",
+            "M274 Digimap Ciputat",
+            "M275 Digimap Citimall Baturaja",
+            "M276 Digimap Shila At Sawangan",
+            "M277 Digimap Citimall Tuban",
+            "M278 Digimap Ass Brebes Mall",
+            "M279 Digimap Ciumbuleuit Street",
+            "M281 Digimap Ngaliyan Semarang",
+            "M282 Digimap Citimall Pangkalan Bun",
+            "M283 Digimap Basuki Rahmat Tulungagung",
+            "M284 Digimap BSD City Loka",
+            "M285 Digimap Blitar Square",
+            "M286 Digimap Citimall Prabumulih",
+            "M287 Digimap Grand Tarakan",
+            "M288 Digimap Mojopahit Street Mojokerto",
+            "M289 Digimap Maleo Town Square",
+            "M290 Digimap Mandau City Mall",
+            "M293 Digimap Salatiga"
+        ];
 
         let rawCSVData = [];
         let filteredData = [];
@@ -452,11 +557,11 @@
                 if (cleanKey === 'store' || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
                     const val = item[k];
                     if (val !== undefined && val !== null && String(val).trim() !== '') {
-                        return String(val).trim().toUpperCase();
+                        return String(val).trim();
                     }
                 }
             }
-            return item.Store ? String(item.Store).trim().toUpperCase() : '-';
+            return item.Store ? String(item.Store).trim() : '-';
         }
 
         function extractQuantity(item) {
@@ -533,7 +638,6 @@
             document.getElementById('last-update').innerText = `${dateStr}, ${timeStr} WIB`;
         }
 
-        // Penarikan data otomatis (Auto Sync)
         function fetchLiveData() {
             const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
 
@@ -562,7 +666,7 @@
             const currentLOB = lobSelect?.value || 'ALL';
             const currentShift = shiftSelect?.value || 'ALL';
 
-            const stores = new Set();
+            const stores = new Set(MASTER_STORES);
             const lobs = new Set();
             const shifts = new Set();
 
@@ -600,12 +704,12 @@
 
         function applyFilters() {
             const monthVal = document.getElementById('filter-month')?.value || 'ALL';
-            const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toUpperCase();
+            const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
             filteredData = rawCSVData.filter(row => {
-                const rowStore = extractStore(row);
+                const rowStore = extractStore(row).toLowerCase();
                 const rowLOB = extractLOB(row);
                 const rowShift = extractShift(row);
                 const rowDateStr = extractDate(row);
@@ -619,7 +723,7 @@
                     }
                 }
 
-                const matchStore = (storeVal === 'ALL' || rowStore === storeVal);
+                const matchStore = (storeVal === 'all' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
                 const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
                 const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
 
@@ -718,23 +822,17 @@
             });
         }
 
-        // Matriks Kedisiplinan Pelaporan Harian Store (Presisi Bulan Berjalan)
+        // Matriks Kedisiplinan Pelaporan 91 Toko
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
 
-            const storeSet = new Set();
             const reportedMap = {};
             let sampleDate = null;
 
-            // Memetakan pelaporan store berdasarkan tanggal persis
             data.forEach(item => {
                 const store = extractStore(item);
                 const rawDateStr = extractDate(item);
-                
-                if (store && store !== '-') {
-                    storeSet.add(store);
-                }
 
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
@@ -742,24 +840,16 @@
                         if (!sampleDate) sampleDate = parsedDate;
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
                         if (!reportedMap[dateKey]) reportedMap[dateKey] = new Set();
-                        if (store && store !== '-') reportedMap[dateKey].add(store);
+                        
+                        if (store && store !== '-') {
+                            reportedMap[dateKey].add(store.toLowerCase().trim());
+                        }
                     }
                 }
             });
 
-            let stores = Array.from(storeSet).sort();
-            if (stores.length === 0) {
-                rawCSVData.forEach(item => {
-                    const st = extractStore(item);
-                    if (st && st !== '-') storeSet.add(st);
-                });
-                stores = Array.from(storeSet).sort();
-            }
-
-            if (stores.length === 0) {
-                container.innerHTML = '<p class="text-center opacity-50 py-4">Belum ada data store yang dapat ditampilkan.</p>';
-                return;
-            }
+            // Menggunakan daftar master 91 Toko
+            const stores = [...MASTER_STORES];
 
             const monthVal = document.getElementById('filter-month')?.value;
             let year, monthIndex;
@@ -793,7 +883,7 @@
                 <table class="w-full text-xs text-center border-collapse border border-white/10">
                     <thead>
                         <tr class="bg-white/5 border-b border-white/10">
-                            <th class="p-2 text-left border-r border-white/10 min-w-[140px]">Nama Store</th>
+                            <th class="p-2 text-left border-r border-white/10 min-w-[220px]">Nama Store</th>
             `;
 
             fullMonthDates.forEach(d => {
@@ -809,10 +899,21 @@
 
             stores.forEach(store => {
                 let reportedDays = 0;
+                const cleanStoreName = store.toLowerCase().trim();
+
                 html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap">${store}</td>`;
 
                 fullMonthDates.forEach(d => {
-                    const hasReported = reportedMap[d.key] && reportedMap[d.key].has(store);
+                    let hasReported = false;
+                    if (reportedMap[d.key]) {
+                        for (let repStore of reportedMap[d.key]) {
+                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) {
+                                hasReported = true;
+                                break;
+                            }
+                        }
+                    }
+
                     if (hasReported) {
                         reportedDays++;
                         html += `<td class="p-1 border-r border-white/10 bg-emerald-500/20 text-emerald-400 font-bold">✓</td>`;
@@ -979,8 +1080,6 @@
         window.onload = function() {
             updateFormattedTimestamp();
             fetchLiveData();
-            
-            // Auto Sync otomatis setiap 60 detik
             setInterval(fetchLiveData, 60000);
         };
     </script>
