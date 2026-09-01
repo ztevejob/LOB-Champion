@@ -98,7 +98,7 @@
 
             <nav class="space-y-2" id="sidebar-nav">
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition nav-active">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview KPI
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview
                 </button>
                 <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="trending-up" class="w-4 h-4"></i> Performa Week vs Week
@@ -381,7 +381,6 @@
         let rawCSVData = [];
         let filteredData = [];
 
-        // Fungsi Helper untuk Parsing Angka (Strict Zero Handling)
         function parseQuantity(val) {
             if (val === undefined || val === null || val === '') return 0;
             const parsed = parseInt(String(val).trim(), 10);
@@ -505,7 +504,176 @@
             });
 
             updateMetricsAndCharts(filteredData);
+            renderWoWStoreTable(filteredData);
+            renderComplianceMatrix(filteredData);
             renderRawDataTable(filteredData);
+        }
+
+        function renderWoWStoreTable(data) {
+            const tbody = document.getElementById('wow-store-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center opacity-50">Belum ada data transaksi untuk dikomparasi</td></tr>';
+                return;
+            }
+
+            const now = new Date();
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(now.getDate() - 7);
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(now.getDate() - 14);
+
+            const storeWoW = {};
+
+            data.forEach(item => {
+                const store = item.Store || item['Nama Store'] || item['Lokasi'] || 'Unknown Store';
+                const lob = (item.LOB || item['Kategori LOB'] || '').toLowerCase();
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
+                const rowDate = new Date(item.Tanggal || item.Timestamp);
+
+                if (!storeWoW[store]) {
+                    storeWoW[store] = {
+                        mac: { lw: 0, tw: 0 },
+                        iphone: { lw: 0, tw: 0 },
+                        ipad: { lw: 0, tw: 0 },
+                        watch: { lw: 0, tw: 0 },
+                        totalLW: 0,
+                        totalTW: 0
+                    };
+                }
+
+                let period = null;
+                if (!isNaN(rowDate.getTime())) {
+                    if (rowDate >= oneWeekAgo) {
+                        period = 'tw';
+                    } else if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) {
+                        period = 'lw';
+                    }
+                } else {
+                    period = 'tw';
+                }
+
+                if (period) {
+                    if (period === 'tw') storeWoW[store].totalTW += qty;
+                    if (period === 'lw') storeWoW[store].totalLW += qty;
+
+                    if (lob.includes('mac')) storeWoW[store].mac[period] += qty;
+                    else if (lob.includes('iphone')) storeWoW[store].iphone[period] += qty;
+                    else if (lob.includes('ipad')) storeWoW[store].ipad[period] += qty;
+                    else if (lob.includes('watch')) storeWoW[store].watch[period] += qty;
+                }
+            });
+
+            Object.keys(storeWoW).sort().forEach(storeName => {
+                const d = storeWoW[storeName];
+                let growthBadge = '<span class="text-slate-400">0%</span>';
+
+                if (d.totalLW > 0) {
+                    const growthPercent = Math.round(((d.totalTW - d.totalLW) / d.totalLW) * 100);
+                    if (growthPercent > 0) {
+                        growthBadge = `<span class="text-emerald-400 font-bold">+${growthPercent}% ▲</span>`;
+                    } else if (growthPercent < 0) {
+                        growthBadge = `<span class="text-rose-400 font-bold">${growthPercent}% ▼</span>`;
+                    }
+                } else if (d.totalTW > 0) {
+                    growthBadge = `<span class="text-emerald-400 font-bold">+100% ▲</span>`;
+                }
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-white/5 transition';
+                row.innerHTML = `
+                    <td class="p-2.5 font-semibold text-indigo-300">${storeName}</td>
+                    <td class="p-2.5 text-center">${d.mac.lw} / <b class="text-indigo-400">${d.mac.tw}</b></td>
+                    <td class="p-2.5 text-center">${d.iphone.lw} / <b class="text-indigo-400">${d.iphone.tw}</b></td>
+                    <td class="p-2.5 text-center">${d.ipad.lw} / <b class="text-indigo-400">${d.ipad.tw}</b></td>
+                    <td class="p-2.5 text-center">${d.watch.lw} / <b class="text-indigo-400">${d.watch.tw}</b></td>
+                    <td class="p-2.5 text-center">${growthBadge}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderComplianceMatrix(data) {
+            const container = document.getElementById('compliance-matrix-container');
+            if (!container) return;
+
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-center opacity-50 py-4">Belum ada data laporan untuk dianalisis kedisiplinannya.</p>';
+                return;
+            }
+
+            const storeSet = new Set();
+            const dateMap = {};
+
+            data.forEach(item => {
+                const store = item.Store || item['Nama Store'] || item['Lokasi'];
+                const rawDate = item.Tanggal || item.Timestamp;
+                
+                if (store && rawDate) {
+                    const cleanStore = store.trim();
+                    storeSet.add(cleanStore);
+
+                    const parsedDate = new Date(rawDate);
+                    if (!isNaN(parsedDate.getTime())) {
+                        const dateKey = parsedDate.toISOString().split('T')[0];
+                        if (!dateMap[dateKey]) dateMap[dateKey] = new Set();
+                        dateMap[dateKey].add(cleanStore);
+                    }
+                }
+            });
+
+            const stores = Array.from(storeSet).sort();
+            const sortedDates = Object.keys(dateMap).sort();
+
+            if (stores.length === 0 || sortedDates.length === 0) {
+                container.innerHTML = '<p class="text-center opacity-50 py-4">Format tanggal atau nama store tidak terdeteksi dengan benar.</p>';
+                return;
+            }
+
+            let html = `
+                <table class="w-full text-xs text-center border-collapse border border-white/10">
+                    <thead>
+                        <tr class="bg-white/5 border-b border-white/10">
+                            <th class="p-2 text-left border-r border-white/10 min-w-[140px]">Nama Store</th>
+            `;
+
+            sortedDates.forEach(dateStr => {
+                const d = new Date(dateStr);
+                const dayMonth = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+                html += `<th class="p-2 border-r border-white/10 min-w-[45px]">${dayMonth}</th>`;
+            });
+
+            html += `
+                            <th class="p-2 min-w-[80px]">Kepatuhan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+            `;
+
+            stores.forEach(store => {
+                let reportedDays = 0;
+                html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10">${store}</td>`;
+
+                sortedDates.forEach(dateStr => {
+                    const hasReported = dateMap[dateStr].has(store);
+                    if (hasReported) {
+                        reportedDays++;
+                        html += `<td class="p-2 border-r border-white/10 bg-emerald-500/10 text-emerald-400 font-bold">✓</td>`;
+                    } else {
+                        html += `<td class="p-2 border-r border-white/10 bg-rose-500/10 text-rose-400/50">✗</td>`;
+                    }
+                });
+
+                const complianceRate = Math.round((reportedDays / sortedDates.length) * 100);
+                const rateColor = complianceRate >= 80 ? 'text-emerald-400' : (complianceRate >= 50 ? 'text-amber-400' : 'text-rose-400');
+
+                html += `<td class="p-2 font-bold ${rateColor}">${complianceRate}%</td></tr>`;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
         }
 
         function renderTop10Sales(data) {
@@ -526,7 +694,6 @@
                 salesMap[name].totalQty += qty;
             });
 
-            // Hanya tampilkan sales yang memiliki penjualan > 0
             const top10 = Object.values(salesMap)
                 .filter(item => item.totalQty > 0)
                 .sort((a, b) => b.totalQty - a.totalQty)
@@ -569,7 +736,6 @@
                 if (champion) storeMap[store].champions.add(champion);
             });
 
-            // Hanya tampilkan store dengan total penjualan > 0
             const top10 = Object.values(storeMap)
                 .filter(item => item.totalQty > 0)
                 .sort((a, b) => b.totalQty - a.totalQty)
@@ -621,7 +787,7 @@
 
         function updateMetricsAndCharts(data) {
             let totalQty = 0;
-            const reports = data.length; // Menghitung kedisiplinan pelaporan (termasuk yang 0 unit)
+            const reports = data.length;
             const champions = new Set();
             const stores = new Set();
             const dates = new Set();
