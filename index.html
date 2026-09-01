@@ -381,118 +381,51 @@
 
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
 
-        // Master List 91 Toko Digimap
         const MASTER_STORES = [
-            "M108 Digimap Trans Studio Mall Bandung",
-            "M116 Digimap Beachwalk Bali",
-            "M117 Digimap Plaza Senayan",
-            "M118 Digimap Pondok Indah Mall 3",
-            "M119 Digimap Centrepoint Mall Medan",
-            "M120 Digimap Sun Plaza Medan",
-            "M121 Digimap Tunjungan Plaza 3 Surabaya",
-            "M122 Digimap Galaxy Mall Surabaya",
-            "M123 Digimap Mall Bali Galeria",
-            "M124 Digimap Pacific Place",
-            "M125 Digimap Supermall Karawaci",
-            "M126 Digimap Ciputra World Surabaya",
-            "M127 Digimap Lotte Shopping Avenue",
-            "M128 Digimap Emporium Mall",
-            "M129 Digimap Mall Puri Indah",
-            "M130 Digimap Sunset Road",
-            "M131 Digimap Grand Indonesia",
-            "M201 Digimap Trans Studio Mall Cibubur",
-            "M203 Digimap AEON Mall BSD",
-            "M205 Digimap Paskal 23 Bandung",
-            "M206 Digimap Pakuwon Mall Surabaya",
-            "M212 Digimap Sunter Mall",
-            "M214 Digimap AEON Mall Sentul",
-            "M215 Digimap Mall Taman Anggrek",
-            "M216 Digimap Tentrem Mall Semarang",
-            "M217 Digimap Blok M Plaza",
-            "M218 Digimap Plaza Balikpapan",
-            "M219 Digimap Basko Padang",
-            "M220 Digimap Malioboro Mall",
-            "M221 Digimap A Yani Pontianak",
-            "M222 Digimap Palembang Indah Mall",
-            "M223 Digimap Roxy Square Jember",
-            "M224 Digimap WTC Jambi",
-            "M225 Digimap Citimall Dumai",
-            "M226 Digimap Ambon City Center",
-            "M227 Digimap AEON Tanjung Barat",
-            "M228 Digimap Citimall Cianjur 2",
-            "M229 Digimap Trans Icon Surabaya",
-            "M230 Digimap The Park Kendari",
-            "M231 Digimap Gress Mall Gresik",
-            "M232 Digimap Pakuwon Mall Solo",
-            "M233 Digimap Unimas District Sidoarjo",
-            "M234 Digimap Citra Grand Cibubur",
-            "M235 Digimap Lippo Plaza Kramat Jati",
-            "M236 Digimap Palu Grand Mall",
-            "M237 Digimap Solo Square",
-            "M238 Digimap Pondok Indah Mall 2",
-            "M239 Digimap Icon Mall Bali",
-            "M240 Digimap Pasific Mall Tegal",
-            "M241 Digimap Revo Mall",
-            "M243 Digimap Aeon Mall Delta Mas",
-            "M244 Digimap Java Mall Semarang",
-            "M245 Digimap Living World Kota Wisata",
-            "M246 Digimap Malang Town Square",
-            "M247 Digimap Lippo Plaza Jambi",
-            "M248 Digimap Suncity Mall Sidoarjo",
-            "M249 Digimap Lippo Plaza Palangkaraya",
-            "M250 Digimap Lippo Plaza Batu",
-            "M251 Digimap The Kings Shopping Centre",
-            "M252 Digimap Binjai Mall",
-            "M253 Digimap Plaza Surabaya",
-            "M254 Digimap basko city mall",
-            "M255 Digimap Antasari Place",
-            "M256 Digimap Lippo Plaza Lubuklinggau",
-            "M257 Digimap City Plaza Jatinegara",
-            "M258 Digimap Lippo Plaza Manado",
-            "M259 Digimap Jatinangor Town Square",
-            "M260 Digimap Kudus Extention Mall",
-            "M261 Digimap PIK Elang Laut",
-            "M262 Digimap Suzuya Merdeka Square Siantar",
-            "M263 Digimap Citimall Sampit",
-            "M264 Digimap Plaza Semanggi",
-            "M265 Digimap IRH Soekarno MERR",
-            "M266 Digimap HIVE Harapan Indah",
-            "M267 Digimap Mall Cijantung",
-            "M268 Digimap Diana Mall Timika",
-            "M269 Digimap Tenth Avenue",
-            "M270 Digimap Citymall Lahat",
-            "M271 Digimap Mall Indramayu",
-            "M272 Digimap Kota Baru Parahyangan",
-            "M273 Digimap Metro Lampung",
-            "M274 Digimap Ciputat",
-            "M275 Digimap Citimall Baturaja",
-            "M276 Digimap Shila At Sawangan",
-            "M277 Digimap Citimall Tuban",
-            "M278 Digimap Ass Brebes Mall",
-            "M279 Digimap Ciumbuleuit Street",
-            "M281 Digimap Ngaliyan Semarang",
-            "M282 Digimap Citimall Pangkalan Bun",
-            "M283 Digimap Basuki Rahmat Tulungagung",
-            "M284 Digimap BSD City Loka",
-            "M285 Digimap Blitar Square",
-            "M286 Digimap Citimall Prabumulih",
-            "M287 Digimap Grand Tarakan",
-            "M288 Digimap Mojopahit Street Mojokerto",
-            "M289 Digimap Maleo Town Square",
-            "M290 Digimap Mandau City Mall",
-            "M293 Digimap Salatiga"
+            "M108 Digimap Trans Studio Mall Bandung", "M116 Digimap Beachwalk Bali", "M117 Digimap Plaza Senayan", 
+            "M118 Digimap Pondok Indah Mall 3", "M119 Digimap Centrepoint Mall Medan", "M120 Digimap Sun Plaza Medan", 
+            "M121 Digimap Tunjungan Plaza 3 Surabaya", "M122 Digimap Galaxy Mall Surabaya", "M123 Digimap Mall Bali Galeria", 
+            "M124 Digimap Pacific Place", "M125 Digimap Supermall Karawaci", "M126 Digimap Ciputra World Surabaya", 
+            "M127 Digimap Lotte Shopping Avenue", "M128 Digimap Emporium Mall", "M129 Digimap Mall Puri Indah", 
+            "M130 Digimap Sunset Road", "M131 Digimap Grand Indonesia", "M201 Digimap Trans Studio Mall Cibubur", 
+            "M203 Digimap AEON Mall BSD", "M205 Digimap Paskal 23 Bandung", "M206 Digimap Pakuwon Mall Surabaya", 
+            "M212 Digimap Sunter Mall", "M214 Digimap AEON Mall Sentul", "M215 Digimap Mall Taman Anggrek", 
+            "M216 Digimap Tentrem Mall Semarang", "M217 Digimap Blok M Plaza", "M218 Digimap Plaza Balikpapan", 
+            "M219 Digimap Basko Padang", "M220 Digimap Malioboro Mall", "M221 Digimap A Yani Pontianak", 
+            "M222 Digimap Palembang Indah Mall", "M223 Digimap Roxy Square Jember", "M224 Digimap WTC Jambi", 
+            "M225 Digimap Citimall Dumai", "M226 Digimap Ambon City Center", "M227 Digimap AEON Tanjung Barat", 
+            "M228 Digimap Citimall Cianjur 2", "M229 Digimap Trans Icon Surabaya", "M230 Digimap The Park Kendari", 
+            "M231 Digimap Gress Mall Gresik", "M232 Digimap Pakuwon Mall Solo", "M233 Digimap Unimas District Sidoarjo", 
+            "M234 Digimap Citra Grand Cibubur", "M235 Digimap Lippo Plaza Kramat Jati", "M236 Digimap Palu Grand Mall", 
+            "M237 Digimap Solo Square", "M238 Digimap Pondok Indah Mall 2", "M239 Digimap Icon Mall Bali", 
+            "M240 Digimap Pasific Mall Tegal", "M241 Digimap Revo Mall", "M243 Digimap Aeon Mall Delta Mas", 
+            "M244 Digimap Java Mall Semarang", "M245 Digimap Living World Kota Wisata", "M246 Digimap Malang Town Square", 
+            "M247 Digimap Lippo Plaza Jambi", "M248 Digimap Suncity Mall Sidoarjo", "M249 Digimap Lippo Plaza Palangkaraya", 
+            "M250 Digimap Lippo Plaza Batu", "M251 Digimap The Kings Shopping Centre", "M252 Digimap Binjai Mall", 
+            "M253 Digimap Plaza Surabaya", "M254 Digimap basko city mall", "M255 Digimap Antasari Place", 
+            "M256 Digimap Lippo Plaza Lubuklinggau", "M257 Digimap City Plaza Jatinegara", "M258 Digimap Lippo Plaza Manado", 
+            "M259 Digimap Jatinangor Town Square", "M260 Digimap Kudus Extention Mall", "M261 Digimap PIK Elang Laut", 
+            "M262 Digimap Suzuya Merdeka Square Siantar", "M263 Digimap Citimall Sampit", "M264 Digimap Plaza Semanggi", 
+            "M265 Digimap IRH Soekarno MERR", "M266 Digimap HIVE Harapan Indah", "M267 Digimap Mall Cijantung", 
+            "M268 Digimap Diana Mall Timika", "M269 Digimap Tenth Avenue", "M270 Digimap Citymall Lahat", 
+            "M271 Digimap Mall Indramayu", "M272 Digimap Kota Baru Parahyangan", "M273 Digimap Metro Lampung", 
+            "M274 Digimap Ciputat", "M275 Digimap Citimall Baturaja", "M276 Digimap Shila At Sawangan", 
+            "M277 Digimap Citimall Tuban", "M278 Digimap Ass Brebes Mall", "M279 Digimap Ciumbuleuit Street", 
+            "M281 Digimap Ngaliyan Semarang", "M282 Digimap Citimall Pangkalan Bun", "M283 Digimap Basuki Rahmat Tulungagung", 
+            "M284 Digimap BSD City Loka", "M285 Digimap Blitar Square", "M286 Digimap Citimall Prabumulih", 
+            "M287 Digimap Grand Tarakan", "M288 Digimap Mojopahit Street Mojokerto", "M289 Digimap Maleo Town Square", 
+            "M290 Digimap Mandau City Mall", "M293 Digimap Salatiga"
         ];
 
         let rawCSVData = [];
         let filteredData = [];
+        let chartInstances = {};
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
-            
             let str = String(val).trim();
             if (str === '') return 0;
-
             str = str.replace(/[^0-9.-]/g, '');
             const parsed = parseInt(str, 10);
             return isNaN(parsed) ? 0 : parsed;
@@ -502,7 +435,6 @@
             if (!dateStr) return null;
             let str = String(dateStr).trim();
             if (!str) return null;
-
             if (str.includes(' ')) str = str.split(' ')[0];
 
             if (str.includes('/') || str.includes('-')) {
@@ -515,7 +447,6 @@
                     }
                 }
             }
-
             const standardDate = new Date(dateStr);
             return isNaN(standardDate.getTime()) ? null : standardDate;
         }
@@ -523,7 +454,6 @@
         function extractLOB(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
-
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
                 if (cleanKey === 'champion lob' || cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('produk')) {
@@ -537,7 +467,6 @@
         function extractName(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
-
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
                 if (cleanKey.includes('nama champion') || cleanKey.includes('nama sa') || cleanKey.includes('nama') || cleanKey.includes('sales')) {
@@ -551,7 +480,6 @@
         function extractStore(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
-
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
                 if (cleanKey === 'store' || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
@@ -567,7 +495,6 @@
         function extractQuantity(item) {
             if (!item) return 0;
             const keys = Object.keys(item);
-
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
                 if (cleanKey === 'total qty' || cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah')) {
@@ -580,7 +507,6 @@
         function extractShift(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
-
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
                 if (cleanKey === 'shift' || cleanKey.includes('shift kerja')) {
@@ -594,7 +520,6 @@
         function extractDate(item) {
             if (!item) return '';
             const keys = Object.keys(item);
-
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
                 if (cleanKey.includes('tanggal transaksi') || cleanKey.includes('tanggal') || cleanKey.includes('timestamp')) {
@@ -628,6 +553,7 @@
             document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
             document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
             lucide.createIcons();
+            applyFilters();
         }
 
         function updateFormattedTimestamp() {
@@ -734,6 +660,159 @@
             renderWoWStoreTable(filteredData);
             renderComplianceMatrix(filteredData);
             renderRawDataTable(filteredData);
+            renderCharts(filteredData);
+        }
+
+        function renderCharts(data) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            // Chart LOB
+            const lobCounts = {};
+            data.forEach(item => {
+                const lob = extractLOB(item);
+                const qty = extractQuantity(item);
+                lobCounts[lob] = (lobCounts[lob] || 0) + qty;
+            });
+
+            if (chartInstances.lob) chartInstances.lob.destroy();
+            const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
+            if (ctxLOB) {
+                chartInstances.lob = new Chart(ctxLOB, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(lobCounts),
+                        datasets: [{
+                            label: 'Unit Terjual',
+                            data: Object.values(lobCounts),
+                            backgroundColor: '#6366f1',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: textColor } },
+                            y: { ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
+
+            // Chart Shift
+            const shiftCounts = {};
+            data.forEach(item => {
+                const shift = extractShift(item);
+                const qty = extractQuantity(item);
+                shiftCounts[shift] = (shiftCounts[shift] || 0) + qty;
+            });
+
+            if (chartInstances.shift) chartInstances.shift.destroy();
+            const ctxShift = document.getElementById('chartShift')?.getContext('2d');
+            if (ctxShift) {
+                chartInstances.shift = new Chart(ctxShift, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(shiftCounts),
+                        datasets: [{
+                            data: Object.values(shiftCounts),
+                            backgroundColor: ['#6366f1', '#a855f7', '#ec4899', '#3b82f6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: textColor } } }
+                    }
+                });
+            }
+
+            // Chart WoW Global
+            const now = new Date();
+            const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
+            const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(now.getDate() - 14);
+
+            const wowData = { LW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 }, TW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 } };
+
+            data.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+                const rowDate = parseCustomDate(extractDate(item));
+
+                let period = 'TW';
+                if (rowDate) {
+                    if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) period = 'LW';
+                    else if (rowDate >= oneWeekAgo) period = 'TW';
+                }
+
+                if (lob.includes('mac')) wowData[period].Mac += qty;
+                else if (lob.includes('iphone')) wowData[period].iPhone += qty;
+                else if (lob.includes('ipad')) wowData[period].iPad += qty;
+                else if (lob.includes('watch')) wowData[period].Watch += qty;
+            });
+
+            if (chartInstances.wow) chartInstances.wow.destroy();
+            const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
+            if (ctxWoW) {
+                chartInstances.wow = new Chart(ctxWoW, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            { label: 'Last Week', data: Object.values(wowData.LW), backgroundColor: '#94a3b8' },
+                            { label: 'This Week', data: Object.values(wowData.TW), backgroundColor: '#6366f1' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: textColor } } },
+                        scales: {
+                            x: { ticks: { color: textColor } },
+                            y: { ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
+
+            // Chart Stores Overview
+            const storeTotals = {};
+            data.forEach(item => {
+                const store = extractStore(item);
+                const qty = extractQuantity(item);
+                if (store !== '-') storeTotals[store] = (storeTotals[store] || 0) + qty;
+            });
+
+            const sortedStores = Object.entries(storeTotals).sort((a, b) => b[1] - a[1]).slice(0, 15);
+
+            if (chartInstances.stores) chartInstances.stores.destroy();
+            const ctxStores = document.getElementById('chartStoresOverview')?.getContext('2d');
+            if (ctxStores) {
+                chartInstances.stores = new Chart(ctxStores, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedStores.map(e => e[0]),
+                        datasets: [{
+                            label: 'Total Penjualan',
+                            data: sortedStores.map(e => e[1]),
+                            backgroundColor: '#10b981',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: textColor } },
+                            y: { ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
         }
 
         function renderWoWStoreTable(data) {
@@ -747,10 +826,8 @@
             }
 
             const now = new Date();
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(now.getDate() - 7);
-            const twoWeeksAgo = new Date();
-            twoWeeksAgo.setDate(now.getDate() - 14);
+            const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
+            const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(now.getDate() - 14);
 
             const storeWoW = {};
 
@@ -773,11 +850,8 @@
 
                 let period = null;
                 if (rowDate) {
-                    if (rowDate >= oneWeekAgo) {
-                        period = 'tw';
-                    } else if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) {
-                        period = 'lw';
-                    }
+                    if (rowDate >= oneWeekAgo) period = 'tw';
+                    else if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) period = 'lw';
                 } else {
                     period = 'tw';
                 }
@@ -822,7 +896,6 @@
             });
         }
 
-        // Matriks Kedisiplinan Pelaporan 91 Toko
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -840,17 +913,12 @@
                         if (!sampleDate) sampleDate = parsedDate;
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
                         if (!reportedMap[dateKey]) reportedMap[dateKey] = new Set();
-                        
-                        if (store && store !== '-') {
-                            reportedMap[dateKey].add(store.toLowerCase().trim());
-                        }
+                        if (store && store !== '-') reportedMap[dateKey].add(store.toLowerCase().trim());
                     }
                 }
             });
 
-            // Menggunakan daftar master 91 Toko
             const stores = [...MASTER_STORES];
-
             const monthVal = document.getElementById('filter-month')?.value;
             let year, monthIndex;
 
@@ -872,11 +940,7 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayStr = String(day).padStart(2, '0');
                 const monthStr = String(monthIndex + 1).padStart(2, '0');
-                const fullDateKey = `${year}-${monthStr}-${dayStr}`;
-                fullMonthDates.push({
-                    key: fullDateKey,
-                    label: `${dayStr}/${monthStr}`
-                });
+                fullMonthDates.push({ key: `${year}-${monthStr}-${dayStr}`, label: `${dayStr}/${monthStr}` });
             }
 
             let html = `
