@@ -381,30 +381,75 @@
         let rawCSVData = [];
         let filteredData = [];
 
+        // Fungsi parsing quantity serba guna untuk mengatasi angka string/format khusus
         function parseQuantity(val) {
-            if (val === undefined || val === null || val === '') return 0;
-            const parsed = parseInt(String(val).trim(), 10);
+            if (val === undefined || val === null) return 0;
+            if (typeof val === 'number') return val;
+            
+            let str = String(val).trim();
+            if (str === '') return 0;
+
+            // Bersihkan format titik/koma ribuan jika ada
+            str = str.replace(/[^0-9.-]/g, '');
+            const parsed = parseInt(str, 10);
             return isNaN(parsed) ? 0 : parsed;
         }
 
-        // Helper universal untuk mengekstrak LOB dengan fleksibel
+        // Ekstraksi LOB secara aman & fleksibel
         function extractLOB(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
-            
-            // Cek pencocokan kunci secara eksak terlebih dahulu
-            const exactMatch = item.LOB || item['Kategori LOB'] || item['LOB Champion'] || item['Kategori'] || item['Produk'];
-            if (exactMatch && String(exactMatch).trim() !== '') return String(exactMatch).trim();
 
-            // Cek pencocokan kunci secara case-insensitive & abaikan spasi tersembunyi
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('lob champion')) {
+                if (cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('lob champion') || cleanKey.includes('produk')) {
                     const val = item[k];
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
             return '-';
+        }
+
+        // Ekstraksi Nama Staff secara fleksibel
+        function extractName(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('nama') || cleanKey.includes('champion') || cleanKey.includes('sales') || cleanKey.includes('staff')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return '-';
+        }
+
+        function extractStore(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('store') || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return '-';
+        }
+
+        function extractQuantity(item) {
+            if (!item) return 0;
+            const keys = Object.keys(item);
+
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah') || cleanKey.includes('penjualan')) {
+                    return parseQuantity(item[k]);
+                }
+            }
+            return parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
         }
 
         function showSection(sectionId) {
@@ -474,9 +519,9 @@
             const lobs = new Set();
 
             data.forEach(item => {
-                const store = item.Store || item['Nama Store'] || item['Lokasi'];
+                const store = extractStore(item);
                 const lob = extractLOB(item);
-                if (store) stores.add(store.trim());
+                if (store && store !== '-') stores.add(store);
                 if (lob && lob !== '-') lobs.add(lob);
             });
 
@@ -502,7 +547,7 @@
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
             filteredData = rawCSVData.filter(row => {
-                const rowStore = (row.Store || row['Nama Store'] || row['Lokasi'] || '').trim();
+                const rowStore = extractStore(row);
                 const rowLOB = extractLOB(row);
                 const rowShift = (row.Shift || row['Shift Kerja'] || '').trim();
                 const rowDate = row.Tanggal || row.Timestamp || '';
@@ -548,9 +593,9 @@
             const storeWoW = {};
 
             data.forEach(item => {
-                const store = item.Store || item['Nama Store'] || item['Lokasi'] || 'Unknown Store';
+                const store = extractStore(item);
                 const lob = extractLOB(item).toLowerCase();
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
+                const qty = extractQuantity(item);
                 const rowDate = new Date(item.Tanggal || item.Timestamp);
 
                 if (!storeWoW[store]) {
@@ -628,18 +673,17 @@
             const dateMap = {};
 
             data.forEach(item => {
-                const store = item.Store || item['Nama Store'] || item['Lokasi'];
+                const store = extractStore(item);
                 const rawDate = item.Tanggal || item.Timestamp;
                 
-                if (store && rawDate) {
-                    const cleanStore = store.trim();
-                    storeSet.add(cleanStore);
+                if (store && store !== '-' && rawDate) {
+                    storeSet.add(store);
 
                     const parsedDate = new Date(rawDate);
                     if (!isNaN(parsedDate.getTime())) {
                         const dateKey = parsedDate.toISOString().split('T')[0];
                         if (!dateMap[dateKey]) dateMap[dateKey] = new Set();
-                        dateMap[dateKey].add(cleanStore);
+                        dateMap[dateKey].add(store);
                     }
                 }
             });
@@ -703,10 +747,10 @@
 
             const salesMap = {};
             data.forEach(item => {
-                const name = item.Nama || item.Champion || item['Nama Sales'] || item['Nama Staff'] || 'Unknown';
+                const name = extractName(item);
                 const lob = extractLOB(item);
-                const store = item.Store || item['Nama Store'] || 'Unknown Store';
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
+                const store = extractStore(item);
+                const qty = extractQuantity(item);
 
                 if (!salesMap[name]) {
                     salesMap[name] = { name, lob, store, totalQty: 0 };
@@ -715,7 +759,7 @@
             });
 
             const top10 = Object.values(salesMap)
-                .filter(item => item.totalQty > 0)
+                .filter(item => item.totalQty > 0 && item.name !== '-')
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
 
@@ -745,19 +789,19 @@
 
             const storeMap = {};
             data.forEach(item => {
-                const store = item.Store || item['Nama Store'] || 'Unknown Store';
-                const champion = item.Nama || item.Champion || item['Nama Sales'] || item['Nama Staff'] || 'Unknown';
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY']);
+                const store = extractStore(item);
+                const champion = extractName(item);
+                const qty = extractQuantity(item);
 
                 if (!storeMap[store]) {
                     storeMap[store] = { store, champions: new Set(), totalQty: 0 };
                 }
                 storeMap[store].totalQty += qty;
-                if (champion) storeMap[store].champions.add(champion);
+                if (champion && champion !== '-') storeMap[store].champions.add(champion);
             });
 
             const top10 = Object.values(storeMap)
-                .filter(item => item.totalQty > 0)
+                .filter(item => item.totalQty > 0 && item.store !== '-')
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
 
@@ -789,11 +833,11 @@
                 return;
             }
 
-            data.slice(0, 50).forEach(item => {
-                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit || item['QTY'] || item['JUMLAH']);
+            data.slice(0, 100).forEach(item => {
+                const qty = extractQuantity(item);
                 const lobVal = extractLOB(item);
-                const nameVal = item.Nama || item.Champion || item['Nama Sales'] || item['Nama Staff'] || '-';
-                const storeVal = item.Store || item['Nama Store'] || item['Lokasi'] || '-';
+                const nameVal = extractName(item);
+                const storeVal = extractStore(item);
                 const shiftVal = item.Shift || item['Shift Kerja'] || '-';
                 const dateVal = item.Tanggal || item.Timestamp || '-';
 
@@ -819,15 +863,15 @@
             const dates = new Set();
 
             data.forEach(row => {
-                const qty = parseQuantity(row.Qty || row.Quantity || row.Unit || row['QTY']);
+                const qty = extractQuantity(row);
                 totalQty += qty;
 
-                const champName = row.Nama || row.Champion || row['Nama Sales'] || row['Nama Staff'];
-                const storeName = row.Store || row['Nama Store'];
+                const champName = extractName(row);
+                const storeName = extractStore(row);
                 const dateVal = row.Tanggal || row.Timestamp;
 
-                if (champName) champions.add(champName);
-                if (storeName) stores.add(storeName);
+                if (champName && champName !== '-') champions.add(champName);
+                if (storeName && storeName !== '-') stores.add(storeName);
                 if (dateVal) dates.add(dateVal.split(' ')[0]);
             });
 
