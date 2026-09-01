@@ -290,7 +290,6 @@
                                     <tr>
                                         <th class="p-2">Rank</th>
                                         <th class="p-2">Nama Store</th>
-                                        <th class="p-2 text-center">Champion</th>
                                         <th class="p-2 text-center">Total Unit</th>
                                     </tr>
                                 </thead>
@@ -381,7 +380,6 @@
         let rawCSVData = [];
         let filteredData = [];
 
-        // Parsing angka robust untuk quantity
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
@@ -394,24 +392,19 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
-        // Parsing Tanggal Andal (Mendukung ISO & DD/MM/YYYY)
         function parseCustomDate(dateStr) {
             if (!dateStr) return null;
             let str = String(dateStr).trim();
             if (!str) return null;
 
-            // Jika mengandung spasi (misal: "25/08/2026 14:30:00"), ambil bagian tanggalnya saja
             if (str.includes(' ')) str = str.split(' ')[0];
 
-            // Cek format DD/MM/YYYY atau DD-MM-YYYY
             if (str.includes('/') || str.includes('-')) {
                 const parts = str.split(/[\/\-]/);
                 if (parts.length === 3) {
                     if (parts[0].length === 4) {
-                        // Format YYYY-MM-DD
                         return new Date(parts[0], parts[1] - 1, parts[2]);
                     } else {
-                        // Format DD/MM/YYYY
                         return new Date(parts[2], parts[1] - 1, parts[0]);
                     }
                 }
@@ -421,7 +414,6 @@
             return isNaN(standardDate.getTime()) ? null : standardDate;
         }
 
-        // Ekstraksi LOB (Champion LOB)
         function extractLOB(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
@@ -436,7 +428,6 @@
             return item['Champion LOB'] || item.LOB || '-';
         }
 
-        // Ekstraksi Nama Staff / Champion
         function extractName(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
@@ -451,7 +442,6 @@
             return item['Nama Champion/ SA'] || item.Nama || '-';
         }
 
-        // Ekstraksi Store (Presisi menangani M221 & kode alfanumerik)
         function extractStore(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
@@ -468,7 +458,6 @@
             return item.Store ? String(item.Store).trim().toUpperCase() : '-';
         }
 
-        // Ekstraksi Quantity (Total Qty)
         function extractQuantity(item) {
             if (!item) return 0;
             const keys = Object.keys(item);
@@ -482,7 +471,6 @@
             return parseQuantity(item['Total Qty'] || item.Qty || item.Quantity || 0);
         }
 
-        // Ekstraksi Shift
         function extractShift(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
@@ -497,7 +485,6 @@
             return item.Shift || '-';
         }
 
-        // Ekstraksi Tanggal Transaksi
         function extractDate(item) {
             if (!item) return '';
             const keys = Object.keys(item);
@@ -732,40 +719,78 @@
             });
         }
 
+        // Matriks Kedisiplinan Pelaporan Harian (Full 1 Bulan Berjalan)
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
 
-            if (data.length === 0) {
-                container.innerHTML = '<p class="text-center opacity-50 py-4">Belum ada data laporan untuk dianalisis kedisiplinannya.</p>';
-                return;
-            }
-
             const storeSet = new Set();
-            const dateMap = {};
+            const reportedMap = {};
+            let sampleDate = null;
 
+            // Kumpulkan store dan log tanggal transaksi
             data.forEach(item => {
                 const store = extractStore(item);
                 const rawDateStr = extractDate(item);
                 
-                if (store && store !== '-' && rawDateStr) {
+                if (store && store !== '-') {
                     storeSet.add(store);
+                }
 
+                if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
-                        const dateKey = parsedDate.toISOString().split('T')[0];
-                        if (!dateMap[dateKey]) dateMap[dateKey] = new Set();
-                        dateMap[dateKey].add(store);
+                        if (!sampleDate) sampleDate = parsedDate;
+                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                        if (!reportedMap[dateKey]) reportedMap[dateKey] = new Set();
+                        if (store && store !== '-') reportedMap[dateKey].add(store);
                     }
                 }
             });
 
-            const stores = Array.from(storeSet).sort();
-            const sortedDates = Object.keys(dateMap).sort();
+            // Ambil daftar store dari data yang ada atau dari raw data
+            let stores = Array.from(storeSet).sort();
+            if (stores.length === 0) {
+                rawCSVData.forEach(item => {
+                    const st = extractStore(item);
+                    if (st && st !== '-') storeSet.add(st);
+                });
+                stores = Array.from(storeSet).sort();
+            }
 
-            if (stores.length === 0 || sortedDates.length === 0) {
-                container.innerHTML = '<p class="text-center opacity-50 py-4">Format tanggal atau nama store tidak terdeteksi dengan benar.</p>';
+            if (stores.length === 0) {
+                container.innerHTML = '<p class="text-center opacity-50 py-4">Belum ada data store yang dapat ditampilkan.</p>';
                 return;
+            }
+
+            // Tentukan Tahun & Bulan yang akan ditampilkan (Full 1 Bulan)
+            const monthVal = document.getElementById('filter-month')?.value;
+            let year, monthIndex;
+
+            if (monthVal && monthVal !== 'ALL') {
+                monthIndex = parseInt(monthVal, 10) - 1;
+                year = sampleDate ? sampleDate.getFullYear() : new Date().getFullYear();
+            } else if (sampleDate) {
+                year = sampleDate.getFullYear();
+                monthIndex = sampleDate.getMonth();
+            } else {
+                const now = new Date();
+                year = now.getFullYear();
+                monthIndex = now.getMonth();
+            }
+
+            // Hitung total hari dalam bulan tersebut (28, 29, 30, atau 31 hari)
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            const fullMonthDates = [];
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayStr = String(day).padStart(2, '0');
+                const monthStr = String(monthIndex + 1).padStart(2, '0');
+                const fullDateKey = `${year}-${monthStr}-${dayStr}`;
+                fullMonthDates.push({
+                    key: fullDateKey,
+                    label: `${dayStr}/${monthStr}`
+                });
             }
 
             let html = `
@@ -775,14 +800,12 @@
                             <th class="p-2 text-left border-r border-white/10 min-w-[140px]">Nama Store</th>
             `;
 
-            sortedDates.forEach(dateStr => {
-                const d = new Date(dateStr);
-                const dayMonth = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
-                html += `<th class="p-2 border-r border-white/10 min-w-[45px]">${dayMonth}</th>`;
+            fullMonthDates.forEach(d => {
+                html += `<th class="p-1.5 border-r border-white/10 min-w-[36px] text-[10px] font-mono">${d.label}</th>`;
             });
 
             html += `
-                            <th class="p-2 min-w-[80px]">Kepatuhan</th>
+                            <th class="p-2 min-w-[70px]">Kepatuhan</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -790,19 +813,19 @@
 
             stores.forEach(store => {
                 let reportedDays = 0;
-                html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10">${store}</td>`;
+                html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap">${store}</td>`;
 
-                sortedDates.forEach(dateStr => {
-                    const hasReported = dateMap[dateStr].has(store);
+                fullMonthDates.forEach(d => {
+                    const hasReported = reportedMap[d.key] && reportedMap[d.key].has(store);
                     if (hasReported) {
                         reportedDays++;
-                        html += `<td class="p-2 border-r border-white/10 bg-emerald-500/10 text-emerald-400 font-bold">✓</td>`;
+                        html += `<td class="p-1 border-r border-white/10 bg-emerald-500/20 text-emerald-400 font-bold">✓</td>`;
                     } else {
-                        html += `<td class="p-2 border-r border-white/10 bg-rose-500/10 text-rose-400/50">✗</td>`;
+                        html += `<td class="p-1 border-r border-white/10 bg-rose-500/10 text-rose-400/40">✗</td>`;
                     }
                 });
 
-                const complianceRate = Math.round((reportedDays / sortedDates.length) * 100);
+                const complianceRate = Math.round((reportedDays / daysInMonth) * 100);
                 const rateColor = complianceRate >= 80 ? 'text-emerald-400' : (complianceRate >= 50 ? 'text-amber-400' : 'text-rose-400');
 
                 html += `<td class="p-2 font-bold ${rateColor}">${complianceRate}%</td></tr>`;
@@ -854,6 +877,7 @@
             });
         }
 
+        // Top 10 Store Performance (Kolom Champion dihapus)
         function renderTop10Stores(data) {
             const tbody = document.getElementById('top10-stores-body');
             if (!tbody) return;
@@ -862,14 +886,12 @@
             const storeMap = {};
             data.forEach(item => {
                 const store = extractStore(item);
-                const champion = extractName(item);
                 const qty = extractQuantity(item);
 
                 if (!storeMap[store]) {
-                    storeMap[store] = { store, champions: new Set(), totalQty: 0 };
+                    storeMap[store] = { store, totalQty: 0 };
                 }
                 storeMap[store].totalQty += qty;
-                if (champion && champion !== '-') storeMap[store].champions.add(champion);
             });
 
             const top10 = Object.values(storeMap)
@@ -878,7 +900,7 @@
                 .slice(0, 10);
 
             if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center opacity-50">Belum ada store dengan penjualan</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center opacity-50">Belum ada store dengan penjualan</td></tr>';
                 return;
             }
 
@@ -888,7 +910,6 @@
                 row.innerHTML = `
                     <td class="p-2 font-bold text-amber-400">#${index + 1}</td>
                     <td class="p-2 font-semibold text-sky-300">${item.store}</td>
-                    <td class="p-2 text-center opacity-80">${item.champions.size} Orang</td>
                     <td class="p-2 text-center font-bold text-emerald-400">${item.totalQty}</td>
                 `;
                 tbody.appendChild(row);
