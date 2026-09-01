@@ -6,12 +6,16 @@
     <title>Dashboard Monitoring LOB Champion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin Datalabels untuk menampilkan angka di dalam/atas Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            /* Transparansi ditambah 20% (dari 0.65 ke 0.45) */
+            --sidebar-bg: rgba(30, 41, 59, 0.45);
             --glass-bg: rgba(30, 41, 59, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-card: rgba(15, 23, 42, 0.55);
@@ -23,6 +27,7 @@
 
         .light-mode {
             --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #e2e8f0 100%);
+            --sidebar-bg: rgba(255, 255, 255, 0.45);
             --glass-bg: rgba(255, 255, 255, 0.65);
             --glass-border: rgba(0, 0, 0, 0.08);
             --glass-card: rgba(255, 255, 255, 0.5);
@@ -38,6 +43,15 @@
             min-height: 100vh;
             font-family: 'Segoe UI', Roboto, sans-serif;
             transition: all 0.3s ease;
+        }
+
+        .glass-sidebar {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
 
         .glass-panel {
@@ -88,20 +102,36 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <aside id="sidebar" class="w-full md:w-64 glass-panel m-2 p-4 flex flex-col justify-between shrink-0 z-20 transition-all duration-300">
+    <!-- Sidebar dengan transparansi +20% -->
+    <aside id="sidebar" class="w-full md:w-64 glass-sidebar m-2 p-4 flex flex-col justify-between shrink-0 z-20 transition-all duration-300">
         <div>
-            <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+            <!-- Header Brand & Kata Executive Dihapus -->
+            <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-indigo-600 rounded-lg text-white">
                         <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight">LOB Champion</h1>
-                        <p class="text-xs text-indigo-400 font-medium">Executive Analytics</p>
+                        <p class="text-xs text-indigo-400 font-medium">Analytics Dashboard</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Auto Sync Active & Mode Gelap Dipindah ke Atas -->
+            <div class="space-y-2 mb-6">
+                <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Auto Sync Active</span>
+                </div>
+
+                <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg glass-card text-xs font-medium hover:bg-white/10 transition">
+                    <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+                    <span id="theme-text">Mode Gelap</span>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
             <nav class="space-y-2" id="sidebar-nav">
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview
@@ -121,17 +151,7 @@
             </nav>
         </div>
 
-        <div class="pt-4 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Auto Sync Active</span>
-            </div>
-
-            <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg glass-card text-sm font-medium hover:bg-white/10 transition">
-                <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
-                <span id="theme-text">Mode Gelap</span>
-            </button>
-
+        <div class="pt-4 border-t border-white/10">
             <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
                 <p class="text-[10px] opacity-70 tracking-wide uppercase font-semibold">Created & Designed by</p>
                 <p class="text-xs font-bold text-indigo-400 mt-0.5">Novi Riyanto</p>
@@ -141,9 +161,10 @@
 
     <main class="flex-1 m-2 md:m-3 flex flex-col gap-4 overflow-hidden">
 
+        <!-- Header tanpa kata Executive -->
         <header class="glass-panel p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
-                <h2 class="text-xl font-bold" id="page-title">Executive Overview</h2>
+                <h2 class="text-xl font-bold" id="page-title">Overview</h2>
                 <p class="text-xs opacity-70 flex items-center gap-2 mt-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Terakhir diperbarui: <span id="last-update" class="font-semibold">Memuat...</span>
@@ -190,6 +211,7 @@
             </div>
         </header>
 
+        <!-- KPI Cards -->
         <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
@@ -242,8 +264,25 @@
             </div>
         </section>
 
+        <!-- Summary Store Unsubmitted Today Banner -->
+        <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-rose-500/20 text-rose-400 rounded-lg">
+                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400">Store Belum Submit Hari Ini (<span id="unsubmitted-count">0</span> Toko)</h4>
+                    <p class="text-xs text-slate-300 mt-0.5" id="unsubmitted-list-text">Memuat data...</p>
+                </div>
+            </div>
+            <button onclick="toggleUnsubmittedModal()" class="px-3 py-1.5 bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 text-xs rounded-lg transition shrink-0 font-medium">
+                Lihat Detail Store
+            </button>
+        </div>
+
         <div class="flex-1 overflow-y-auto pr-1 space-y-4">
 
+            <!-- Section 1: Overview -->
             <div id="sec-overview" class="content-section space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
@@ -307,6 +346,7 @@
                 </div>
             </div>
 
+            <!-- Section 2: Performa WoW dengan No. Urut -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
@@ -325,6 +365,7 @@
                         <table class="w-full text-xs text-left border-collapse">
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
+                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
                                     <th class="p-2.5 sticky-header-bg">Nama Store</th>
                                     <th class="p-2.5 text-center sticky-header-bg">Mac (LW / TW)</th>
                                     <th class="p-2.5 text-center sticky-header-bg">iPhone (LW / TW)</th>
@@ -339,6 +380,7 @@
                 </div>
             </div>
 
+            <!-- Section 3: Store Performance -->
             <div id="sec-store-perf" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
@@ -348,16 +390,18 @@
                 </div>
             </div>
 
+            <!-- Section 4: Matriks Kedisiplinan Pagi & Siang + No. Urut -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store</h3>
+                        <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
                         <span class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Total 91 Toko</span>
                     </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto max-h-[550px] relative"></div>
                 </div>
             </div>
 
+            <!-- Section 5: Log Transaksi Masuk + No. Urut -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <h3 class="font-bold text-sm mb-4">Log Transaksi Masuk</h3>
@@ -365,6 +409,7 @@
                         <table class="w-full text-xs text-left border-collapse">
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
+                                    <th class="p-2 text-center w-12 sticky-header-bg">No.</th>
                                     <th class="p-2 sticky-header-bg">Tanggal</th>
                                     <th class="p-2 sticky-header-bg">Nama</th>
                                     <th class="p-2 sticky-header-bg">Store</th>
@@ -382,7 +427,29 @@
         </div>
     </main>
 
+    <!-- Modal Store Belum Submit -->
+    <div id="unsubmitted-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg p-6 max-h-[80vh] flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
+                    <h3 class="font-bold text-base text-rose-400 flex items-center gap-2">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i> Store Belum Submit Laporan Hari Ini
+                    </h3>
+                    <button onclick="toggleUnsubmittedModal()" class="text-slate-400 hover:text-white">&times;</button>
+                </div>
+                <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[50vh] space-y-2 text-xs">
+                    <!-- Dynamic List -->
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 text-right">
+                <button onclick="toggleUnsubmittedModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Register Chart.js Datalabels Plugin secara global
+        Chart.register(ChartDataLabels);
         lucide.createIcons();
 
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
@@ -426,6 +493,7 @@
         let rawCSVData = [];
         let filteredData = [];
         let chartInstances = {};
+        let unsubmittedStoresList = [];
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
@@ -544,7 +612,7 @@
             document.getElementById(`btn-${sectionId}`).classList.add('nav-active');
 
             const titles = {
-                'overview': 'Executive Overview',
+                'overview': 'Overview',
                 'wow-perf': 'Komparasi Week-on-Week',
                 'store-perf': 'Store Performance Comparison',
                 'compliance': 'Matriks Kedisiplinan Store',
@@ -560,6 +628,11 @@
             document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
             lucide.createIcons();
             applyFilters();
+        }
+
+        function toggleUnsubmittedModal() {
+            const modal = document.getElementById('unsubmitted-modal');
+            modal.classList.toggle('hidden');
         }
 
         function updateFormattedTimestamp() {
@@ -663,12 +736,62 @@
             });
 
             updateMetricsAndCharts(filteredData);
+            calculateUnsubmittedToday(rawCSVData);
             renderWoWStoreTable(filteredData);
             renderComplianceMatrix(filteredData);
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
 
+        // 8. Summary Store yang Belum Submit Hari Ini
+        function calculateUnsubmittedToday(data) {
+            const now = new Date();
+            const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            
+            const submittedStoresToday = new Set();
+            data.forEach(item => {
+                const rawDateStr = extractDate(item);
+                const store = extractStore(item);
+                if (rawDateStr && store && store !== '-') {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate) {
+                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                        if (dateKey === todayKey) {
+                            submittedStoresToday.add(store.toLowerCase().trim());
+                        }
+                    }
+                }
+            });
+
+            unsubmittedStoresList = MASTER_STORES.filter(store => {
+                const cleanStore = store.toLowerCase().trim();
+                for (let subStore of submittedStoresToday) {
+                    if (subStore.includes(cleanStore) || cleanStore.includes(subStore)) return false;
+                }
+                return true;
+            });
+
+            document.getElementById('unsubmitted-count').innerText = unsubmittedStoresList.length;
+            
+            if (unsubmittedStoresList.length === 0) {
+                document.getElementById('unsubmitted-list-text').innerText = "Luar biasa! Seluruh store telah mengirimkan laporan hari ini.";
+            } else {
+                const preview = unsubmittedStoresList.slice(0, 4).join(', ');
+                const extra = unsubmittedStoresList.length > 4 ? ` dan ${unsubmittedStoresList.length - 4} store lainnya.` : '.';
+                document.getElementById('unsubmitted-list-text').innerText = `${preview}${extra}`;
+            }
+
+            const modalBody = document.getElementById('unsubmitted-modal-body');
+            modalBody.innerHTML = '';
+            unsubmittedStoresList.forEach((store, idx) => {
+                const item = document.createElement('div');
+                item.className = 'p-2 rounded bg-white/5 border border-white/5 flex items-center gap-2';
+                item.innerHTML = `<span class="font-mono opacity-50 text-[10px]">${idx + 1}.</span> <span>${store}</span>`;
+                modalBody.appendChild(item);
+            });
+        }
+
+        // 6. Angka didalam/atas seluruh chart
         function renderCharts(data) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -680,16 +803,7 @@
                 lobCounts[lob] = (lobCounts[lob] || 0) + qty;
             });
 
-            const lobPalette = [
-                '#6366f1',
-                '#3b82f6',
-                '#06b6d4',
-                '#10b981',
-                '#f59e0b',
-                '#ec4899',
-                '#8b5cf6',
-                '#14b8a6'
-            ];
+            const lobPalette = ['#6366f1', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#14b8a6'];
 
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
@@ -709,7 +823,16 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { weight: 'bold', size: 11 },
+                                formatter: Math.round
+                            }
+                        },
                         scales: {
                             x: { ticks: { color: textColor } },
                             y: { ticks: { color: textColor } }
@@ -740,7 +863,14 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: textColor } } }
+                        plugins: {
+                            legend: { labels: { color: textColor } },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (val) => val > 0 ? val : ''
+                            }
+                        }
                     }
                 });
             }
@@ -783,7 +913,15 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: textColor } } },
+                        plugins: {
+                            legend: { labels: { color: textColor } },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { weight: 'bold', size: 10 }
+                            }
+                        },
                         scales: {
                             x: { ticks: { color: textColor } },
                             y: { ticks: { color: textColor } }
@@ -819,7 +957,15 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         indexAxis: 'y',
-                        plugins: { legend: { display: false } },
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'right',
+                                color: textColor,
+                                font: { weight: 'bold', size: 10 }
+                            }
+                        },
                         scales: {
                             x: { ticks: { color: textColor } },
                             y: { ticks: { color: textColor } }
@@ -829,13 +975,14 @@
             }
         }
 
+        // 2. Nomor Urut pada Tabel WoW
         function renderWoWStoreTable(data) {
             const tbody = document.getElementById('wow-store-table-body');
             if (!tbody) return;
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center opacity-50">Belum ada data transaksi untuk dikomparasi</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center opacity-50">Belum ada data transaksi untuk dikomparasi</td></tr>';
                 return;
             }
 
@@ -881,6 +1028,7 @@
                 }
             });
 
+            let index = 1;
             Object.keys(storeWoW).sort().forEach(storeName => {
                 const d = storeWoW[storeName];
                 let growthBadge = '<span class="text-slate-400">0%</span>';
@@ -899,6 +1047,7 @@
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-white/5 transition';
                 row.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-60">${index++}</td>
                     <td class="p-2.5 font-semibold text-indigo-300">${storeName}</td>
                     <td class="p-2.5 text-center">${d.mac.lw} / <b class="text-indigo-400">${d.mac.tw}</b></td>
                     <td class="p-2.5 text-center">${d.iphone.lw} / <b class="text-indigo-400">${d.iphone.tw}</b></td>
@@ -910,6 +1059,7 @@
             });
         }
 
+        // 1 & 2. Matriks Kedisiplinan Pagi/Siang + Nomor Urut
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -920,14 +1070,22 @@
             data.forEach(item => {
                 const store = extractStore(item);
                 const rawDateStr = extractDate(item);
+                const shift = extractShift(item).toLowerCase();
 
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
                         if (!sampleDate) sampleDate = parsedDate;
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        if (!reportedMap[dateKey]) reportedMap[dateKey] = new Set();
-                        if (store && store !== '-') reportedMap[dateKey].add(store.toLowerCase().trim());
+                        if (!reportedMap[dateKey]) reportedMap[dateKey] = { pagi: new Set(), siang: new Set() };
+                        
+                        if (store && store !== '-') {
+                            if (shift.includes('pagi') || shift.includes('1') || shift.includes('morning')) {
+                                reportedMap[dateKey].pagi.add(store.toLowerCase().trim());
+                            } else {
+                                reportedMap[dateKey].siang.add(store.toLowerCase().trim());
+                            }
+                        }
                     }
                 }
             });
@@ -961,46 +1119,55 @@
                 <table class="w-full text-xs text-center border-collapse border border-white/10">
                     <thead class="sticky top-0 z-20 sticky-header-bg shadow-md">
                         <tr class="border-b border-white/10">
-                            <th class="p-2 text-left border-r border-white/10 min-w-[220px] sticky left-0 z-30 sticky-header-bg">Nama Store</th>
+                            <th rowspan="2" class="p-2 text-center w-10 border-r border-white/10 sticky left-0 z-30 sticky-header-bg">No.</th>
+                            <th rowspan="2" class="p-2 text-left border-r border-white/10 min-w-[200px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
             `;
 
             fullMonthDates.forEach(d => {
-                html += `<th class="p-1.5 border-r border-white/10 min-w-[36px] text-[10px] font-mono sticky-header-bg">${d.label}</th>`;
+                html += `<th colspan="2" class="p-1 border-r border-white/10 min-w-[50px] text-[10px] font-mono sticky-header-bg">${d.label}</th>`;
             });
 
             html += `
-                            <th class="p-2 min-w-[70px] sticky-header-bg">Kepatuhan</th>
+                            <th rowspan="2" class="p-2 min-w-[70px] sticky-header-bg">Kepatuhan</th>
                         </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5">
+                        <tr class="border-b border-white/10 text-[9px]">
             `;
 
-            stores.forEach(store => {
-                let reportedDays = 0;
+            fullMonthDates.forEach(() => {
+                html += `<th class="p-0.5 border-r border-white/5 bg-slate-800/50">P</th><th class="p-0.5 border-r border-white/10 bg-slate-800/50">S</th>`;
+            });
+
+            html += `</tr></thead><tbody class="divide-y divide-white/5">`;
+
+            stores.forEach((store, idx) => {
+                let totalReportSlots = 0;
                 const cleanStoreName = store.toLowerCase().trim();
 
-                html += `<tr><td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap sticky left-0 z-10 sticky-header-bg">${store}</td>`;
+                html += `<tr>
+                    <td class="p-2 text-center font-mono opacity-60 border-r border-white/10 sticky left-0 z-10 sticky-header-bg">${idx + 1}</td>
+                    <td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap sticky left-10 z-10 sticky-header-bg">${store}</td>`;
 
                 fullMonthDates.forEach(d => {
-                    let hasReported = false;
+                    let hasPagi = false, hasSiang = false;
+                    
                     if (reportedMap[d.key]) {
-                        for (let repStore of reportedMap[d.key]) {
-                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) {
-                                hasReported = true;
-                                break;
-                            }
+                        for (let repStore of reportedMap[d.key].pagi) {
+                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasPagi = true; break; }
+                        }
+                        for (let repStore of reportedMap[d.key].siang) {
+                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasSiang = true; break; }
                         }
                     }
 
-                    if (hasReported) {
-                        reportedDays++;
-                        html += `<td class="p-1 border-r border-white/10 bg-emerald-500/20 text-emerald-400 font-bold">✓</td>`;
-                    } else {
-                        html += `<td class="p-1 border-r border-white/10 bg-rose-500/10 text-rose-400/40">✗</td>`;
-                    }
+                    if (hasPagi) totalReportSlots++;
+                    if (hasSiang) totalReportSlots++;
+
+                    html += `<td class="p-0.5 border-r border-white/5 ${hasPagi ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasPagi ? '✓' : '✗'}</td>`;
+                    html += `<td class="p-0.5 border-r border-white/10 ${hasSiang ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasSiang ? '✓' : '✗'}</td>`;
                 });
 
-                const complianceRate = Math.round((reportedDays / daysInMonth) * 100);
+                const maxSlots = daysInMonth * 2;
+                const complianceRate = Math.round((totalReportSlots / maxSlots) * 100);
                 const rateColor = complianceRate >= 80 ? 'text-emerald-400' : (complianceRate >= 50 ? 'text-amber-400' : 'text-rose-400');
 
                 html += `<td class="p-2 font-bold ${rateColor}">${complianceRate}%</td></tr>`;
@@ -1090,17 +1257,18 @@
             });
         }
 
+        // 2. Nomor Urut Log Transaksi Masuk
         function renderRawDataTable(data) {
             const tbody = document.getElementById('raw-data-body');
             if (!tbody) return;
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center opacity-50">Tidak ada data laporan masuk</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center opacity-50">Tidak ada data laporan masuk</td></tr>';
                 return;
             }
 
-            data.slice(0, 100).forEach(item => {
+            data.slice(0, 100).forEach((item, index) => {
                 const qty = extractQuantity(item);
                 const lobVal = extractLOB(item);
                 const nameVal = extractName(item);
@@ -1111,6 +1279,7 @@
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-white/5 transition';
                 row.innerHTML = `
+                    <td class="p-2 text-center font-mono opacity-60">${index + 1}</td>
                     <td class="p-2 opacity-70">${dateVal}</td>
                     <td class="p-2 font-medium text-indigo-300">${nameVal}</td>
                     <td class="p-2 font-semibold">${storeVal}</td>
@@ -1122,12 +1291,13 @@
             });
         }
 
+        // 7. Perbaikan Perhitungan Rata-rata Unit / Hari
         function updateMetricsAndCharts(data) {
             let totalQty = 0;
             const reports = data.length;
             const champions = new Set();
             const stores = new Set();
-            const dates = new Set();
+            const uniqueDates = new Set();
 
             data.forEach(row => {
                 const qty = extractQuantity(row);
@@ -1135,15 +1305,22 @@
 
                 const champName = extractName(row);
                 const storeName = extractStore(row);
-                const dateVal = extractDate(row);
+                const rawDateStr = extractDate(row);
 
                 if (champName && champName !== '-') champions.add(champName);
                 if (storeName && storeName !== '-') stores.add(storeName);
-                if (dateVal) dates.add(dateVal.split(' ')[0]);
+
+                if (rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate) {
+                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                        uniqueDates.add(dateKey);
+                    }
+                }
             });
 
-            const totalActiveDays = dates.size || 1;
-            const avgProductivity = (totalQty / totalActiveDays).toFixed(1);
+            const activeDaysCount = uniqueDates.size > 0 ? uniqueDates.size : 1;
+            const avgProductivity = (totalQty / activeDaysCount).toFixed(1);
 
             document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
             document.getElementById('kpi-avg-productivity').innerText = avgProductivity;
