@@ -100,6 +100,9 @@
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview KPI
                 </button>
+                <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> Performa Week vs Week
+                </button>
                 <button onclick="showSection('store-perf')" id="btn-store-perf" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="store" class="w-4 h-4"></i> Performance Store
                 </button>
@@ -142,6 +145,30 @@
 
             <div class="flex flex-wrap items-center gap-3 text-xs">
                 <div>
+                    <label class="block opacity-60 mb-1">Filter Month</label>
+                    <select id="filter-month" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <option value="ALL">Semua Bulan</option>
+                        <option value="01">Januari</option>
+                        <option value="02">Februari</option>
+                        <option value="03">Maret</option>
+                        <option value="04">April</option>
+                        <option value="05">Mei</option>
+                        <option value="06">Juni</option>
+                        <option value="07">Juli</option>
+                        <option value="08">Agustus</option>
+                        <option value="09">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block opacity-60 mb-1">Filter Store</label>
+                    <select id="filter-store" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 max-w-[150px]">
+                        <option value="ALL">Semua Store</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block opacity-60 mb-1">Filter LOB</label>
                     <select id="filter-lob" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         <option value="ALL">Semua LOB</option>
@@ -151,12 +178,6 @@
                     <label class="block opacity-60 mb-1">Filter Shift</label>
                     <select id="filter-shift" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         <option value="ALL">Semua Shift</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block opacity-60 mb-1">Filter Position</label>
-                    <select id="filter-position" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="ALL">Semua Jabatan</option>
                     </select>
                 </div>
             </div>
@@ -232,27 +253,81 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-panel p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-sm flex items-center gap-2">
+                                <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i> Top 10 Champion Sales (Semua LOB)
+                            </h3>
+                            <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left border-collapse">
+                                <thead class="opacity-70 border-b border-white/10 uppercase">
+                                    <tr>
+                                        <th class="p-2">Rank</th>
+                                        <th class="p-2">Nama Sales</th>
+                                        <th class="p-2">LOB</th>
+                                        <th class="p-2">Store</th>
+                                        <th class="p-2 text-center">Total Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="top10-sales-body" class="divide-y divide-white/5"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-sm flex items-center gap-2">
+                                <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i> Top 10 Store Performance (Semua LOB)
+                            </h3>
+                            <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left border-collapse">
+                                <thead class="opacity-70 border-b border-white/10 uppercase">
+                                    <tr>
+                                        <th class="p-2">Rank</th>
+                                        <th class="p-2">Nama Store</th>
+                                        <th class="p-2 text-center">Champion</th>
+                                        <th class="p-2 text-center">Total Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="top10-stores-body" class="divide-y divide-white/5"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-wow-perf" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-bold text-sm flex items-center gap-2">
-                            <i data-lucide="award" class="w-4 h-4 text-amber-400"></i> Leaderboard Performa & Produktivitas Champion
+                            <i data-lucide="trending-up" class="w-4 h-4 text-indigo-400"></i> Komparasi Global: Week Ini vs Week Sebelumnya (Per LOB)
                         </h3>
-                        <span class="text-xs opacity-60">Diurutkan berdasarkan produktivitas unit / hari</span>
                     </div>
+                    <div class="h-72 relative"><canvas id="chartWoWGlobal"></canvas></div>
+                </div>
+
+                <div class="glass-panel p-4">
+                    <h3 class="font-bold text-sm mb-4 flex items-center gap-2">
+                        <i data-lucide="store" class="w-4 h-4 text-purple-400"></i> Detail Komparasi per Store (This Week vs Last Week)
+                    </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-xs text-left border-collapse">
                             <thead class="opacity-70 border-b border-white/10 uppercase">
                                 <tr>
-                                    <th class="p-2.5">Nama Champion</th>
-                                    <th class="p-2.5">LOB Focus</th>
-                                    <th class="p-2.5">Store</th>
-                                    <th class="p-2.5 text-center">Hari Aktif</th>
-                                    <th class="p-2.5 text-center">Total Unit</th>
-                                    <th class="p-2.5 text-center">Rata-rata (Unit/Hari)</th>
+                                    <th class="p-2.5">Nama Store</th>
+                                    <th class="p-2.5 text-center">Mac (LW / TW)</th>
+                                    <th class="p-2.5 text-center">iPhone (LW / TW)</th>
+                                    <th class="p-2.5 text-center">iPad (LW / TW)</th>
+                                    <th class="p-2.5 text-center">Watch (LW / TW)</th>
+                                    <th class="p-2.5 text-center">Growth Total</th>
                                 </tr>
                             </thead>
-                            <tbody id="champion-leaderboard-body" class="divide-y divide-white/5">
-                            </tbody>
+                            <tbody id="wow-store-table-body" class="divide-y divide-white/5"></tbody>
                         </table>
                     </div>
                 </div>
@@ -261,7 +336,7 @@
             <div id="sec-store-perf" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                        <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Perbandingan Total Penjualan Antar Store
+                        <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Perbandingan Total Penjualan Seluruh Store
                     </h3>
                     <div class="h-80 relative"><canvas id="chartStoresOverview"></canvas></div>
                 </div>
@@ -270,7 +345,6 @@
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <h3 class="font-bold text-sm mb-4">Matriks Kedisiplinan Pelaporan Harian Store</h3>
-                    <p class="text-xs opacity-70 mb-4">Memantau konsistensi store dalam menginput laporan penjualan harian.</p>
                     <div id="compliance-matrix-container" class="overflow-x-auto"></div>
                 </div>
             </div>
@@ -304,9 +378,6 @@
 
         let rawCSVData = [];
         let filteredData = [];
-        let chartLOBInstance = null;
-        let chartShiftInstance = null;
-        let chartStoresInstance = null;
 
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
@@ -317,6 +388,7 @@
 
             const titles = {
                 'overview': 'Executive Overview',
+                'wow-perf': 'Komparasi Week-on-Week',
                 'store-perf': 'Store Performance Comparison',
                 'compliance': 'Matriks Kedisiplinan Store',
                 'raw-data': 'Data Transaksi Mentah'
@@ -332,52 +404,78 @@
             lucide.createIcons();
         }
 
-        function renderLeaderboard(data) {
-            const tbody = document.getElementById('champion-leaderboard-body');
+        function updateFormattedTimestamp() {
+            const now = new Date();
+            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+            const dateStr = now.toLocaleDateString('id-ID', dateOptions);
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
+            document.getElementById('last-update').innerText = `${dateStr}, ${timeStr} WIB`;
+        }
+
+        function renderTop10Sales(data) {
+            const tbody = document.getElementById('top10-sales-body');
             tbody.innerHTML = '';
 
-            const championMap = {};
-
+            const salesMap = {};
             data.forEach(item => {
                 const name = item.Nama || item.Champion || 'Unknown';
                 const lob = item.LOB || 'Other';
                 const store = item.Store || 'Unknown Store';
                 const qty = parseInt(item.Qty || item.Quantity || 1, 10);
-                const date = item.Tanggal || item.Timestamp || 'N/A';
 
-                if (!championMap[name]) {
-                    championMap[name] = {
-                        name: name,
-                        lob: lob,
-                        store: store,
-                        totalQty: 0,
-                        activeDates: new Set()
-                    };
+                if (!salesMap[name]) {
+                    salesMap[name] = { name, lob, store, totalQty: 0 };
                 }
-
-                championMap[name].totalQty += qty;
-                if (date !== 'N/A') championMap[name].activeDates.add(date);
+                salesMap[name].totalQty += qty;
             });
 
-            const champions = Object.values(championMap).map(c => {
-                const activeDays = c.activeDates.size || 1;
-                return {
-                    ...c,
-                    activeDays: activeDays,
-                    avgPerDay: (c.totalQty / activeDays).toFixed(1)
-                };
-            }).sort((a, b) => b.avgPerDay - a.avgPerDay);
+            const top10 = Object.values(salesMap)
+                .sort((a, b) => b.totalQty - a.totalQty)
+                .slice(0, 10);
 
-            champions.forEach(c => {
+            top10.forEach((item, index) => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-white/5 transition';
                 row.innerHTML = `
-                    <td class="p-2.5 font-semibold text-indigo-400">${c.name}</td>
-                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300 font-medium">${c.lob}</span></td>
-                    <td class="p-2.5 opacity-80">${c.store}</td>
-                    <td class="p-2.5 text-center font-medium">${c.activeDays} Hari</td>
-                    <td class="p-2.5 text-center font-bold text-emerald-400">${c.totalQty} Unit</td>
-                    <td class="p-2.5 text-center font-bold text-amber-400">${c.avgPerDay} / Hari</td>
+                    <td class="p-2 font-bold text-amber-400">#${index + 1}</td>
+                    <td class="p-2 font-semibold text-indigo-300">${item.name}</td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300">${item.lob}</span></td>
+                    <td class="p-2 opacity-80">${item.store}</td>
+                    <td class="p-2 text-center font-bold text-emerald-400">${item.totalQty}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderTop10Stores(data) {
+            const tbody = document.getElementById('top10-stores-body');
+            tbody.innerHTML = '';
+
+            const storeMap = {};
+            data.forEach(item => {
+                const store = item.Store || 'Unknown Store';
+                const champion = item.Nama || item.Champion || 'Unknown';
+                const qty = parseInt(item.Qty || item.Quantity || 1, 10);
+
+                if (!storeMap[store]) {
+                    storeMap[store] = { store, champions: new Set(), totalQty: 0 };
+                }
+                storeMap[store].totalQty += qty;
+                storeMap[store].champions.add(champion);
+            });
+
+            const top10 = Object.values(storeMap)
+                .sort((a, b) => b.totalQty - a.totalQty)
+                .slice(0, 10);
+
+            top10.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-white/5 transition';
+                row.innerHTML = `
+                    <td class="p-2 font-bold text-amber-400">#${index + 1}</td>
+                    <td class="p-2 font-semibold text-sky-300">${item.store}</td>
+                    <td class="p-2 text-center opacity-80">${item.champions.size} Orang</td>
+                    <td class="p-2 text-center font-bold text-emerald-400">${item.totalQty}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -406,28 +504,23 @@
             document.getElementById('kpi-active-champions').innerText = champions.size;
             document.getElementById('kpi-total-stores').innerText = stores.size;
 
-            renderLeaderboard(data);
-        }
-
-        function processData(data) {
-            filteredData = data;
-            updateMetricsAndCharts(filteredData);
-            document.getElementById('last-update').innerText = new Date().toLocaleTimeString('id-ID');
+            renderTop10Sales(data);
+            renderTop10Stores(data);
+            updateFormattedTimestamp();
         }
 
         function fetchLiveData() {
             const icon = document.getElementById('refresh-icon');
             icon.classList.add('animate-spin');
 
-            // Contoh penanganan CSV via PapaParse (sesuaikan URL CSV Live Anda)
             setTimeout(() => {
                 icon.classList.remove('animate-spin');
-                document.getElementById('last-update').innerText = new Date().toLocaleTimeString('id-ID');
-            }, 1000);
+                updateFormattedTimestamp();
+            }, 800);
         }
 
         window.onload = function() {
-            fetchLiveData();
+            updateFormattedTimestamp();
         };
     </script>
 </body>
