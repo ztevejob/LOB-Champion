@@ -360,7 +360,7 @@
                                     <th class="p-2">Nama</th>
                                     <th class="p-2">Store</th>
                                     <th class="p-2">LOB</th>
-                                    <th class="p-2">Qty</th>
+                                    <th class="p-2 text-center">Qty</th>
                                     <th class="p-2">Shift</th>
                                 </tr>
                             </thead>
@@ -376,11 +376,17 @@
     <script>
         lucide.createIcons();
 
-        // URL Google Sheets Published CSV
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
 
         let rawCSVData = [];
         let filteredData = [];
+
+        // Fungsi Helper untuk Parsing Angka (Strict Zero Handling)
+        function parseQuantity(val) {
+            if (val === undefined || val === null || val === '') return 0;
+            const parsed = parseInt(String(val).trim(), 10);
+            return isNaN(parsed) ? 0 : parsed;
+        }
 
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
@@ -419,7 +425,6 @@
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
 
-            // Tambahkan query timestamp acak untuk membypass cache browser saat sync live
             const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
 
             Papa.parse(cacheBusterUrl, {
@@ -437,7 +442,7 @@
                 error: function(err) {
                     console.error('Error saat mengambil CSV:', err);
                     if (icon) icon.classList.remove('animate-spin');
-                    alert('Gagal menyinkronkan data. Pastikan jaringan internet stabil.');
+                    alert('Gagal menyinkronkan data.');
                 }
             });
         }
@@ -513,20 +518,22 @@
                 const name = item.Nama || item.Champion || item['Nama Sales'] || 'Unknown';
                 const lob = item.LOB || item['Kategori LOB'] || 'Other';
                 const store = item.Store || item['Nama Store'] || 'Unknown Store';
-                const qty = parseInt(item.Qty || item.Quantity || item.Unit || 1, 10);
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
 
                 if (!salesMap[name]) {
                     salesMap[name] = { name, lob, store, totalQty: 0 };
                 }
-                salesMap[name].totalQty += isNaN(qty) ? 0 : qty;
+                salesMap[name].totalQty += qty;
             });
 
+            // Hanya tampilkan sales yang memiliki penjualan > 0
             const top10 = Object.values(salesMap)
+                .filter(item => item.totalQty > 0)
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
 
             if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center opacity-50">Belum ada data penjualan</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center opacity-50">Belum ada penjualan tercatat</td></tr>';
                 return;
             }
 
@@ -553,21 +560,23 @@
             data.forEach(item => {
                 const store = item.Store || item['Nama Store'] || 'Unknown Store';
                 const champion = item.Nama || item.Champion || 'Unknown';
-                const qty = parseInt(item.Qty || item.Quantity || item.Unit || 1, 10);
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
 
                 if (!storeMap[store]) {
                     storeMap[store] = { store, champions: new Set(), totalQty: 0 };
                 }
-                storeMap[store].totalQty += isNaN(qty) ? 0 : qty;
+                storeMap[store].totalQty += qty;
                 if (champion) storeMap[store].champions.add(champion);
             });
 
+            // Hanya tampilkan store dengan total penjualan > 0
             const top10 = Object.values(storeMap)
+                .filter(item => item.totalQty > 0)
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
 
             if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center opacity-50">Belum ada data store</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center opacity-50">Belum ada store dengan penjualan</td></tr>';
                 return;
             }
 
@@ -590,11 +599,12 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center opacity-50">Tidak ada transaksi ditemukan</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center opacity-50">Tidak ada data laporan masuk</td></tr>';
                 return;
             }
 
             data.slice(0, 50).forEach(item => {
+                const qty = parseQuantity(item.Qty || item.Quantity || item.Unit);
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-white/5 transition';
                 row.innerHTML = `
@@ -602,7 +612,7 @@
                     <td class="p-2 font-medium text-indigo-300">${item.Nama || item.Champion || '-'}</td>
                     <td class="p-2">${item.Store || item['Nama Store'] || '-'}</td>
                     <td class="p-2">${item.LOB || item['Kategori LOB'] || '-'}</td>
-                    <td class="p-2 text-center font-bold text-emerald-400">${item.Qty || item.Quantity || 1}</td>
+                    <td class="p-2 text-center font-bold ${qty > 0 ? 'text-emerald-400' : 'text-slate-400'}">${qty}</td>
                     <td class="p-2">${item.Shift || '-'}</td>
                 `;
                 tbody.appendChild(row);
@@ -611,14 +621,14 @@
 
         function updateMetricsAndCharts(data) {
             let totalQty = 0;
-            const reports = data.length;
+            const reports = data.length; // Menghitung kedisiplinan pelaporan (termasuk yang 0 unit)
             const champions = new Set();
             const stores = new Set();
             const dates = new Set();
 
             data.forEach(row => {
-                const qty = parseInt(row.Qty || row.Quantity || row.Unit || 1, 10);
-                totalQty += isNaN(qty) ? 0 : qty;
+                const qty = parseQuantity(row.Qty || row.Quantity || row.Unit);
+                totalQty += qty;
 
                 const champName = row.Nama || row.Champion || row['Nama Sales'];
                 const storeName = row.Store || row['Nama Store'];
