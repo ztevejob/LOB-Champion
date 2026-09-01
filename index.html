@@ -376,6 +376,9 @@
     <script>
         lucide.createIcons();
 
+        // URL Google Sheets Published CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
+
         let rawCSVData = [];
         let filteredData = [];
 
@@ -412,26 +415,120 @@
             document.getElementById('last-update').innerText = `${dateStr}, ${timeStr} WIB`;
         }
 
+        function fetchLiveData() {
+            const icon = document.getElementById('refresh-icon');
+            if (icon) icon.classList.add('animate-spin');
+
+            // Tambahkan query timestamp acak untuk membypass cache browser saat sync live
+            const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
+
+            Papa.parse(cacheBusterUrl, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    rawCSVData = results.data;
+                    populateDropdownFilters(rawCSVData);
+                    applyFilters();
+                    
+                    if (icon) icon.classList.remove('animate-spin');
+                    updateFormattedTimestamp();
+                },
+                error: function(err) {
+                    console.error('Error saat mengambil CSV:', err);
+                    if (icon) icon.classList.remove('animate-spin');
+                    alert('Gagal menyinkronkan data. Pastikan jaringan internet stabil.');
+                }
+            });
+        }
+
+        function populateDropdownFilters(data) {
+            const storeSelect = document.getElementById('filter-store');
+            const lobSelect = document.getElementById('filter-lob');
+
+            const stores = new Set();
+            const lobs = new Set();
+
+            data.forEach(item => {
+                const store = item.Store || item['Nama Store'] || item['Lokasi'];
+                const lob = item.LOB || item['Kategori LOB'];
+                if (store) stores.add(store.trim());
+                if (lob) lobs.add(lob.trim());
+            });
+
+            if (storeSelect) {
+                storeSelect.innerHTML = '<option value="ALL">Semua Store</option>';
+                Array.from(stores).sort().forEach(store => {
+                    storeSelect.innerHTML += `<option value="${store}">${store}</option>`;
+                });
+            }
+
+            if (lobSelect) {
+                lobSelect.innerHTML = '<option value="ALL">Semua LOB</option>';
+                Array.from(lobs).sort().forEach(lob => {
+                    lobSelect.innerHTML += `<option value="${lob}">${lob}</option>`;
+                });
+            }
+        }
+
+        function applyFilters() {
+            const monthVal = document.getElementById('filter-month')?.value || 'ALL';
+            const storeVal = document.getElementById('filter-store')?.value || 'ALL';
+            const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
+            const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
+
+            filteredData = rawCSVData.filter(row => {
+                const rowStore = (row.Store || row['Nama Store'] || row['Lokasi'] || '').trim();
+                const rowLOB = (row.LOB || row['Kategori LOB'] || '').trim();
+                const rowShift = (row.Shift || row['Shift Kerja'] || '').trim();
+                const rowDate = row.Tanggal || row.Timestamp || '';
+
+                let matchMonth = true;
+                if (monthVal !== 'ALL' && rowDate) {
+                    const parsedDate = new Date(rowDate);
+                    if (!isNaN(parsedDate.getTime())) {
+                        const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                        matchMonth = (m === monthVal);
+                    }
+                }
+
+                const matchStore = (storeVal === 'ALL' || rowStore === storeVal);
+                const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
+                const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
+
+                return matchMonth && matchStore && matchLOB && matchShift;
+            });
+
+            updateMetricsAndCharts(filteredData);
+            renderRawDataTable(filteredData);
+        }
+
         function renderTop10Sales(data) {
             const tbody = document.getElementById('top10-sales-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             const salesMap = {};
             data.forEach(item => {
-                const name = item.Nama || item.Champion || 'Unknown';
-                const lob = item.LOB || 'Other';
-                const store = item.Store || 'Unknown Store';
-                const qty = parseInt(item.Qty || item.Quantity || 1, 10);
+                const name = item.Nama || item.Champion || item['Nama Sales'] || 'Unknown';
+                const lob = item.LOB || item['Kategori LOB'] || 'Other';
+                const store = item.Store || item['Nama Store'] || 'Unknown Store';
+                const qty = parseInt(item.Qty || item.Quantity || item.Unit || 1, 10);
 
                 if (!salesMap[name]) {
                     salesMap[name] = { name, lob, store, totalQty: 0 };
                 }
-                salesMap[name].totalQty += qty;
+                salesMap[name].totalQty += isNaN(qty) ? 0 : qty;
             });
 
             const top10 = Object.values(salesMap)
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
+
+            if (top10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center opacity-50">Belum ada data penjualan</td></tr>';
+                return;
+            }
 
             top10.forEach((item, index) => {
                 const row = document.createElement('tr');
@@ -449,24 +546,30 @@
 
         function renderTop10Stores(data) {
             const tbody = document.getElementById('top10-stores-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             const storeMap = {};
             data.forEach(item => {
-                const store = item.Store || 'Unknown Store';
+                const store = item.Store || item['Nama Store'] || 'Unknown Store';
                 const champion = item.Nama || item.Champion || 'Unknown';
-                const qty = parseInt(item.Qty || item.Quantity || 1, 10);
+                const qty = parseInt(item.Qty || item.Quantity || item.Unit || 1, 10);
 
                 if (!storeMap[store]) {
                     storeMap[store] = { store, champions: new Set(), totalQty: 0 };
                 }
-                storeMap[store].totalQty += qty;
-                storeMap[store].champions.add(champion);
+                storeMap[store].totalQty += isNaN(qty) ? 0 : qty;
+                if (champion) storeMap[store].champions.add(champion);
             });
 
             const top10 = Object.values(storeMap)
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
+
+            if (top10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center opacity-50">Belum ada data store</td></tr>';
+                return;
+            }
 
             top10.forEach((item, index) => {
                 const row = document.createElement('tr');
@@ -481,6 +584,31 @@
             });
         }
 
+        function renderRawDataTable(data) {
+            const tbody = document.getElementById('raw-data-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center opacity-50">Tidak ada transaksi ditemukan</td></tr>';
+                return;
+            }
+
+            data.slice(0, 50).forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-white/5 transition';
+                row.innerHTML = `
+                    <td class="p-2 opacity-70">${item.Tanggal || item.Timestamp || '-'}</td>
+                    <td class="p-2 font-medium text-indigo-300">${item.Nama || item.Champion || '-'}</td>
+                    <td class="p-2">${item.Store || item['Nama Store'] || '-'}</td>
+                    <td class="p-2">${item.LOB || item['Kategori LOB'] || '-'}</td>
+                    <td class="p-2 text-center font-bold text-emerald-400">${item.Qty || item.Quantity || 1}</td>
+                    <td class="p-2">${item.Shift || '-'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
         function updateMetricsAndCharts(data) {
             let totalQty = 0;
             const reports = data.length;
@@ -489,38 +617,34 @@
             const dates = new Set();
 
             data.forEach(row => {
-                totalQty += parseInt(row.Qty || row.Quantity || 1, 10);
-                if (row.Nama || row.Champion) champions.add(row.Nama || row.Champion);
-                if (row.Store) stores.add(row.Store);
-                if (row.Tanggal || row.Timestamp) dates.add(row.Tanggal || row.Timestamp);
+                const qty = parseInt(row.Qty || row.Quantity || row.Unit || 1, 10);
+                totalQty += isNaN(qty) ? 0 : qty;
+
+                const champName = row.Nama || row.Champion || row['Nama Sales'];
+                const storeName = row.Store || row['Nama Store'];
+                const dateVal = row.Tanggal || row.Timestamp;
+
+                if (champName) champions.add(champName);
+                if (storeName) stores.add(storeName);
+                if (dateVal) dates.add(dateVal.split(' ')[0]);
             });
 
             const totalActiveDays = dates.size || 1;
             const avgProductivity = (totalQty / totalActiveDays).toFixed(1);
 
-            document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString();
+            document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
             document.getElementById('kpi-avg-productivity').innerText = avgProductivity;
-            document.getElementById('kpi-total-reports').innerText = reports.toLocaleString();
+            document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
             document.getElementById('kpi-active-champions').innerText = champions.size;
             document.getElementById('kpi-total-stores').innerText = stores.size;
 
             renderTop10Sales(data);
             renderTop10Stores(data);
-            updateFormattedTimestamp();
-        }
-
-        function fetchLiveData() {
-            const icon = document.getElementById('refresh-icon');
-            icon.classList.add('animate-spin');
-
-            setTimeout(() => {
-                icon.classList.remove('animate-spin');
-                updateFormattedTimestamp();
-            }, 800);
         }
 
         window.onload = function() {
             updateFormattedTimestamp();
+            fetchLiveData();
         };
     </script>
 </body>
