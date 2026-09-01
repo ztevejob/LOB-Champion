@@ -116,9 +116,10 @@
         </div>
 
         <div class="pt-4 border-t border-white/10 space-y-3">
-            <button onclick="fetchLiveData()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-lg shadow-indigo-600/30">
-                <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Live Sync Data
-            </button>
+            <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Auto Sync Active</span>
+            </div>
 
             <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg glass-card text-sm font-medium hover:bg-white/10 transition">
                 <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
@@ -532,10 +533,8 @@
             document.getElementById('last-update').innerText = `${dateStr}, ${timeStr} WIB`;
         }
 
+        // Penarikan data otomatis (Auto Sync)
         function fetchLiveData() {
-            const icon = document.getElementById('refresh-icon');
-            if (icon) icon.classList.add('animate-spin');
-
             const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
 
             Papa.parse(cacheBusterUrl, {
@@ -546,14 +545,10 @@
                     rawCSVData = results.data;
                     populateDropdownFilters(rawCSVData);
                     applyFilters();
-                    
-                    if (icon) icon.classList.remove('animate-spin');
                     updateFormattedTimestamp();
                 },
                 error: function(err) {
-                    console.error('Error saat mengambil CSV:', err);
-                    if (icon) icon.classList.remove('animate-spin');
-                    alert('Gagal menyinkronkan data.');
+                    console.error('Error auto-sync CSV:', err);
                 }
             });
         }
@@ -562,6 +557,10 @@
             const storeSelect = document.getElementById('filter-store');
             const lobSelect = document.getElementById('filter-lob');
             const shiftSelect = document.getElementById('filter-shift');
+
+            const currentStore = storeSelect?.value || 'ALL';
+            const currentLOB = lobSelect?.value || 'ALL';
+            const currentShift = shiftSelect?.value || 'ALL';
 
             const stores = new Set();
             const lobs = new Set();
@@ -580,21 +579,21 @@
             if (storeSelect) {
                 storeSelect.innerHTML = '<option value="ALL">Semua Store</option>';
                 Array.from(stores).sort().forEach(store => {
-                    storeSelect.innerHTML += `<option value="${store}">${store}</option>`;
+                    storeSelect.innerHTML += `<option value="${store}" ${store === currentStore ? 'selected' : ''}>${store}</option>`;
                 });
             }
 
             if (lobSelect) {
                 lobSelect.innerHTML = '<option value="ALL">Semua LOB</option>';
                 Array.from(lobs).sort().forEach(lob => {
-                    lobSelect.innerHTML += `<option value="${lob}">${lob}</option>`;
+                    lobSelect.innerHTML += `<option value="${lob}" ${lob === currentLOB ? 'selected' : ''}>${lob}</option>`;
                 });
             }
 
             if (shiftSelect) {
                 shiftSelect.innerHTML = '<option value="ALL">Semua Shift</option>';
                 Array.from(shifts).sort().forEach(shift => {
-                    shiftSelect.innerHTML += `<option value="${shift}">${shift}</option>`;
+                    shiftSelect.innerHTML += `<option value="${shift}" ${shift === currentShift ? 'selected' : ''}>${shift}</option>`;
                 });
             }
         }
@@ -719,7 +718,7 @@
             });
         }
 
-        // Matriks Kedisiplinan Pelaporan Harian (Full 1 Bulan Berjalan)
+        // Matriks Kedisiplinan Pelaporan Harian Store (Presisi Bulan Berjalan)
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -728,7 +727,7 @@
             const reportedMap = {};
             let sampleDate = null;
 
-            // Kumpulkan store dan log tanggal transaksi
+            // Memetakan pelaporan store berdasarkan tanggal persis
             data.forEach(item => {
                 const store = extractStore(item);
                 const rawDateStr = extractDate(item);
@@ -748,7 +747,6 @@
                 }
             });
 
-            // Ambil daftar store dari data yang ada atau dari raw data
             let stores = Array.from(storeSet).sort();
             if (stores.length === 0) {
                 rawCSVData.forEach(item => {
@@ -763,7 +761,6 @@
                 return;
             }
 
-            // Tentukan Tahun & Bulan yang akan ditampilkan (Full 1 Bulan)
             const monthVal = document.getElementById('filter-month')?.value;
             let year, monthIndex;
 
@@ -779,7 +776,6 @@
                 monthIndex = now.getMonth();
             }
 
-            // Hitung total hari dalam bulan tersebut (28, 29, 30, atau 31 hari)
             const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
             const fullMonthDates = [];
 
@@ -877,7 +873,6 @@
             });
         }
 
-        // Top 10 Store Performance (Kolom Champion dihapus)
         function renderTop10Stores(data) {
             const tbody = document.getElementById('top10-stores-body');
             if (!tbody) return;
@@ -984,6 +979,9 @@
         window.onload = function() {
             updateFormattedTimestamp();
             fetchLiveData();
+            
+            // Auto Sync otomatis setiap 60 detik
+            setInterval(fetchLiveData, 60000);
         };
     </script>
 </body>
