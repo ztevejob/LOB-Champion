@@ -6,7 +6,6 @@
     <title>Dashboard Monitoring LOB Champion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Plugin Datalabels untuk menampilkan angka di dalam/atas Chart -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -99,58 +98,58 @@
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row min-h-screen">
+<body class="flex flex-col lg:flex-row min-h-screen p-2 md:p-4 gap-4">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-full md:w-64 glass-sidebar m-2 p-4 flex flex-col justify-between shrink-0 z-20 transition-all duration-300">
+    <!-- Sidebar Responsive -->
+    <aside id="sidebar" class="w-full lg:w-64 glass-sidebar p-4 flex flex-col justify-between shrink-0 z-20">
         <div>
-            <!-- Header Brand -->
-            <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
+            <!-- Header Brand & Mobile Toggle -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-indigo-600 rounded-lg text-white">
                         <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-lg leading-tight">LOB Champion</h1>
+                        <h1 class="font-bold text-base md:text-lg leading-tight">LOB Champion</h1>
                         <p class="text-xs text-indigo-400 font-medium">Analytics Dashboard</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Auto Sync Active & Mode Gelap -->
-            <div class="space-y-2 mb-6">
+            <!-- Auto Sync & Mode Gelap -->
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-2 my-4">
                 <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Auto Sync Active</span>
+                    <span>Auto Sync</span>
                 </div>
 
-                <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg glass-card text-xs font-medium hover:bg-white/10 transition">
+                <button onclick="toggleTheme()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg glass-card text-xs font-medium hover:bg-white/10 transition">
                     <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
                     <span id="theme-text">Mode Gelap</span>
                 </button>
             </div>
 
             <!-- Navigation Links -->
-            <nav class="space-y-2" id="sidebar-nav">
-                <button onclick="showSection('overview')" id="btn-overview" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition nav-active">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview
+            <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-1.5" id="sidebar-nav">
+                <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition nav-active">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> Overview
                 </button>
-                <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
-                    <i data-lucide="trending-up" class="w-4 h-4"></i> Performa Week vs Week
+                <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> WoW Perf.
                 </button>
-                <button onclick="showSection('store-perf')" id="btn-store-perf" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
-                    <i data-lucide="store" class="w-4 h-4"></i> Performance Store
+                <button onclick="showSection('store-perf')" id="btn-store-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="store" class="w-4 h-4 shrink-0"></i> Store Perf.
                 </button>
-                <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
-                    <i data-lucide="calendar-check" class="w-4 h-4"></i> Matriks Kedisiplinan
+                <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> Kedisiplinan
                 </button>
-                <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
-                    <i data-lucide="database" class="w-4 h-4"></i> Data Transaksi
+                <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition col-span-2 sm:col-span-1">
+                    <i data-lucide="database" class="w-4 h-4 shrink-0"></i> Log Transaksi
                 </button>
             </nav>
         </div>
 
-        <div class="pt-4 border-t border-white/10">
+        <div class="pt-4 mt-4 border-t border-white/10 hidden lg:block">
             <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
                 <p class="text-[10px] opacity-70 tracking-wide uppercase font-semibold">Created & Designed by</p>
                 <p class="text-xs font-bold text-indigo-400 mt-0.5">Novi Riyanto</p>
@@ -158,22 +157,23 @@
         </div>
     </aside>
 
-    <main class="flex-1 m-2 md:m-3 flex flex-col gap-4 overflow-hidden">
+    <main class="flex-1 flex flex-col gap-4 overflow-hidden w-full">
 
         <!-- Header -->
-        <header class="glass-panel p-4 flex flex-wrap items-center justify-between gap-4">
+        <header class="glass-panel p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-                <h2 class="text-xl font-bold" id="page-title">Overview</h2>
+                <h2 class="text-lg md:text-xl font-bold" id="page-title">Overview</h2>
                 <p class="text-xs opacity-70 flex items-center gap-2 mt-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Terakhir diperbarui: <span id="last-update" class="font-semibold">Memuat...</span>
                 </p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-3 text-xs">
+            <!-- Filters Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full md:w-auto text-xs">
                 <div>
-                    <label class="block opacity-60 mb-1">Filter Month</label>
-                    <select id="filter-month" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <label class="block opacity-60 mb-1 text-[10px]">Filter Month</label>
+                    <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         <option value="ALL">Semua Bulan</option>
                         <option value="01">Januari</option>
                         <option value="02">Februari</option>
@@ -190,76 +190,76 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block opacity-60 mb-1">Filter Store</label>
-                    <select id="filter-store" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 max-w-[150px]">
+                    <label class="block opacity-60 mb-1 text-[10px]">Filter Store</label>
+                    <select id="filter-store" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         <option value="ALL">Semua Store</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block opacity-60 mb-1">Filter LOB</label>
-                    <select id="filter-lob" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <label class="block opacity-60 mb-1 text-[10px]">Filter LOB</label>
+                    <select id="filter-lob" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         <option value="ALL">Semua LOB</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block opacity-60 mb-1">Filter Shift</label>
-                    <select id="filter-shift" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <label class="block opacity-60 mb-1 text-[10px]">Filter Shift</label>
+                    <select id="filter-shift" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         <option value="ALL">Semua Shift</option>
                     </select>
                 </div>
             </div>
         </header>
 
-        <!-- KPI Cards Updated: Poin 1, 2, 4, 5 -->
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Responsive KPI Grid -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-            <!-- Poin 5: Total Unit Terjual per LOB -->
+            <!-- Total Unit Terjual per LOB -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Unit Terjual per LOB</p>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Unit / LOB</p>
                     <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-400"></i>
                 </div>
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">Mac</span>
+                        <span class="opacity-60 block text-[10px]">Mac</span>
                         <span class="text-base font-bold text-indigo-300" id="kpi-total-mac">0</span>
                     </div>
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">iPhone</span>
+                        <span class="opacity-60 block text-[10px]">iPhone</span>
                         <span class="text-base font-bold text-blue-300" id="kpi-total-iphone">0</span>
                     </div>
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">iPad</span>
+                        <span class="opacity-60 block text-[10px]">iPad</span>
                         <span class="text-base font-bold text-cyan-300" id="kpi-total-ipad">0</span>
                     </div>
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">Watch</span>
+                        <span class="opacity-60 block text-[10px]">Watch</span>
                         <span class="text-base font-bold text-emerald-300" id="kpi-total-watch">0</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Poin 1: Average per LOB dalam Sehari -->
+            <!-- Average / Hari per LOB (Kalkulasi Diperbaiki) -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-purple-400">Average / Hari per LOB</p>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-purple-400">Average / Hari / LOB</p>
                     <i data-lucide="calculator" class="w-4 h-4 text-purple-400"></i>
                 </div>
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">Mac</span>
+                        <span class="opacity-60 block text-[10px]">Mac</span>
                         <span class="text-base font-bold text-purple-300" id="kpi-avg-mac">0.0</span>
                     </div>
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">iPhone</span>
+                        <span class="opacity-60 block text-[10px]">iPhone</span>
                         <span class="text-base font-bold text-purple-300" id="kpi-avg-iphone">0.0</span>
                     </div>
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">iPad</span>
+                        <span class="opacity-60 block text-[10px]">iPad</span>
                         <span class="text-base font-bold text-purple-300" id="kpi-avg-ipad">0.0</span>
                     </div>
                     <div class="bg-white/5 p-2 rounded border border-white/5">
-                        <span class="opacity-60 block">Watch</span>
+                        <span class="opacity-60 block text-[10px]">Watch</span>
                         <span class="text-base font-bold text-purple-300" id="kpi-avg-watch">0.0</span>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium opacity-70">Total Laporan Masuk</p>
-                    <h3 class="text-3xl font-bold mt-2 text-emerald-400" id="kpi-total-reports">0</h3>
+                    <h3 class="text-2xl md:text-3xl font-bold mt-2 text-emerald-400" id="kpi-total-reports">0</h3>
                     <p class="text-[10px] opacity-50 mt-1">Laporan dari form terisi</p>
                 </div>
                 <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
@@ -281,7 +281,7 @@
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium opacity-70">Champion Aktif</p>
-                    <h3 class="text-3xl font-bold mt-2 text-amber-400" id="kpi-active-champions">0</h3>
+                    <h3 class="text-2xl md:text-3xl font-bold mt-2 text-amber-400" id="kpi-active-champions">0</h3>
                     <p class="text-[10px] opacity-50 mt-1">Sales terdaftar berkontribusi</p>
                 </div>
                 <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
@@ -291,18 +291,18 @@
 
         </section>
 
-        <!-- Summary Store Unsubmitted Today Banner -->
-        <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <!-- Summary Store Unsubmitted Banner -->
+        <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-rose-500/20 text-rose-400 rounded-lg">
+                <div class="p-2 bg-rose-500/20 text-rose-400 rounded-lg shrink-0">
                     <i data-lucide="alert-circle" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400">Store Belum Submit Hari Ini (<span id="unsubmitted-count">0</span> Toko)</h4>
-                    <p class="text-xs text-slate-300 mt-0.5" id="unsubmitted-list-text">Memuat data...</p>
+                    <p class="text-xs text-slate-300 mt-0.5 line-clamp-2" id="unsubmitted-list-text">Memuat data...</p>
                 </div>
             </div>
-            <button onclick="toggleUnsubmittedModal()" class="px-3 py-1.5 bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 text-xs rounded-lg transition shrink-0 font-medium">
+            <button onclick="toggleUnsubmittedModal()" class="w-full sm:w-auto px-3 py-1.5 bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 text-xs rounded-lg transition shrink-0 font-medium text-center">
                 Lihat Detail Store
             </button>
         </div>
@@ -311,8 +311,8 @@
 
             <!-- Section 1: Overview -->
             <div id="sec-overview" class="content-section space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="smartphone" class="w-4 h-4 text-indigo-400"></i> Total Penjualan per Kategori LOB
                         </h3>
@@ -326,16 +326,16 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="glass-panel p-4">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-sm flex items-center gap-2">
-                                <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i> Top 10 Champion Sales (Semua LOB)
+                                <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i> Top 10 Champion Sales
                             </h3>
-                            <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
+                            <span class="text-[10px] opacity-60">Semua LOB</span>
                         </div>
                         <div class="overflow-x-auto max-h-[400px]">
-                            <table class="w-full text-xs text-left border-collapse">
+                            <table class="w-full text-xs text-left border-collapse min-w-[500px]">
                                 <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                     <tr>
                                         <th class="p-2 sticky-header-bg">Rank</th>
@@ -350,16 +350,15 @@
                         </div>
                     </div>
 
-                    <!-- Poin 6: Top 10 Store Performance Pecah per LOB -->
                     <div class="glass-panel p-4">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-sm flex items-center gap-2">
-                                <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i> Top 10 Store Performance (Detail per LOB)
+                                <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i> Top 10 Store Performance
                             </h3>
-                            <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
+                            <span class="text-[10px] opacity-60">Detail per LOB</span>
                         </div>
                         <div class="overflow-x-auto max-h-[400px]">
-                            <table class="w-full text-xs text-left border-collapse">
+                            <table class="w-full text-xs text-left border-collapse min-w-[550px]">
                                 <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                     <tr>
                                         <th class="p-2 sticky-header-bg">Rank</th>
@@ -394,7 +393,7 @@
                         <i data-lucide="store" class="w-4 h-4 text-purple-400"></i> Detail Komparasi per Store (This Week vs Last Week)
                     </h3>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse">
+                        <table class="w-full text-xs text-left border-collapse min-w-[650px]">
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
                                     <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
@@ -425,7 +424,7 @@
             <!-- Section 4: Matriks Kedisiplinan -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
-                    <div class="flex items-center justify-between mb-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
                         <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
                         <span class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Total 91 Toko</span>
                     </div>
@@ -433,7 +432,7 @@
                 </div>
             </div>
 
-            <!-- Section 5: Log Transaksi Masuk (Poin 3: Hanya 10 Terakhir) -->
+            <!-- Section 5: Log Transaksi Masuk -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
@@ -441,7 +440,7 @@
                         <span class="text-[10px] px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded-full font-medium">Real-time Top 10</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse">
+                        <table class="w-full text-xs text-left border-collapse min-w-[600px]">
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
                                     <th class="p-2 text-center w-12 sticky-header-bg">No.</th>
@@ -537,6 +536,7 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
+        // Improved Robust Date Parser for Accurate Day Count Calculation
         function parseCustomDate(dateStr) {
             if (!dateStr) return null;
             let str = String(dateStr).trim();
@@ -546,10 +546,17 @@
             if (str.includes('/') || str.includes('-')) {
                 const parts = str.split(/[\/\-]/);
                 if (parts.length === 3) {
+                    let year = parseInt(parts[2], 10);
+                    let month = parseInt(parts[1], 10) - 1;
+                    let day = parseInt(parts[0], 10);
+
                     if (parts[0].length === 4) {
-                        return new Date(parts[0], parts[1] - 1, parts[2]);
-                    } else {
-                        return new Date(parts[2], parts[1] - 1, parts[0]);
+                        year = parseInt(parts[0], 10);
+                        month = parseInt(parts[1], 10) - 1;
+                        day = parseInt(parts[2], 10);
+                    }
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        return new Date(year, month, day);
                     }
                 }
             }
@@ -1144,15 +1151,15 @@
             }
 
             let html = `
-                <table class="w-full text-xs text-center border-collapse border border-white/10">
+                <table class="w-full text-xs text-center border-collapse border border-white/10 min-w-[750px]">
                     <thead class="sticky top-0 z-20 sticky-header-bg shadow-md">
                         <tr class="border-b border-white/10">
                             <th rowspan="2" class="p-2 text-center w-10 border-r border-white/10 sticky left-0 z-30 sticky-header-bg">No.</th>
-                            <th rowspan="2" class="p-2 text-left border-r border-white/10 min-w-[200px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
+                            <th rowspan="2" class="p-2 text-left border-r border-white/10 min-w-[180px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
             `;
 
             fullMonthDates.forEach(d => {
-                html += `<th colspan="2" class="p-1 border-r border-white/10 min-w-[50px] text-[10px] font-mono sticky-header-bg">${d.label}</th>`;
+                html += `<th colspan="2" class="p-1 border-r border-white/10 min-w-[44px] text-[10px] font-mono sticky-header-bg">${d.label}</th>`;
             });
 
             html += `
@@ -1247,7 +1254,6 @@
             });
         }
 
-        // Poin 6: Top 10 Store Performance Pecah per LOB
         function renderTop10Stores(data) {
             const tbody = document.getElementById('top10-stores-body');
             if (!tbody) return;
@@ -1298,7 +1304,6 @@
             });
         }
 
-        // Poin 3: Log Transaksi Masuk Hanya 10 Terakhir
         function renderRawDataTable(data) {
             const tbody = document.getElementById('raw-data-body');
             if (!tbody) return;
@@ -1309,7 +1314,6 @@
                 return;
             }
 
-            // Urutkan transaksi paling baru di atas dan ambil hanya 10 transaksi pertama
             const latest10 = [...data].reverse().slice(0, 10);
 
             latest10.forEach((item, index) => {
@@ -1335,7 +1339,7 @@
             });
         }
 
-        // Poin 1 & 5: Perhitungan Total & Average per LOB
+        // Calculation Fix applied to ensure Average / Day differs from Total
         function updateMetricsAndCharts(data) {
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             const reports = data.length;
@@ -1364,15 +1368,16 @@
                 }
             });
 
-            const activeDaysCount = uniqueDates.size > 0 ? uniqueDates.size : 1;
+            // Make sure activeDaysCount is at least 1, or count unique valid dates found
+            const activeDaysCount = Math.max(1, uniqueDates.size);
 
-            // Update Total per LOB (Poin 5)
+            // Update Total per LOB
             document.getElementById('kpi-total-mac').innerText = totalMac.toLocaleString('id-ID');
             document.getElementById('kpi-total-iphone').innerText = totalIphone.toLocaleString('id-ID');
             document.getElementById('kpi-total-ipad').innerText = totalIpad.toLocaleString('id-ID');
             document.getElementById('kpi-total-watch').innerText = totalWatch.toLocaleString('id-ID');
 
-            // Update Average per LOB dalam Sehari (Poin 1)
+            // Update Average / Hari per LOB (Disesuaikan dengan pembagian jumlah hari)
             document.getElementById('kpi-avg-mac').innerText = (totalMac / activeDaysCount).toFixed(1);
             document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeDaysCount).toFixed(1);
             document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeDaysCount).toFixed(1);
