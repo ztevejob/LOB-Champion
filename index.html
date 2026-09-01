@@ -67,7 +67,6 @@
             border: 1px solid rgba(99, 102, 241, 0.4) !important;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -92,7 +91,7 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight">LOB Champion</h1>
-                        <p class="text-xs text-indigo-400 font-medium">Monitoring Dashboard</p>
+                        <p class="text-xs text-indigo-400 font-medium">Executive Analytics</p>
                     </div>
                 </div>
             </div>
@@ -163,14 +162,24 @@
             </div>
         </header>
 
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium opacity-70">Total Unit Terjual</p>
                     <h3 class="text-2xl font-bold mt-1 text-indigo-400" id="kpi-total-qty">0</h3>
                 </div>
                 <div class="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400">
-                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium opacity-70">Rata-rata Unit / Hari</p>
+                    <h3 class="text-2xl font-bold mt-1 text-purple-400" id="kpi-avg-productivity">0.0</h3>
+                </div>
+                <div class="p-3 bg-purple-500/10 rounded-xl border border-purple-500/20 text-purple-400">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
                 </div>
             </div>
 
@@ -180,7 +189,7 @@
                     <h3 class="text-2xl font-bold mt-1 text-emerald-400" id="kpi-total-reports">0</h3>
                 </div>
                 <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
-                    <i data-lucide="file-check" class="w-6 h-6"></i>
+                    <i data-lucide="file-check" class="w-5 h-5"></i>
                 </div>
             </div>
 
@@ -190,17 +199,17 @@
                     <h3 class="text-2xl font-bold mt-1 text-amber-400" id="kpi-active-champions">0</h3>
                 </div>
                 <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
-                    <i data-lucide="users" class="w-6 h-6"></i>
+                    <i data-lucide="users" class="w-5 h-5"></i>
                 </div>
             </div>
 
-            <div class="glass-card p-4 flex items-center justify-between">
+            <div class="glass-card p-4 flex items-center justify-between col-span-2 md:col-span-1">
                 <div>
                     <p class="text-xs font-medium opacity-70">Store Berpartisipasi</p>
                     <h3 class="text-2xl font-bold mt-1 text-sky-400" id="kpi-total-stores">0</h3>
                 </div>
                 <div class="p-3 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
-                    <i data-lucide="map-pin" class="w-6 h-6"></i>
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
                 </div>
             </div>
         </section>
@@ -223,12 +232,203 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                            <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Top Store Performa Tertinggi
+                <div class="glass-panel p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="award" class="w-4 h-4 text-amber-400"></i> Leaderboard Performa & Produktivitas Champion
                         </h3>
-                        <div class="h-64 relative"><canvas id="chartStoresOverview"></canvas></div>
+                        <span class="text-xs opacity-60">Diurutkan berdasarkan produktivitas unit / hari</span>
                     </div>
-                    <div class="glass-panel p-4 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead class="opacity-70 border-b border-white/10 uppercase">
+                                <tr>
+                                    <th class="p-2.5">Nama Champion</th>
+                                    <th class="p-2.5">LOB Focus</th>
+                                    <th class="p-2.5">Store</th>
+                                    <th class="p-2.5 text-center">Hari Aktif</th>
+                                    <th class="p-2.5 text-center">Total Unit</th>
+                                    <th class="p-2.5 text-center">Rata-rata (Unit/Hari)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="champion-leaderboard-body" class="divide-y divide-white/5">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-store-perf" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4">
+                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                        <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Perbandingan Total Penjualan Antar Store
+                    </h3>
+                    <div class="h-80 relative"><canvas id="chartStoresOverview"></canvas></div>
+                </div>
+            </div>
+
+            <div id="sec-compliance" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4">
+                    <h3 class="font-bold text-sm mb-4">Matriks Kedisiplinan Pelaporan Harian Store</h3>
+                    <p class="text-xs opacity-70 mb-4">Memantau konsistensi store dalam menginput laporan penjualan harian.</p>
+                    <div id="compliance-matrix-container" class="overflow-x-auto"></div>
+                </div>
+            </div>
+
+            <div id="sec-raw-data" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4">
+                    <h3 class="font-bold text-sm mb-4">Log Transaksi Masuk</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead class="opacity-70 border-b border-white/10 uppercase">
+                                <tr>
+                                    <th class="p-2">Tanggal</th>
+                                    <th class="p-2">Nama</th>
+                                    <th class="p-2">Store</th>
+                                    <th class="p-2">LOB</th>
+                                    <th class="p-2">Qty</th>
+                                    <th class="p-2">Shift</th>
+                                </tr>
+                            </thead>
+                            <tbody id="raw-data-body" class="divide-y divide-white/5"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        let rawCSVData = [];
+        let filteredData = [];
+        let chartLOBInstance = null;
+        let chartShiftInstance = null;
+        let chartStoresInstance = null;
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+
+            document.getElementById(`sec-${sectionId}`).classList.remove('hidden');
+            document.getElementById(`btn-${sectionId}`).classList.add('nav-active');
+
+            const titles = {
+                'overview': 'Executive Overview',
+                'store-perf': 'Store Performance Comparison',
+                'compliance': 'Matriks Kedisiplinan Store',
+                'raw-data': 'Data Transaksi Mentah'
+            };
+            document.getElementById('page-title').innerText = titles[sectionId] || 'Dashboard';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+            document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
+            lucide.createIcons();
+        }
+
+        function renderLeaderboard(data) {
+            const tbody = document.getElementById('champion-leaderboard-body');
+            tbody.innerHTML = '';
+
+            const championMap = {};
+
+            data.forEach(item => {
+                const name = item.Nama || item.Champion || 'Unknown';
+                const lob = item.LOB || 'Other';
+                const store = item.Store || 'Unknown Store';
+                const qty = parseInt(item.Qty || item.Quantity || 1, 10);
+                const date = item.Tanggal || item.Timestamp || 'N/A';
+
+                if (!championMap[name]) {
+                    championMap[name] = {
+                        name: name,
+                        lob: lob,
+                        store: store,
+                        totalQty: 0,
+                        activeDates: new Set()
+                    };
+                }
+
+                championMap[name].totalQty += qty;
+                if (date !== 'N/A') championMap[name].activeDates.add(date);
+            });
+
+            const champions = Object.values(championMap).map(c => {
+                const activeDays = c.activeDates.size || 1;
+                return {
+                    ...c,
+                    activeDays: activeDays,
+                    avgPerDay: (c.totalQty / activeDays).toFixed(1)
+                };
+            }).sort((a, b) => b.avgPerDay - a.avgPerDay);
+
+            champions.forEach(c => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-white/5 transition';
+                row.innerHTML = `
+                    <td class="p-2.5 font-semibold text-indigo-400">${c.name}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300 font-medium">${c.lob}</span></td>
+                    <td class="p-2.5 opacity-80">${c.store}</td>
+                    <td class="p-2.5 text-center font-medium">${c.activeDays} Hari</td>
+                    <td class="p-2.5 text-center font-bold text-emerald-400">${c.totalQty} Unit</td>
+                    <td class="p-2.5 text-center font-bold text-amber-400">${c.avgPerDay} / Hari</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateMetricsAndCharts(data) {
+            let totalQty = 0;
+            const reports = data.length;
+            const champions = new Set();
+            const stores = new Set();
+            const dates = new Set();
+
+            data.forEach(row => {
+                totalQty += parseInt(row.Qty || row.Quantity || 1, 10);
+                if (row.Nama || row.Champion) champions.add(row.Nama || row.Champion);
+                if (row.Store) stores.add(row.Store);
+                if (row.Tanggal || row.Timestamp) dates.add(row.Tanggal || row.Timestamp);
+            });
+
+            const totalActiveDays = dates.size || 1;
+            const avgProductivity = (totalQty / totalActiveDays).toFixed(1);
+
+            document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString();
+            document.getElementById('kpi-avg-productivity').innerText = avgProductivity;
+            document.getElementById('kpi-total-reports').innerText = reports.toLocaleString();
+            document.getElementById('kpi-active-champions').innerText = champions.size;
+            document.getElementById('kpi-total-stores').innerText = stores.size;
+
+            renderLeaderboard(data);
+        }
+
+        function processData(data) {
+            filteredData = data;
+            updateMetricsAndCharts(filteredData);
+            document.getElementById('last-update').innerText = new Date().toLocaleTimeString('id-ID');
+        }
+
+        function fetchLiveData() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('animate-spin');
+
+            // Contoh penanganan CSV via PapaParse (sesuaikan URL CSV Live Anda)
+            setTimeout(() => {
+                icon.classList.remove('animate-spin');
+                document.getElementById('last-update').innerText = new Date().toLocaleTimeString('id-ID');
+            }, 1000);
+        }
+
+        window.onload = function() {
+            fetchLiveData();
+        };
+    </script>
+</body>
+</html>
