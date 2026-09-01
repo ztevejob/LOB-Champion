@@ -14,7 +14,6 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-            /* Transparansi ditambah 20% (dari 0.65 ke 0.45) */
             --sidebar-bg: rgba(30, 41, 59, 0.45);
             --glass-bg: rgba(30, 41, 59, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
@@ -102,10 +101,10 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <!-- Sidebar dengan transparansi +20% -->
+    <!-- Sidebar -->
     <aside id="sidebar" class="w-full md:w-64 glass-sidebar m-2 p-4 flex flex-col justify-between shrink-0 z-20 transition-all duration-300">
         <div>
-            <!-- Header Brand & Kata Executive Dihapus -->
+            <!-- Header Brand -->
             <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-indigo-600 rounded-lg text-white">
@@ -118,7 +117,7 @@
                 </div>
             </div>
 
-            <!-- Auto Sync Active & Mode Gelap Dipindah ke Atas -->
+            <!-- Auto Sync Active & Mode Gelap -->
             <div class="space-y-2 mb-6">
                 <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -161,7 +160,7 @@
 
     <main class="flex-1 m-2 md:m-3 flex flex-col gap-4 overflow-hidden">
 
-        <!-- Header tanpa kata Executive -->
+        <!-- Header -->
         <header class="glass-panel p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
                 <h2 class="text-xl font-bold" id="page-title">Overview</h2>
@@ -211,57 +210,85 @@
             </div>
         </header>
 
-        <!-- KPI Cards -->
-        <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div class="glass-card p-4 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium opacity-70">Total Unit Terjual</p>
-                    <h3 class="text-2xl font-bold mt-1 text-indigo-400" id="kpi-total-qty">0</h3>
+        <!-- KPI Cards Updated: Poin 1, 2, 4, 5 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+            <!-- Poin 5: Total Unit Terjual per LOB -->
+            <div class="glass-card p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Unit Terjual per LOB</p>
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-400"></i>
                 </div>
-                <div class="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">Mac</span>
+                        <span class="text-base font-bold text-indigo-300" id="kpi-total-mac">0</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">iPhone</span>
+                        <span class="text-base font-bold text-blue-300" id="kpi-total-iphone">0</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">iPad</span>
+                        <span class="text-base font-bold text-cyan-300" id="kpi-total-ipad">0</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">Watch</span>
+                        <span class="text-base font-bold text-emerald-300" id="kpi-total-watch">0</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="glass-card p-4 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium opacity-70">Rata-rata Unit / Hari</p>
-                    <h3 class="text-2xl font-bold mt-1 text-purple-400" id="kpi-avg-productivity">0.0</h3>
+            <!-- Poin 1: Average per LOB dalam Sehari -->
+            <div class="glass-card p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-purple-400">Average / Hari per LOB</p>
+                    <i data-lucide="calculator" class="w-4 h-4 text-purple-400"></i>
                 </div>
-                <div class="p-3 bg-purple-500/10 rounded-xl border border-purple-500/20 text-purple-400">
-                    <i data-lucide="zap" class="w-5 h-5"></i>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">Mac</span>
+                        <span class="text-base font-bold text-purple-300" id="kpi-avg-mac">0.0</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">iPhone</span>
+                        <span class="text-base font-bold text-purple-300" id="kpi-avg-iphone">0.0</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">iPad</span>
+                        <span class="text-base font-bold text-purple-300" id="kpi-avg-ipad">0.0</span>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded border border-white/5">
+                        <span class="opacity-60 block">Watch</span>
+                        <span class="text-base font-bold text-purple-300" id="kpi-avg-watch">0.0</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Total Laporan Masuk -->
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium opacity-70">Total Laporan Masuk</p>
-                    <h3 class="text-2xl font-bold mt-1 text-emerald-400" id="kpi-total-reports">0</h3>
+                    <h3 class="text-3xl font-bold mt-2 text-emerald-400" id="kpi-total-reports">0</h3>
+                    <p class="text-[10px] opacity-50 mt-1">Laporan dari form terisi</p>
                 </div>
                 <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
-                    <i data-lucide="file-check" class="w-5 h-5"></i>
+                    <i data-lucide="file-check" class="w-6 h-6"></i>
                 </div>
             </div>
 
+            <!-- Champion Aktif -->
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium opacity-70">Champion Aktif</p>
-                    <h3 class="text-2xl font-bold mt-1 text-amber-400" id="kpi-active-champions">0</h3>
+                    <h3 class="text-3xl font-bold mt-2 text-amber-400" id="kpi-active-champions">0</h3>
+                    <p class="text-[10px] opacity-50 mt-1">Sales terdaftar berkontribusi</p>
                 </div>
                 <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
-                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <i data-lucide="users" class="w-6 h-6"></i>
                 </div>
             </div>
 
-            <div class="glass-card p-4 flex items-center justify-between col-span-2 md:col-span-1">
-                <div>
-                    <p class="text-xs font-medium opacity-70">Store Berpartisipasi</p>
-                    <h3 class="text-2xl font-bold mt-1 text-sky-400" id="kpi-total-stores">0</h3>
-                </div>
-                <div class="p-3 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
-                    <i data-lucide="map-pin" class="w-5 h-5"></i>
-                </div>
-            </div>
         </section>
 
         <!-- Summary Store Unsubmitted Today Banner -->
@@ -323,10 +350,11 @@
                         </div>
                     </div>
 
+                    <!-- Poin 6: Top 10 Store Performance Pecah per LOB -->
                     <div class="glass-panel p-4">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-sm flex items-center gap-2">
-                                <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i> Top 10 Store Performance (Semua LOB)
+                                <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i> Top 10 Store Performance (Detail per LOB)
                             </h3>
                             <span class="text-[10px] opacity-60">Peringkat 10 Teratas</span>
                         </div>
@@ -336,7 +364,11 @@
                                     <tr>
                                         <th class="p-2 sticky-header-bg">Rank</th>
                                         <th class="p-2 sticky-header-bg">Nama Store</th>
-                                        <th class="p-2 text-center sticky-header-bg">Total Unit</th>
+                                        <th class="p-2 text-center sticky-header-bg">Mac</th>
+                                        <th class="p-2 text-center sticky-header-bg">iPhone</th>
+                                        <th class="p-2 text-center sticky-header-bg">iPad</th>
+                                        <th class="p-2 text-center sticky-header-bg">Watch</th>
+                                        <th class="p-2 text-center sticky-header-bg">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody id="top10-stores-body" class="divide-y divide-white/5"></tbody>
@@ -346,7 +378,7 @@
                 </div>
             </div>
 
-            <!-- Section 2: Performa WoW dengan No. Urut -->
+            <!-- Section 2: Performa WoW -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
@@ -390,7 +422,7 @@
                 </div>
             </div>
 
-            <!-- Section 4: Matriks Kedisiplinan Pagi & Siang + No. Urut -->
+            <!-- Section 4: Matriks Kedisiplinan -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
@@ -401,10 +433,13 @@
                 </div>
             </div>
 
-            <!-- Section 5: Log Transaksi Masuk + No. Urut -->
+            <!-- Section 5: Log Transaksi Masuk (Poin 3: Hanya 10 Terakhir) -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm mb-4">Log Transaksi Masuk</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm">Log Transaksi Masuk (10 Transaksi Terbaru)</h3>
+                        <span class="text-[10px] px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded-full font-medium">Real-time Top 10</span>
+                    </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse">
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
@@ -437,9 +472,7 @@
                     </h3>
                     <button onclick="toggleUnsubmittedModal()" class="text-slate-400 hover:text-white">&times;</button>
                 </div>
-                <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[50vh] space-y-2 text-xs">
-                    <!-- Dynamic List -->
-                </div>
+                <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[50vh] space-y-2 text-xs"></div>
             </div>
             <div class="mt-4 pt-3 border-t border-white/10 text-right">
                 <button onclick="toggleUnsubmittedModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition">Tutup</button>
@@ -448,7 +481,6 @@
     </div>
 
     <script>
-        // Register Chart.js Datalabels Plugin secara global
         Chart.register(ChartDataLabels);
         lucide.createIcons();
 
@@ -743,7 +775,6 @@
             renderCharts(filteredData);
         }
 
-        // 8. Summary Store yang Belum Submit Hari Ini
         function calculateUnsubmittedToday(data) {
             const now = new Date();
             const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -791,7 +822,6 @@
             });
         }
 
-        // 6. Angka didalam/atas seluruh chart
         function renderCharts(data) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -975,7 +1005,6 @@
             }
         }
 
-        // 2. Nomor Urut pada Tabel WoW
         function renderWoWStoreTable(data) {
             const tbody = document.getElementById('wow-store-table-body');
             if (!tbody) return;
@@ -1059,7 +1088,6 @@
             });
         }
 
-        // 1 & 2. Matriks Kedisiplinan Pagi/Siang + Nomor Urut
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -1219,6 +1247,7 @@
             });
         }
 
+        // Poin 6: Top 10 Store Performance Pecah per LOB
         function renderTop10Stores(data) {
             const tbody = document.getElementById('top10-stores-body');
             if (!tbody) return;
@@ -1227,21 +1256,29 @@
             const storeMap = {};
             data.forEach(item => {
                 const store = extractStore(item);
+                const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
 
+                if (store === '-') return;
+
                 if (!storeMap[store]) {
-                    storeMap[store] = { store, totalQty: 0 };
+                    storeMap[store] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, totalQty: 0 };
                 }
+
                 storeMap[store].totalQty += qty;
+                if (lob.includes('mac')) storeMap[store].mac += qty;
+                else if (lob.includes('iphone')) storeMap[store].iphone += qty;
+                else if (lob.includes('ipad')) storeMap[store].ipad += qty;
+                else if (lob.includes('watch')) storeMap[store].watch += qty;
             });
 
             const top10 = Object.values(storeMap)
-                .filter(item => item.totalQty > 0 && item.store !== '-')
+                .filter(item => item.totalQty > 0)
                 .sort((a, b) => b.totalQty - a.totalQty)
                 .slice(0, 10);
 
             if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center opacity-50">Belum ada store dengan penjualan</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center opacity-50">Belum ada store dengan penjualan</td></tr>';
                 return;
             }
 
@@ -1251,13 +1288,17 @@
                 row.innerHTML = `
                     <td class="p-2 font-bold text-amber-400">#${index + 1}</td>
                     <td class="p-2 font-semibold text-sky-300">${item.store}</td>
+                    <td class="p-2 text-center text-indigo-300">${item.mac}</td>
+                    <td class="p-2 text-center text-blue-300">${item.iphone}</td>
+                    <td class="p-2 text-center text-cyan-300">${item.ipad}</td>
+                    <td class="p-2 text-center text-emerald-300">${item.watch}</td>
                     <td class="p-2 text-center font-bold text-emerald-400">${item.totalQty}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        // 2. Nomor Urut Log Transaksi Masuk
+        // Poin 3: Log Transaksi Masuk Hanya 10 Terakhir
         function renderRawDataTable(data) {
             const tbody = document.getElementById('raw-data-body');
             if (!tbody) return;
@@ -1268,7 +1309,10 @@
                 return;
             }
 
-            data.slice(0, 100).forEach((item, index) => {
+            // Urutkan transaksi paling baru di atas dan ambil hanya 10 transaksi pertama
+            const latest10 = [...data].reverse().slice(0, 10);
+
+            latest10.forEach((item, index) => {
                 const qty = extractQuantity(item);
                 const lobVal = extractLOB(item);
                 const nameVal = extractName(item);
@@ -1291,24 +1335,25 @@
             });
         }
 
-        // 7. Perbaikan Perhitungan Rata-rata Unit / Hari
+        // Poin 1 & 5: Perhitungan Total & Average per LOB
         function updateMetricsAndCharts(data) {
-            let totalQty = 0;
+            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             const reports = data.length;
             const champions = new Set();
-            const stores = new Set();
             const uniqueDates = new Set();
 
             data.forEach(row => {
                 const qty = extractQuantity(row);
-                totalQty += qty;
-
+                const lob = extractLOB(row).toLowerCase();
                 const champName = extractName(row);
-                const storeName = extractStore(row);
                 const rawDateStr = extractDate(row);
 
+                if (lob.includes('mac')) totalMac += qty;
+                else if (lob.includes('iphone')) totalIphone += qty;
+                else if (lob.includes('ipad')) totalIpad += qty;
+                else if (lob.includes('watch')) totalWatch += qty;
+
                 if (champName && champName !== '-') champions.add(champName);
-                if (storeName && storeName !== '-') stores.add(storeName);
 
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
@@ -1320,13 +1365,21 @@
             });
 
             const activeDaysCount = uniqueDates.size > 0 ? uniqueDates.size : 1;
-            const avgProductivity = (totalQty / activeDaysCount).toFixed(1);
 
-            document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
-            document.getElementById('kpi-avg-productivity').innerText = avgProductivity;
+            // Update Total per LOB (Poin 5)
+            document.getElementById('kpi-total-mac').innerText = totalMac.toLocaleString('id-ID');
+            document.getElementById('kpi-total-iphone').innerText = totalIphone.toLocaleString('id-ID');
+            document.getElementById('kpi-total-ipad').innerText = totalIpad.toLocaleString('id-ID');
+            document.getElementById('kpi-total-watch').innerText = totalWatch.toLocaleString('id-ID');
+
+            // Update Average per LOB dalam Sehari (Poin 1)
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / activeDaysCount).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeDaysCount).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeDaysCount).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeDaysCount).toFixed(1);
+
             document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
             document.getElementById('kpi-active-champions').innerText = champions.size;
-            document.getElementById('kpi-total-stores').innerText = stores.size;
 
             renderTop10Sales(data);
             renderTop10Stores(data);
