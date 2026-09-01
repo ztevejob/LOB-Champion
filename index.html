@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Monitoring LOB Champion</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PapaParse for CSV Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            --glass-bg: rgba(30, 41, 59, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-card: rgba(15, 23, 42, 0.55);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent: #6366f1;
+        }
+
+        .light-mode {
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #e2e8f0 100%);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-card: rgba(255, 255, 255, 0.5);
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --accent: #4f46e5;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="w-full md:w-64 glass-panel m-2 p-4 flex flex-col justify-between shrink-0 z-20 transition-all duration-300">
+        <div>
+            <!-- Header Logo -->
+            <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-indigo-600 rounded-lg text-white">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">LOB Champion</h1>
+                        <p class="text-xs text-indigo-400 font-medium">Monitoring Dashboard</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-2">
+                <a href="#overview" onclick="showSection('overview')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-indigo-600/30 text-indigo-300 border border-indigo-500/30">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview KPI
+                </a>
+                <a href="#store-perf" onclick="showSection('store-perf')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="store" class="w-4 h-4"></i> Performance Store
+                </a>
+                <a href="#compliance" onclick="showSection('compliance')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="calendar-check" class="w-4 h-4"></i> Matriks Kedisiplinan
+                </a>
+                <a href="#raw-data" onclick="showSection('raw-data')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                    <i data-lucide="database" class="w-4 h-4"></i> Data Transaksi
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer & Controls -->
+        <div class="pt-4 border-t border-white/10 space-y-3">
+            <!-- Sync / Refresh -->
+            <button onclick="fetchLiveData()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-lg shadow-indigo-600/30">
+                <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Live Sync Data
+            </button>
+
+            <!-- Theme Toggle -->
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg glass-card text-sm font-medium hover:bg-white/10 transition">
+                <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+                <span id="theme-text">Mode Gelap</span>
+            </button>
+
+            <div class="text-[11px] text-center opacity-60">
+                Auto-sync live via Google Sheets CSV
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 m-2 md:m-3 flex flex-col gap-4 overflow-hidden">
+
+        <!-- TOP BAR -->
+        <header class="glass-panel p-4 flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold" id="page-title">Executive Overview</h2>
+                <p class="text-xs opacity-70 flex items-center gap-2 mt-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Terakhir diperbarui: <span id="last-update" class="font-semibold">Memuat...</span>
+                </p>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap items-center gap-3 text-xs">
+                <div>
+                    <label class="block opacity-60 mb-1">Filter LOB</label>
+                    <select id="filter-lob" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <option value="ALL">Semua LOB</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block opacity-60 mb-1">Filter Shift</label>
+                    <select id="filter-shift" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <option value="ALL">Semua Shift</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block opacity-60 mb-1">Filter Position</label>
+                    <select id="filter-position" onchange="applyFilters()" class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <option value="ALL">Semua Jabatan</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI SUMMARY CARDS -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium opacity-70">Total Unit Terjual</p>
+                    <h3 class="text-2xl font-bold mt-1 text-indigo-400" id="kpi-total-qty">0</h3>
+                </div>
+                <div class="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400">
+                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium opacity-70">Total Laporan Masuk</p>
+                    <h3 class="text-2xl font-bold mt-1 text-emerald-400" id="kpi-total-reports">0</h3>
+                </div>
+                <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
+                    <i data-lucide="file-check" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium opacity-70">Champion Aktif</p>
+                    <h3 class="text-2xl font-bold mt-1 text-amber-400" id="kpi-active-champions">0</h3>
+                </div>
+                <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium opacity-70">Store Berpartisipasi</p>
+                    <h3 class="text-2xl font-bold mt-1 text-sky-400" id="kpi-total-stores">0</h3>
+                </div>
+                <div class="p-3 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sky-400">
+                    <i data-lucide="map-pin" class="w-6 h-6"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD CHARTS GRID -->
+        <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+
+            <!-- ROW 1: LOB Breakdown & Shift Yield -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Bar Chart LOB -->
+                <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="smartphone" class="w-4 h-4 text-indigo-400"></i> Total Penjualan per Kategori LOB
+                        </h3>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="chartLOB"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pie Chart Shift -->
+                <div class="glass-panel p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Penjualan per Shift
+                        </h3>
+                    </div>
+                    <div class="h-64 relative flex items-center justify-center">
+                        <canvas id="chartShift"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: Store Ranking & Position Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Bar Chart Top Stores -->
+                <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Top Store Performa Tertinggi
+                        </h3>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="chartStores"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pie Chart Positions -->
+                <div class="glass-panel p-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="user-check" class="w-4 h-4 text-sky-400"></i> Kontribusi Berdasarkan Position
+                        </h3>
+                    </div>
+                    <div class="h-64 relative flex items-center justify-center">
+                        <canvas id="chartPosition"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAW DATA & LEADERBOARD TABLE -->
+            <div class="glass-panel p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-sm flex items-center gap-2">
+                        <i data-lucide="list-tree" class="w-4 h-4 text-indigo-400"></i> Leaderboard Champion & Transaksi Terbaru
+                    </h3>
+                    <input type="text" id="table-search" onkeyup="filterTable()" placeholder="Cari Store / Champion..." class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/10 text-opacity-60 bg-white/5">
+                                <th class="p-3">Tanggal</th>
+                                <th class="p-3">Store</th>
+                                <th class="p-3">Nama Champion</th>
+                                <th class="p-3">LOB</th>
+                                <th class="p-3">Shift</th>
+                                <th class="p-3">Position</th>
+                                <th class="p-3 text-right">Qty Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-white/5">
+                            <tr>
+                                <td colspan="7" class="p-4 text-center text-opacity-50">Sedang mengunduh data live...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JS DASHBOARD LOGIC -->
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?gid=813605285&single=true&output=csv';
+        
+        let rawData = [];
+        let filteredData = [];
+        let charts = {};
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // On Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLiveData();
+            // Auto refresh every 2 minutes for real live updates
+            setInterval(fetchLiveData, 120000);
+        });
+
+        // Toggle Dark/Light Mode
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            
+            document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+            document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
+            lucide.createIcons();
+            
+            // Re-render charts for appropriate colors
+            updateCharts();
+        }
+
+        // Fetch Live Data from Google Sheets
+        function fetchLiveData() {
+            const refreshIcon = document.getElementById('refresh-icon');
+            refreshIcon.classList.add('animate-spin');
+
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    refreshIcon.classList.remove('animate-spin');
+                    rawData = results.data.map(row => ({
+                        timestamp: row['Timestamp'] || '',
+                        coach: row['Email Sales Coach'] || '',
+                        champion: row['Nama Champion/ SA'] || row['Nama Champion'] || '',
+                        store: row['Store'] || '',
+                        date: row['Tanggal Transaksi'] || '',
+                        lob: row['Champion LOB'] || '',
+                        qty: parseInt(row['Total Qty'] || row['Qty'] || 0),
+                        position: row['Positions'] || row['Position'] || 'SA',
+                        shift: row['Shift'] || 'N/A'
+                    }));
+
+                    document.getElementById('last-update').innerText = new Date().toLocaleTimeString('id-ID');
+                    populateFilterOptions();
+                    applyFilters();
+                },
+                error: function(err) {
+                    refreshIcon.classList.remove('animate-spin');
+                    console.error('Error fetching CSV:', err);
+                    alert('Gagal mengambil data live. Silakan coba beberapa saat lagi.');
+                }
+            });
+        }
+
+        // Populate Dropdown Filters Dynamically
+        function populateFilterOptions() {
+            const lobSet = new Set();
+            const shiftSet = new Set();
+            const posSet = new Set();
+
+            rawData.forEach(item => {
+                if(item.lob) lobSet.add(item.lob);
+                if(item.shift) shiftSet.add(item.shift);
+                if(item.position) posSet.add(item.position);
+            });
+
+            populateSelect('filter-lob', Array.from(lobSet));
+            populateSelect('filter-shift', Array.from(shiftSet));
+            populateSelect('filter-position', Array.from(posSet));
+        }
+
+        function populateSelect(id, items) {
+            const select = document.getElementById(id);
+            const currentVal = select.value;
+            select.innerHTML = `<option value="ALL">Semua ${id.replace('filter-', '').toUpperCase()}</option>`;
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.innerText = item;
+                select.appendChild(opt);
+            });
+            select.value = currentVal;
+        }
+
+        // Apply Filters
+        function applyFilters() {
+            const lob = document.getElementById('filter-lob').value;
+            const shift = document.getElementById('filter-shift').value;
+            const pos = document.getElementById('filter-position').value;
+
+            filteredData = rawData.filter(item => {
+                const matchLob = (lob === 'ALL' || item.lob === lob);
+                const matchShift = (shift === 'ALL' || item.shift === shift);
+                const matchPos = (pos === 'ALL' || item.position === pos);
+                return matchLob && matchShift && matchPos;
+            });
+
+            updateKPIs();
+            updateCharts();
+            renderTable();
+        }
+
+        // Update KPI Cards
+        function updateKPIs() {
+            const totalQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
+            const totalReports = filteredData.length;
+            const champions = new Set(filteredData.map(i => i.champion)).size;
+            const stores = new Set(filteredData.map(i => i.store)).size;
+
+            document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
+            document.getElementById('kpi-total-reports').innerText = totalReports.toLocaleString('id-ID');
+            document.getElementById('kpi-active-champions').innerText = champions;
+            document.getElementById('kpi-total-stores').innerText = stores;
+        }
+
+        // Render Table Data
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center opacity-50">Tidak ada data sesuai filter.</td></tr>`;
+                return;
+            }
+
+            // Show latest 50 records
+            filteredData.slice(-50).reverse().forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-3 opacity-80">${row.date || row.timestamp.split(' ')[0]}</td>
+                    <td class="p-3 font-semibold">${row.store}</td>
+                    <td class="p-3">${row.champion}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300 font-medium">${row.lob}</span></td>
+                    <td class="p-3 opacity-80">${row.shift}</td>
+                    <td class="p-3 opacity-80">${row.position}</td>
+                    <td class="p-3 text-right font-bold text-indigo-400">${row.qty}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTable() {
+            const query = document.getElementById('table-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#table-body tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // Update Chart Visualizations
+        function updateCharts() {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+            const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+
+            // 1. Chart LOB Performance
+            const lobGroup = {};
+            filteredData.forEach(d => {
+                lobGroup[d.lob] = (lobGroup[d.lob] || 0) + d.qty;
+            });
+
+            createOrUpdateChart('chartLOB', 'bar', {
+                labels: Object.keys(lobGroup),
+                datasets: [{
+                    label: 'Unit Terjual',
+                    data: Object.values(lobGroup),
+                    backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#06b6d4', '#ec4899'],
+                    borderRadius: 6
+                }]
+            }, textColor, gridColor);
+
+            // 2. Chart Shift Yield
+            const shiftGroup = {};
+            filteredData.forEach(d => {
+                shiftGroup[d.shift] = (shiftGroup[d.shift] || 0) + d.qty;
+            });
+
+            createOrUpdateChart('chartShift', 'doughnut', {
+                labels: Object.keys(shiftGroup),
+                datasets: [{
+                    data: Object.values(shiftGroup),
+                    backgroundColor: ['#6366f1', '#f59e0b', '#10b981', '#64748b']
+                }]
+            }, textColor, gridColor);
+
+            // 3. Top Stores
+            const storeGroup = {};
+            filteredData.forEach(d => {
+                storeGroup[d.store] = (storeGroup[d.store] || 0) + d.qty;
+            });
+            const sortedStores = Object.entries(storeGroup).sort((a,b) => b[1] - a[1]).slice(0, 10);
+
+            createOrUpdateChart('chartStores', 'bar', {
+                labels: sortedStores.map(s => s[0]),
+                datasets: [{
+                    label: 'Total Qty',
+                    data: sortedStores.map(s => s[1]),
+                    backgroundColor: '#10b981',
+                    borderRadius: 6
+                }]
+            }, textColor, gridColor);
+
+            // 4. Position Breakdown
+            const posGroup = {};
+            filteredData.forEach(d => {
+                posGroup[d.position] = (posGroup[d.position] || 0) + d.qty;
+            });
+
+            createOrUpdateChart('chartPosition', 'pie', {
+                labels: Object.keys(posGroup),
+                datasets: [{
+                    data: Object.values(posGroup),
+                    backgroundColor: ['#06b6d4', '#ec4899', '#8b5cf6', '#f59e0b']
+                }]
+            }, textColor, gridColor);
+        }
+
+        function createOrUpdateChart(canvasId, type, data, textColor, gridColor) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            charts[canvasId] = new Chart(ctx, {
+                type: type,
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: textColor }
+                        }
+                    },
+                    scales: (type === 'bar') ? {
+                        x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                        y: { ticks: { color: textColor }, grid: { color: gridColor } }
+                    } : {}
+                }
+            });
+        }
+    </script>
+</body>
+</html>
