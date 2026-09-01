@@ -65,6 +65,12 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
 
+        .nav-active {
+            background-color: rgba(99, 102, 241, 0.3) !important;
+            color: #818cf8 !important;
+            border: 1px solid rgba(99, 102, 241, 0.4) !important;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -98,30 +104,28 @@
             </div>
 
             <!-- Navigation Links -->
-            <nav class="space-y-2">
-                <a href="#overview" onclick="showSection('overview')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-indigo-600/30 text-indigo-300 border border-indigo-500/30">
+            <nav class="space-y-2" id="sidebar-nav">
+                <button onclick="showSection('overview')" id="btn-overview" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview KPI
-                </a>
-                <a href="#store-perf" onclick="showSection('store-perf')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                </button>
+                <button onclick="showSection('store-perf')" id="btn-store-perf" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="store" class="w-4 h-4"></i> Performance Store
-                </a>
-                <a href="#compliance" onclick="showSection('compliance')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                </button>
+                <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="calendar-check" class="w-4 h-4"></i> Matriks Kedisiplinan
-                </a>
-                <a href="#raw-data" onclick="showSection('raw-data')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
+                </button>
+                <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="database" class="w-4 h-4"></i> Data Transaksi
-                </a>
+                </button>
             </nav>
         </div>
 
         <!-- Sidebar Footer & Controls -->
         <div class="pt-4 border-t border-white/10 space-y-3">
-            <!-- Sync / Refresh -->
             <button onclick="fetchLiveData()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-lg shadow-indigo-600/30">
                 <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Live Sync Data
             </button>
 
-            <!-- Theme Toggle -->
             <button onclick="toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg glass-card text-sm font-medium hover:bg-white/10 transition">
                 <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
                 <span id="theme-text">Mode Gelap</span>
@@ -212,91 +216,124 @@
             </div>
         </section>
 
-        <!-- DASHBOARD CHARTS GRID -->
-        <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+        <!-- DYNAMIC CONTENT SECTIONS -->
+        <div class="flex-1 overflow-y-auto pr-1">
 
-            <!-- ROW 1: LOB Breakdown & Shift Yield -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Bar Chart LOB -->
-                <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
+            <!-- SECTION 1: OVERVIEW KPI -->
+            <div id="sec-overview" class="content-section space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="smartphone" class="w-4 h-4 text-indigo-400"></i> Total Penjualan per Kategori LOB
                         </h3>
+                        <div class="h-64 relative"><canvas id="chartLOB"></canvas></div>
                     </div>
-                    <div class="h-64 relative">
-                        <canvas id="chartLOB"></canvas>
-                    </div>
-                </div>
-
-                <!-- Pie Chart Shift -->
-                <div class="glass-panel p-4 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
+                    <div class="glass-panel p-4 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Penjualan per Shift
                         </h3>
-                    </div>
-                    <div class="h-64 relative flex items-center justify-center">
-                        <canvas id="chartShift"></canvas>
+                        <div class="h-64 relative flex items-center justify-center"><canvas id="chartShift"></canvas></div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ROW 2: Store Ranking & Position Breakdown -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Bar Chart Top Stores -->
-                <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Top Store Performa Tertinggi
                         </h3>
+                        <div class="h-64 relative"><canvas id="chartStoresOverview"></canvas></div>
                     </div>
-                    <div class="h-64 relative">
-                        <canvas id="chartStores"></canvas>
-                    </div>
-                </div>
-
-                <!-- Pie Chart Positions -->
-                <div class="glass-panel p-4 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
+                    <div class="glass-panel p-4 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="user-check" class="w-4 h-4 text-sky-400"></i> Kontribusi Berdasarkan Position
                         </h3>
-                    </div>
-                    <div class="h-64 relative flex items-center justify-center">
-                        <canvas id="chartPosition"></canvas>
+                        <div class="h-64 relative flex items-center justify-center"><canvas id="chartPosition"></canvas></div>
                     </div>
                 </div>
             </div>
 
-            <!-- RAW DATA & LEADERBOARD TABLE -->
-            <div class="glass-panel p-4">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-sm flex items-center gap-2">
-                        <i data-lucide="list-tree" class="w-4 h-4 text-indigo-400"></i> Leaderboard Champion & Transaksi Terbaru
+            <!-- SECTION 2: PERFORMANCE STORE -->
+            <div id="sec-store-perf" class="content-section space-y-4 hidden">
+                <div class="glass-panel p-4">
+                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                        <i data-lucide="store" class="w-4 h-4 text-emerald-400"></i> Ranking Performa Store (Top 15)
                     </h3>
-                    <input type="text" id="table-search" onkeyup="filterTable()" placeholder="Cari Store / Champion..." class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <div class="h-72 relative"><canvas id="chartStoreFull"></canvas></div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-white/10 text-opacity-60 bg-white/5">
-                                <th class="p-3">Tanggal</th>
-                                <th class="p-3">Store</th>
-                                <th class="p-3">Nama Champion</th>
-                                <th class="p-3">LOB</th>
-                                <th class="p-3">Shift</th>
-                                <th class="p-3">Position</th>
-                                <th class="p-3 text-right">Qty Unit</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body" class="divide-y divide-white/5">
-                            <tr>
-                                <td colspan="7" class="p-4 text-center text-opacity-50">Sedang mengunduh data live...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="glass-panel p-4">
+                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                        <i data-lucide="list" class="w-4 h-4 text-indigo-400"></i> Rekap Performa Seluruh Store
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 bg-white/5">
+                                    <th class="p-3">Nama Store</th>
+                                    <th class="p-3 text-center">Total Unit</th>
+                                    <th class="p-3 text-center">Jumlah Transaksi</th>
+                                    <th class="p-3 text-center">Champion Aktif</th>
+                                </tr>
+                            </thead>
+                            <tbody id="store-table-body" class="divide-y divide-white/5"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: MATRIKS KEDISIPLINAN -->
+            <div id="sec-compliance" class="content-section space-y-4 hidden">
+                <div class="glass-panel p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i> Matriks Kedisiplinan Laporan Harian
+                        </h3>
+                        <div class="flex items-center gap-4 text-xs opacity-80">
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-500 inline-block"></span> Sudah Lapor</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-rose-500/30 border border-rose-500 inline-block"></span> Kosong / Off</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-center border-collapse">
+                            <thead>
+                                <tr id="compliance-header" class="border-b border-white/10 bg-white/5"></tr>
+                            </thead>
+                            <tbody id="compliance-body" class="divide-y divide-white/5"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: RAW DATA TRANSAKSI -->
+            <div id="sec-raw-data" class="content-section space-y-4 hidden">
+                <div class="glass-panel p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="database" class="w-4 h-4 text-indigo-400"></i> Riwayat Seluruh Transaksi
+                        </h3>
+                        <input type="text" id="table-search" onkeyup="filterTable()" placeholder="Cari Store / Champion..." class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 text-opacity-60 bg-white/5">
+                                    <th class="p-3">Tanggal</th>
+                                    <th class="p-3">Store</th>
+                                    <th class="p-3">Nama Champion</th>
+                                    <th class="p-3">LOB</th>
+                                    <th class="p-3">Shift</th>
+                                    <th class="p-3">Position</th>
+                                    <th class="p-3 text-right">Qty Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="divide-y divide-white/5">
+                                <tr>
+                                    <td colspan="7" class="p-4 text-center text-opacity-50">Sedang mengunduh data live...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -311,30 +348,38 @@
         let filteredData = [];
         let charts = {};
 
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // On Page Load
         document.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-            // Auto refresh every 2 minutes for real live updates
             setInterval(fetchLiveData, 120000);
         });
 
-        // Toggle Dark/Light Mode
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('#sidebar-nav button').forEach(btn => btn.classList.remove('nav-active'));
+
+            document.getElementById(`sec-${sectionId}`).classList.remove('hidden');
+            document.getElementById(`btn-${sectionId}`).classList.add('nav-active');
+
+            const titles = {
+                'overview': 'Executive Overview',
+                'store-perf': 'Performance Store Analisis',
+                'compliance': 'Matriks Kedisiplinan Pelaporan',
+                'raw-data': 'Detail Transaksi Real-time'
+            };
+            document.getElementById('page-title').innerText = titles[sectionId];
+        }
+
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
-            
             document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
             document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
             lucide.createIcons();
-            
-            // Re-render charts for appropriate colors
             updateCharts();
         }
 
-        // Fetch Live Data from Google Sheets
         function fetchLiveData() {
             const refreshIcon = document.getElementById('refresh-icon');
             refreshIcon.classList.add('animate-spin');
@@ -364,12 +409,10 @@
                 error: function(err) {
                     refreshIcon.classList.remove('animate-spin');
                     console.error('Error fetching CSV:', err);
-                    alert('Gagal mengambil data live. Silakan coba beberapa saat lagi.');
                 }
             });
         }
 
-        // Populate Dropdown Filters Dynamically
         function populateFilterOptions() {
             const lobSet = new Set();
             const shiftSet = new Set();
@@ -399,7 +442,6 @@
             select.value = currentVal;
         }
 
-        // Apply Filters
         function applyFilters() {
             const lob = document.getElementById('filter-lob').value;
             const shift = document.getElementById('filter-shift').value;
@@ -415,33 +457,28 @@
             updateKPIs();
             updateCharts();
             renderTable();
+            renderStoreTable();
+            renderComplianceMatrix();
         }
 
-        // Update KPI Cards
         function updateKPIs() {
             const totalQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
-            const totalReports = filteredData.length;
-            const champions = new Set(filteredData.map(i => i.champion)).size;
-            const stores = new Set(filteredData.map(i => i.store)).size;
-
             document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
-            document.getElementById('kpi-total-reports').innerText = totalReports.toLocaleString('id-ID');
-            document.getElementById('kpi-active-champions').innerText = champions;
-            document.getElementById('kpi-total-stores').innerText = stores;
+            document.getElementById('kpi-total-reports').innerText = filteredData.length.toLocaleString('id-ID');
+            document.getElementById('kpi-active-champions').innerText = new Set(filteredData.map(i => i.champion)).size;
+            document.getElementById('kpi-total-stores').innerText = new Set(filteredData.map(i => i.store)).size;
         }
 
-        // Render Table Data
         function renderTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
 
             if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center opacity-50">Tidak ada data sesuai filter.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center opacity-50">Tidak ada data.</td></tr>`;
                 return;
             }
 
-            // Show latest 50 records
-            filteredData.slice(-50).reverse().forEach(row => {
+            filteredData.slice(-100).reverse().forEach(row => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-white/5 transition';
                 tr.innerHTML = `
@@ -459,99 +496,127 @@
 
         function filterTable() {
             const query = document.getElementById('table-search').value.toLowerCase();
-            const rows = document.querySelectorAll('#table-body tr');
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
+            document.querySelectorAll('#table-body tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
             });
         }
 
-        // Update Chart Visualizations
+        function renderStoreTable() {
+            const tbody = document.getElementById('store-table-body');
+            tbody.innerHTML = '';
+
+            const storeStats = {};
+            filteredData.forEach(d => {
+                if(!storeStats[d.store]) {
+                    storeStats[d.store] = { qty: 0, reports: 0, champions: new Set() };
+                }
+                storeStats[d.store].qty += d.qty;
+                storeStats[d.store].reports += 1;
+                storeStats[d.store].champions.add(d.champion);
+            });
+
+            Object.entries(storeStats).sort((a,b) => b[1].qty - a[1].qty).forEach(([store, data]) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold">${store}</td>
+                    <td class="p-3 text-center font-bold text-indigo-400">${data.qty}</td>
+                    <td class="p-3 text-center opacity-80">${data.reports}</td>
+                    <td class="p-3 text-center opacity-80">${data.champions.size}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderComplianceMatrix() {
+            const header = document.getElementById('compliance-header');
+            const tbody = document.getElementById('compliance-body');
+            
+            const dates = Array.from(new Set(filteredData.map(d => d.date || d.timestamp.split(' ')[0]))).sort().slice(-7);
+            const stores = Array.from(new Set(filteredData.map(d => d.store))).sort();
+
+            header.innerHTML = `<th class="p-3 text-left">Nama Store</th>` + dates.map(d => `<th class="p-3">${d}</th>`).join('');
+            tbody.innerHTML = '';
+
+            stores.forEach(store => {
+                let rowHtml = `<td class="p-3 text-left font-semibold">${store}</td>`;
+                dates.forEach(date => {
+                    const reports = filteredData.filter(d => d.store === store && (d.date === date || d.timestamp.startsWith(date)));
+                    if(reports.length > 0) {
+                        const totalUnits = reports.reduce((s, r) => s + r.qty, 0);
+                        rowHtml += `<td class="p-2"><span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold block">${totalUnits} unit</span></td>`;
+                    } else {
+                        rowHtml += `<td class="p-2"><span class="px-2 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 font-medium block">OFF / Kosong</span></td>`;
+                    }
+                });
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-white/5 transition';
+                tr.innerHTML = rowHtml;
+                tbody.appendChild(tr);
+            });
+        }
+
         function updateCharts() {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
             const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
 
-            // 1. Chart LOB Performance
+            // LOB Chart
             const lobGroup = {};
-            filteredData.forEach(d => {
-                lobGroup[d.lob] = (lobGroup[d.lob] || 0) + d.qty;
-            });
-
+            filteredData.forEach(d => lobGroup[d.lob] = (lobGroup[d.lob] || 0) + d.qty);
             createOrUpdateChart('chartLOB', 'bar', {
                 labels: Object.keys(lobGroup),
-                datasets: [{
-                    label: 'Unit Terjual',
-                    data: Object.values(lobGroup),
-                    backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#06b6d4', '#ec4899'],
-                    borderRadius: 6
-                }]
+                datasets: [{ label: 'Unit', data: Object.values(lobGroup), backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#06b6d4'] }]
             }, textColor, gridColor);
 
-            // 2. Chart Shift Yield
+            // Shift Chart
             const shiftGroup = {};
-            filteredData.forEach(d => {
-                shiftGroup[d.shift] = (shiftGroup[d.shift] || 0) + d.qty;
-            });
-
+            filteredData.forEach(d => shiftGroup[d.shift] = (shiftGroup[d.shift] || 0) + d.qty);
             createOrUpdateChart('chartShift', 'doughnut', {
                 labels: Object.keys(shiftGroup),
-                datasets: [{
-                    data: Object.values(shiftGroup),
-                    backgroundColor: ['#6366f1', '#f59e0b', '#10b981', '#64748b']
-                }]
+                datasets: [{ data: Object.values(shiftGroup), backgroundColor: ['#6366f1', '#f59e0b', '#10b981'] }]
             }, textColor, gridColor);
 
-            // 3. Top Stores
+            // Store Top 10 Chart (Overview)
             const storeGroup = {};
-            filteredData.forEach(d => {
-                storeGroup[d.store] = (storeGroup[d.store] || 0) + d.qty;
-            });
-            const sortedStores = Object.entries(storeGroup).sort((a,b) => b[1] - a[1]).slice(0, 10);
-
-            createOrUpdateChart('chartStores', 'bar', {
-                labels: sortedStores.map(s => s[0]),
-                datasets: [{
-                    label: 'Total Qty',
-                    data: sortedStores.map(s => s[1]),
-                    backgroundColor: '#10b981',
-                    borderRadius: 6
-                }]
+            filteredData.forEach(d => storeGroup[d.store] = (storeGroup[d.store] || 0) + d.qty);
+            const topStores = Object.entries(storeGroup).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            createOrUpdateChart('chartStoresOverview', 'bar', {
+                labels: topStores.map(s => s[0]),
+                datasets: [{ label: 'Total Qty', data: topStores.map(s => s[1]), backgroundColor: '#10b981' }]
             }, textColor, gridColor);
 
-            // 4. Position Breakdown
-            const posGroup = {};
-            filteredData.forEach(d => {
-                posGroup[d.position] = (posGroup[d.position] || 0) + d.qty;
-            });
+            // Store Top 15 Chart (Full)
+            const top15Stores = Object.entries(storeGroup).sort((a,b) => b[1] - a[1]).slice(0, 15);
+            createOrUpdateChart('chartStoreFull', 'bar', {
+                labels: top15Stores.map(s => s[0]),
+                datasets: [{ label: 'Total Unit Terjual', data: top15Stores.map(s => s[1]), backgroundColor: '#6366f1' }]
+            }, textColor, gridColor);
 
+            // Position Chart
+            const posGroup = {};
+            filteredData.forEach(d => posGroup[d.position] = (posGroup[d.position] || 0) + d.qty);
             createOrUpdateChart('chartPosition', 'pie', {
                 labels: Object.keys(posGroup),
-                datasets: [{
-                    data: Object.values(posGroup),
-                    backgroundColor: ['#06b6d4', '#ec4899', '#8b5cf6', '#f59e0b']
-                }]
+                datasets: [{ data: Object.values(posGroup), backgroundColor: ['#06b6d4', '#ec4899', '#8b5cf6'] }]
             }, textColor, gridColor);
         }
 
         function createOrUpdateChart(canvasId, type, data, textColor, gridColor) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
             
             if (charts[canvasId]) {
                 charts[canvasId].destroy();
             }
 
-            charts[canvasId] = new Chart(ctx, {
+            charts[canvasId] = new Chart(ctx.getContext('2d'), {
                 type: type,
                 data: data,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: textColor }
-                        }
-                    },
+                    plugins: { legend: { labels: { color: textColor } } },
                     scales: (type === 'bar') ? {
                         x: { ticks: { color: textColor }, grid: { color: gridColor } },
                         y: { ticks: { color: textColor }, grid: { color: gridColor } }
