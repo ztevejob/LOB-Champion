@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Monitoring LOB Champion</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- PapaParse for CSV Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -87,10 +83,8 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <!-- SIDEBAR -->
     <aside id="sidebar" class="w-full md:w-64 glass-panel m-2 p-4 flex flex-col justify-between shrink-0 z-20 transition-all duration-300">
         <div>
-            <!-- Header Logo -->
             <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-indigo-600 rounded-lg text-white">
@@ -103,7 +97,6 @@
                 </div>
             </div>
 
-            <!-- Navigation Links -->
             <nav class="space-y-2" id="sidebar-nav">
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview KPI
@@ -120,7 +113,6 @@
             </nav>
         </div>
 
-        <!-- Sidebar Footer & Controls -->
         <div class="pt-4 border-t border-white/10 space-y-3">
             <button onclick="fetchLiveData()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-lg shadow-indigo-600/30">
                 <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Live Sync Data
@@ -131,16 +123,15 @@
                 <span id="theme-text">Mode Gelap</span>
             </button>
 
-            <div class="text-[11px] text-center opacity-60">
-                Auto-sync live via Google Sheets CSV
+            <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
+                <p class="text-[10px] opacity-70 tracking-wide uppercase font-semibold">Created & Designed by</p>
+                <p class="text-xs font-bold text-indigo-400 mt-0.5">Novi Riyanto</p>
             </div>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 m-2 md:m-3 flex flex-col gap-4 overflow-hidden">
 
-        <!-- TOP BAR -->
         <header class="glass-panel p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
                 <h2 class="text-xl font-bold" id="page-title">Executive Overview</h2>
@@ -150,7 +141,6 @@
                 </p>
             </div>
 
-            <!-- Filters -->
             <div class="flex flex-wrap items-center gap-3 text-xs">
                 <div>
                     <label class="block opacity-60 mb-1">Filter LOB</label>
@@ -173,7 +163,6 @@
             </div>
         </header>
 
-        <!-- KPI SUMMARY CARDS -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
@@ -216,10 +205,8 @@
             </div>
         </section>
 
-        <!-- DYNAMIC CONTENT SECTIONS -->
-        <div class="flex-1 overflow-y-auto pr-1">
+        <div class="flex-1 overflow-y-auto pr-1 space-y-4">
 
-            <!-- SECTION 1: OVERVIEW KPI -->
             <div id="sec-overview" class="content-section space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="glass-panel p-4 md:col-span-2 flex flex-col justify-between">
@@ -244,386 +231,4 @@
                         <div class="h-64 relative"><canvas id="chartStoresOverview"></canvas></div>
                     </div>
                     <div class="glass-panel p-4 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                            <i data-lucide="user-check" class="w-4 h-4 text-sky-400"></i> Kontribusi Berdasarkan Position
-                        </h3>
-                        <div class="h-64 relative flex items-center justify-center"><canvas id="chartPosition"></canvas></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 2: PERFORMANCE STORE -->
-            <div id="sec-store-perf" class="content-section space-y-4 hidden">
-                <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                        <i data-lucide="store" class="w-4 h-4 text-emerald-400"></i> Ranking Performa Store (Top 15)
-                    </h3>
-                    <div class="h-72 relative"><canvas id="chartStoreFull"></canvas></div>
-                </div>
-
-                <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                        <i data-lucide="list" class="w-4 h-4 text-indigo-400"></i> Rekap Performa Seluruh Store
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-xs text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-white/10 bg-white/5">
-                                    <th class="p-3">Nama Store</th>
-                                    <th class="p-3 text-center">Total Unit</th>
-                                    <th class="p-3 text-center">Jumlah Transaksi</th>
-                                    <th class="p-3 text-center">Champion Aktif</th>
-                                </tr>
-                            </thead>
-                            <tbody id="store-table-body" class="divide-y divide-white/5"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 3: MATRIKS KEDISIPLINAN -->
-            <div id="sec-compliance" class="content-section space-y-4 hidden">
-                <div class="glass-panel p-4">
-                    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
-                            <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i> Matriks Kedisiplinan Laporan Harian
-                        </h3>
-                        <div class="flex items-center gap-4 text-xs opacity-80">
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-500 inline-block"></span> Sudah Lapor</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-rose-500/30 border border-rose-500 inline-block"></span> Kosong / Off</span>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-xs text-center border-collapse">
-                            <thead>
-                                <tr id="compliance-header" class="border-b border-white/10 bg-white/5"></tr>
-                            </thead>
-                            <tbody id="compliance-body" class="divide-y divide-white/5"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 4: RAW DATA TRANSAKSI -->
-            <div id="sec-raw-data" class="content-section space-y-4 hidden">
-                <div class="glass-panel p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
-                            <i data-lucide="database" class="w-4 h-4 text-indigo-400"></i> Riwayat Seluruh Transaksi
-                        </h3>
-                        <input type="text" id="table-search" onkeyup="filterTable()" placeholder="Cari Store / Champion..." class="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-xs text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-white/10 text-opacity-60 bg-white/5">
-                                    <th class="p-3">Tanggal</th>
-                                    <th class="p-3">Store</th>
-                                    <th class="p-3">Nama Champion</th>
-                                    <th class="p-3">LOB</th>
-                                    <th class="p-3">Shift</th>
-                                    <th class="p-3">Position</th>
-                                    <th class="p-3 text-right">Qty Unit</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-body" class="divide-y divide-white/5">
-                                <tr>
-                                    <td colspan="7" class="p-4 text-center text-opacity-50">Sedang mengunduh data live...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- JS DASHBOARD LOGIC -->
-    <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?gid=813605285&single=true&output=csv';
-        
-        let rawData = [];
-        let filteredData = [];
-        let charts = {};
-
-        lucide.createIcons();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchLiveData();
-            setInterval(fetchLiveData, 120000);
-        });
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden'));
-            document.querySelectorAll('#sidebar-nav button').forEach(btn => btn.classList.remove('nav-active'));
-
-            document.getElementById(`sec-${sectionId}`).classList.remove('hidden');
-            document.getElementById(`btn-${sectionId}`).classList.add('nav-active');
-
-            const titles = {
-                'overview': 'Executive Overview',
-                'store-perf': 'Performance Store Analisis',
-                'compliance': 'Matriks Kedisiplinan Pelaporan',
-                'raw-data': 'Detail Transaksi Real-time'
-            };
-            document.getElementById('page-title').innerText = titles[sectionId];
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
-            document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
-            lucide.createIcons();
-            updateCharts();
-        }
-
-        function fetchLiveData() {
-            const refreshIcon = document.getElementById('refresh-icon');
-            refreshIcon.classList.add('animate-spin');
-
-            Papa.parse(CSV_URL, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    refreshIcon.classList.remove('animate-spin');
-                    rawData = results.data.map(row => ({
-                        timestamp: row['Timestamp'] || '',
-                        coach: row['Email Sales Coach'] || '',
-                        champion: row['Nama Champion/ SA'] || row['Nama Champion'] || '',
-                        store: row['Store'] || '',
-                        date: row['Tanggal Transaksi'] || '',
-                        lob: row['Champion LOB'] || '',
-                        qty: parseInt(row['Total Qty'] || row['Qty'] || 0),
-                        position: row['Positions'] || row['Position'] || 'SA',
-                        shift: row['Shift'] || 'N/A'
-                    }));
-
-                    document.getElementById('last-update').innerText = new Date().toLocaleTimeString('id-ID');
-                    populateFilterOptions();
-                    applyFilters();
-                },
-                error: function(err) {
-                    refreshIcon.classList.remove('animate-spin');
-                    console.error('Error fetching CSV:', err);
-                }
-            });
-        }
-
-        function populateFilterOptions() {
-            const lobSet = new Set();
-            const shiftSet = new Set();
-            const posSet = new Set();
-
-            rawData.forEach(item => {
-                if(item.lob) lobSet.add(item.lob);
-                if(item.shift) shiftSet.add(item.shift);
-                if(item.position) posSet.add(item.position);
-            });
-
-            populateSelect('filter-lob', Array.from(lobSet));
-            populateSelect('filter-shift', Array.from(shiftSet));
-            populateSelect('filter-position', Array.from(posSet));
-        }
-
-        function populateSelect(id, items) {
-            const select = document.getElementById(id);
-            const currentVal = select.value;
-            select.innerHTML = `<option value="ALL">Semua ${id.replace('filter-', '').toUpperCase()}</option>`;
-            items.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item;
-                opt.innerText = item;
-                select.appendChild(opt);
-            });
-            select.value = currentVal;
-        }
-
-        function applyFilters() {
-            const lob = document.getElementById('filter-lob').value;
-            const shift = document.getElementById('filter-shift').value;
-            const pos = document.getElementById('filter-position').value;
-
-            filteredData = rawData.filter(item => {
-                const matchLob = (lob === 'ALL' || item.lob === lob);
-                const matchShift = (shift === 'ALL' || item.shift === shift);
-                const matchPos = (pos === 'ALL' || item.position === pos);
-                return matchLob && matchShift && matchPos;
-            });
-
-            updateKPIs();
-            updateCharts();
-            renderTable();
-            renderStoreTable();
-            renderComplianceMatrix();
-        }
-
-        function updateKPIs() {
-            const totalQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
-            document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
-            document.getElementById('kpi-total-reports').innerText = filteredData.length.toLocaleString('id-ID');
-            document.getElementById('kpi-active-champions').innerText = new Set(filteredData.map(i => i.champion)).size;
-            document.getElementById('kpi-total-stores').innerText = new Set(filteredData.map(i => i.store)).size;
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center opacity-50">Tidak ada data.</td></tr>`;
-                return;
-            }
-
-            filteredData.slice(-100).reverse().forEach(row => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-3 opacity-80">${row.date || row.timestamp.split(' ')[0]}</td>
-                    <td class="p-3 font-semibold">${row.store}</td>
-                    <td class="p-3">${row.champion}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300 font-medium">${row.lob}</span></td>
-                    <td class="p-3 opacity-80">${row.shift}</td>
-                    <td class="p-3 opacity-80">${row.position}</td>
-                    <td class="p-3 text-right font-bold text-indigo-400">${row.qty}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filterTable() {
-            const query = document.getElementById('table-search').value.toLowerCase();
-            document.querySelectorAll('#table-body tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
-            });
-        }
-
-        function renderStoreTable() {
-            const tbody = document.getElementById('store-table-body');
-            tbody.innerHTML = '';
-
-            const storeStats = {};
-            filteredData.forEach(d => {
-                if(!storeStats[d.store]) {
-                    storeStats[d.store] = { qty: 0, reports: 0, champions: new Set() };
-                }
-                storeStats[d.store].qty += d.qty;
-                storeStats[d.store].reports += 1;
-                storeStats[d.store].champions.add(d.champion);
-            });
-
-            Object.entries(storeStats).sort((a,b) => b[1].qty - a[1].qty).forEach(([store, data]) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-3 font-semibold">${store}</td>
-                    <td class="p-3 text-center font-bold text-indigo-400">${data.qty}</td>
-                    <td class="p-3 text-center opacity-80">${data.reports}</td>
-                    <td class="p-3 text-center opacity-80">${data.champions.size}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderComplianceMatrix() {
-            const header = document.getElementById('compliance-header');
-            const tbody = document.getElementById('compliance-body');
-            
-            const dates = Array.from(new Set(filteredData.map(d => d.date || d.timestamp.split(' ')[0]))).sort().slice(-7);
-            const stores = Array.from(new Set(filteredData.map(d => d.store))).sort();
-
-            header.innerHTML = `<th class="p-3 text-left">Nama Store</th>` + dates.map(d => `<th class="p-3">${d}</th>`).join('');
-            tbody.innerHTML = '';
-
-            stores.forEach(store => {
-                let rowHtml = `<td class="p-3 text-left font-semibold">${store}</td>`;
-                dates.forEach(date => {
-                    const reports = filteredData.filter(d => d.store === store && (d.date === date || d.timestamp.startsWith(date)));
-                    if(reports.length > 0) {
-                        const totalUnits = reports.reduce((s, r) => s + r.qty, 0);
-                        rowHtml += `<td class="p-2"><span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold block">${totalUnits} unit</span></td>`;
-                    } else {
-                        rowHtml += `<td class="p-2"><span class="px-2 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 font-medium block">OFF / Kosong</span></td>`;
-                    }
-                });
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-white/5 transition';
-                tr.innerHTML = rowHtml;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateCharts() {
-            const isLight = document.body.classList.contains('light-mode');
-            const textColor = isLight ? '#0f172a' : '#f8fafc';
-            const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
-
-            // LOB Chart
-            const lobGroup = {};
-            filteredData.forEach(d => lobGroup[d.lob] = (lobGroup[d.lob] || 0) + d.qty);
-            createOrUpdateChart('chartLOB', 'bar', {
-                labels: Object.keys(lobGroup),
-                datasets: [{ label: 'Unit', data: Object.values(lobGroup), backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#06b6d4'] }]
-            }, textColor, gridColor);
-
-            // Shift Chart
-            const shiftGroup = {};
-            filteredData.forEach(d => shiftGroup[d.shift] = (shiftGroup[d.shift] || 0) + d.qty);
-            createOrUpdateChart('chartShift', 'doughnut', {
-                labels: Object.keys(shiftGroup),
-                datasets: [{ data: Object.values(shiftGroup), backgroundColor: ['#6366f1', '#f59e0b', '#10b981'] }]
-            }, textColor, gridColor);
-
-            // Store Top 10 Chart (Overview)
-            const storeGroup = {};
-            filteredData.forEach(d => storeGroup[d.store] = (storeGroup[d.store] || 0) + d.qty);
-            const topStores = Object.entries(storeGroup).sort((a,b) => b[1] - a[1]).slice(0, 10);
-            createOrUpdateChart('chartStoresOverview', 'bar', {
-                labels: topStores.map(s => s[0]),
-                datasets: [{ label: 'Total Qty', data: topStores.map(s => s[1]), backgroundColor: '#10b981' }]
-            }, textColor, gridColor);
-
-            // Store Top 15 Chart (Full)
-            const top15Stores = Object.entries(storeGroup).sort((a,b) => b[1] - a[1]).slice(0, 15);
-            createOrUpdateChart('chartStoreFull', 'bar', {
-                labels: top15Stores.map(s => s[0]),
-                datasets: [{ label: 'Total Unit Terjual', data: top15Stores.map(s => s[1]), backgroundColor: '#6366f1' }]
-            }, textColor, gridColor);
-
-            // Position Chart
-            const posGroup = {};
-            filteredData.forEach(d => posGroup[d.position] = (posGroup[d.position] || 0) + d.qty);
-            createOrUpdateChart('chartPosition', 'pie', {
-                labels: Object.keys(posGroup),
-                datasets: [{ data: Object.values(posGroup), backgroundColor: ['#06b6d4', '#ec4899', '#8b5cf6'] }]
-            }, textColor, gridColor);
-        }
-
-        function createOrUpdateChart(canvasId, type, data, textColor, gridColor) {
-            const ctx = document.getElementById(canvasId);
-            if (!ctx) return;
-            
-            if (charts[canvasId]) {
-                charts[canvasId].destroy();
-            }
-
-            charts[canvasId] = new Chart(ctx.getContext('2d'), {
-                type: type,
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: textColor } } },
-                    scales: (type === 'bar') ? {
-                        x: { ticks: { color: textColor }, grid: { color: gridColor } },
-                        y: { ticks: { color: textColor }, grid: { color: gridColor } }
-                    } : {}
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+                        <h3 class="font-bold text-sm flex items-center gap
