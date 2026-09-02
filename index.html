@@ -23,7 +23,7 @@
             --header-bg: #0f172a;
         }
 
-        /* PERBAIKAN 1: Optimasi kontras & warna font pada Light Mode */
+        /* PERBAIKAN: Kontras & Warna Font Kritis untuk Mode Terang */
         .light-mode {
             --bg-gradient: linear-gradient(135deg, #eef2ff 0%, #f8fafc 50%, #e2e8f0 100%);
             --sidebar-bg: rgba(255, 255, 255, 0.85);
@@ -31,7 +31,7 @@
             --glass-border: rgba(0, 0, 0, 0.12);
             --glass-card: rgba(255, 255, 255, 0.9);
             --text-main: #0f172a;
-            --text-sub: #334155;
+            --text-sub: #1e293b;
             --accent: #4f46e5;
             --header-bg: #ffffff;
         }
@@ -39,14 +39,17 @@
         .light-mode .text-slate-300,
         .light-mode .text-slate-400,
         .light-mode .text-indigo-300,
-        .light-mode .text-sky-300 {
-            color: #1e293b !important;
+        .light-mode .text-sky-300,
+        .light-mode .text-amber-300,
+        .light-mode .text-rose-300 {
+            color: #0f172a !important;
         }
 
         .light-mode .opacity-60,
         .light-mode .opacity-70,
+        .light-mode .opacity-80,
         .light-mode .opacity-50 {
-            opacity: 0.9 !important;
+            opacity: 1 !important;
             color: #334155 !important;
         }
 
@@ -379,7 +382,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <!-- PERBAIKAN 5: Urutan header tabel Top 10 Champion Sales: Rank, Nama, Store, Sales LOB, Total Unit -->
                     <div class="glass-panel p-4">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-sm flex items-center gap-2">
@@ -470,12 +472,11 @@
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 
-                <!-- PERBAIKAN 4: Lokasi "Terlambat Submit" ditaruh diatas Matriks Kedisiplinan -->
+                <!-- PERBAIKAN: Posisi "Terlambat Submit" ditaruh di Atas Matriks Kedisiplinan -->
                 <div class="glass-panel p-4 border-l-4 border-amber-500">
                     <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
                         <div class="flex items-center gap-2">
                             <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
-                            <!-- PERBAIKAN 2: Judul diubah menjadi Terlambat Submit -->
                             <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide">Terlambat Submit</h3>
                         </div>
                         <button onclick="copyLateChampionsList()" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-700 dark:text-amber-300 rounded text-xs font-bold transition flex items-center gap-1.5">
@@ -486,7 +487,7 @@
                     
                     <div class="overflow-x-auto max-h-[300px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                            <!-- PERBAIKAN 3: Header tabel diubah menjadi Nama Champion & Timestamp Tanggal Transaksi -->
+                            <!-- PERBAIKAN: Header tabel diubah menjadi Nama Champion & Timestamp Tanggal Transaksi -->
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
                                 <tr>
                                     <th class="p-2 sticky-header-bg">Nama Champion</th>
@@ -1053,7 +1054,7 @@
             });
         }
 
-        <!-- PERBAIKAN 3: Struktur Tabel Terlambat Submit disesuaikan (Nama Champion, Timestamp Tanggal Transaksi) -->
+        /* PERBAIKAN: Rendering Tabel Terlambat Submit (2 Kolom: Nama Champion & Timestamp Tanggal Transaksi) */
         function renderLateChampionsTable(data) {
             const tbody = document.getElementById('late-champions-body');
             if (!tbody) return;
@@ -1606,7 +1607,6 @@
             });
         }
 
-        <!-- PERBAIKAN 5: Urutan rendering Top 10 Champion Sales disesuaikan dengan header (Rank, Nama, Store, Sales LOB, Total Unit) -->
         function renderTop10Sales(data) {
             const tbody = document.getElementById('top10-sales-body');
             if (!tbody) return;
