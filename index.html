@@ -472,7 +472,7 @@
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 
-                <!-- PERBAIKAN 1: Doughnut Chart Kepatuhan Pindah Paling Atas -->
+                <!-- Doughnut Chart Kepatuhan Pindah Paling Atas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
@@ -508,7 +508,6 @@
                     
                     <div class="overflow-x-auto max-h-[300px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                            <!-- PERBAIKAN 2: Header tabel (Nama Champion, Timestamp, Tanggal Transaksi) -->
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
                                 <tr>
                                     <th class="p-2 sticky-header-bg">Nama Champion</th>
@@ -1056,7 +1055,7 @@
             });
         }
 
-        /* PERBAIKAN 2: Headings & Tampilan Tabel Terlambat Submit (Nama Champion, Timestamp, Tanggal Transaksi) */
+        // PERBAIKAN: Warna font timestamp disesuaikan (text-amber-500 / text-amber-300 / text-white) agar sangat kontras dan jelas terbaca pada mode gelap
         function renderLateChampionsTable(data) {
             const tbody = document.getElementById('late-champions-body');
             if (!tbody) return;
@@ -1102,7 +1101,7 @@
                         <p class="text-[10px] opacity-80 font-semibold line-clamp-1">${item.store}</p>
                     </td>
                     <td class="p-2">
-                        <p class="font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200">${item.dateTsStr}</p>
+                        <p class="font-mono text-[11px] font-extrabold text-amber-600 dark:text-amber-400">${item.dateTsStr}</p>
                     </td>
                     <td class="p-2">
                         <p class="font-mono text-[11px] font-bold text-indigo-700 dark:text-indigo-300">${item.dateTxStr}</p>
@@ -1272,7 +1271,6 @@
             renderComplianceCharts();
         }
 
-        /* PERBAIKAN 3: Penyesuaian Kontras Label Doughnut Chart saat Dark/Light Mode */
         function renderComplianceCharts() {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
