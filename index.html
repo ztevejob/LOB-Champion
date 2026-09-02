@@ -345,7 +345,7 @@
                         <div class="h-64 relative"><canvas id="chartLOB"></canvas></div>
                     </div>
                     
-                    <!-- POIN 3: Penjualan per Shift di-breakdown per LOB -->
+                    <!-- Penjualan per Shift breakdown per LOB -->
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Penjualan per Shift (Breakdown per LOB)
@@ -442,23 +442,32 @@
             <!-- Section 3: Matriks Kedisiplinan Pelaporan Harian Store + Grafik Baru -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 
-                <!-- POIN 1 & 2: Donut Chart Submit vs Belum Submit (Kemarin & Hari Ini), Top 10 Disiplin Dihapus -->
-                <div class="grid grid-cols-1 gap-4">
+                <!-- PERBAIKAN 2: Grafik Kepatuhan Dipisah Antara Kemarin & Hari Ini -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Status Kepatuhan Pelaporan Store (Kemarin & Hari Ini)
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Status Kepatuhan Kemarin (<span id="chart-yesterday-date">01/09/2026</span>)
                         </h3>
                         <div class="h-64 relative flex items-center justify-center">
-                            <canvas id="chartCompliancePie"></canvas>
+                            <canvas id="chartComplianceYesterday"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-4 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i> Status Kepatuhan Hari Ini (<span id="chart-today-date">02/09/2026</span>)
+                        </h3>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="chartComplianceToday"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabel Matriks Kedisiplinan -->
+                <!-- PERBAIKAN 1: Tabel Matriks Kedisiplinan (Pagi, Middle, Siang) -->
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
                         <div>
-                            <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
+                            <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi, Middle, & Siang)</h3>
                             <p class="text-[11px] opacity-60 mt-0.5">Persentase kepatuhan dihitung berdasarkan Tanggal Transaksi pada periode terfilter</p>
                         </div>
                         <span id="total-stores-badge" class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Memuat...</span>
@@ -880,6 +889,12 @@
             document.getElementById('unsubmitted-date-label').innerText = formattedTodayDate;
             document.getElementById('unsubmitted-yesterday-label').innerText = formattedYesterdayDate;
             
+            // Tanggal di judul chart status kepatuhan
+            const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
+            const chartTodayLabel = document.getElementById('chart-today-date');
+            if (chartYesterdayLabel) chartYesterdayLabel.innerText = formattedYesterdayDate;
+            if (chartTodayLabel) chartTodayLabel.innerText = formattedTodayDate;
+
             const submittedToday = new Set();
             const submittedYesterday = new Set();
 
@@ -958,6 +973,7 @@
             });
         }
 
+        // PERBAIKAN 1: Matriks Kedisiplinan Pelaporan (Pagi, Middle, Siang)
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -979,11 +995,13 @@
                         
                         activeDatesSet.add(dateKey);
 
-                        if (!reportedMap[dateKey]) reportedMap[dateKey] = { pagi: new Set(), siang: new Set() };
+                        if (!reportedMap[dateKey]) reportedMap[dateKey] = { pagi: new Set(), middle: new Set(), siang: new Set() };
                         
                         if (store && store !== '-') {
-                            if (shift.includes('pagi') || shift.includes('1') || shift.includes('morning')) {
+                            if (shift.includes('pagi') || shift.includes('morning') || shift.includes('shift 1') || shift === '1') {
                                 reportedMap[dateKey].pagi.add(store.toLowerCase().trim());
+                            } else if (shift.includes('middle') || shift.includes('mid') || shift.includes('shift 2') || shift === '2') {
+                                reportedMap[dateKey].middle.add(store.toLowerCase().trim());
                             } else {
                                 reportedMap[dateKey].siang.add(store.toLowerCase().trim());
                             }
@@ -1018,10 +1036,11 @@
             }
 
             const activeDaysCount = activeDatesSet.size > 0 ? activeDatesSet.size : fullMonthDates.length;
-            const totalActiveSlots = activeDaysCount * 2;
+            // Dihitung berdasarkan 3 slot per hari (Pagi, Middle, Siang)
+            const totalActiveSlots = activeDaysCount * 3;
 
             let html = `
-                <table class="w-full text-xs text-center border-collapse border border-white/10 min-w-[750px]">
+                <table class="w-full text-xs text-center border-collapse border border-white/10 min-w-[900px]">
                     <thead class="sticky top-0 z-20 sticky-header-bg shadow-md">
                         <tr class="border-b border-white/10">
                             <th rowspan="2" class="p-2 text-center w-10 border-r border-white/10 sticky left-0 z-30 sticky-header-bg">No.</th>
@@ -1030,7 +1049,7 @@
 
             fullMonthDates.forEach(d => {
                 const colHeaderStyle = d.isActive ? 'text-indigo-300 font-bold' : 'opacity-40';
-                html += `<th colspan="2" class="p-1 border-r border-white/10 min-w-[44px] text-[10px] font-mono sticky-header-bg ${colHeaderStyle}">${d.label}</th>`;
+                html += `<th colspan="3" class="p-1 border-r border-white/10 min-w-[60px] text-[10px] font-mono sticky-header-bg ${colHeaderStyle}">${d.label}</th>`;
             });
 
             html += `
@@ -1040,7 +1059,7 @@
             `;
 
             fullMonthDates.forEach(() => {
-                html += `<th class="p-0.5 border-r border-white/5 bg-slate-800/50">P</th><th class="p-0.5 border-r border-white/10 bg-slate-800/50">S</th>`;
+                html += `<th class="p-0.5 border-r border-white/5 bg-slate-800/50">P</th><th class="p-0.5 border-r border-white/5 bg-slate-800/50">M</th><th class="p-0.5 border-r border-white/10 bg-slate-800/50">S</th>`;
             });
 
             html += `</tr></thead><tbody class="divide-y divide-white/5">`;
@@ -1054,11 +1073,14 @@
                     <td class="p-2 text-left font-semibold text-indigo-300 border-r border-white/10 whitespace-nowrap sticky left-10 z-10 sticky-header-bg">${store}</td>`;
 
                 fullMonthDates.forEach(d => {
-                    let hasPagi = false, hasSiang = false;
+                    let hasPagi = false, hasMiddle = false, hasSiang = false;
                     
                     if (reportedMap[d.key]) {
                         for (let repStore of reportedMap[d.key].pagi) {
                             if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasPagi = true; break; }
+                        }
+                        for (let repStore of reportedMap[d.key].middle) {
+                            if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasMiddle = true; break; }
                         }
                         for (let repStore of reportedMap[d.key].siang) {
                             if (repStore.includes(cleanStoreName) || cleanStoreName.includes(repStore)) { hasSiang = true; break; }
@@ -1066,9 +1088,11 @@
                     }
 
                     if (hasPagi) totalReportSlots++;
+                    if (hasMiddle) totalReportSlots++;
                     if (hasSiang) totalReportSlots++;
 
                     html += `<td class="p-0.5 border-r border-white/5 ${hasPagi ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasPagi ? '✓' : '✗'}</td>`;
+                    html += `<td class="p-0.5 border-r border-white/5 ${hasMiddle ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasMiddle ? '✓' : '✗'}</td>`;
                     html += `<td class="p-0.5 border-r border-white/10 ${hasSiang ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasSiang ? '✓' : '✗'}</td>`;
                 });
 
@@ -1092,7 +1116,7 @@
             renderComplianceCharts();
         }
 
-        // POIN 1: Render Donut Chart (Sudah Submit vs Belum Submit Kemarin & Hari Ini)
+        // PERBAIKAN 2: Render Chart Dipisah (Kemarin vs Hari Ini)
         function renderComplianceCharts() {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -1103,21 +1127,17 @@
             const submittedToday = totalStores - unsubmittedTodayList.length;
             const unsubmittedToday = unsubmittedTodayList.length;
 
-            if (chartInstances.compliancePie) chartInstances.compliancePie.destroy();
-            const ctxPie = document.getElementById('chartCompliancePie')?.getContext('2d');
-            if (ctxPie) {
-                chartInstances.compliancePie = new Chart(ctxPie, {
+            // Chart Kemarin
+            if (chartInstances.complianceYesterday) chartInstances.complianceYesterday.destroy();
+            const ctxYesterday = document.getElementById('chartComplianceYesterday')?.getContext('2d');
+            if (ctxYesterday) {
+                chartInstances.complianceYesterday = new Chart(ctxYesterday, {
                     type: 'doughnut',
                     data: {
-                        labels: [
-                            `Submit Kemarin (${submittedYesterday})`, 
-                            `Belum Submit Kemarin (${unsubmittedYesterday})`, 
-                            `Submit Hari Ini (${submittedToday})`, 
-                            `Belum Submit Hari Ini (${unsubmittedToday})`
-                        ],
+                        labels: ['Submit', 'Belum Submit'],
                         datasets: [{
-                            data: [submittedYesterday, unsubmittedYesterday, submittedToday, unsubmittedToday],
-                            backgroundColor: ['#10b981', '#f43f5e', '#3b82f6', '#fbbf24']
+                            data: [submittedYesterday, unsubmittedYesterday],
+                            backgroundColor: ['#10b981', '#f43f5e']
                         }]
                     },
                     options: {
@@ -1126,12 +1146,43 @@
                         plugins: {
                             legend: { 
                                 position: 'bottom',
-                                labels: { color: textColor, font: { size: 10 } } 
+                                labels: { color: textColor, font: { size: 11 } } 
                             },
                             datalabels: {
                                 color: '#ffffff',
-                                font: { weight: 'bold', size: 11 },
-                                formatter: (val) => val > 0 ? val : ''
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (val) => val > 0 ? `${val} Toko` : ''
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Chart Hari Ini
+            if (chartInstances.complianceToday) chartInstances.complianceToday.destroy();
+            const ctxToday = document.getElementById('chartComplianceToday')?.getContext('2d');
+            if (ctxToday) {
+                chartInstances.complianceToday = new Chart(ctxToday, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Submit', 'Belum Submit'],
+                        datasets: [{
+                            data: [submittedToday, unsubmittedToday],
+                            backgroundColor: ['#3b82f6', '#fbbf24']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: textColor, font: { size: 11 } } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (val) => val > 0 ? `${val} Toko` : ''
                             }
                         }
                     }
@@ -1188,7 +1239,7 @@
                 });
             }
 
-            // POIN 3: Penjualan per Shift di-breakdown per LOB (Grouped Bar Chart)
+            // Penjualan per Shift di-breakdown per LOB (Grouped Bar Chart)
             const shiftsSet = new Set();
             const lobsSet = new Set(['Mac', 'iPhone', 'iPad', 'Watch']);
             const shiftLobMatrix = {};
@@ -1231,7 +1282,7 @@
                 chartInstances.shift = new Chart(ctxShift, {
                     type: 'bar',
                     data: {
-                        labels: shiftLabels.length > 0 ? shiftLabels : ['Pagi', 'Siang'],
+                        labels: shiftLabels.length > 0 ? shiftLabels : ['Pagi', 'Middle', 'Siang'],
                         datasets: shiftDatasets
                     },
                     options: {
