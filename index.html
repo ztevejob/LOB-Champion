@@ -288,7 +288,7 @@
 
         </section>
 
-        <!-- POIN 2: Action Area Summary Toko Belum Submit (Kemarin & Hari Ini) -->
+        <!-- Summary Toko Belum Submit (Kemarin & Hari Ini) -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
             <div class="flex items-center justify-between border-b border-white/10 pb-2">
                 <div class="flex items-center gap-2">
@@ -322,7 +322,7 @@
                     <div>
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-slate-300">Hari Ini (<span id="unsubmitted-date-label">02/09/2026</span>)</span>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 text-rose-300"><span id="unsubmitted-count">0</span> Store</span>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30"><span id="unsubmitted-count">0</span> Store</span>
                         </div>
                         <p class="text-[11px] text-slate-400 mt-1 line-clamp-2" id="unsubmitted-list-text">Memuat data...</p>
                     </div>
@@ -337,18 +337,20 @@
 
             <!-- Section 1: Overview -->
             <div id="sec-overview" class="content-section space-y-4">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="smartphone" class="w-4 h-4 text-indigo-400"></i> Total Penjualan per Kategori LOB
                         </h3>
                         <div class="h-64 relative"><canvas id="chartLOB"></canvas></div>
                     </div>
+                    
+                    <!-- POIN 3: Penjualan per Shift di-breakdown per LOB -->
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                            <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Penjualan per Shift
+                            <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Penjualan per Shift (Breakdown per LOB)
                         </h3>
-                        <div class="h-64 relative flex items-center justify-center"><canvas id="chartShift"></canvas></div>
+                        <div class="h-64 relative"><canvas id="chartShift"></canvas></div>
                     </div>
                 </div>
 
@@ -437,25 +439,17 @@
                 </div>
             </div>
 
-            <!-- POIN 1: Section 3 - Matriks Kedisiplinan Pelaporan Harian Store + Grafik -->
+            <!-- Section 3: Matriks Kedisiplinan Pelaporan Harian Store + Grafik Baru -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 
-                <!-- Grafik Kedisiplinan Pelaporan -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <!-- POIN 1 & 2: Donut Chart Submit vs Belum Submit (Kemarin & Hari Ini), Top 10 Disiplin Dihapus -->
+                <div class="grid grid-cols-1 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Distribusi Kepatuhan Pelaporan
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Status Kepatuhan Pelaporan Store (Kemarin & Hari Ini)
                         </h3>
-                        <div class="h-56 relative flex items-center justify-center">
+                        <div class="h-64 relative flex items-center justify-center">
                             <canvas id="chartCompliancePie"></canvas>
-                        </div>
-                    </div>
-                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="award" class="w-4 h-4 text-indigo-400"></i> Top 10 Store Paling Disiplin
-                        </h3>
-                        <div class="h-56 relative">
-                            <canvas id="chartTopCompliance"></canvas>
                         </div>
                     </div>
                 </div>
@@ -869,16 +863,14 @@
             }
 
             updateMetricsAndCharts(filteredData);
-            calculateUnsubmittedSummary(rawCSVData); // POIN 2: Evaluasi Kemarin & Hari Ini
+            calculateUnsubmittedSummary(rawCSVData);
             renderWoWStoreTable(filteredData);
-            renderComplianceMatrix(filteredData);  // POIN 1: Matriks Kedisiplinan & Grafiknya
+            renderComplianceMatrix(filteredData);
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
 
-        // POIN 2: Kalkulasi Store Belum Submit (Kemarin vs Hari Ini)
         function calculateUnsubmittedSummary(data) {
-            // Acuan tanggal spesifik 02/09/2026 dan 01/09/2026
             const todayKey = "2026-09-02";
             const yesterdayKey = "2026-09-01";
 
@@ -926,7 +918,6 @@
             document.getElementById('unsubmitted-count').innerText = unsubmittedTodayList.length;
             document.getElementById('unsubmitted-yesterday-count').innerText = `${unsubmittedYesterdayList.length} Store`;
             
-            // Text Preview Hari Ini
             if (unsubmittedTodayList.length === 0) {
                 document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah submit hari ini (${formattedTodayDate}).`;
             } else {
@@ -935,7 +926,6 @@
                 document.getElementById('unsubmitted-list-text').innerText = `${preview}${extra}`;
             }
 
-            // Text Preview Kemarin
             if (unsubmittedYesterdayList.length === 0) {
                 document.getElementById('unsubmitted-yesterday-preview').innerText = `Seluruh store telah melengkapi laporan kemarin (${formattedYesterdayDate}).`;
             } else {
@@ -945,7 +935,6 @@
             }
         }
 
-        // POIN 2: Salin List Follow Up
         function copyUnsubmittedList() {
             const list = (currentModalTarget === 'yesterday') ? unsubmittedYesterdayList : unsubmittedTodayList;
             const dateStr = (currentModalTarget === 'yesterday') ? formattedYesterdayDate : formattedTodayDate;
@@ -969,7 +958,6 @@
             });
         }
 
-        // POIN 1: Matriks Kedisiplinan Pelaporan & Grafiknya
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -1057,9 +1045,6 @@
 
             html += `</tr></thead><tbody class="divide-y divide-white/5">`;
 
-            const storeComplianceList = [];
-            let highCount = 0, midCount = 0, lowCount = 0;
-
             stores.forEach((store, idx) => {
                 let totalReportSlots = 0;
                 const cleanStoreName = store.toLowerCase().trim();
@@ -1088,17 +1073,12 @@
                 });
 
                 const complianceRate = Math.min(100, Math.round((totalReportSlots / totalActiveSlots) * 100));
-                storeComplianceList.push({ store, rate: complianceRate });
 
                 let rateBadgeClass = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
                 if (complianceRate < 50) {
                     rateBadgeClass = 'bg-rose-500/20 text-rose-400 border-rose-500/30';
-                    lowCount++;
                 } else if (complianceRate < 80) {
                     rateBadgeClass = 'bg-amber-500/20 text-amber-400 border-amber-500/30';
-                    midCount++;
-                } else {
-                    highCount++;
                 }
 
                 html += `<td class="p-2 text-center font-bold">
@@ -1109,75 +1089,50 @@
             html += `</tbody></table>`;
             container.innerHTML = html;
 
-            // Render Grafik Kedisiplinan
-            renderComplianceCharts(storeComplianceList, highCount, midCount, lowCount);
+            renderComplianceCharts();
         }
 
-        // POIN 1: Render Grafik Kedisiplinan (Pie + Top Bar Chart)
-        function renderComplianceCharts(storeList, high, mid, low) {
+        // POIN 1: Render Donut Chart (Sudah Submit vs Belum Submit Kemarin & Hari Ini)
+        function renderComplianceCharts() {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            // 1. Chart Donut Distribusi
+            const totalStores = MASTER_STORES.length;
+            const submittedYesterday = totalStores - unsubmittedYesterdayList.length;
+            const unsubmittedYesterday = unsubmittedYesterdayList.length;
+            const submittedToday = totalStores - unsubmittedTodayList.length;
+            const unsubmittedToday = unsubmittedTodayList.length;
+
             if (chartInstances.compliancePie) chartInstances.compliancePie.destroy();
             const ctxPie = document.getElementById('chartCompliancePie')?.getContext('2d');
             if (ctxPie) {
                 chartInstances.compliancePie = new Chart(ctxPie, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Tinggi (≥80%)', 'Sedang (50-79%)', 'Rendah (<50%)'],
+                        labels: [
+                            `Submit Kemarin (${submittedYesterday})`, 
+                            `Belum Submit Kemarin (${unsubmittedYesterday})`, 
+                            `Submit Hari Ini (${submittedToday})`, 
+                            `Belum Submit Hari Ini (${unsubmittedToday})`
+                        ],
                         datasets: [{
-                            data: [high, mid, low],
-                            backgroundColor: ['#10b981', '#f59e0b', '#f43f5e']
+                            data: [submittedYesterday, unsubmittedYesterday, submittedToday, unsubmittedToday],
+                            backgroundColor: ['#10b981', '#f43f5e', '#3b82f6', '#fbbf24']
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { labels: { color: textColor, font: { size: 10 } } },
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: textColor, font: { size: 10 } } 
+                            },
                             datalabels: {
                                 color: '#ffffff',
                                 font: { weight: 'bold', size: 11 },
                                 formatter: (val) => val > 0 ? val : ''
                             }
-                        }
-                    }
-                });
-            }
-
-            // 2. Chart Bar Top 10 Disiplin
-            const top10Disiplin = [...storeList].sort((a, b) => b.rate - a.rate).slice(0, 10);
-            if (chartInstances.topCompliance) chartInstances.topCompliance.destroy();
-            const ctxBar = document.getElementById('chartTopCompliance')?.getContext('2d');
-            if (ctxBar) {
-                chartInstances.topCompliance = new Chart(ctxBar, {
-                    type: 'bar',
-                    data: {
-                        labels: top10Disiplin.map(item => item.store.replace('Digimap ', '')),
-                        datasets: [{
-                            label: '% Kepatuhan',
-                            data: top10Disiplin.map(item => item.rate),
-                            backgroundColor: '#6366f1',
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            datalabels: {
-                                anchor: 'end',
-                                align: 'top',
-                                color: textColor,
-                                font: { weight: 'bold', size: 10 },
-                                formatter: (val) => `${val}%`
-                            }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { size: 9 } } },
-                            y: { max: 100, ticks: { color: textColor } }
                         }
                     }
                 });
@@ -1233,35 +1188,68 @@
                 });
             }
 
-            const shiftCounts = {};
+            // POIN 3: Penjualan per Shift di-breakdown per LOB (Grouped Bar Chart)
+            const shiftsSet = new Set();
+            const lobsSet = new Set(['Mac', 'iPhone', 'iPad', 'Watch']);
+            const shiftLobMatrix = {};
+
             data.forEach(item => {
                 const shift = extractShift(item);
+                let lob = extractLOB(item);
                 const qty = extractQuantity(item);
-                shiftCounts[shift] = (shiftCounts[shift] || 0) + qty;
+
+                const lobLower = lob.toLowerCase();
+                if (lobLower.includes('mac')) lob = 'Mac';
+                else if (lobLower.includes('iphone')) lob = 'iPhone';
+                else if (lobLower.includes('ipad')) lob = 'iPad';
+                else if (lobLower.includes('watch')) lob = 'Watch';
+
+                if (shift && shift !== '-') {
+                    shiftsSet.add(shift);
+                    lobsSet.add(lob);
+                    if (!shiftLobMatrix[shift]) shiftLobMatrix[shift] = {};
+                    shiftLobMatrix[shift][lob] = (shiftLobMatrix[shift][lob] || 0) + qty;
+                }
+            });
+
+            const shiftLabels = Array.from(shiftsSet).sort();
+            const lobList = Array.from(lobsSet);
+
+            const shiftDatasets = lobList.map((lob, idx) => {
+                const colors = ['#6366f1', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
+                return {
+                    label: lob,
+                    data: shiftLabels.map(s => (shiftLobMatrix[s] && shiftLobMatrix[s][lob]) ? shiftLobMatrix[s][lob] : 0),
+                    backgroundColor: colors[idx % colors.length],
+                    borderRadius: 4
+                };
             });
 
             if (chartInstances.shift) chartInstances.shift.destroy();
             const ctxShift = document.getElementById('chartShift')?.getContext('2d');
             if (ctxShift) {
                 chartInstances.shift = new Chart(ctxShift, {
-                    type: 'doughnut',
+                    type: 'bar',
                     data: {
-                        labels: Object.keys(shiftCounts),
-                        datasets: [{
-                            data: Object.values(shiftCounts),
-                            backgroundColor: ['#6366f1', '#a855f7', '#ec4899', '#3b82f6']
-                        }]
+                        labels: shiftLabels.length > 0 ? shiftLabels : ['Pagi', 'Siang'],
+                        datasets: shiftDatasets
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { labels: { color: textColor } },
+                            legend: { labels: { color: textColor, font: { size: 10 } } },
                             datalabels: {
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 12 },
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { weight: 'bold', size: 9 },
                                 formatter: (val) => val > 0 ? val : ''
                             }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor } },
+                            y: { ticks: { color: textColor } }
                         }
                     }
                 });
