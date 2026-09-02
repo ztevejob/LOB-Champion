@@ -288,22 +288,49 @@
 
         </section>
 
-        <!-- POIN 2: Action Area: Store Belum Submit Hari Ini -->
-        <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <div class="p-2 bg-rose-500/20 text-rose-400 rounded-lg shrink-0">
-                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                </div>
-                <div>
+        <!-- POIN 2: Action Area Summary Toko Belum Submit (Kemarin & Hari Ini) -->
+        <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
+            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                <div class="flex items-center gap-2">
+                    <div class="p-1.5 bg-rose-500/20 text-rose-400 rounded-lg">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    </div>
                     <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400">
-                        Action Area: Store Belum Submit Hari Ini (<span id="unsubmitted-date-label">Hari Ini</span>) - <span id="unsubmitted-count">0</span> Store
+                        Action Area: Store Belum Submit (Kemarin vs Hari Ini)
                     </h4>
-                    <p class="text-xs text-slate-300 mt-0.5 line-clamp-2" id="unsubmitted-list-text">Memuat data...</p>
+                </div>
+                <span class="text-[10px] opacity-60">Acuan Tanggal Transaksi</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Data Kemarin -->
+                <div class="bg-white/5 p-3 rounded-lg border border-white/5 flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-300">Kemarin (<span id="unsubmitted-yesterday-label">01/09/2026</span>)</span>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30" id="unsubmitted-yesterday-count">0 Store</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-1 line-clamp-2" id="unsubmitted-yesterday-preview">Memuat data...</p>
+                    </div>
+                    <button onclick="toggleUnsubmittedModal('yesterday')" class="w-full py-1.5 bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30 text-xs rounded transition font-medium flex items-center justify-center gap-1">
+                        <i data-lucide="list-checks" class="w-3.5 h-3.5"></i> Detail Kemarin
+                    </button>
+                </div>
+
+                <!-- Data Hari Ini -->
+                <div class="bg-white/5 p-3 rounded-lg border border-white/5 flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-300">Hari Ini (<span id="unsubmitted-date-label">02/09/2026</span>)</span>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 text-rose-300"><span id="unsubmitted-count">0</span> Store</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-1 line-clamp-2" id="unsubmitted-list-text">Memuat data...</p>
+                    </div>
+                    <button onclick="toggleUnsubmittedModal('today')" class="w-full py-1.5 bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30 text-xs rounded transition font-medium flex items-center justify-center gap-1">
+                        <i data-lucide="list-checks" class="w-3.5 h-3.5"></i> Detail Hari Ini
+                    </button>
                 </div>
             </div>
-            <button onclick="toggleUnsubmittedModal()" class="w-full sm:w-auto px-3.5 py-2 bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 text-xs rounded-lg transition shrink-0 font-medium text-center flex items-center justify-center gap-1.5">
-                <i data-lucide="list-checks" class="w-4 h-4"></i> Lihat Detail & Follow Up
-            </button>
         </div>
 
         <div class="flex-1 overflow-y-auto pr-1 space-y-4">
@@ -410,15 +437,36 @@
                 </div>
             </div>
 
-            <!-- POIN 1 & 3: Section 3 - Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang) -->
+            <!-- POIN 1: Section 3 - Matriks Kedisiplinan Pelaporan Harian Store + Grafik -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
+                
+                <!-- Grafik Kedisiplinan Pelaporan -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Distribusi Kepatuhan Pelaporan
+                        </h3>
+                        <div class="h-56 relative flex items-center justify-center">
+                            <canvas id="chartCompliancePie"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
+                            <i data-lucide="award" class="w-4 h-4 text-indigo-400"></i> Top 10 Store Paling Disiplin
+                        </h3>
+                        <div class="h-56 relative">
+                            <canvas id="chartTopCompliance"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Matriks Kedisiplinan -->
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
                         <div>
                             <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
                             <p class="text-[11px] opacity-60 mt-0.5">Persentase kepatuhan dihitung berdasarkan Tanggal Transaksi pada periode terfilter</p>
                         </div>
-                        <!-- POIN 3: Menggunakan Total Seluruh Toko secara dinamis -->
                         <span id="total-stores-badge" class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Memuat...</span>
                     </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto max-h-[550px] relative"></div>
@@ -454,18 +502,18 @@
         </div>
     </main>
 
-    <!-- Modal Store Belum Submit (Action Area Hari Ini) -->
+    <!-- Modal Store Belum Submit (Action Area) -->
     <div id="unsubmitted-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-lg p-6 max-h-[85vh] flex flex-col justify-between shadow-2xl">
             <div>
                 <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
                     <div>
                         <h3 class="font-bold text-base text-rose-400 flex items-center gap-2">
-                            <i data-lucide="alert-triangle" class="w-5 h-5"></i> Action Area: Store Belum Submit Laporan
+                            <i data-lucide="alert-triangle" class="w-5 h-5"></i> Action Area: Store Belum Submit
                         </h3>
                         <p class="text-[11px] text-slate-400 mt-0.5">Daftar toko yang belum mengirimkan laporan pada tanggal <b id="unsubmitted-modal-date" class="text-rose-300"></b></p>
                     </div>
-                    <button onclick="toggleUnsubmittedModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+                    <button onclick="closeUnsubmittedModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
                 </div>
                 <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[45vh] space-y-1.5 text-xs pr-1"></div>
             </div>
@@ -473,7 +521,7 @@
                 <button onclick="copyUnsubmittedList()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1.5">
                     <i data-lucide="copy" class="w-4 h-4"></i> Salin List Follow-Up
                 </button>
-                <button onclick="toggleUnsubmittedModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-lg transition">Tutup</button>
+                <button onclick="closeUnsubmittedModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-lg transition">Tutup</button>
             </div>
         </div>
     </div>
@@ -523,8 +571,13 @@
         let rawCSVData = [];
         let filteredData = [];
         let chartInstances = {};
-        let unsubmittedStoresList = [];
-        let formattedTodayDate = "";
+        
+        let unsubmittedTodayList = [];
+        let unsubmittedYesterdayList = [];
+        let currentModalTarget = 'today';
+
+        let formattedTodayDate = "02/09/2026";
+        let formattedYesterdayDate = "01/09/2026";
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
@@ -629,7 +682,6 @@
             return item.Shift || '-';
         }
 
-        // POIN 1: Mengambil Tanggal_Transaksi terlebih dahulu agar kinerjanya presisi berbasis transaksi bisnis
         function extractDate(item) {
             if (!item) return '';
             const keys = Object.keys(item);
@@ -675,9 +727,40 @@
             applyFilters();
         }
 
-        function toggleUnsubmittedModal() {
+        function toggleUnsubmittedModal(target = 'today') {
+            currentModalTarget = target;
             const modal = document.getElementById('unsubmitted-modal');
-            modal.classList.toggle('hidden');
+            const dateLabel = document.getElementById('unsubmitted-modal-date');
+            const modalBody = document.getElementById('unsubmitted-modal-body');
+
+            const list = (target === 'yesterday') ? unsubmittedYesterdayList : unsubmittedTodayList;
+            const dateStr = (target === 'yesterday') ? formattedYesterdayDate : formattedTodayDate;
+
+            dateLabel.innerText = dateStr;
+            modalBody.innerHTML = '';
+
+            if (list.length === 0) {
+                modalBody.innerHTML = '<div class="p-3 text-center text-slate-400">Seluruh store telah mengirimkan laporan pada tanggal ini.</div>';
+            } else {
+                list.forEach((store, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'p-2 rounded bg-white/5 border border-white/5 flex items-center justify-between text-xs hover:bg-white/10 transition';
+                    item.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono opacity-50 text-[10px] w-5 text-right">${idx + 1}.</span> 
+                            <span class="font-medium text-slate-200">${store}</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-300 font-semibold border border-rose-500/30">Belum Submit</span>
+                    `;
+                    modalBody.appendChild(item);
+                });
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeUnsubmittedModal() {
+            document.getElementById('unsubmitted-modal').classList.add('hidden');
         }
 
         function updateFormattedTimestamp() {
@@ -780,34 +863,34 @@
                 return matchMonth && matchStore && matchLOB && matchShift;
             });
 
-            // POIN 3: Update Badge Total Toko
             const badgeEl = document.getElementById('total-stores-badge');
             if (badgeEl) {
                 badgeEl.innerText = `Total ${MASTER_STORES.length} Toko`;
             }
 
             updateMetricsAndCharts(filteredData);
-            calculateUnsubmittedToday(rawCSVData); // POIN 2: Evaluasi HARI INI
+            calculateUnsubmittedSummary(rawCSVData); // POIN 2: Evaluasi Kemarin & Hari Ini
             renderWoWStoreTable(filteredData);
-            renderComplianceMatrix(filteredData);  // POIN 1 & 3: Matriks Kedisiplinan Tanggal Transaksi
+            renderComplianceMatrix(filteredData);  // POIN 1: Matriks Kedisiplinan & Grafiknya
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
 
-        // POIN 2: Kalkulasi Store Belum Submit HARI INI
-        function calculateUnsubmittedToday(data) {
-            const today = new Date();
-            
-            const tYear = today.getFullYear();
-            const tMonthStr = String(today.getMonth() + 1).padStart(2, '0');
-            const tDayStr = String(today.getDate()).padStart(2, '0');
-            const todayKey = `${tYear}-${tMonthStr}-${tDayStr}`;
+        // POIN 2: Kalkulasi Store Belum Submit (Kemarin vs Hari Ini)
+        function calculateUnsubmittedSummary(data) {
+            // Acuan tanggal spesifik 02/09/2026 dan 01/09/2026
+            const todayKey = "2026-09-02";
+            const yesterdayKey = "2026-09-01";
 
-            formattedTodayDate = `${tDayStr}/${tMonthStr}/${tYear}`;
+            formattedTodayDate = "02/09/2026";
+            formattedYesterdayDate = "01/09/2026";
+
             document.getElementById('unsubmitted-date-label').innerText = formattedTodayDate;
-            document.getElementById('unsubmitted-modal-date').innerText = formattedTodayDate;
+            document.getElementById('unsubmitted-yesterday-label').innerText = formattedYesterdayDate;
             
-            const submittedStoresToday = new Set();
+            const submittedToday = new Set();
+            const submittedYesterday = new Set();
+
             data.forEach(item => {
                 const rawDateStr = extractDate(item);
                 const store = extractStore(item);
@@ -816,68 +899,77 @@
                     if (parsedDate) {
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
                         if (dateKey === todayKey) {
-                            submittedStoresToday.add(store.toLowerCase().trim());
+                            submittedToday.add(store.toLowerCase().trim());
+                        } else if (dateKey === yesterdayKey) {
+                            submittedYesterday.add(store.toLowerCase().trim());
                         }
                     }
                 }
             });
 
-            unsubmittedStoresList = MASTER_STORES.filter(store => {
-                const cleanStore = store.toLowerCase().trim();
-                for (let subStore of submittedStoresToday) {
-                    if (subStore.includes(cleanStore) || cleanStore.includes(subStore)) return false;
+            unsubmittedTodayList = MASTER_STORES.filter(store => {
+                const clean = store.toLowerCase().trim();
+                for (let sub of submittedToday) {
+                    if (sub.includes(clean) || clean.includes(sub)) return false;
                 }
                 return true;
             });
 
-            document.getElementById('unsubmitted-count').innerText = unsubmittedStoresList.length;
+            unsubmittedYesterdayList = MASTER_STORES.filter(store => {
+                const clean = store.toLowerCase().trim();
+                for (let sub of submittedYesterday) {
+                    if (sub.includes(clean) || clean.includes(sub)) return false;
+                }
+                return true;
+            });
+
+            document.getElementById('unsubmitted-count').innerText = unsubmittedTodayList.length;
+            document.getElementById('unsubmitted-yesterday-count').innerText = `${unsubmittedYesterdayList.length} Store`;
             
-            if (unsubmittedStoresList.length === 0) {
-                document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah mengirimkan laporan hari ini (${formattedTodayDate}).`;
+            // Text Preview Hari Ini
+            if (unsubmittedTodayList.length === 0) {
+                document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah submit hari ini (${formattedTodayDate}).`;
             } else {
-                const preview = unsubmittedStoresList.slice(0, 3).join(', ');
-                const extra = unsubmittedStoresList.length > 3 ? ` dan ${unsubmittedStoresList.length - 3} store lainnya.` : '.';
+                const preview = unsubmittedTodayList.slice(0, 2).join(', ');
+                const extra = unsubmittedTodayList.length > 2 ? ` dan ${unsubmittedTodayList.length - 2} store lainnya.` : '.';
                 document.getElementById('unsubmitted-list-text').innerText = `${preview}${extra}`;
             }
 
-            const modalBody = document.getElementById('unsubmitted-modal-body');
-            modalBody.innerHTML = '';
-            unsubmittedStoresList.forEach((store, idx) => {
-                const item = document.createElement('div');
-                item.className = 'p-2 rounded bg-white/5 border border-white/5 flex items-center justify-between text-xs hover:bg-white/10 transition';
-                item.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="font-mono opacity-50 text-[10px] w-5 text-right">${idx + 1}.</span> 
-                        <span class="font-medium text-slate-200">${store}</span>
-                    </div>
-                    <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-300 font-semibold border border-rose-500/30">Belum Submit</span>
-                `;
-                modalBody.appendChild(item);
-            });
+            // Text Preview Kemarin
+            if (unsubmittedYesterdayList.length === 0) {
+                document.getElementById('unsubmitted-yesterday-preview').innerText = `Seluruh store telah melengkapi laporan kemarin (${formattedYesterdayDate}).`;
+            } else {
+                const preview = unsubmittedYesterdayList.slice(0, 2).join(', ');
+                const extra = unsubmittedYesterdayList.length > 2 ? ` dan ${unsubmittedYesterdayList.length - 2} store lainnya.` : '.';
+                document.getElementById('unsubmitted-yesterday-preview').innerText = `${preview}${extra}`;
+            }
         }
 
-        // POIN 2 (Action Area): Salin Daftar Toko Belum Submit Ke Clipboard
+        // POIN 2: Salin List Follow Up
         function copyUnsubmittedList() {
-            if (unsubmittedStoresList.length === 0) {
+            const list = (currentModalTarget === 'yesterday') ? unsubmittedYesterdayList : unsubmittedTodayList;
+            const dateStr = (currentModalTarget === 'yesterday') ? formattedYesterdayDate : formattedTodayDate;
+
+            if (list.length === 0) {
                 alert('Tidak ada store yang perlu di-follow up!');
                 return;
             }
 
-            let text = `*REMINDER: BELUM SUBMIT LAPORAN CHAMPION LOB HARI INI (${formattedTodayDate})*\n`;
-            text += `Total: ${unsubmittedStoresList.length} Store\n\n`;
-            unsubmittedStoresList.forEach((store, i) => {
+            let text = `*REMINDER: BELUM SUBMIT LAPORAN CHAMPION LOB TANGGAL ${dateStr}*\n`;
+            text += `Total: ${list.length} Store\n\n`;
+            list.forEach((store, i) => {
                 text += `${i + 1}. ${store}\n`;
             });
-            text += `\nMohon tim Store Trainer / LOB Champion terkait segera melengkapi laporan hari ini. Terima kasih!`;
+            text += `\nMohon tim Store Trainer / LOB Champion terkait segera melengkapi laporan. Terima kasih!`;
 
             navigator.clipboard.writeText(text).then(() => {
-                alert('Daftar store belum submit berhasil disalin! Anda bisa langsung menempelkannya ke WhatsApp/Telegram.');
+                alert('Daftar store belum submit berhasil disalin!');
             }).catch(err => {
                 console.error('Gagal menyalin:', err);
             });
         }
 
-        // POIN 1 & 3: Matriks Kedisiplinan Pelaporan Berbasis Tanggal Transaksi Bisnis
+        // POIN 1: Matriks Kedisiplinan Pelaporan & Grafiknya
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -886,7 +978,6 @@
             const activeDatesSet = new Set();
             let sampleDate = null;
 
-            // Memetakan laporan per tanggal transaksi bisnis (Tanggal_Transaksi)
             data.forEach(item => {
                 const store = extractStore(item);
                 const rawDateStr = extractDate(item);
@@ -919,14 +1010,13 @@
 
             if (monthVal && monthVal !== 'ALL') {
                 monthIndex = parseInt(monthVal, 10) - 1;
-                year = sampleDate ? sampleDate.getFullYear() : new Date().getFullYear();
+                year = sampleDate ? sampleDate.getFullYear() : 2026;
             } else if (sampleDate) {
                 year = sampleDate.getFullYear();
                 monthIndex = sampleDate.getMonth();
             } else {
-                const now = new Date();
-                year = now.getFullYear();
-                monthIndex = now.getMonth();
+                year = 2026;
+                monthIndex = 8;
             }
 
             const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
@@ -967,6 +1057,9 @@
 
             html += `</tr></thead><tbody class="divide-y divide-white/5">`;
 
+            const storeComplianceList = [];
+            let highCount = 0, midCount = 0, lowCount = 0;
+
             stores.forEach((store, idx) => {
                 let totalReportSlots = 0;
                 const cleanStoreName = store.toLowerCase().trim();
@@ -995,12 +1088,17 @@
                 });
 
                 const complianceRate = Math.min(100, Math.round((totalReportSlots / totalActiveSlots) * 100));
-                
+                storeComplianceList.push({ store, rate: complianceRate });
+
                 let rateBadgeClass = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
                 if (complianceRate < 50) {
                     rateBadgeClass = 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+                    lowCount++;
                 } else if (complianceRate < 80) {
                     rateBadgeClass = 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+                    midCount++;
+                } else {
+                    highCount++;
                 }
 
                 html += `<td class="p-2 text-center font-bold">
@@ -1010,6 +1108,80 @@
 
             html += `</tbody></table>`;
             container.innerHTML = html;
+
+            // Render Grafik Kedisiplinan
+            renderComplianceCharts(storeComplianceList, highCount, midCount, lowCount);
+        }
+
+        // POIN 1: Render Grafik Kedisiplinan (Pie + Top Bar Chart)
+        function renderComplianceCharts(storeList, high, mid, low) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            // 1. Chart Donut Distribusi
+            if (chartInstances.compliancePie) chartInstances.compliancePie.destroy();
+            const ctxPie = document.getElementById('chartCompliancePie')?.getContext('2d');
+            if (ctxPie) {
+                chartInstances.compliancePie = new Chart(ctxPie, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Tinggi (≥80%)', 'Sedang (50-79%)', 'Rendah (<50%)'],
+                        datasets: [{
+                            data: [high, mid, low],
+                            backgroundColor: ['#10b981', '#f59e0b', '#f43f5e']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { size: 10 } } },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (val) => val > 0 ? val : ''
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Chart Bar Top 10 Disiplin
+            const top10Disiplin = [...storeList].sort((a, b) => b.rate - a.rate).slice(0, 10);
+            if (chartInstances.topCompliance) chartInstances.topCompliance.destroy();
+            const ctxBar = document.getElementById('chartTopCompliance')?.getContext('2d');
+            if (ctxBar) {
+                chartInstances.topCompliance = new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: top10Disiplin.map(item => item.store.replace('Digimap ', '')),
+                        datasets: [{
+                            label: '% Kepatuhan',
+                            data: top10Disiplin.map(item => item.rate),
+                            backgroundColor: '#6366f1',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => `${val}%`
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 9 } } },
+                            y: { max: 100, ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
         }
 
         function renderCharts(data) {
@@ -1149,7 +1321,6 @@
                     }
                 });
             }
-            // POIN 4: Chart Perbandingan Total Penjualan Seluruh Store telah dihapus
         }
 
         function renderWoWStoreTable(data) {
