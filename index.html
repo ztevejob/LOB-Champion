@@ -17,9 +17,9 @@
             --glass-bg: rgba(30, 41, 59, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-card: rgba(15, 23, 42, 0.55);
-            --text-main: #f8fafc;
-            --text-sub: #cbd5e1;
-            --accent: #6366f1;
+            --text-main: #ffffff;
+            --text-sub: #e2e8f0;
+            --accent: #818cf8;
             --header-bg: #0f172a;
         }
 
@@ -30,9 +30,9 @@
             --glass-bg: rgba(255, 255, 255, 0.9);
             --glass-border: rgba(0, 0, 0, 0.15);
             --glass-card: rgba(255, 255, 255, 0.95);
-            --text-main: #0f172a;
-            --text-sub: #334155;
-            --accent: #4f46e5;
+            --text-main: #090d16;
+            --text-sub: #1e293b;
+            --accent: #3730a3;
             --header-bg: #ffffff;
         }
 
@@ -41,34 +41,70 @@
         .light-mode .text-indigo-300,
         .light-mode .text-sky-300,
         .light-mode .text-amber-300,
-        .light-mode .text-rose-300 {
-            color: #1e293b !important;
+        .light-mode .text-rose-300,
+        .light-mode .text-emerald-300,
+        .light-mode .text-blue-300,
+        .light-mode .text-cyan-300,
+        .light-mode .text-purple-300 {
+            color: #0f172a !important;
         }
 
         .light-mode .opacity-60,
         .light-mode .opacity-70,
         .light-mode .opacity-80,
+        .light-mode .opacity-90,
         .light-mode .opacity-50 {
             opacity: 1 !important;
-            color: #334155 !important;
+            color: #1e293b !important;
         }
 
         .light-mode select {
             background-color: #ffffff !important;
             color: #0f172a !important;
-            border-color: #94a3b8 !important;
+            border-color: #64748b !important;
         }
 
         .light-mode td, .light-mode th {
             color: #0f172a !important;
         }
 
+        /* Dark Mode High Brightness / Neon Enhancement */
         body {
             background: var(--bg-gradient);
             color: var(--text-main);
             min-height: 100vh;
             font-family: 'Segoe UI', Roboto, sans-serif;
             transition: all 0.3s ease;
+        }
+
+        :not(.light-mode) p, 
+        :not(.light-mode) span, 
+        :not(.light-mode) h1, 
+        :not(.light-mode) h2, 
+        :not(.light-mode) h3, 
+        :not(.light-mode) h4, 
+        :not(.light-mode) label, 
+        :not(.light-mode) th, 
+        :not(.light-mode) td {
+            color: #ffffff;
+        }
+
+        :not(.light-mode) .text-indigo-600, :not(.light-mode) .text-indigo-700, :not(.light-mode) .text-indigo-500 { color: #818cf8 !important; text-shadow: 0 0 10px rgba(129, 140, 248, 0.4); }
+        :not(.light-mode) .text-blue-600, :not(.light-mode) .text-blue-700, :not(.light-mode) .text-blue-500 { color: #60a5fa !important; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
+        :not(.light-mode) .text-cyan-600, :not(.light-mode) .text-cyan-700, :not(.light-mode) .text-cyan-500 { color: #22d3ee !important; text-shadow: 0 0 10px rgba(34, 211, 238, 0.4); }
+        :not(.light-mode) .text-emerald-600, :not(.light-mode) .text-emerald-700, :not(.light-mode) .text-emerald-500, :not(.light-mode) .text-emerald-400 { color: #34d399 !important; text-shadow: 0 0 10px rgba(52, 211, 153, 0.4); }
+        :not(.light-mode) .text-amber-600, :not(.light-mode) .text-amber-700, :not(.light-mode) .text-amber-500, :not(.light-mode) .text-amber-400 { color: #fbbf24 !important; text-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
+        :not(.light-mode) .text-rose-600, :not(.light-mode) .text-rose-700, :not(.light-mode) .text-rose-500, :not(.light-mode) .text-rose-400 { color: #fb7185 !important; text-shadow: 0 0 10px rgba(251, 113, 133, 0.4); }
+        :not(.light-mode) .text-purple-600, :not(.light-mode) .text-purple-700, :not(.light-mode) .text-purple-500 { color: #c084fc !important; text-shadow: 0 0 10px rgba(192, 132, 252, 0.4); }
+        :not(.light-mode) .text-sky-600, :not(.light-mode) .text-sky-700, :not(.light-mode) .text-sky-500 { color: #38bdf8 !important; text-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
+
+        :not(.light-mode) .opacity-60, 
+        :not(.light-mode) .opacity-70, 
+        :not(.light-mode) .opacity-80, 
+        :not(.light-mode) .opacity-90, 
+        :not(.light-mode) .opacity-50 {
+            opacity: 1 !important;
+            color: #f1f5f9 !important;
         }
 
         .glass-sidebar {
@@ -104,9 +140,9 @@
         }
 
         .nav-active {
-            background-color: rgba(99, 102, 241, 0.25) !important;
+            background-color: rgba(129, 140, 248, 0.3) !important;
             color: var(--accent) !important;
-            border: 1px solid rgba(99, 102, 241, 0.5) !important;
+            border: 1px solid rgba(129, 140, 248, 0.6) !important;
             font-weight: 700 !important;
         }
 
@@ -189,7 +225,7 @@
             <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-semibold mb-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Terakhir diperbarui: <span id="last-update">Memuat...</span>
+                    Terakhir diperbarui: <span id="last-update">Memuat...</span>[cite: 3]
                 </div>
                 <h2 class="text-lg md:text-xl font-bold" id="page-title">Overview</h2>
             </div>
@@ -1055,7 +1091,6 @@
             });
         }
 
-        // PERBAIKAN: Warna font timestamp disesuaikan (text-amber-500 / text-amber-300 / text-white) agar sangat kontras dan jelas terbaca pada mode gelap
         function renderLateChampionsTable(data) {
             const tbody = document.getElementById('late-champions-body');
             if (!tbody) return;
@@ -1290,7 +1325,7 @@
                         labels: ['Submit', 'Belum Submit'],
                         datasets: [{
                             data: [submittedYesterday, unsubmittedYesterday],
-                            backgroundColor: ['#10b981', '#f43f5e']
+                            backgroundColor: ['#34d399', '#fb7185']
                         }]
                     },
                     options: {
@@ -1320,7 +1355,7 @@
                         labels: ['Submit', 'Belum Submit'],
                         datasets: [{
                             data: [submittedToday, unsubmittedToday],
-                            backgroundColor: ['#3b82f6', '#fbbf24']
+                            backgroundColor: ['#60a5fa', '#fbbf24']
                         }]
                     },
                     options: {
@@ -1353,7 +1388,7 @@
                 lobCounts[lob] = (lobCounts[lob] || 0) + qty;
             });
 
-            const lobPalette = ['#6366f1', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#14b8a6'];
+            const lobPalette = ['#818cf8', '#60a5fa', '#22d3ee', '#34d399', '#fbbf24', '#f472b6', '#c084fc', '#2dd4bf'];
 
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
@@ -1418,7 +1453,7 @@
             const lobList = Array.from(lobsSet);
 
             const shiftDatasets = lobList.map((lob, idx) => {
-                const colors = ['#6366f1', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
+                const colors = ['#818cf8', '#60a5fa', '#22d3ee', '#34d399', '#fbbf24', '#f472b6'];
                 return {
                     label: lob,
                     data: shiftLabels.map(s => (shiftLobMatrix[s] && shiftLobMatrix[s][lob]) ? shiftLobMatrix[s][lob] : 0),
@@ -1489,7 +1524,7 @@
                         labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [
                             { label: 'Last Week', data: Object.values(wowData.LW), backgroundColor: '#94a3b8' },
-                            { label: 'This Week', data: Object.values(wowData.TW), backgroundColor: '#6366f1' }
+                            { label: 'This Week', data: Object.values(wowData.TW), backgroundColor: '#818cf8' }
                         ]
                     },
                     options: {
