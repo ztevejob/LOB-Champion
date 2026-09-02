@@ -156,14 +156,14 @@
 
     <main class="flex-1 flex flex-col gap-4 overflow-hidden w-full">
 
-        <!-- Header -->
+        <!-- PERBAIKAN 4: Terakhir Diperbarui Ditaruh Paling Atas Header -->
         <header class="glass-panel p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 rounded-full text-xs font-semibold mb-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Terakhir diperbarui: <span id="last-update">Memuat...</span>
+                </div>
                 <h2 class="text-lg md:text-xl font-bold" id="page-title">Overview</h2>
-                <p class="text-xs opacity-70 flex items-center gap-2 mt-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Terakhir diperbarui: <span id="last-update" class="font-semibold">Memuat...</span>
-                </p>
             </div>
 
             <!-- Filters Grid -->
@@ -236,10 +236,10 @@
                 </div>
             </div>
 
-            <!-- Average / Hari per LOB -->
+            <!-- PERBAIKAN 3: Average / Bulan / LOB -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-purple-400">Average / Hari / LOB</p>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-purple-400">Average / Bulan / LOB</p>
                     <i data-lucide="calculator" class="w-4 h-4 text-purple-400"></i>
                 </div>
                 <div class="grid grid-cols-2 gap-2 text-xs">
@@ -345,7 +345,6 @@
                         <div class="h-64 relative"><canvas id="chartLOB"></canvas></div>
                     </div>
                     
-                    <!-- Penjualan per Shift breakdown per LOB -->
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Penjualan per Shift (Breakdown per LOB)
@@ -416,10 +415,14 @@
                     <div class="h-72 relative"><canvas id="chartWoWGlobal"></canvas></div>
                 </div>
 
+                <!-- PERBAIKAN 5: Pemastian Seluruh 98 Toko Masuk di Tabel WoW -->
                 <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm mb-4 flex items-center gap-2">
-                        <i data-lucide="store" class="w-4 h-4 text-purple-400"></i> Detail Komparasi per Store (This Week vs Last Week)
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="store" class="w-4 h-4 text-purple-400"></i> Detail Komparasi per Store (This Week vs Last Week)
+                        </h3>
+                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-300 font-semibold rounded-full border border-indigo-500/30">Total 98 Store</span>
+                    </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[650px]">
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
@@ -439,10 +442,9 @@
                 </div>
             </div>
 
-            <!-- Section 3: Matriks Kedisiplinan Pelaporan Harian Store + Grafik Baru -->
+            <!-- Section 3: Kedisiplinan & Matriks (Berbagi Tampilan Responsif) -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 
-                <!-- PERBAIKAN 2: Grafik Kepatuhan Dipisah Antara Kemarin & Hari Ini -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
@@ -463,16 +465,49 @@
                     </div>
                 </div>
 
-                <!-- PERBAIKAN 1: Tabel Matriks Kedisiplinan (Pagi, Middle, Siang) -->
-                <div class="glass-panel p-4">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+                <!-- Shared Display Grid: Tabel Keterlambatan vs Matriks Kedisiplinan Pagi/Middle/Siang -->
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                    
+                    <!-- PERBAIKAN 2: Tabel Khusus Champion Terlambat Submit (>24 Jam) -->
+                    <div class="glass-panel p-4 xl:col-span-1 flex flex-col justify-between border-l-4 border-amber-500">
                         <div>
-                            <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi, Middle, & Siang)</h3>
-                            <p class="text-[11px] opacity-60 mt-0.5">Persentase kepatuhan dihitung berdasarkan Tanggal Transaksi pada periode terfilter</p>
+                            <div class="flex items-center justify-between pb-2 mb-3 border-b border-white/10">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="clock-alert" class="w-4 h-4 text-amber-400"></i>
+                                    <h3 class="font-bold text-xs text-amber-400 uppercase tracking-wide">Terlambat Submit (>24 Jam)</h3>
+                                </div>
+                                <button onclick="copyLateChampionsList()" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 rounded text-[10px] font-semibold transition flex items-center gap-1">
+                                    <i data-lucide="copy" class="w-3 h-3"></i> Copy Data
+                                </button>
+                            </div>
+                            <p class="text-[10px] opacity-60 mb-2">Perbandingan timestamp pengisian form vs tanggal transaksi.</p>
+                            
+                            <div class="overflow-y-auto max-h-[420px] pr-1">
+                                <table class="w-full text-xs text-left border-collapse">
+                                    <thead class="opacity-90 border-b border-white/10 text-[10px] uppercase sticky top-0 sticky-header-bg">
+                                        <tr>
+                                            <th class="p-1.5 sticky-header-bg">Champion & Store</th>
+                                            <th class="p-1.5 text-center sticky-header-bg">Selisih</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="late-champions-body" class="divide-y divide-white/5"></tbody>
+                                </table>
+                            </div>
                         </div>
-                        <span id="total-stores-badge" class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Memuat...</span>
                     </div>
-                    <div id="compliance-matrix-container" class="overflow-x-auto max-h-[550px] relative"></div>
+
+                    <!-- PERBAIKAN 1: Matriks Kedisiplinan Pelaporan Harian (Pagi, Middle, Siang) -->
+                    <div class="glass-panel p-4 xl:col-span-2">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi, Middle, & Siang)</h3>
+                                <p class="text-[11px] opacity-60 mt-0.5">Berdasarkan Tanggal Transaksi & Shift periode terfilter</p>
+                            </div>
+                            <span id="total-stores-badge" class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Memuat...</span>
+                        </div>
+                        <div id="compliance-matrix-container" class="overflow-x-auto max-h-[420px] relative"></div>
+                    </div>
+
                 </div>
             </div>
 
@@ -574,6 +609,7 @@
         let rawCSVData = [];
         let filteredData = [];
         let chartInstances = {};
+        let lateChampionsList = [];
         
         let unsubmittedTodayList = [];
         let unsubmittedYesterdayList = [];
@@ -596,25 +632,42 @@
             if (!dateStr) return null;
             let str = String(dateStr).trim();
             if (!str) return null;
-            if (str.includes(' ')) str = str.split(' ')[0];
+            
+            let timePart = "";
+            if (str.includes(' ')) {
+                const parts = str.split(' ');
+                str = parts[0];
+                timePart = parts[1] || "";
+            }
 
+            let year, month, day;
             if (str.includes('/') || str.includes('-')) {
                 const parts = str.split(/[\/\-]/);
                 if (parts.length === 3) {
-                    let year = parseInt(parts[2], 10);
-                    let month = parseInt(parts[1], 10) - 1;
-                    let day = parseInt(parts[0], 10);
-
                     if (parts[0].length === 4) {
                         year = parseInt(parts[0], 10);
                         month = parseInt(parts[1], 10) - 1;
                         day = parseInt(parts[2], 10);
-                    }
-                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-                        return new Date(year, month, day);
+                    } else {
+                        year = parseInt(parts[2], 10);
+                        month = parseInt(parts[1], 10) - 1;
+                        day = parseInt(parts[0], 10);
                     }
                 }
             }
+
+            let hours = 0, minutes = 0, seconds = 0;
+            if (timePart && timePart.includes(':')) {
+                const t = timePart.split(':');
+                hours = parseInt(t[0], 10) || 0;
+                minutes = parseInt(t[1], 10) || 0;
+                seconds = parseInt(t[2], 10) || 0;
+            }
+
+            if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                return new Date(year, month, day, hours, minutes, seconds);
+            }
+
             const standardDate = new Date(dateStr);
             return isNaN(standardDate.getTime()) ? null : standardDate;
         }
@@ -695,14 +748,20 @@
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
+            return item['Tanggal_Transaksi'] || item['Tanggal Transaksi'] || item.Tanggal || '';
+        }
+
+        function extractTimestamp(item) {
+            if (!item) return '';
+            const keys = Object.keys(item);
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey.includes('timestamp')) {
+                if (cleanKey.includes('timestamp') || cleanKey.includes('waktu')) {
                     const val = item[k];
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
-            return item['Tanggal_Transaksi'] || item['Tanggal Transaksi'] || item.Tanggal || item.Timestamp || '';
+            return item.Timestamp || '';
         }
 
         function showSection(sectionId) {
@@ -875,6 +934,7 @@
             calculateUnsubmittedSummary(rawCSVData);
             renderWoWStoreTable(filteredData);
             renderComplianceMatrix(filteredData);
+            renderLateChampionsTable(filteredData);
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
@@ -889,7 +949,6 @@
             document.getElementById('unsubmitted-date-label').innerText = formattedTodayDate;
             document.getElementById('unsubmitted-yesterday-label').innerText = formattedYesterdayDate;
             
-            // Tanggal di judul chart status kepatuhan
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
             const chartTodayLabel = document.getElementById('chart-today-date');
             if (chartYesterdayLabel) chartYesterdayLabel.innerText = formattedYesterdayDate;
@@ -973,7 +1032,82 @@
             });
         }
 
-        // PERBAIKAN 1: Matriks Kedisiplinan Pelaporan (Pagi, Middle, Siang)
+        // PERBAIKAN 2: Render Tabel Champion Terlambat Submit (>24 Jam)
+        function renderLateChampionsTable(data) {
+            const tbody = document.getElementById('late-champions-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            lateChampionsList = [];
+
+            data.forEach(item => {
+                const name = extractName(item);
+                const store = extractStore(item);
+                const rawDateStr = extractDate(item);
+                const tsStr = extractTimestamp(item);
+
+                if (rawDateStr && tsStr && name !== '-' && store !== '-') {
+                    const dateTx = parseCustomDate(rawDateStr);
+                    const dateTs = parseCustomDate(tsStr);
+
+                    if (dateTx && dateTs) {
+                        const diffHours = (dateTs - dateTx) / (1000 * 60 * 60);
+                        if (diffHours > 24) {
+                            lateChampionsList.push({
+                                name,
+                                store,
+                                diffDays: (diffHours / 24).toFixed(1),
+                                dateTxStr: rawDateStr,
+                                dateTsStr: tsStr
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (lateChampionsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="p-3 text-center text-slate-400 text-[11px]">Tidak ada Champion terlambat submit (>24 jam).</td></tr>';
+                return;
+            }
+
+            lateChampionsList.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-1.5">
+                        <p class="font-semibold text-amber-300 text-[11px]">${item.name}</p>
+                        <p class="text-[10px] text-slate-400 line-clamp-1">${item.store}</p>
+                    </td>
+                    <td class="p-1.5 text-center">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            +${item.diffDays} Hari
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function copyLateChampionsList() {
+            if (lateChampionsList.length === 0) {
+                alert('Tidak ada data keterlambatan submit untuk disalin.');
+                return;
+            }
+
+            let text = `*DAFTAR CHAMPION TERLAMBAT SUBMIT LAPORAN (>24 JAM)*\n\n`;
+            lateChampionsList.forEach((item, idx) => {
+                text += `${idx + 1}. ${item.name} - ${item.store} (Keterlambatan: +${item.diffDays} Hari)\n`;
+            });
+            text += `\nMohon perhatiannya agar laporan disubmit pada hari transaksi. Terima kasih!`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Daftar Champion terlambat submit berhasil disalin!');
+            }).catch(err => {
+                console.error('Gagal menyalin:', err);
+            });
+        }
+
+        // PERBAIKAN 1: Matriks Kedisiplinan Pelaporan Mengambil Data Tanggal Transaksi & Shift
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -1036,7 +1170,6 @@
             }
 
             const activeDaysCount = activeDatesSet.size > 0 ? activeDatesSet.size : fullMonthDates.length;
-            // Dihitung berdasarkan 3 slot per hari (Pagi, Middle, Siang)
             const totalActiveSlots = activeDaysCount * 3;
 
             let html = `
@@ -1116,7 +1249,6 @@
             renderComplianceCharts();
         }
 
-        // PERBAIKAN 2: Render Chart Dipisah (Kemarin vs Hari Ini)
         function renderComplianceCharts() {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -1127,7 +1259,6 @@
             const submittedToday = totalStores - unsubmittedTodayList.length;
             const unsubmittedToday = unsubmittedTodayList.length;
 
-            // Chart Kemarin
             if (chartInstances.complianceYesterday) chartInstances.complianceYesterday.destroy();
             const ctxYesterday = document.getElementById('chartComplianceYesterday')?.getContext('2d');
             if (ctxYesterday) {
@@ -1158,7 +1289,6 @@
                 });
             }
 
-            // Chart Hari Ini
             if (chartInstances.complianceToday) chartInstances.complianceToday.destroy();
             const ctxToday = document.getElementById('chartComplianceToday')?.getContext('2d');
             if (ctxToday) {
@@ -1239,7 +1369,6 @@
                 });
             }
 
-            // Penjualan per Shift di-breakdown per LOB (Grouped Bar Chart)
             const shiftsSet = new Set();
             const lobsSet = new Set(['Mac', 'iPhone', 'iPad', 'Watch']);
             const shiftLobMatrix = {};
@@ -1362,30 +1491,45 @@
             }
         }
 
+        // PERBAIKAN 5: Seluruh 98 Toko Dijamin Masuk ke Tabel Komparasi WoW
         function renderWoWStoreTable(data) {
             const tbody = document.getElementById('wow-store-table-body');
             if (!tbody) return;
             tbody.innerHTML = '';
-
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center opacity-50">Belum ada data transaksi untuk dikomparasi</td></tr>';
-                return;
-            }
 
             const now = new Date();
             const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
             const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(now.getDate() - 14);
 
             const storeWoW = {};
+            
+            MASTER_STORES.forEach(store => {
+                storeWoW[store] = {
+                    mac: { lw: 0, tw: 0 },
+                    iphone: { lw: 0, tw: 0 },
+                    ipad: { lw: 0, tw: 0 },
+                    watch: { lw: 0, tw: 0 },
+                    totalLW: 0,
+                    totalTW: 0
+                };
+            });
 
             data.forEach(item => {
-                const store = extractStore(item);
+                const rawStore = extractStore(item);
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
                 const rowDate = parseCustomDate(extractDate(item));
 
-                if (!storeWoW[store]) {
-                    storeWoW[store] = {
+                if (!rawStore || rawStore === '-') return;
+
+                const matchedMasterStore = MASTER_STORES.find(s => 
+                    s.toLowerCase().trim() === rawStore.toLowerCase().trim() ||
+                    s.toLowerCase().includes(rawStore.toLowerCase()) || 
+                    rawStore.toLowerCase().includes(s.toLowerCase())
+                ) || rawStore;
+
+                if (!storeWoW[matchedMasterStore]) {
+                    storeWoW[matchedMasterStore] = {
                         mac: { lw: 0, tw: 0 },
                         iphone: { lw: 0, tw: 0 },
                         ipad: { lw: 0, tw: 0 },
@@ -1404,13 +1548,13 @@
                 }
 
                 if (period) {
-                    if (period === 'tw') storeWoW[store].totalTW += qty;
-                    if (period === 'lw') storeWoW[store].totalLW += qty;
+                    if (period === 'tw') storeWoW[matchedMasterStore].totalTW += qty;
+                    if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
 
-                    if (lob.includes('mac')) storeWoW[store].mac[period] += qty;
-                    else if (lob.includes('iphone')) storeWoW[store].iphone[period] += qty;
-                    else if (lob.includes('ipad')) storeWoW[store].ipad[period] += qty;
-                    else if (lob.includes('watch')) storeWoW[store].watch[period] += qty;
+                    if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
+                    else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
+                    else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
+                    else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
                 }
             });
 
@@ -1572,11 +1716,12 @@
             });
         }
 
+        // PERBAIKAN 3: Hitung Rata-rata Penjualan LOB Per Bulan
         function updateMetricsAndCharts(data) {
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             const reports = data.length;
             const champions = new Set();
-            const uniqueDates = new Set();
+            const uniqueMonths = new Set();
 
             data.forEach(row => {
                 const qty = extractQuantity(row);
@@ -1594,23 +1739,23 @@
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
-                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        uniqueDates.add(dateKey);
+                        const monthKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}`;
+                        uniqueMonths.add(monthKey);
                     }
                 }
             });
 
-            const activeDaysCount = Math.max(1, uniqueDates.size);
+            const activeMonthsCount = Math.max(1, uniqueMonths.size);
 
             document.getElementById('kpi-total-mac').innerText = totalMac.toLocaleString('id-ID');
             document.getElementById('kpi-total-iphone').innerText = totalIphone.toLocaleString('id-ID');
             document.getElementById('kpi-total-ipad').innerText = totalIpad.toLocaleString('id-ID');
             document.getElementById('kpi-total-watch').innerText = totalWatch.toLocaleString('id-ID');
 
-            document.getElementById('kpi-avg-mac').innerText = (totalMac / activeDaysCount).toFixed(1);
-            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeDaysCount).toFixed(1);
-            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeDaysCount).toFixed(1);
-            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeDaysCount).toFixed(1);
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / activeMonthsCount).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeMonthsCount).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeMonthsCount).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeMonthsCount).toFixed(1);
 
             document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
             document.getElementById('kpi-active-champions').innerText = champions.size;
