@@ -137,9 +137,6 @@
                 <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> WoW Perf.
                 </button>
-                <button onclick="showSection('store-perf')" id="btn-store-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition">
-                    <i data-lucide="store" class="w-4 h-4 shrink-0"></i> Store Perf.
-                </button>
                 <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-white/5 transition">
                     <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> Kedisiplinan
                 </button>
@@ -291,7 +288,7 @@
 
         </section>
 
-        <!-- PERBAIKAN POIN 2: Summary Store Unsubmitted Kemarin (Action Area) -->
+        <!-- POIN 2: Action Area: Store Belum Submit Hari Ini -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-rose-500/20 text-rose-400 rounded-lg shrink-0">
@@ -299,7 +296,7 @@
                 </div>
                 <div>
                     <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400">
-                        Action Area: Store Belum Submit Laporan Kemarin (<span id="unsubmitted-date-label">H-1</span>) - <span id="unsubmitted-count">0</span> Store
+                        Action Area: Store Belum Submit Hari Ini (<span id="unsubmitted-date-label">Hari Ini</span>) - <span id="unsubmitted-count">0</span> Store
                     </h4>
                     <p class="text-xs text-slate-300 mt-0.5 line-clamp-2" id="unsubmitted-list-text">Memuat data...</p>
                 </div>
@@ -413,31 +410,22 @@
                 </div>
             </div>
 
-            <!-- Section 3: Store Performance -->
-            <div id="sec-store-perf" class="content-section hidden space-y-4">
-                <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                        <i data-lucide="trophy" class="w-4 h-4 text-emerald-400"></i> Perbandingan Total Penjualan Seluruh Store
-                    </h3>
-                    <div class="h-80 relative"><canvas id="chartStoresOverview"></canvas></div>
-                </div>
-            </div>
-
-            <!-- PERBAIKAN POIN 1: Section 4 - Matriks Kedisiplinan Pelaporan Harian Store -->
+            <!-- POIN 1 & 3: Section 3 - Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang) -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
                         <div>
                             <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi & Siang)</h3>
-                            <p class="text-[11px] opacity-60 mt-0.5">Persentase kepatuhan dihitung berdasarkan jumlah hari aktif transaksi pada periode terfilter</p>
+                            <p class="text-[11px] opacity-60 mt-0.5">Persentase kepatuhan dihitung berdasarkan Tanggal Transaksi pada periode terfilter</p>
                         </div>
-                        <span class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Total 91 Toko</span>
+                        <!-- POIN 3: Menggunakan Total Seluruh Toko secara dinamis -->
+                        <span id="total-stores-badge" class="text-xs font-semibold px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">Memuat...</span>
                     </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto max-h-[550px] relative"></div>
                 </div>
             </div>
 
-            <!-- Section 5: Log Transaksi Masuk -->
+            <!-- Section 4: Log Transaksi Masuk -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
@@ -449,7 +437,7 @@
                             <thead class="opacity-90 border-b border-white/10 uppercase sticky top-0 z-10 sticky-header-bg">
                                 <tr>
                                     <th class="p-2 text-center w-12 sticky-header-bg">No.</th>
-                                    <th class="p-2 sticky-header-bg">Tanggal</th>
+                                    <th class="p-2 sticky-header-bg">Tanggal Transaksi</th>
                                     <th class="p-2 sticky-header-bg">Nama</th>
                                     <th class="p-2 sticky-header-bg">Store</th>
                                     <th class="p-2 sticky-header-bg">LOB</th>
@@ -466,7 +454,7 @@
         </div>
     </main>
 
-    <!-- Modal Store Belum Submit (Action Area) -->
+    <!-- Modal Store Belum Submit (Action Area Hari Ini) -->
     <div id="unsubmitted-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-lg p-6 max-h-[85vh] flex flex-col justify-between shadow-2xl">
             <div>
@@ -475,7 +463,7 @@
                         <h3 class="font-bold text-base text-rose-400 flex items-center gap-2">
                             <i data-lucide="alert-triangle" class="w-5 h-5"></i> Action Area: Store Belum Submit Laporan
                         </h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Daftar toko yang tidak mengirimkan laporan pada tanggal <b id="unsubmitted-modal-date" class="text-rose-300"></b></p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Daftar toko yang belum mengirimkan laporan pada tanggal <b id="unsubmitted-modal-date" class="text-rose-300"></b></p>
                     </div>
                     <button onclick="toggleUnsubmittedModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
                 </div>
@@ -536,7 +524,7 @@
         let filteredData = [];
         let chartInstances = {};
         let unsubmittedStoresList = [];
-        let formattedYesterdayDate = "";
+        let formattedTodayDate = "";
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
@@ -641,17 +629,25 @@
             return item.Shift || '-';
         }
 
+        // POIN 1: Mengambil Tanggal_Transaksi terlebih dahulu agar kinerjanya presisi berbasis transaksi bisnis
         function extractDate(item) {
             if (!item) return '';
             const keys = Object.keys(item);
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey.includes('tanggal transaksi') || cleanKey.includes('tanggal') || cleanKey.includes('timestamp')) {
+                if (cleanKey === 'tanggal_transaksi' || cleanKey.includes('tanggal transaksi') || cleanKey === 'tanggal') {
                     const val = item[k];
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
-            return item['Tanggal Transaksi'] || item.Tanggal || item.Timestamp || '';
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('timestamp')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Tanggal_Transaksi'] || item['Tanggal Transaksi'] || item.Tanggal || item.Timestamp || '';
         }
 
         function showSection(sectionId) {
@@ -664,7 +660,6 @@
             const titles = {
                 'overview': 'Overview',
                 'wow-perf': 'Komparasi Week-on-Week',
-                'store-perf': 'Store Performance Comparison',
                 'compliance': 'Matriks Kedisiplinan Store',
                 'raw-data': 'Data Transaksi Mentah'
             };
@@ -785,29 +780,34 @@
                 return matchMonth && matchStore && matchLOB && matchShift;
             });
 
+            // POIN 3: Update Badge Total Toko
+            const badgeEl = document.getElementById('total-stores-badge');
+            if (badgeEl) {
+                badgeEl.innerText = `Total ${MASTER_STORES.length} Toko`;
+            }
+
             updateMetricsAndCharts(filteredData);
-            calculateUnsubmittedYesterday(rawCSVData); // PERBAIKAN POIN 2: Evaluasi H-1 Kemarin
+            calculateUnsubmittedToday(rawCSVData); // POIN 2: Evaluasi HARI INI
             renderWoWStoreTable(filteredData);
-            renderComplianceMatrix(filteredData);      // PERBAIKAN POIN 1: Matriks Kedisiplinan Diperbaiki
+            renderComplianceMatrix(filteredData);  // POIN 1 & 3: Matriks Kedisiplinan Tanggal Transaksi
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
 
-        // PERBAIKAN POIN 2: Kalkulasi Store Belum Submit KEMARIN (H-1)
-        function calculateUnsubmittedYesterday(data) {
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
+        // POIN 2: Kalkulasi Store Belum Submit HARI INI
+        function calculateUnsubmittedToday(data) {
+            const today = new Date();
             
-            const yYear = yesterday.getFullYear();
-            const yMonthStr = String(yesterday.getMonth() + 1).padStart(2, '0');
-            const yDayStr = String(yesterday.getDate()).padStart(2, '0');
-            const yesterdayKey = `${yYear}-${yMonthStr}-${yDayStr}`;
+            const tYear = today.getFullYear();
+            const tMonthStr = String(today.getMonth() + 1).padStart(2, '0');
+            const tDayStr = String(today.getDate()).padStart(2, '0');
+            const todayKey = `${tYear}-${tMonthStr}-${tDayStr}`;
 
-            formattedYesterdayDate = `${yDayStr}/${yMonthStr}/${yYear}`;
-            document.getElementById('unsubmitted-date-label').innerText = formattedYesterdayDate;
-            document.getElementById('unsubmitted-modal-date').innerText = formattedYesterdayDate;
+            formattedTodayDate = `${tDayStr}/${tMonthStr}/${tYear}`;
+            document.getElementById('unsubmitted-date-label').innerText = formattedTodayDate;
+            document.getElementById('unsubmitted-modal-date').innerText = formattedTodayDate;
             
-            const submittedStoresYesterday = new Set();
+            const submittedStoresToday = new Set();
             data.forEach(item => {
                 const rawDateStr = extractDate(item);
                 const store = extractStore(item);
@@ -815,8 +815,8 @@
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        if (dateKey === yesterdayKey) {
-                            submittedStoresYesterday.add(store.toLowerCase().trim());
+                        if (dateKey === todayKey) {
+                            submittedStoresToday.add(store.toLowerCase().trim());
                         }
                     }
                 }
@@ -824,7 +824,7 @@
 
             unsubmittedStoresList = MASTER_STORES.filter(store => {
                 const cleanStore = store.toLowerCase().trim();
-                for (let subStore of submittedStoresYesterday) {
+                for (let subStore of submittedStoresToday) {
                     if (subStore.includes(cleanStore) || cleanStore.includes(subStore)) return false;
                 }
                 return true;
@@ -833,7 +833,7 @@
             document.getElementById('unsubmitted-count').innerText = unsubmittedStoresList.length;
             
             if (unsubmittedStoresList.length === 0) {
-                document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah mengirimkan laporan kemarin (${formattedYesterdayDate}).`;
+                document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah mengirimkan laporan hari ini (${formattedTodayDate}).`;
             } else {
                 const preview = unsubmittedStoresList.slice(0, 3).join(', ');
                 const extra = unsubmittedStoresList.length > 3 ? ` dan ${unsubmittedStoresList.length - 3} store lainnya.` : '.';
@@ -856,19 +856,19 @@
             });
         }
 
-        // PERBAIKAN POIN 2 (Action Area): Salin Daftar Toko Belum Submit Ke Clipboard
+        // POIN 2 (Action Area): Salin Daftar Toko Belum Submit Ke Clipboard
         function copyUnsubmittedList() {
             if (unsubmittedStoresList.length === 0) {
-                alert('Tidak ada store yang perlu di follow up!');
+                alert('Tidak ada store yang perlu di-follow up!');
                 return;
             }
 
-            let text = `*REMINDER: BELUM SUBMIT LAPORAN CHAMPION LOB (${formattedYesterdayDate})*\n`;
+            let text = `*REMINDER: BELUM SUBMIT LAPORAN CHAMPION LOB HARI INI (${formattedTodayDate})*\n`;
             text += `Total: ${unsubmittedStoresList.length} Store\n\n`;
             unsubmittedStoresList.forEach((store, i) => {
                 text += `${i + 1}. ${store}\n`;
             });
-            text += `\nMohon tim Store Trainer / LOB Champion terkait segera melengkapi laporan. Terima kasih!`;
+            text += `\nMohon tim Store Trainer / LOB Champion terkait segera melengkapi laporan hari ini. Terima kasih!`;
 
             navigator.clipboard.writeText(text).then(() => {
                 alert('Daftar store belum submit berhasil disalin! Anda bisa langsung menempelkannya ke WhatsApp/Telegram.');
@@ -877,7 +877,7 @@
             });
         }
 
-        // PERBAIKAN POIN 1: Penyesuaian Matriks Kedisiplinan Pelaporan
+        // POIN 1 & 3: Matriks Kedisiplinan Pelaporan Berbasis Tanggal Transaksi Bisnis
         function renderComplianceMatrix(data) {
             const container = document.getElementById('compliance-matrix-container');
             if (!container) return;
@@ -886,7 +886,7 @@
             const activeDatesSet = new Set();
             let sampleDate = null;
 
-            // 1. Memetakan laporan per tanggal & mendeteksi daftar tanggal yang aktif memiliki transaksi
+            // Memetakan laporan per tanggal transaksi bisnis (Tanggal_Transaksi)
             data.forEach(item => {
                 const store = extractStore(item);
                 const rawDateStr = extractDate(item);
@@ -939,7 +939,6 @@
                 fullMonthDates.push({ key: dateKey, label: `${dayStr}/${monthStr}`, isActive: activeDatesSet.has(dateKey) });
             }
 
-            // Hitung total slot hari aktif yang valid (Active Days * 2 Shift)
             const activeDaysCount = activeDatesSet.size > 0 ? activeDatesSet.size : fullMonthDates.length;
             const totalActiveSlots = activeDaysCount * 2;
 
@@ -995,7 +994,6 @@
                     html += `<td class="p-0.5 border-r border-white/10 ${hasSiang ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-400/30'}">${hasSiang ? '✓' : '✗'}</td>`;
                 });
 
-                // Perhitungan persentase kepatuhan yang adil & realistis
                 const complianceRate = Math.min(100, Math.round((totalReportSlots / totalActiveSlots) * 100));
                 
                 let rateBadgeClass = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
@@ -1151,50 +1149,7 @@
                     }
                 });
             }
-
-            const storeTotals = {};
-            data.forEach(item => {
-                const store = extractStore(item);
-                const qty = extractQuantity(item);
-                if (store !== '-') storeTotals[store] = (storeTotals[store] || 0) + qty;
-            });
-
-            const sortedStores = Object.entries(storeTotals).sort((a, b) => b[1] - a[1]).slice(0, 15);
-
-            if (chartInstances.stores) chartInstances.stores.destroy();
-            const ctxStores = document.getElementById('chartStoresOverview')?.getContext('2d');
-            if (ctxStores) {
-                chartInstances.stores = new Chart(ctxStores, {
-                    type: 'bar',
-                    data: {
-                        labels: sortedStores.map(e => e[0]),
-                        datasets: [{
-                            label: 'Total Penjualan',
-                            data: sortedStores.map(e => e[1]),
-                            backgroundColor: '#10b981',
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                            legend: { display: false },
-                            datalabels: {
-                                anchor: 'end',
-                                align: 'right',
-                                color: textColor,
-                                font: { weight: 'bold', size: 10 }
-                            }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor } },
-                            y: { ticks: { color: textColor } }
-                        }
-                    }
-                });
-            }
+            // POIN 4: Chart Perbandingan Total Penjualan Seluruh Store telah dihapus
         }
 
         function renderWoWStoreTable(data) {
