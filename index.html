@@ -309,7 +309,7 @@
             </div>
         </section>
 
-        <!-- REVISED: Hutang Submit (Digabung Jadi Satu Tabel dengan 2 Kolom: Nama Toko & Tanggal Transaksi) -->
+        <!-- Hutang Submit (Digabung Jadi Satu Tabel dengan 2 Kolom: Nama Toko & Tanggal Transaksi) -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-500/20 pb-2">
                 <div class="flex items-center gap-2">
@@ -460,7 +460,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i> Status Kepatuhan Kemarin (<span id="chart-yesterday-date">01/09/2026</span>)
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i> Status Kepatuhan Kemarin (<span id="chart-yesterday-date">-</span>)
                         </h3>
                         <div class="h-64 relative flex items-center justify-center">
                             <canvas id="chartComplianceYesterday"></canvas>
@@ -469,7 +469,7 @@
 
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i> Status Kepatuhan Hari Ini (<span id="chart-today-date">02/09/2026</span>)
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i> Status Kepatuhan Hari Ini (<span id="chart-today-date">-</span>)
                         </h3>
                         <div class="h-64 relative flex items-center justify-center">
                             <canvas id="chartComplianceToday"></canvas>
@@ -597,8 +597,8 @@
         let unsubmittedTodayList = [];
         let unsubmittedYesterdayList = [];
 
-        let formattedTodayDate = "02/09/2026";
-        let formattedYesterdayDate = "01/09/2026";
+        let formattedTodayDate = "";
+        let formattedYesterdayDate = "";
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
@@ -886,11 +886,21 @@
         }
 
         function calculateUnsubmittedSummary(data) {
-            const todayKey = "2026-09-02";
-            const yesterdayKey = "2026-09-01";
+            // Perhitungan otomatis tanggal hari ini dan kemarin berdasarkan sistem
+            const now = new Date();
+            const todayYear = now.getFullYear();
+            const todayMonth = String(now.getMonth() + 1).padStart(2, '0');
+            const todayDay = String(now.getDate()).padStart(2, '0');
+            const todayKey = `${todayYear}-${todayMonth}-${todayDay}`;
+            formattedTodayDate = `${todayDay}/${todayMonth}/${todayYear}`;
 
-            formattedTodayDate = "02/09/2026";
-            formattedYesterdayDate = "01/09/2026";
+            const yesterdayDate = new Date(now);
+            yesterdayDate.setDate(now.getDate() - 1);
+            const yestYear = yesterdayDate.getFullYear();
+            const yestMonth = String(yesterdayDate.getMonth() + 1).padStart(2, '0');
+            const yestDay = String(yesterdayDate.getDate()).padStart(2, '0');
+            const yesterdayKey = `${yestYear}-${yestMonth}-${yestDay}`;
+            formattedYesterdayDate = `${yestDay}/${yestMonth}/${yestYear}`;
 
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
             const chartTodayLabel = document.getElementById('chart-today-date');
@@ -1107,13 +1117,13 @@
 
             if (monthVal && monthVal !== 'ALL') {
                 monthIndex = parseInt(monthVal, 10) - 1;
-                year = sampleDate ? sampleDate.getFullYear() : 2026;
+                year = sampleDate ? sampleDate.getFullYear() : new Date().getFullYear();
             } else if (sampleDate) {
                 year = sampleDate.getFullYear();
                 monthIndex = sampleDate.getMonth();
             } else {
-                year = 2026;
-                monthIndex = 8;
+                year = new Date().getFullYear();
+                monthIndex = new Date().getMonth();
             }
 
             const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
@@ -1580,7 +1590,7 @@
                     <td class="p-2 font-bold text-amber-600 dark:text-amber-400">#${index + 1}</td>
                     <td class="p-2 font-bold text-indigo-700 dark:text-indigo-300">${item.name}</td>
                     <td class="p-2 font-semibold opacity-90">${item.store}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-700 dark:text-indigo-300">${item.lob}</span></td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30">${item.lob}</span></td>
                     <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${item.totalQty}</td>
                 `;
                 tbody.appendChild(row);
