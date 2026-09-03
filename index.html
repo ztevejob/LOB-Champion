@@ -148,9 +148,12 @@
             </div>
 
             <div class="grid grid-cols-2 lg:grid-cols-1 gap-2 my-4">
-                <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Auto Sync</span>
+                <div class="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Auto Sync</span>
+                    </div>
+                    <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300" id="last-update">Memuat...</span>
                 </div>
 
                 <button onclick="toggleTheme()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg glass-card text-xs font-bold hover:bg-black/5 dark:hover:bg-white/10 transition">
@@ -187,10 +190,6 @@
 
         <header class="glass-panel p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-semibold mb-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Terakhir diperbarui: <span id="last-update">Memuat...</span>
-                </div>
                 <h2 class="text-lg md:text-xl font-bold" id="page-title">Overview</h2>
             </div>
 
@@ -320,7 +319,7 @@
                         <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
                             HUTANG SUBMIT (LIST TOKO BELUM SUBMIT)
                         </h4>
-                        <p class="text-[11px] opacity-80 font-medium">List toko yang belum submit laporan.</p>
+                        <p class="text-[11px] opacity-80 font-medium">Akumulasi toko belum submit dari tanggal 1 hingga hari H.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 self-end sm:self-auto">
@@ -594,11 +593,9 @@
         let chartInstances = {};
         let lateChampionsList = [];
         
-        let unsubmittedTodayList = [];
-        let unsubmittedYesterdayList = [];
+        let cumulativeUnsubmittedList = [];
 
         let formattedTodayDate = "";
-        let formattedYesterdayDate = "";
 
         function parseQuantity(val) {
             if (val === undefined || val === null) return 0;
@@ -886,29 +883,29 @@
         }
 
         function calculateUnsubmittedSummary(data) {
-            // Perhitungan otomatis tanggal hari ini dan kemarin berdasarkan sistem
             const now = new Date();
             const todayYear = now.getFullYear();
-            const todayMonth = String(now.getMonth() + 1).padStart(2, '0');
-            const todayDay = String(now.getDate()).padStart(2, '0');
-            const todayKey = `${todayYear}-${todayMonth}-${todayDay}`;
-            formattedTodayDate = `${todayDay}/${todayMonth}/${todayYear}`;
+            const todayMonth = now.getMonth(); 
+            const todayDateNum = now.getDate();
+            const todayDay = String(todayDateNum).padStart(2, '0');
+            const todayMonthStr = String(todayMonth + 1).padStart(2, '0');
+            formattedTodayDate = `${todayDay}/${todayMonthStr}/${todayYear}`;
 
-            const yesterdayDate = new Date(now);
-            yesterdayDate.setDate(now.getDate() - 1);
-            const yestYear = yesterdayDate.getFullYear();
-            const yestMonth = String(yesterdayDate.getMonth() + 1).padStart(2, '0');
-            const yestDay = String(yesterdayDate.getDate()).padStart(2, '0');
-            const yesterdayKey = `${yestYear}-${yestMonth}-${yestDay}`;
-            formattedYesterdayDate = `${yestDay}/${yestMonth}/${yestYear}`;
+            // Generate range from date 1 to today (Hari H)
+            const dateRangeKeys = [];
+            const dateRangeLabels = [];
+            for (let d = 1; d <= todayDateNum; d++) {
+                const dStr = String(d).padStart(2, '0');
+                const key = `${todayYear}-${todayMonthStr}-${dStr}`;
+                dateRangeKeys.push(key);
+                dateRangeLabels.push(`${dStr}/${todayMonthStr}/${todayYear}`);
+            }
 
-            const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
-            const chartTodayLabel = document.getElementById('chart-today-date');
-            if (chartYesterdayLabel) chartYesterdayLabel.innerText = formattedYesterdayDate;
-            if (chartTodayLabel) chartTodayLabel.innerText = formattedTodayDate;
-
-            const submittedToday = new Set();
-            const submittedYesterday = new Set();
+            // Map submitted stores per date
+            const submittedPerDate = {};
+            dateRangeKeys.forEach(k => {
+                submittedPerDate[k] = new Set();
+            });
 
             data.forEach(item => {
                 const rawDateStr = extractDate(item);
@@ -917,30 +914,48 @@
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        if (dateKey === todayKey) {
-                            submittedToday.add(store.toLowerCase().trim());
-                        } else if (dateKey === yesterdayKey) {
-                            submittedYesterday.add(store.toLowerCase().trim());
+                        if (submittedPerDate[dateKey]) {
+                            submittedPerDate[dateKey].add(store.toLowerCase().trim());
                         }
                     }
                 }
             });
 
-            unsubmittedTodayList = MASTER_STORES.filter(store => {
-                const clean = store.toLowerCase().trim();
-                for (let sub of submittedToday) {
-                    if (sub.includes(clean) || clean.includes(sub)) return false;
+            // Accumulate unsubmitted per store across the date range (date 1 to Hari H)
+            cumulativeUnsubmittedList = [];
+
+            MASTER_STORES.forEach(store => {
+                const cleanStore = store.toLowerCase().trim();
+                let missingDates = [];
+
+                dateRangeKeys.forEach((key, index) => {
+                    const submittedSet = submittedPerDate[key];
+                    let isSubmitted = false;
+                    for (let sub of submittedSet) {
+                        if (sub.includes(cleanStore) || cleanStore.includes(sub)) {
+                            isSubmitted = true;
+                            break;
+                        }
+                    }
+                    if (!isSubmitted) {
+                        missingDates.push(dateRangeLabels[index]);
+                    }
+                });
+
+                if (missingDates.length > 0) {
+                    cumulativeUnsubmittedList.push({
+                        store: store,
+                        dates: missingDates.join(', ')
+                    });
                 }
-                return true;
             });
 
-            unsubmittedYesterdayList = MASTER_STORES.filter(store => {
-                const clean = store.toLowerCase().trim();
-                for (let sub of submittedYesterday) {
-                    if (sub.includes(clean) || clean.includes(sub)) return false;
-                }
-                return true;
-            });
+            const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
+            const chartTodayLabel = document.getElementById('chart-today-date');
+            const yesterdayDateObj = new Date(now);
+            yesterdayDateObj.setDate(now.getDate() - 1);
+            if (chartYesterdayLabel) chartYesterdayLabel.innerText = `${String(yesterdayDateObj.getDate()).padStart(2, '0')}/${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}/${yesterdayDateObj.getFullYear()}`;
+            if (chartTodayLabel) chartTodayLabel.innerText = formattedTodayDate;
 
             renderCombinedUnsubmittedTable();
         }
@@ -950,58 +965,39 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            let combinedRows = [];
-            unsubmittedYesterdayList.forEach(store => {
-                combinedRows.push({ store: store, date: formattedYesterdayDate });
-            });
-            unsubmittedTodayList.forEach(store => {
-                combinedRows.push({ store: store, date: formattedTodayDate });
-            });
-
-            if (combinedRows.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Luar biasa! Tidak ada hutang submit untuk kemarin maupun hari ini.</td></tr>';
+            if (cumulativeUnsubmittedList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Luar biasa! Semua toko sudah submit lengkap dari tanggal 1 sampai hari ini.</td></tr>';
                 return;
             }
 
-            combinedRows.forEach((item, index) => {
+            cumulativeUnsubmittedList.forEach((item, index) => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 row.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
                     <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
-                    <td class="p-2.5 font-mono text-rose-600 dark:text-rose-400 font-bold">${item.date}</td>
+                    <td class="p-2.5 font-mono text-rose-600 dark:text-rose-400 font-bold">${item.dates}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
         function copyCombinedUnsubmittedWaDraft() {
-            let text = `*REMINDER: REKAP HUTANG SUBMIT LAPORAN LOB CHAMPION*\n\n`;
+            if (cumulativeUnsubmittedList.length === 0) {
+                alert('Tidak ada data hutang submit untuk disalin.');
+                return;
+            }
+
+            let text = `*REMINDER: REKAP AKUMULASI HUTANG SUBMIT LOB CHAMPION*\n*(Periode tgl 1 s.d. Hari Ini)*\n\n`;
             
-            text += `📅 *Kemarin (${formattedYesterdayDate})* - Total: ${unsubmittedYesterdayList.length} Store\n`;
-            if (unsubmittedYesterdayList.length === 0) {
-                text += `(Lengkap / Tidak ada hutang)\n\n`;
-            } else {
-                unsubmittedYesterdayList.forEach((store, idx) => {
-                    text += `${idx + 1}. ${store}\n`;
-                });
-                text += `\n`;
-            }
+            cumulativeUnsubmittedList.forEach((item, idx) => {
+                text += `${idx + 1}. *${item.store}*\n   Belum Submit Tgl: ${item.dates}\n\n`;
+            });
 
-            text += `📅 *Hari Ini (${formattedTodayDate})* - Total: ${unsubmittedTodayList.length} Store\n`;
-            if (unsubmittedTodayList.length === 0) {
-                text += `(Lengkap / Belum ada hutang)\n\n`;
-            } else {
-                unsubmittedTodayList.forEach((store, idx) => {
-                    text += `${idx + 1}. ${store}\n`;
-                });
-                text += `\n`;
-            }
-
-            text += `Mohon kepada rekan-rekan Store Trainer / LOB Champion di toko tersebut untuk segera melengkapi laporan harian yang belum disubmit. Terima kasih atas kerjasamanya! 🙏`;
+            text += `Mohon kepada rekan-rekan Store Trainer / LOB Champion di toko-toko tersebut untuk segera melengkapi laporan harian yang belum disubmit. Terima kasih atas kerjasamanya! 🙏`;
 
             navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA gabungan hutang submit berhasil disalin ke clipboard!');
+                alert('Draft WA akumulasi hutang submit berhasil disalin ke clipboard!');
             }).catch(err => {
                 console.error('Gagal menyalin draft WA gabungan:', err);
             });
@@ -1221,10 +1217,37 @@
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
             const totalStores = MASTER_STORES.length;
-            const submittedYesterday = totalStores - unsubmittedYesterdayList.length;
-            const unsubmittedYesterday = unsubmittedYesterdayList.length;
-            const submittedToday = totalStores - unsubmittedTodayList.length;
-            const unsubmittedToday = unsubmittedTodayList.length;
+            const now = new Date();
+            const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const yesterdayDateObj = new Date(now); yesterdayDateObj.setDate(now.getDate() - 1);
+            const yesterdayKey = `${yesterdayDateObj.getFullYear()}-${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDateObj.getDate()).padStart(2, '0')}`;
+
+            let subToday = new Set();
+            let subYest = new Set();
+            rawCSVData.forEach(item => {
+                const s = extractStore(item);
+                const dt = parseCustomDate(extractDate(item));
+                if (dt && s && s !== '-') {
+                    const k = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+                    if (k === todayKey) subToday.add(s.toLowerCase().trim());
+                    if (k === yesterdayKey) subYest.add(s.toLowerCase().trim());
+                }
+            });
+
+            const unYestCount = MASTER_STORES.filter(st => {
+                const c = st.toLowerCase().trim();
+                for (let x of subYest) { if (x.includes(c) || c.includes(x)) return false; }
+                return true;
+            }).length;
+
+            const unTodayCount = MASTER_STORES.filter(st => {
+                const c = st.toLowerCase().trim();
+                for (let x of subToday) { if (x.includes(c) || c.includes(x)) return false; }
+                return true;
+            }).length;
+
+            const submittedYesterday = totalStores - unYestCount;
+            const submittedToday = totalStores - unTodayCount;
 
             if (chartInstances.complianceYesterday) chartInstances.complianceYesterday.destroy();
             const ctxYesterday = document.getElementById('chartComplianceYesterday')?.getContext('2d');
@@ -1234,7 +1257,7 @@
                     data: {
                         labels: ['Submit', 'Belum Submit'],
                         datasets: [{
-                            data: [submittedYesterday, unsubmittedYesterday],
+                            data: [submittedYesterday, unYestCount],
                             backgroundColor: ['#10b981', '#f43f5e']
                         }]
                     },
@@ -1264,7 +1287,7 @@
                     data: {
                         labels: ['Submit', 'Belum Submit'],
                         datasets: [{
-                            data: [submittedToday, unsubmittedToday],
+                            data: [submittedToday, unTodayCount],
                             backgroundColor: ['#3b82f6', '#fbbf24']
                         }]
                     },
