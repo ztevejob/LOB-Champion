@@ -309,7 +309,7 @@
             </div>
         </section>
 
-        <!-- REVISED: Hutang Submit (Digabung Jadi Satu + Tombol Copy Text Draft WA) -->
+        <!-- REVISED: Hutang Submit (Digabung Jadi Satu Tabel dengan 2 Kolom: Nama Toko & Tanggal Transaksi) -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-500/20 pb-2">
                 <div class="flex items-center gap-2">
@@ -318,9 +318,9 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                            Hutang Submit (List Toko Belum Submit Tanggal Berjalan & Kemarin)
+                            HUTANG SUBMIT (LIST TOKO BELUM SUBMIT TANGGAL BERJALAN & KEMARIN)
                         </h4>
-                        <p class="text-[11px] opacity-80 font-medium">Prinsip gabungan: Toko yang belum submit pada tanggal berjalan maupun kemarin dihitung sebagai hutang submit.</p>
+                        <p class="text-[11px] opacity-80 font-medium">Gabungan toko yang belum submit pada tanggal berjalan (<span id="label-date-today">02/09/2026</span>) dan kemarin (<span id="label-date-yesterday">01/09/2026</span>).</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 self-end sm:self-auto">
@@ -330,34 +330,20 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- Data Kemarin -->
-                <div class="bg-black/5 dark:bg-white/5 p-3 rounded-lg border border-gray-500/10 flex flex-col justify-between gap-2">
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold">Kemarin (<span id="unsubmitted-yesterday-label">01/09/2026</span>)</span>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/30" id="unsubmitted-yesterday-count">0 Store</span>
-                        </div>
-                        <p class="text-[11px] opacity-90 mt-1 line-clamp-2 font-medium" id="unsubmitted-yesterday-preview">Memuat data...</p>
-                    </div>
-                    <button onclick="toggleUnsubmittedModal('yesterday')" class="w-full py-1.5 bg-rose-500/20 border border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-500/30 text-xs rounded transition font-bold flex items-center justify-center gap-1">
-                        <i data-lucide="list-checks" class="w-3.5 h-3.5"></i> Detail Kemarin
-                    </button>
-                </div>
-
-                <!-- Data Hari Ini -->
-                <div class="bg-black/5 dark:bg-white/5 p-3 rounded-lg border border-gray-500/10 flex flex-col justify-between gap-2">
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold">Hari Ini (<span id="unsubmitted-date-label">02/09/2026</span>)</span>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/30"><span id="unsubmitted-count">0</span> Store</span>
-                        </div>
-                        <p class="text-[11px] opacity-90 mt-1 line-clamp-2 font-medium" id="unsubmitted-list-text">Memuat data...</p>
-                    </div>
-                    <button onclick="toggleUnsubmittedModal('today')" class="w-full py-1.5 bg-rose-500/20 border border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-500/30 text-xs rounded transition font-bold flex items-center justify-center gap-1">
-                        <i data-lucide="list-checks" class="w-3.5 h-3.5"></i> Detail Hari Ini
-                    </button>
-                </div>
+            <!-- Tabel Tunggal Hutang Submit -->
+            <div class="overflow-x-auto max-h-[320px]">
+                <table class="w-full text-xs text-left border-collapse min-w-[500px]">
+                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                        <tr>
+                            <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                            <th class="p-2.5 sticky-header-bg">Nama Toko</th>
+                            <th class="p-2.5 sticky-header-bg">Tanggal Transaksi (Belum Submit)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="combined-unsubmitted-table-body" class="divide-y divide-gray-500/10">
+                        <!-- Data dimasukkan via JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -564,30 +550,6 @@
         </div>
     </main>
 
-    <!-- Modal Hutang Submit -->
-    <div id="unsubmitted-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-lg p-6 max-h-[85vh] flex flex-col justify-between shadow-2xl">
-            <div>
-                <div class="flex items-center justify-between mb-3 border-b border-gray-500/20 pb-3">
-                    <div>
-                        <h3 class="font-bold text-base text-rose-500 flex items-center gap-2">
-                            <i data-lucide="alert-triangle" class="w-5 h-5"></i> Hutang Submit: Store Belum Lapor
-                        </h3>
-                        <p class="text-[11px] opacity-90 mt-0.5 font-medium">Daftar toko yang belum mengirimkan laporan pada tanggal <b id="unsubmitted-modal-date" class="text-rose-600 dark:text-rose-300"></b></p>
-                    </div>
-                    <button onclick="closeUnsubmittedModal()" class="opacity-70 hover:opacity-100 text-xl font-bold">&times;</button>
-                </div>
-                <div id="unsubmitted-modal-body" class="overflow-y-auto max-h-[45vh] space-y-1.5 text-xs pr-1"></div>
-            </div>
-            <div class="mt-4 pt-3 border-t border-gray-500/20 flex items-center justify-between gap-2">
-                <button onclick="copyUnsubmittedList()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5">
-                    <i data-lucide="copy" class="w-4 h-4"></i> Salin List Follow-Up
-                </button>
-                <button onclick="closeUnsubmittedModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-lg transition">Tutup</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         Chart.register(ChartDataLabels);
         lucide.createIcons();
@@ -637,7 +599,6 @@
         
         let unsubmittedTodayList = [];
         let unsubmittedYesterdayList = [];
-        let currentModalTarget = 'today';
 
         let formattedTodayDate = "02/09/2026";
         let formattedYesterdayDate = "01/09/2026";
@@ -813,42 +774,6 @@
             applyFilters();
         }
 
-        function toggleUnsubmittedModal(target = 'today') {
-            currentModalTarget = target;
-            const modal = document.getElementById('unsubmitted-modal');
-            const dateLabel = document.getElementById('unsubmitted-modal-date');
-            const modalBody = document.getElementById('unsubmitted-modal-body');
-
-            const list = (target === 'yesterday') ? unsubmittedYesterdayList : unsubmittedTodayList;
-            const dateStr = (target === 'yesterday') ? formattedYesterdayDate : formattedTodayDate;
-
-            dateLabel.innerText = dateStr;
-            modalBody.innerHTML = '';
-
-            if (list.length === 0) {
-                modalBody.innerHTML = '<div class="p-3 text-center opacity-80 font-medium">Seluruh store telah mengirimkan laporan pada tanggal ini.</div>';
-            } else {
-                list.forEach((store, idx) => {
-                    const item = document.createElement('div');
-                    item.className = 'p-2 rounded bg-black/5 dark:bg-white/5 border border-gray-500/10 flex items-center justify-between text-xs hover:bg-black/10 dark:hover:bg-white/10 transition';
-                    item.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono opacity-70 text-[10px] w-5 text-right font-bold">${idx + 1}.</span> 
-                            <span class="font-bold text-slate-900 dark:text-slate-100">${store}</span>
-                        </div>
-                        <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-700 dark:text-rose-300 font-bold border border-rose-500/30">Hutang Submit</span>
-                    `;
-                    modalBody.appendChild(item);
-                });
-            }
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeUnsubmittedModal() {
-            document.getElementById('unsubmitted-modal').classList.add('hidden');
-        }
-
         function updateFormattedTimestamp() {
             const now = new Date();
             const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -970,8 +895,8 @@
             formattedTodayDate = "02/09/2026";
             formattedYesterdayDate = "01/09/2026";
 
-            document.getElementById('unsubmitted-date-label').innerText = formattedTodayDate;
-            document.getElementById('unsubmitted-yesterday-label').innerText = formattedYesterdayDate;
+            document.getElementById('label-date-today').innerText = formattedTodayDate;
+            document.getElementById('label-date-yesterday').innerText = formattedYesterdayDate;
             
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
             const chartTodayLabel = document.getElementById('chart-today-date');
@@ -1013,46 +938,36 @@
                 return true;
             });
 
-            document.getElementById('unsubmitted-count').innerText = unsubmittedTodayList.length;
-            document.getElementById('unsubmitted-yesterday-count').innerText = `${unsubmittedYesterdayList.length} Store`;
-            
-            if (unsubmittedTodayList.length === 0) {
-                document.getElementById('unsubmitted-list-text').innerText = `Luar biasa! Seluruh store telah submit hari ini (${formattedTodayDate}).`;
-            } else {
-                const preview = unsubmittedTodayList.slice(0, 2).join(', ');
-                const extra = unsubmittedTodayList.length > 2 ? ` dan ${unsubmittedTodayList.length - 2} store lainnya.` : '.';
-                document.getElementById('unsubmitted-list-text').innerText = `${preview}${extra}`;
-            }
-
-            if (unsubmittedYesterdayList.length === 0) {
-                document.getElementById('unsubmitted-yesterday-preview').innerText = `Seluruh store telah melengkapi laporan kemarin (${formattedYesterdayDate}).`;
-            } else {
-                const preview = unsubmittedYesterdayList.slice(0, 2).join(', ');
-                const extra = unsubmittedYesterdayList.length > 2 ? ` dan ${unsubmittedYesterdayList.length - 2} store lainnya.` : '.';
-                document.getElementById('unsubmitted-yesterday-preview').innerText = `${preview}${extra}`;
-            }
+            renderCombinedUnsubmittedTable();
         }
 
-        function copyUnsubmittedList() {
-            const list = (currentModalTarget === 'yesterday') ? unsubmittedYesterdayList : unsubmittedTodayList;
-            const dateStr = (currentModalTarget === 'yesterday') ? formattedYesterdayDate : formattedTodayDate;
+        function renderCombinedUnsubmittedTable() {
+            const tbody = document.getElementById('combined-unsubmitted-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
 
-            if (list.length === 0) {
-                alert('Tidak ada store yang perlu di-follow up!');
+            let combinedRows = [];
+            unsubmittedYesterdayList.forEach(store => {
+                combinedRows.push({ store: store, date: formattedYesterdayDate });
+            });
+            unsubmittedTodayList.forEach(store => {
+                combinedRows.push({ store: store, date: formattedTodayDate });
+            });
+
+            if (combinedRows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Luar biasa! Tidak ada hutang submit untuk kemarin maupun hari ini.</td></tr>';
                 return;
             }
 
-            let text = `*REMINDER: HUTANG SUBMIT LAPORAN CHAMPION LOB TANGGAL ${dateStr}*\n`;
-            text += `Total: ${list.length} Store\n\n`;
-            list.forEach((store, i) => {
-                text += `${i + 1}. ${store}\n`;
-            });
-            text += `\nMohon tim Store Trainer / LOB Champion terkait segera melengkapi laporan. Terima kasih!`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Daftar hutang submit store berhasil disalin!');
-            }).catch(err => {
-                console.error('Gagal menyalin:', err);
+            combinedRows.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                row.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
+                    <td class="p-2.5 font-mono text-rose-600 dark:text-rose-400 font-bold">${item.date}</td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
