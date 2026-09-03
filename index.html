@@ -23,7 +23,6 @@
             --header-bg: #0f172a;
         }
 
-        /* Optimization for Light Mode Contrast */
         .light-mode {
             --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
             --sidebar-bg: rgba(255, 255, 255, 0.9);
@@ -49,14 +48,6 @@
             color: #0f172a !important;
         }
 
-        .light-mode .opacity-60,
-        .light-mode .opacity-70,
-        .light-mode .opacity-80,
-        .light-mode .opacity-50 {
-            opacity: 1 !important;
-            color: #1e293b !important;
-        }
-
         .light-mode select {
             background-color: #ffffff !important;
             color: #0f172a !important;
@@ -67,43 +58,12 @@
             color: #0f172a !important;
         }
 
-        /* Dark mode explicit font and text color enforcement */
         body:not(.light-mode) {
             color: #f8fafc !important;
         }
         body:not(.light-mode) table td,
         body:not(.light-mode) table th {
             color: #f8fafc !important;
-        }
-        body:not(.light-mode) p,
-        body:not(.light-mode) span,
-        body:not(.light-mode) h1,
-        body:not(.light-mode) h2,
-        body:not(.light-mode) h3,
-        body:not(.light-mode) h4 {
-            color: inherit;
-        }
-
-        .light-mode .bg-indigo-500\/20,
-        .light-mode .bg-indigo-500\/10 {
-            background-color: #e0e7ff !important;
-            color: #312e81 !important;
-        }
-        .light-mode .bg-emerald-500\/20,
-        .light-mode .bg-emerald-500\/10 {
-            background-color: #d1fae5 !important;
-            color: #064e3b !important;
-        }
-        .light-mode .bg-amber-500\/20,
-        .light-mode .bg-amber-500\/10 {
-            background-color: #fef3c7 !important;
-            color: #78350f !important;
-        }
-        .light-mode .bg-rose-500\/20,
-        .light-mode .bg-rose-500\/10,
-        .light-mode .bg-rose-500\/1 {
-            background-color: #fee2e2 !important;
-            color: #7f1d1d !important;
         }
 
         body {
@@ -175,7 +135,6 @@
     <!-- Sidebar Responsive -->
     <aside id="sidebar" class="w-full lg:w-64 glass-sidebar p-4 flex flex-col justify-between shrink-0 z-20">
         <div>
-            <!-- Header Brand & Mobile Toggle -->
             <div class="flex items-center justify-between pb-4 border-b border-gray-500/20">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-indigo-600 rounded-lg text-white">
@@ -188,7 +147,6 @@
                 </div>
             </div>
 
-            <!-- Auto Sync & Mode Gelap -->
             <div class="grid grid-cols-2 lg:grid-cols-1 gap-2 my-4">
                 <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -201,7 +159,6 @@
                 </button>
             </div>
 
-            <!-- Navigation Links -->
             <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-1.5" id="sidebar-nav">
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> Overview
@@ -221,7 +178,7 @@
         <div class="pt-4 mt-4 border-t border-gray-500/20 hidden lg:block">
             <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
                 <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Created & Designed by</p>
-                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">Novi Riyanto</p>
+                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">Novi Riyanto[cite: 5]</p>
             </div>
         </div>
     </aside>
@@ -237,7 +194,6 @@
                 <h2 class="text-lg md:text-xl font-bold" id="page-title">Overview</h2>
             </div>
 
-            <!-- Filters Grid -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full md:w-auto text-xs">
                 <div>
                     <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Month</label>
@@ -280,8 +236,6 @@
 
         <!-- KPI Grid -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-            <!-- Total Unit Terjual per LOB -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Total Unit / LOB</p>
@@ -307,7 +261,6 @@
                 </div>
             </div>
 
-            <!-- Average / Bulan / LOB -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Average / Bulan / LOB</p>
@@ -333,7 +286,6 @@
                 </div>
             </div>
 
-            <!-- Total Laporan Masuk -->
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-bold opacity-90">Total Laporan Masuk</p>
@@ -345,7 +297,6 @@
                 </div>
             </div>
 
-            <!-- Champion Aktif -->
             <div class="glass-card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-bold opacity-90">Champion Aktif</p>
@@ -356,21 +307,27 @@
                     <i data-lucide="users" class="w-6 h-6"></i>
                 </div>
             </div>
-
         </section>
 
-        <!-- Hutang Submit -->
+        <!-- REVISED: Hutang Submit (Digabung Jadi Satu + Tombol Copy Text Draft WA) -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
-            <div class="flex items-center justify-between border-b border-gray-500/20 pb-2">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-500/20 pb-2">
                 <div class="flex items-center gap-2">
                     <div class="p-1.5 bg-rose-500/20 text-rose-500 rounded-lg">
                         <i data-lucide="alert-circle" class="w-5 h-5"></i>
                     </div>
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                        Hutang Submit (List Toko Belum Submit Tanggal Berjalan)
-                    </h4>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                            Hutang Submit (List Toko Belum Submit Tanggal Berjalan & Kemarin)
+                        </h4>
+                        <p class="text-[11px] opacity-80 font-medium">Prinsip gabungan: Toko yang belum submit pada tanggal berjalan maupun kemarin dihitung sebagai hutang submit.</p>
+                    </div>
                 </div>
-                <span class="text-[10px] opacity-80 font-bold">Acuan Tanggal Berjalan</span>
+                <div class="flex items-center gap-2 self-end sm:self-auto">
+                    <button onclick="copyCombinedUnsubmittedWaDraft()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                        <i data-lucide="message-square" class="w-4 h-4"></i> Copy Draft WA Gabungan
+                    </button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -514,8 +471,6 @@
 
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
-                
-                <!-- Doughnut Chart Kepatuhan Pindah Paling Atas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
@@ -536,7 +491,6 @@
                     </div>
                 </div>
 
-                <!-- Terlambat Submit (4 Kolom + Format Draft WA) -->
                 <div class="glass-panel p-4 border-l-4 border-amber-500">
                     <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
                         <div class="flex items-center gap-2">
@@ -569,7 +523,6 @@
                     </div>
                 </div>
 
-                <!-- Matriks Kedisiplinan Pelaporan Harian Store -->
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
                         <div>
@@ -580,7 +533,6 @@
                     </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto max-h-[420px] relative"></div>
                 </div>
-
             </div>
 
             <!-- Section 4: Log Transaksi Masuk -->
@@ -1101,6 +1053,38 @@
                 alert('Daftar hutang submit store berhasil disalin!');
             }).catch(err => {
                 console.error('Gagal menyalin:', err);
+            });
+        }
+
+        function copyCombinedUnsubmittedWaDraft() {
+            let text = `*REMINDER: REKAP HUTANG SUBMIT LAPORAN LOB CHAMPION*\n\n`;
+            
+            text += `📅 *Kemarin (${formattedYesterdayDate})* - Total: ${unsubmittedYesterdayList.length} Store\n`;
+            if (unsubmittedYesterdayList.length === 0) {
+                text += `(Lengkap / Tidak ada hutang)\n\n`;
+            } else {
+                unsubmittedYesterdayList.forEach((store, idx) => {
+                    text += `${idx + 1}. ${store}\n`;
+                });
+                text += `\n`;
+            }
+
+            text += `📅 *Hari Ini (${formattedTodayDate})* - Total: ${unsubmittedTodayList.length} Store\n`;
+            if (unsubmittedTodayList.length === 0) {
+                text += `(Lengkap / Belum ada hutang)\n\n`;
+            } else {
+                unsubmittedTodayList.forEach((store, idx) => {
+                    text += `${idx + 1}. ${store}\n`;
+                });
+                text += `\n`;
+            }
+
+            text += `Mohon kepada rekan-rekan Store Trainer / LOB Champion di toko tersebut untuk segera melengkapi laporan harian yang belum disubmit. Terima kasih atas kerjasamanya! 🙏`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Draft WA gabungan hutang submit berhasil disalin ke clipboard!');
+            }).catch(err => {
+                console.error('Gagal menyalin draft WA gabungan:', err);
             });
         }
 
