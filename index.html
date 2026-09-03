@@ -318,9 +318,9 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                            HUTANG SUBMIT (LIST TOKO BELUM SUBMIT TANGGAL BERJALAN & KEMARIN)
+                            HUTANG SUBMIT (LIST TOKO BELUM SUBMIT)
                         </h4>
-                        <p class="text-[11px] opacity-80 font-medium">Gabungan toko yang belum submit pada tanggal berjalan (<span id="label-date-today">02/09/2026</span>) dan kemarin (<span id="label-date-yesterday">01/09/2026</span>).</p>
+                        <p class="text-[11px] opacity-80 font-medium">List toko yang belum submit laporan.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 self-end sm:self-auto">
@@ -484,9 +484,6 @@
                             <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide">Terlambat Submit</h3>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyLateChampionsList()" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-700 dark:text-amber-300 rounded text-xs font-bold transition flex items-center gap-1.5">
-                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Data
-                            </button>
                             <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
                                 <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Copy Draft WA
                             </button>
@@ -895,9 +892,6 @@
             formattedTodayDate = "02/09/2026";
             formattedYesterdayDate = "01/09/2026";
 
-            document.getElementById('label-date-today').innerText = formattedTodayDate;
-            document.getElementById('label-date-yesterday').innerText = formattedYesterdayDate;
-            
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
             const chartTodayLabel = document.getElementById('chart-today-date');
             if (chartYesterdayLabel) chartYesterdayLabel.innerText = formattedYesterdayDate;
@@ -1049,25 +1043,6 @@
                     <td class="p-2 font-mono text-[11px] font-bold text-indigo-700 dark:text-indigo-300">${item.dateTxStr}</td>
                 `;
                 tbody.appendChild(tr);
-            });
-        }
-
-        function copyLateChampionsList() {
-            if (lateChampionsList.length === 0) {
-                alert('Tidak ada data keterlambatan submit untuk disalin.');
-                return;
-            }
-
-            let text = `*DAFTAR CHAMPION TERLAMBAT SUBMIT LAPORAN*\n\n`;
-            lateChampionsList.forEach((item, idx) => {
-                text += `${idx + 1}. ${item.name} - ${item.store} | Timestamp: ${item.dateTsStr} | Tanggal Tx: ${item.dateTxStr}\n`;
-            });
-            text += `\nMohon perhatiannya agar laporan disubmit pada hari transaksi. Terima kasih!`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Daftar Champion terlambat submit berhasil disalin!');
-            }).catch(err => {
-                console.error('Gagal menyalin:', err);
             });
         }
 
