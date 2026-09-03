@@ -91,6 +91,19 @@
             color: #fda4af !important;
         }
 
+        /* Light mode specific background and color for ✓ and ✗ */
+        .light-mode .matrix-symbol-yes {
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+
+        .light-mode .matrix-symbol-no {
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+            font-weight: bold;
+        }
+
         body {
             background: var(--bg-gradient);
             color: var(--text-main);
@@ -333,7 +346,7 @@
             </div>
         </section>
 
-        <!-- Hutang Submit (Digabung Jadi Satu Tabel dengan 2 Kolom: Nama Toko & Tanggal Transaksi) -->
+        <!-- Hutang Submit -->
         <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-500/20 pb-2">
                 <div class="flex items-center gap-2">
@@ -354,7 +367,6 @@
                 </div>
             </div>
 
-            <!-- Tabel Tunggal Hutang Submit -->
             <div class="overflow-x-auto max-h-[320px]">
                 <table class="w-full text-xs text-left border-collapse min-w-[500px]">
                     <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
@@ -364,9 +376,7 @@
                             <th class="p-2.5 sticky-header-bg">Tanggal Transaksi (Belum Submit)</th>
                         </tr>
                     </thead>
-                    <tbody id="combined-unsubmitted-table-body" class="divide-y divide-gray-500/10">
-                        <!-- Data dimasukkan via JS -->
-                    </tbody>
+                    <tbody id="combined-unsubmitted-table-body" class="divide-y divide-gray-500/10"></tbody>
                 </table>
             </div>
         </div>
@@ -513,7 +523,7 @@
                             </button>
                         </div>
                     </div>
-                    <p class="text-xs opacity-90 mb-3 font-medium">Daftar transaksi yang disubmit lebih dari 24 jam dari waktu transaksi dilakukan.</p>
+                    <p class="text-xs opacity-90 mb-3 font-medium">Daftar transaksi yang disubmit lewat dari jam 12 malam pada hari H dari waktu transaksi dilakukan.</p>
                     
                     <div class="overflow-x-auto max-h-[300px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[500px]">
@@ -617,9 +627,7 @@
         let filteredData = [];
         let chartInstances = {};
         let lateChampionsList = [];
-        
         let cumulativeUnsubmittedList = [];
-
         let formattedTodayDate = "";
 
         function parseQuantity(val) {
@@ -916,7 +924,6 @@
             const todayMonthStr = String(todayMonth + 1).padStart(2, '0');
             formattedTodayDate = `${todayDay}/${todayMonthStr}/${todayYear}`;
 
-            // Generate range from date 1 to yesterday (because today's report will be submitted at endshift)
             const dateRangeKeys = [];
             const dateRangeLabels = [];
             for (let d = 1; d < todayDateNum; d++) {
@@ -926,7 +933,6 @@
                 dateRangeLabels.push(`${dStr}/${todayMonthStr}/${todayYear}`);
             }
 
-            // Map submitted stores per date
             const submittedPerDate = {};
             dateRangeKeys.forEach(k => {
                 submittedPerDate[k] = new Set();
@@ -946,7 +952,6 @@
                 }
             });
 
-            // Accumulate unsubmitted per store across the past date range (date 1 up to yesterday)
             cumulativeUnsubmittedList = [];
 
             if (dateRangeKeys.length > 0) {
@@ -1048,8 +1053,9 @@
                     const dateTs = parseCustomDate(tsStr);
 
                     if (dateTx && dateTs) {
-                        const diffHours = (dateTs - dateTx) / (1000 * 60 * 60);
-                        if (diffHours > 24) {
+                        // Aturan baru: Transaksi disubmit lewat dari jam 12 malam pada hari H (tanggal submit > tanggal transaksi)
+                        const txDayEnd = new Date(dateTx.getFullYear(), dateTx.getMonth(), dateTx.getDate(), 23, 59, 59, 999);
+                        if (dateTs > txDayEnd) {
                             lateChampionsList.push({
                                 name,
                                 store,
@@ -1085,11 +1091,11 @@
                 return;
             }
 
-            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (dikirim melebihi 24 jam dari tanggal transaksi):\n\n`;
+            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (dikirim lewat dari jam 12 malam pada hari H dari waktu transaksi):\n\n`;
             lateChampionsList.forEach((item, idx) => {
                 text += `${idx + 1}. *Nama*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
             });
-            text += `Mohon ke depannya agar laporan dapat diinput tepat waktu sesuai tanggal transaksi berlangsung ya. Terima kasih atas kerjasamanya! 🙏`;
+            text += `Mohon ke depannya agar laporan dapat diinput tepat waktu di hari H transaksi ya. Terima kasih atas kerjasamanya! 🙏`;
 
             navigator.clipboard.writeText(text).then(() => {
                 alert('Draft WA Terlambat Submit berhasil disalin ke clipboard!');
@@ -1770,7 +1776,7 @@
             document.getElementById('kpi-avg-mac').innerText = (totalMac / activeMonthsCount).toFixed(1);
             document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeMonthsCount).toFixed(1);
             document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeMonthsCount).toFixed(1);
-            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeMonthsCount).label = (totalWatch / activeMonthsCount).toFixed(1); // safety
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeMonthsCount).toFixed(1);
 
             document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
             document.getElementById('kpi-active-champions').innerText = champions.size;
