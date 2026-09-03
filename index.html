@@ -66,6 +66,31 @@
             color: #f8fafc !important;
         }
 
+        /* Neon green adjustments for dark mode */
+        body:not(.light-mode) #last-update,
+        body:not(.light-mode) .neon-date-target {
+            color: #39ff14 !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+        }
+
+        body:not(.light-mode) .neon-store-badge {
+            color: #39ff14 !important;
+            border-color: rgba(57, 255, 20, 0.4) !important;
+            background-color: rgba(57, 255, 20, 0.1) !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+        }
+
+        body:not(.light-mode) .matrix-symbol-yes {
+            background-color: rgba(57, 255, 20, 0.2) !important;
+            color: #39ff14 !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+        }
+
+        body:not(.light-mode) .matrix-symbol-no {
+            background-color: rgba(244, 63, 94, 0.25) !important;
+            color: #fda4af !important;
+        }
+
         body {
             background: var(--bg-gradient);
             color: var(--text-main);
@@ -153,7 +178,7 @@
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>Auto Sync</span>
                     </div>
-                    <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300" id="last-update">Memuat...</span>
+                    <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
                 </div>
 
                 <button onclick="toggleTheme()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg glass-card text-xs font-bold hover:bg-black/5 dark:hover:bg-white/10 transition">
@@ -319,7 +344,7 @@
                         <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
                             HUTANG SUBMIT (LIST TOKO BELUM SUBMIT)
                         </h4>
-                        <p class="text-[11px] opacity-80 font-medium">Akumulasi toko belum submit dari tanggal 1 hingga hari H.</p>
+                        <p class="text-[11px] opacity-80 font-medium">Akumulasi toko belum submit dari tanggal 1 hingga kemarin (hari ini direport saat endshift).</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 self-end sm:self-auto">
@@ -433,7 +458,7 @@
                         <h3 class="font-bold text-sm flex items-center gap-2">
                             <i data-lucide="store" class="w-4 h-4 text-purple-500"></i> Detail Komparasi per Store (This Week vs Last Week)
                         </h3>
-                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30">Total 98 Store</span>
+                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge">Total 98 Store</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[650px]">
@@ -511,7 +536,7 @@
                             <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi, Middle, & Siang)</h3>
                             <p class="text-[11px] opacity-80 mt-0.5 font-semibold">Berdasarkan Tanggal Transaksi & Shift periode terfilter</p>
                         </div>
-                        <span id="total-stores-badge" class="text-xs font-bold px-3 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-full border border-indigo-500/30">Memuat...</span>
+                        <span id="total-stores-badge" class="text-xs font-bold px-3 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-full border border-indigo-500/30 neon-store-badge">Memuat...</span>
                     </div>
                     <div id="compliance-matrix-container" class="overflow-x-auto max-h-[420px] relative"></div>
                 </div>
@@ -891,10 +916,10 @@
             const todayMonthStr = String(todayMonth + 1).padStart(2, '0');
             formattedTodayDate = `${todayDay}/${todayMonthStr}/${todayYear}`;
 
-            // Generate range from date 1 to today (Hari H)
+            // Generate range from date 1 to yesterday (because today's report will be submitted at endshift)
             const dateRangeKeys = [];
             const dateRangeLabels = [];
-            for (let d = 1; d <= todayDateNum; d++) {
+            for (let d = 1; d < todayDateNum; d++) {
                 const dStr = String(d).padStart(2, '0');
                 const key = `${todayYear}-${todayMonthStr}-${dStr}`;
                 dateRangeKeys.push(key);
@@ -921,34 +946,36 @@
                 }
             });
 
-            // Accumulate unsubmitted per store across the date range (date 1 to Hari H)
+            // Accumulate unsubmitted per store across the past date range (date 1 up to yesterday)
             cumulativeUnsubmittedList = [];
 
-            MASTER_STORES.forEach(store => {
-                const cleanStore = store.toLowerCase().trim();
-                let missingDates = [];
+            if (dateRangeKeys.length > 0) {
+                MASTER_STORES.forEach(store => {
+                    const cleanStore = store.toLowerCase().trim();
+                    let missingDates = [];
 
-                dateRangeKeys.forEach((key, index) => {
-                    const submittedSet = submittedPerDate[key];
-                    let isSubmitted = false;
-                    for (let sub of submittedSet) {
-                        if (sub.includes(cleanStore) || cleanStore.includes(sub)) {
-                            isSubmitted = true;
-                            break;
+                    dateRangeKeys.forEach((key, index) => {
+                        const submittedSet = submittedPerDate[key];
+                        let isSubmitted = false;
+                        for (let sub of submittedSet) {
+                            if (sub.includes(cleanStore) || cleanStore.includes(sub)) {
+                                isSubmitted = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!isSubmitted) {
-                        missingDates.push(dateRangeLabels[index]);
+                        if (!isSubmitted) {
+                            missingDates.push(dateRangeLabels[index]);
+                        }
+                    });
+
+                    if (missingDates.length > 0) {
+                        cumulativeUnsubmittedList.push({
+                            store: store,
+                            dates: missingDates.join(', ')
+                        });
                     }
                 });
-
-                if (missingDates.length > 0) {
-                    cumulativeUnsubmittedList.push({
-                        store: store,
-                        dates: missingDates.join(', ')
-                    });
-                }
-            });
+            }
 
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
             const chartTodayLabel = document.getElementById('chart-today-date');
@@ -966,7 +993,7 @@
             tbody.innerHTML = '';
 
             if (cumulativeUnsubmittedList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Luar biasa! Semua toko sudah submit lengkap dari tanggal 1 sampai hari ini.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Luar biasa! Semua toko sudah submit lengkap dari tanggal 1 sampai kemarin.</td></tr>';
                 return;
             }
 
@@ -988,7 +1015,7 @@
                 return;
             }
 
-            let text = `*REMINDER: REKAP AKUMULASI HUTANG SUBMIT LOB CHAMPION*\n*(Periode tgl 1 s.d. Hari Ini)*\n\n`;
+            let text = `*REMINDER: REKAP AKUMULASI HUTANG SUBMIT LOB CHAMPION*\n*(Periode tgl 1 s.d. Kemarin)*\n\n`;
             
             cumulativeUnsubmittedList.forEach((item, idx) => {
                 text += `${idx + 1}. *${item.store}*\n   Belum Submit Tgl: ${item.dates}\n\n`;
@@ -1187,9 +1214,9 @@
                     if (hasMiddle) totalReportSlots++;
                     if (hasSiang) totalReportSlots++;
 
-                    html += `<td class="p-0.5 border-r border-gray-500/10 ${hasPagi ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-500/50'}">${hasPagi ? '✓' : '✗'}</td>`;
-                    html += `<td class="p-0.5 border-r border-gray-500/10 ${hasMiddle ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-500/50'}">${hasMiddle ? '✓' : '✗'}</td>`;
-                    html += `<td class="p-0.5 border-r border-gray-500/20 ${hasSiang ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold' : 'bg-rose-500/10 text-rose-500/50'}">${hasSiang ? '✓' : '✗'}</td>`;
+                    html += `<td class="p-0.5 border-r border-gray-500/10 ${hasPagi ? 'matrix-symbol-yes font-bold' : 'matrix-symbol-no'}">${hasPagi ? '✓' : '✗'}</td>`;
+                    html += `<td class="p-0.5 border-r border-gray-500/10 ${hasMiddle ? 'matrix-symbol-yes font-bold' : 'matrix-symbol-no'}">${hasMiddle ? '✓' : '✗'}</td>`;
+                    html += `<td class="p-0.5 border-r border-gray-500/20 ${hasSiang ? 'matrix-symbol-yes font-bold' : 'matrix-symbol-no'}">${hasSiang ? '✓' : '✗'}</td>`;
                 });
 
                 const complianceRate = Math.min(100, Math.round((totalReportSlots / totalActiveSlots) * 100));
@@ -1743,7 +1770,7 @@
             document.getElementById('kpi-avg-mac').innerText = (totalMac / activeMonthsCount).toFixed(1);
             document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeMonthsCount).toFixed(1);
             document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeMonthsCount).toFixed(1);
-            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeMonthsCount).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeMonthsCount).label = (totalWatch / activeMonthsCount).toFixed(1); // safety
 
             document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
             document.getElementById('kpi-active-champions').innerText = champions.size;
