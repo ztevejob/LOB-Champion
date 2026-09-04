@@ -500,22 +500,13 @@
 
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="glass-panel p-4 flex flex-col justify-between">
+                <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+                    <div class="glass-panel p-4 flex flex-col justify-between max-w-lg mx-auto w-full">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
                             <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i> Status Kepatuhan Kemarin (<span id="chart-yesterday-date">-</span>)
                         </h3>
                         <div class="h-64 relative flex items-center justify-center">
                             <canvas id="chartComplianceYesterday"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel p-4 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i> Status Kepatuhan Bulan Ini (<span id="chart-month-name">-</span>)
-                        </h3>
-                        <div class="h-64 relative flex items-center justify-center">
-                            <canvas id="chartComplianceToday"></canvas>
                         </div>
                     </div>
                 </div>
@@ -1294,36 +1285,6 @@
             }).length;
             const submittedYesterday = totalStores - unYestCount;
 
-            // Chart Bulan Berjalan (Hanya membaca bulan berjalan saja sesuai filter/bulan aktif)
-            const activeMonthName = new Date(targetYear, targetMonthIdx, 1).toLocaleString('id-ID', { month: 'long', year: 'numeric' });
-            const monthNameEl = document.getElementById('chart-month-name');
-            if (monthNameEl) monthNameEl.innerText = activeMonthName;
-
-            let storesSubmittedThisMonth = new Set();
-            rawCSVData.forEach(item => {
-                const s = extractStore(item);
-                const dt = parseCustomDate(extractDate(item));
-                if (dt && s && s !== '-') {
-                    if (dt.getFullYear() === targetYear && dt.getMonth() === targetMonthIdx) {
-                        storesSubmittedThisMonth.add(s.toLowerCase().trim());
-                    }
-                }
-            });
-
-            let submittedMonthCount = 0;
-            MASTER_STORES.forEach(st => {
-                const c = st.toLowerCase().trim();
-                let found = false;
-                for (let x of storesSubmittedThisMonth) {
-                    if (x.includes(c) || c.includes(x)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) submittedMonthCount++;
-            });
-            const unSubmittedMonthCount = totalStores - submittedMonthCount;
-
             if (chartInstances.complianceYesterday) chartInstances.complianceYesterday.destroy();
             const ctxYesterday = document.getElementById('chartComplianceYesterday')?.getContext('2d');
             if (ctxYesterday) {
@@ -1334,36 +1295,6 @@
                         datasets: [{
                             data: [submittedYesterday, unYestCount],
                             backgroundColor: ['#10b981', '#f43f5e']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { 
-                                position: 'bottom',
-                                labels: { color: textColor, font: { size: 11, weight: 'bold' } } 
-                            },
-                            datalabels: {
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 12 },
-                                formatter: (val) => val > 0 ? `${val} Toko` : ''
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (chartInstances.complianceToday) chartInstances.complianceToday.destroy();
-            const ctxToday = document.getElementById('chartComplianceToday')?.getContext('2d');
-            if (ctxToday) {
-                chartInstances.complianceToday = new Chart(ctxToday, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Submit', 'Belum Submit'],
-                        datasets: [{
-                            data: [submittedMonthCount, unSubmittedMonthCount],
-                            backgroundColor: ['#3b82f6', '#fbbf24']
                         }]
                     },
                     options: {
