@@ -91,6 +91,14 @@
             color: #fda4af !important;
         }
 
+        /* Neon green styling for LOB column in Dark Mode */
+        body:not(.light-mode) .raw-data-lob {
+            color: #39ff14 !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+            background-color: rgba(57, 255, 20, 0.1) !important;
+            border: 1px solid rgba(57, 255, 20, 0.2);
+        }
+
         /* Light mode specific background and color for ✓ and ✗ */
         .light-mode .matrix-symbol-yes {
             background-color: #d1fae5 !important;
@@ -219,7 +227,7 @@
         <div class="pt-4 mt-4 border-t border-gray-500/20 hidden lg:block">
             <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
                 <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Created & Designed by</p>
-                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">Novi Riyanto[cite: 5]</p>
+                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">Novi Riyanto</p>
             </div>
         </div>
     </aside>
@@ -354,8 +362,9 @@
                         <i data-lucide="alert-circle" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                            HUTANG SUBMIT (LIST TOKO BELUM SUBMIT)
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                            HUTANG SUBMIT (LIST TOKO BELUM SUBMIT) 
+                            <span id="unsubmitted-total-badge" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
                         </h4>
                         <p class="text-[11px] opacity-80 font-medium">Akumulasi toko belum submit dari tanggal 1 hingga kemarin (hari ini direport saat endshift).</p>
                     </div>
@@ -503,7 +512,7 @@
 
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i> Status Kepatuhan Hari Ini (<span id="chart-today-date">-</span>)
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i> Status Kepatuhan Bulan Ini (<span id="chart-month-name">-</span>)
                         </h3>
                         <div class="h-64 relative flex items-center justify-center">
                             <canvas id="chartComplianceToday"></canvas>
@@ -515,7 +524,10 @@
                     <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
                         <div class="flex items-center gap-2">
                             <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
-                            <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide">Terlambat Submit</h3>
+                            <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
+                                Terlambat Submit 
+                                <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Laporan</span>
+                            </h3>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
@@ -983,17 +995,21 @@
             }
 
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
-            const chartTodayLabel = document.getElementById('chart-today-date');
             const yesterdayDateObj = new Date(now);
             yesterdayDateObj.setDate(now.getDate() - 1);
             if (chartYesterdayLabel) chartYesterdayLabel.innerText = `${String(yesterdayDateObj.getDate()).padStart(2, '0')}/${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}/${yesterdayDateObj.getFullYear()}`;
-            if (chartTodayLabel) chartTodayLabel.innerText = formattedTodayDate;
 
             renderCombinedUnsubmittedTable();
         }
 
         function renderCombinedUnsubmittedTable() {
             const tbody = document.getElementById('combined-unsubmitted-table-body');
+            const totalBadge = document.getElementById('unsubmitted-total-badge');
+            
+            if (totalBadge) {
+                totalBadge.innerText = `${cumulativeUnsubmittedList.length} Toko`;
+            }
+
             if (!tbody) return;
             tbody.innerHTML = '';
 
@@ -1020,7 +1036,7 @@
                 return;
             }
 
-            let text = `*REMINDER: REKAP AKUMULASI HUTANG SUBMIT LOB CHAMPION*\n*(Periode tgl 1 s.d. Kemarin)*\n\n`;
+            let text = `*REMINDER: REKAP AKUMULASI HUTANG SUBMIT LOB CHAMPION*\n*(Periode tgl 1 s.d. Kemarin) | Total: ${cumulativeUnsubmittedList.length} Toko*\n\n`;
             
             cumulativeUnsubmittedList.forEach((item, idx) => {
                 text += `${idx + 1}. *${item.store}*\n   Belum Submit Tgl: ${item.dates}\n\n`;
@@ -1037,8 +1053,7 @@
 
         function renderLateChampionsTable(data) {
             const tbody = document.getElementById('late-champions-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
+            const totalLateBadge = document.getElementById('late-submit-total-badge');
 
             lateChampionsList = [];
 
@@ -1053,7 +1068,6 @@
                     const dateTs = parseCustomDate(tsStr);
 
                     if (dateTx && dateTs) {
-                        // Aturan baru: Transaksi disubmit lewat dari jam 12 malam pada hari H (tanggal submit > tanggal transaksi)
                         const txDayEnd = new Date(dateTx.getFullYear(), dateTx.getMonth(), dateTx.getDate(), 23, 59, 59, 999);
                         if (dateTs > txDayEnd) {
                             lateChampionsList.push({
@@ -1066,6 +1080,13 @@
                     }
                 }
             });
+
+            if (totalLateBadge) {
+                totalLateBadge.innerText = `${lateChampionsList.length} Laporan`;
+            }
+
+            if (!tbody) return;
+            tbody.innerHTML = '';
 
             if (lateChampionsList.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada Champion terlambat submit.</td></tr>';
@@ -1091,7 +1112,7 @@
                 return;
             }
 
-            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (dikirim lewat dari jam 12 malam pada hari H dari waktu transaksi):\n\n`;
+            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (Total: ${lateChampionsList.length} laporan, dikirim lewat dari jam 12 malam pada hari H):\n\n`;
             lateChampionsList.forEach((item, idx) => {
                 text += `${idx + 1}. *Nama*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
             });
@@ -1242,27 +1263,26 @@
             html += `</tbody></table>`;
             container.innerHTML = html;
 
-            renderComplianceCharts();
+            renderComplianceCharts(monthIndex, year);
         }
 
-        function renderComplianceCharts() {
+        function renderComplianceCharts(targetMonthIdx, targetYear) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
             const totalStores = MASTER_STORES.length;
             const now = new Date();
-            const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            
+            // Chart Kemarin
             const yesterdayDateObj = new Date(now); yesterdayDateObj.setDate(now.getDate() - 1);
             const yesterdayKey = `${yesterdayDateObj.getFullYear()}-${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDateObj.getDate()).padStart(2, '0')}`;
 
-            let subToday = new Set();
             let subYest = new Set();
             rawCSVData.forEach(item => {
                 const s = extractStore(item);
                 const dt = parseCustomDate(extractDate(item));
                 if (dt && s && s !== '-') {
                     const k = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
-                    if (k === todayKey) subToday.add(s.toLowerCase().trim());
                     if (k === yesterdayKey) subYest.add(s.toLowerCase().trim());
                 }
             });
@@ -1272,15 +1292,37 @@
                 for (let x of subYest) { if (x.includes(c) || c.includes(x)) return false; }
                 return true;
             }).length;
-
-            const unTodayCount = MASTER_STORES.filter(st => {
-                const c = st.toLowerCase().trim();
-                for (let x of subToday) { if (x.includes(c) || c.includes(x)) return false; }
-                return true;
-            }).length;
-
             const submittedYesterday = totalStores - unYestCount;
-            const submittedToday = totalStores - unTodayCount;
+
+            // Chart Bulan Berjalan (Hanya membaca bulan berjalan saja sesuai filter/bulan aktif)
+            const activeMonthName = new Date(targetYear, targetMonthIdx, 1).toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+            const monthNameEl = document.getElementById('chart-month-name');
+            if (monthNameEl) monthNameEl.innerText = activeMonthName;
+
+            let storesSubmittedThisMonth = new Set();
+            rawCSVData.forEach(item => {
+                const s = extractStore(item);
+                const dt = parseCustomDate(extractDate(item));
+                if (dt && s && s !== '-') {
+                    if (dt.getFullYear() === targetYear && dt.getMonth() === targetMonthIdx) {
+                        storesSubmittedThisMonth.add(s.toLowerCase().trim());
+                    }
+                }
+            });
+
+            let submittedMonthCount = 0;
+            MASTER_STORES.forEach(st => {
+                const c = st.toLowerCase().trim();
+                let found = false;
+                for (let x of storesSubmittedThisMonth) {
+                    if (x.includes(c) || c.includes(x)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) submittedMonthCount++;
+            });
+            const unSubmittedMonthCount = totalStores - submittedMonthCount;
 
             if (chartInstances.complianceYesterday) chartInstances.complianceYesterday.destroy();
             const ctxYesterday = document.getElementById('chartComplianceYesterday')?.getContext('2d');
@@ -1320,7 +1362,7 @@
                     data: {
                         labels: ['Submit', 'Belum Submit'],
                         datasets: [{
-                            data: [submittedToday, unTodayCount],
+                            data: [submittedMonthCount, unSubmittedMonthCount],
                             backgroundColor: ['#3b82f6', '#fbbf24']
                         }]
                     },
@@ -1730,7 +1772,7 @@
                     <td class="p-2 opacity-90 font-mono text-[11px] font-semibold">${dateVal}</td>
                     <td class="p-2 font-bold text-indigo-700 dark:text-indigo-300">${nameVal}</td>
                     <td class="p-2 font-bold">${storeVal}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-700 dark:text-indigo-300">${lobVal}</span></td>
+                    <td class="p-2"><span class="px-2.5 py-1 rounded text-xs font-bold raw-data-lob inline-block">${lobVal}</span></td>
                     <td class="p-2 text-center font-bold ${qty > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'opacity-60'}">${qty}</td>
                     <td class="p-2 font-semibold">${shiftVal}</td>
                 `;
