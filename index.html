@@ -66,7 +66,6 @@
             color: #f8fafc !important;
         }
 
-        /* Neon green adjustments for dark mode */
         body:not(.light-mode) #last-update,
         body:not(.light-mode) .neon-date-target {
             color: #39ff14 !important;
@@ -91,7 +90,6 @@
             color: #fda4af !important;
         }
 
-        /* Neon green styling for LOB column in Dark Mode */
         body:not(.light-mode) .raw-data-lob {
             color: #39ff14 !important;
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
@@ -99,7 +97,6 @@
             border: 1px solid rgba(57, 255, 20, 0.2);
         }
 
-        /* Light mode specific background and color for ✓ and ✗ */
         .light-mode .matrix-symbol-yes {
             background-color: #d1fae5 !important;
             color: #065f46 !important;
@@ -206,6 +203,12 @@
                     <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
                     <span id="theme-text">Mode Gelap</span>
                 </button>
+
+                <!-- Tombol Reset Filter -->
+                <button onclick="resetFilters()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold hover:bg-rose-500/30 transition col-span-2 lg:col-span-1">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>Reset Filter</span>
+                </button>
             </div>
 
             <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-1.5" id="sidebar-nav">
@@ -225,9 +228,10 @@
         </div>
 
         <div class="pt-4 mt-4 border-t border-gray-500/20 hidden lg:block">
-            <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
-                <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Created & Designed by</p>
-                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">Novi Riyanto</p>
+            <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1">
+                <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
+                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400">Novi Riyanto</p>
+                <p class="text-[9px] opacity-70 border-t border-gray-500/20 pt-1 text-slate-400">Developed in collaboration with Gemini AI</p>
             </div>
         </div>
     </aside>
@@ -511,6 +515,7 @@
                     </div>
                 </div>
 
+                <!-- Detail Laporan Terlambat Submit -->
                 <div class="glass-panel p-4 border-l-4 border-amber-500">
                     <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
                         <div class="flex items-center gap-2">
@@ -532,13 +537,44 @@
                         <table class="w-full text-xs text-left border-collapse min-w-[500px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
                                 <tr>
-                                    <th class="p-2 sticky-header-bg">Nama</th>
+                                    <th class="p-2 sticky-header-bg">Nama Champion</th>
                                     <th class="p-2 sticky-header-bg">Toko</th>
                                     <th class="p-2 sticky-header-bg">Timestamp</th>
                                     <th class="p-2 sticky-header-bg">Tanggal Transaksi</th>
                                 </tr>
                             </thead>
                             <tbody id="late-champions-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tabel Rekap Berapa Kali Champion Terlambat Submit -->
+                <div class="glass-panel p-4 border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
+                            <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2">
+                                Rekap Frekuensi Keterlambatan Per Champion
+                                <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-extrabold border border-purple-500/30">0 Champion</span>
+                            </h3>
+                        </div>
+                        <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy WA Rekap
+                        </button>
+                    </div>
+                    <p class="text-xs opacity-90 mb-3 font-medium">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
+
+                    <div class="overflow-x-auto max-h-[300px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama Champion</th>
+                                    <th class="p-2.5 sticky-header-bg">Toko</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Berapa Kali Terlambat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
                         </table>
                     </div>
                 </div>
@@ -630,6 +666,7 @@
         let filteredData = [];
         let chartInstances = {};
         let lateChampionsList = [];
+        let lateChampionSummaryList = [];
         let cumulativeUnsubmittedList = [];
         let formattedTodayDate = "";
 
@@ -705,12 +742,12 @@
             const keys = Object.keys(item);
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
-                if (cleanKey.includes('nama champion') || cleanKey.includes('nama sa') || cleanKey.includes('nama') || cleanKey.includes('sales')) {
+                if ((cleanKey.includes('nama') || cleanKey.includes('champion') || cleanKey.includes('sa')) && !cleanKey.includes('toko') && !cleanKey.includes('store') && !cleanKey.includes('email')) {
                     const val = item[k];
                     if (val && String(val).trim() !== '') return String(val).trim();
                 }
             }
-            return item['Nama Champion/ SA'] || item.Nama || '-';
+            return item['Nama Champion/ SA'] || item['Nama Champion'] || item.Nama || '-';
         }
 
         function extractStore(item) {
@@ -801,6 +838,14 @@
             document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
             document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
             lucide.createIcons();
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-month').value = '09';
+            document.getElementById('filter-store').value = 'ALL';
+            document.getElementById('filter-lob').value = 'ALL';
+            document.getElementById('filter-shift').value = 'ALL';
             applyFilters();
         }
 
@@ -914,6 +959,8 @@
             renderWoWStoreTable(filteredData);
             renderComplianceMatrix(filteredData);
             renderLateChampionsTable(filteredData);
+            renderTop10Sales(filteredData);
+            renderTop10Stores(filteredData);
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
@@ -1047,6 +1094,7 @@
             const totalLateBadge = document.getElementById('late-submit-total-badge');
 
             lateChampionsList = [];
+            const summaryMap = {};
 
             data.forEach(item => {
                 const name = extractName(item);
@@ -1067,33 +1115,94 @@
                                 dateTxStr: rawDateStr,
                                 dateTsStr: tsStr
                             });
+
+                            const key = `${name.toLowerCase().trim()}___${store.toLowerCase().trim()}`;
+                            if (!summaryMap[key]) {
+                                summaryMap[key] = {
+                                    name,
+                                    store,
+                                    count: 0
+                                };
+                            }
+                            summaryMap[key].count += 1;
                         }
                     }
                 }
             });
 
+            lateChampionSummaryList = Object.values(summaryMap).sort((a, b) => b.count - a.count);
+
             if (totalLateBadge) {
                 totalLateBadge.innerText = `${lateChampionsList.length} Laporan`;
+            }
+
+            if (tbody) {
+                tbody.innerHTML = '';
+                if (lateChampionsList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada Champion terlambat submit.</td></tr>';
+                } else {
+                    lateChampionsList.forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                        tr.innerHTML = `
+                            <td class="p-2 font-bold text-amber-700 dark:text-amber-300 text-xs">${item.name}</td>
+                            <td class="p-2 font-semibold text-xs">${item.store}</td>
+                            <td class="p-2 font-mono text-[11px] font-extrabold text-amber-600 dark:text-amber-400">${item.dateTsStr}</td>
+                            <td class="p-2 font-mono text-[11px] font-bold text-indigo-700 dark:text-indigo-300">${item.dateTxStr}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            }
+
+            renderLateChampionSummaryTable();
+        }
+
+        function renderLateChampionSummaryTable() {
+            const tbody = document.getElementById('late-champions-summary-body');
+            const summaryBadge = document.getElementById('late-summary-total-badge');
+
+            if (summaryBadge) {
+                summaryBadge.innerText = `${lateChampionSummaryList.length} Champion`;
             }
 
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            if (lateChampionsList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada Champion terlambat submit.</td></tr>';
+            if (lateChampionSummaryList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada rekap keterlambatan Champion.</td></tr>';
                 return;
             }
 
-            lateChampionsList.forEach(item => {
+            lateChampionSummaryList.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2 font-bold text-amber-700 dark:text-amber-300 text-xs">${item.name}</td>
-                    <td class="p-2 font-semibold text-xs">${item.store}</td>
-                    <td class="p-2 font-mono text-[11px] font-extrabold text-amber-600 dark:text-amber-400">${item.dateTsStr}</td>
-                    <td class="p-2 font-mono text-[11px] font-bold text-indigo-700 dark:text-indigo-300">${item.dateTxStr}</td>
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2.5 font-bold text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
+                    <td class="p-2.5 font-semibold text-xs">${item.store}</td>
+                    <td class="p-2.5 text-center"><span class="px-2.5 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-bold text-xs border border-purple-500/30">${item.count} Kali</span></td>
                 `;
                 tbody.appendChild(tr);
+            });
+        }
+
+        function copyLateChampionSummaryWaDraft() {
+            if (lateChampionSummaryList.length === 0) {
+                alert('Tidak ada data keterlambatan Champion untuk disalin.');
+                return;
+            }
+
+            let text = `*REKAP FREKUENSI KETERLAMBATAN SUBMIT LOB CHAMPION*\n*(Total: ${lateChampionSummaryList.length} Champion Terlibat)*\n\n`;
+            lateChampionSummaryList.forEach((item, idx) => {
+                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Jumlah Terlambat*: ${item.count} Kali\n\n`;
+            });
+            text += `Mohon perhatian dan evaluasi bersama agar pengisian laporan dapat dilakukan secara disiplin sebelum jam 12 malam di hari H transaksi. Terima kasih! 🙏`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Draft WA Rekap Keterlambatan Champion berhasil disalin!');
+            }).catch(err => {
+                console.error('Gagal menyalin rekap WA:', err);
             });
         }
 
@@ -1105,7 +1214,7 @@
 
             let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (Total: ${lateChampionsList.length} laporan, dikirim lewat dari jam 12 malam pada hari H):\n\n`;
             lateChampionsList.forEach((item, idx) => {
-                text += `${idx + 1}. *Nama*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
+                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
             });
             text += `Mohon ke depannya agar laporan dapat diinput tepat waktu di hari H transaksi ya. Terima kasih atas kerjasamanya! 🙏`;
 
@@ -1264,7 +1373,6 @@
             const totalStores = MASTER_STORES.length;
             const now = new Date();
             
-            // Chart Kemarin
             const yesterdayDateObj = new Date(now); yesterdayDateObj.setDate(now.getDate() - 1);
             const yesterdayKey = `${yesterdayDateObj.getFullYear()}-${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDateObj.getDate()).padStart(2, '0')}`;
 
@@ -1715,7 +1823,7 @@
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             const reports = data.length;
             const champions = new Set();
-            const uniqueMonths = new Set();
+            const activeDates = new Set();
 
             data.forEach(row => {
                 const qty = extractQuantity(row);
@@ -1733,36 +1841,38 @@
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
-                        const monthKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}`;
-                        uniqueMonths.add(monthKey);
+                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                        activeDates.add(dateKey);
                     }
                 }
             });
 
-            const activeMonthsCount = Math.max(1, uniqueMonths.size);
+            // Perhitungan rata-rata berdasarkan jumlah hari aktif/berjalan di bulan terfilter
+            const daysCount = Math.max(1, activeDates.size);
+
+            const avgMac = (totalMac / daysCount).toFixed(1);
+            const avgIphone = (totalIphone / daysCount).toFixed(1);
+            const avgIpad = (totalIpad / daysCount).toFixed(1);
+            const avgWatch = (totalWatch / daysCount).toFixed(1);
 
             document.getElementById('kpi-total-mac').innerText = totalMac.toLocaleString('id-ID');
             document.getElementById('kpi-total-iphone').innerText = totalIphone.toLocaleString('id-ID');
             document.getElementById('kpi-total-ipad').innerText = totalIpad.toLocaleString('id-ID');
             document.getElementById('kpi-total-watch').innerText = totalWatch.toLocaleString('id-ID');
 
-            document.getElementById('kpi-avg-mac').innerText = (totalMac / activeMonthsCount).toFixed(1);
-            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeMonthsCount).toFixed(1);
-            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeMonthsCount).toFixed(1);
-            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeMonthsCount).toFixed(1);
+            document.getElementById('kpi-avg-mac').innerText = avgMac;
+            document.getElementById('kpi-avg-iphone').innerText = avgIphone;
+            document.getElementById('kpi-avg-ipad').innerText = avgIpad;
+            document.getElementById('kpi-avg-watch').innerText = avgWatch;
 
             document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
-            document.getElementById('kpi-active-champions').innerText = champions.size;
-
-            renderTop10Sales(data);
-            renderTop10Stores(data);
+            document.getElementById('kpi-active-champions').innerText = champions.size.toLocaleString('id-ID');
         }
 
-        window.onload = function() {
-            updateFormattedTimestamp();
+        window.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-            setInterval(fetchLiveData, 60000);
-        };
+            setInterval(fetchLiveData, 300000); // Sync otomatis setiap 5 menit
+        });
     </script>
 </body>
 </html>
