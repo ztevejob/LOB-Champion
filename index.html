@@ -72,6 +72,16 @@
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
         }
 
+        /* Style Font Hijau Neon untuk Total Transaksi Penjualan Berhasil */
+        .neon-green-text {
+            color: #39ff14 !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+        }
+        .light-mode .neon-green-text {
+            color: #059669 !important;
+            text-shadow: none;
+        }
+
         body:not(.light-mode) .neon-store-badge {
             color: #39ff14 !important;
             border-color: rgba(57, 255, 20, 0.4) !important;
@@ -79,7 +89,6 @@
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
         }
 
-        /* Warna Font Neon Mode Gelap untuk Tabel Keterlambatan */
         body:not(.light-mode) .neon-purple-text {
             color: #e9d5ff !important;
             text-shadow: 0 0 8px rgba(233, 213, 255, 0.6);
@@ -296,7 +305,8 @@
         </header>
 
         <!-- KPI Grid -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- 1. Total Unit / LOB -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Total Unit / LOB</p>
@@ -322,50 +332,75 @@
                 </div>
             </div>
 
+            <!-- 2. Average / Hari / LOB & Summary Transaksi Berhasil -->
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Average / Hari / LOB</p>
                     <i data-lucide="calculator" class="w-4 h-4 text-purple-500"></i>
                 </div>
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                        <span class="opacity-80 block text-[10px] font-bold">Mac</span>
-                        <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-mac">0.0</span>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div>
+                            <span class="opacity-80 block text-[10px] font-bold">Mac</span>
+                            <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-mac">0.0</span>
+                        </div>
+                        <div class="text-right border-l border-gray-500/20 pl-2">
+                            <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
+                            <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-mac">0</span>
+                        </div>
                     </div>
-                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                        <span class="opacity-80 block text-[10px] font-bold">iPhone</span>
-                        <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-iphone">0.0</span>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div>
+                            <span class="opacity-80 block text-[10px] font-bold">iPhone</span>
+                            <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-iphone">0.0</span>
+                        </div>
+                        <div class="text-right border-l border-gray-500/20 pl-2">
+                            <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
+                            <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-iphone">0</span>
+                        </div>
                     </div>
-                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                        <span class="opacity-80 block text-[10px] font-bold">iPad</span>
-                        <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-ipad">0.0</span>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div>
+                            <span class="opacity-80 block text-[10px] font-bold">iPad</span>
+                            <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-ipad">0.0</span>
+                        </div>
+                        <div class="text-right border-l border-gray-500/20 pl-2">
+                            <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
+                            <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-ipad">0</span>
+                        </div>
                     </div>
-                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                        <span class="opacity-80 block text-[10px] font-bold">Watch</span>
-                        <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-watch">0.0</span>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div>
+                            <span class="opacity-80 block text-[10px] font-bold">Watch</span>
+                            <span class="text-base font-bold text-purple-600 dark:text-purple-300" id="kpi-avg-watch">0.0</span>
+                        </div>
+                        <div class="text-right border-l border-gray-500/20 pl-2">
+                            <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
+                            <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-watch">0</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-card p-4 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-bold opacity-90">Total Laporan Masuk</p>
-                    <h3 class="text-2xl md:text-3xl font-bold mt-2 text-emerald-600 dark:text-emerald-400" id="kpi-total-reports">0</h3>
-                    <p class="text-[10px] opacity-80 mt-1 font-semibold">Laporan dari form terisi</p>
+            <!-- 3. Gabungan Total Laporan Masuk, Champion Aktif, dan Total Toko -->
+            <div class="glass-card p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Ringkasan Aktivitas</p>
+                    <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
                 </div>
-                <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
-                    <i data-lucide="file-check" class="w-6 h-6"></i>
-                </div>
-            </div>
-
-            <div class="glass-card p-4 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-bold opacity-90">Champion Aktif</p>
-                    <h3 class="text-2xl md:text-3xl font-bold mt-2 text-amber-600 dark:text-amber-400" id="kpi-active-champions">0</h3>
-                    <p class="text-[10px] opacity-80 mt-1 font-semibold">Sales terdaftar berkontribusi</p>
-                </div>
-                <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-600 dark:text-amber-400">
-                    <i data-lucide="users" class="w-6 h-6"></i>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
+                        <span class="opacity-80 block text-[10px] font-bold">Laporan</span>
+                        <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400" id="kpi-total-reports">0</span>
+                    </div>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
+                        <span class="opacity-80 block text-[10px] font-bold">Champion</span>
+                        <span class="text-lg font-bold text-amber-600 dark:text-amber-400" id="kpi-active-champions">0</span>
+                    </div>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
+                        <span class="opacity-80 block text-[10px] font-bold">Toko</span>
+                        <span class="text-lg font-bold text-indigo-600 dark:text-indigo-400" id="kpi-total-stores">0</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -692,7 +727,6 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
-        // Penyesuaian presisi parser tanggal untuk project September 2026
         function parseCustomDate(dateStr) {
             if (!dateStr) return null;
             let str = String(dateStr).trim();
@@ -715,7 +749,6 @@
                         day = parseInt(parts[2], 10);
                     } else {
                         year = parseInt(parts[2], 10);
-                        // Jika format tahun 2 digit (misal 26 -> 2026)
                         if (year < 100) year += 2000;
                         month = parseInt(parts[1], 10) - 1;
                         day = parseInt(parts[0], 10);
@@ -953,7 +986,6 @@
                     const parsedDate = parseCustomDate(rowDateStr);
                     if (parsedDate) {
                         const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
-                        // Memastikan pemfilteran bulan bekerja tepat di tahun 2026
                         matchMonth = (m === monthVal && parsedDate.getFullYear() === 2026);
                     } else {
                         matchMonth = false;
@@ -986,10 +1018,9 @@
         function calculateUnsubmittedSummary(data) {
             const now = new Date();
             const todayYear = 2026;
-            const todayMonth = 8; // September (0-indexed = 8)
+            const todayMonthStr = "09";
             const todayDateNum = now.getDate();
             const todayDay = String(todayDateNum).padStart(2, '0');
-            const todayMonthStr = "09";
             formattedTodayDate = `${todayDay}/${todayMonthStr}/${todayYear}`;
 
             const dateRangeKeys = [];
@@ -1176,7 +1207,6 @@
             renderLateChampionSummaryTable();
         }
 
-        // Perbaikan Tabel Berapa Kali Terlambat pada Mode Gelap (Font Neon Purple & Green Glow)
         function renderLateChampionSummaryTable() {
             const tbody = document.getElementById('late-champions-summary-body');
             const summaryBadge = document.getElementById('late-summary-total-badge');
@@ -1831,22 +1861,36 @@
 
         function updateMetricsAndCharts(data) {
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
+            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
+
             const reports = data.length;
             const champions = new Set();
             const activeDates = new Set();
+            const activeStores = new Set();
 
             data.forEach(row => {
                 const qty = extractQuantity(row);
                 const lob = extractLOB(row).toLowerCase();
                 const champName = extractName(row);
+                const storeName = extractStore(row);
                 const rawDateStr = extractDate(row);
 
-                if (lob.includes('mac')) totalMac += qty;
-                else if (lob.includes('iphone')) totalIphone += qty;
-                else if (lob.includes('ipad')) totalIpad += qty;
-                else if (lob.includes('watch')) totalWatch += qty;
+                if (lob.includes('mac')) {
+                    totalMac += qty;
+                    if (qty > 0) trxMac++;
+                } else if (lob.includes('iphone')) {
+                    totalIphone += qty;
+                    if (qty > 0) trxIphone++;
+                } else if (lob.includes('ipad')) {
+                    totalIpad += qty;
+                    if (qty > 0) trxIpad++;
+                } else if (lob.includes('watch')) {
+                    totalWatch += qty;
+                    if (qty > 0) trxWatch++;
+                }
 
                 if (champName && champName !== '-') champions.add(champName);
+                if (storeName && storeName !== '-') activeStores.add(storeName.toLowerCase().trim());
 
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
@@ -1857,7 +1901,6 @@
                 }
             });
 
-            // Perhitungan rata-rata harian berdasarkan jumlah hari aktif di bulan September 2026
             const daysCount = Math.max(1, activeDates.size);
 
             const avgMac = (totalMac / daysCount).toFixed(1);
@@ -1875,13 +1918,21 @@
             document.getElementById('kpi-avg-ipad').innerText = avgIpad;
             document.getElementById('kpi-avg-watch').innerText = avgWatch;
 
+            // Update Total Transaksi Berhasil
+            document.getElementById('kpi-trx-mac').innerText = trxMac.toLocaleString('id-ID');
+            document.getElementById('kpi-trx-iphone').innerText = trxIphone.toLocaleString('id-ID');
+            document.getElementById('kpi-trx-ipad').innerText = trxIpad.toLocaleString('id-ID');
+            document.getElementById('kpi-trx-watch').innerText = trxWatch.toLocaleString('id-ID');
+
+            // Update Kartu Ringkasan Aktivitas Tergabung
             document.getElementById('kpi-total-reports').innerText = reports.toLocaleString('id-ID');
             document.getElementById('kpi-active-champions').innerText = champions.size.toLocaleString('id-ID');
+            document.getElementById('kpi-total-stores').innerText = activeStores.size.toLocaleString('id-ID');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000); // Sync otomatis setiap 5 menit
+            setInterval(fetchLiveData, 300000);
         });
     </script>
 </body>
