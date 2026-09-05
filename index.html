@@ -79,6 +79,18 @@
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
         }
 
+        /* Warna Font Neon Mode Gelap untuk Tabel Keterlambatan */
+        body:not(.light-mode) .neon-purple-text {
+            color: #e9d5ff !important;
+            text-shadow: 0 0 8px rgba(233, 213, 255, 0.6);
+        }
+        body:not(.light-mode) .neon-green-badge {
+            color: #39ff14 !important;
+            border-color: rgba(57, 255, 20, 0.5) !important;
+            background-color: rgba(57, 255, 20, 0.15) !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+        }
+
         body:not(.light-mode) .matrix-symbol-yes {
             background-color: rgba(57, 255, 20, 0.2) !important;
             color: #39ff14 !important;
@@ -312,7 +324,7 @@
 
             <div class="glass-card p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Average / Bulan / LOB</p>
+                    <p class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Average / Hari / LOB</p>
                     <i data-lucide="calculator" class="w-4 h-4 text-purple-500"></i>
                 </div>
                 <div class="grid grid-cols-2 gap-2 text-xs">
@@ -680,6 +692,7 @@
             return isNaN(parsed) ? 0 : parsed;
         }
 
+        // Penyesuaian presisi parser tanggal untuk project September 2026
         function parseCustomDate(dateStr) {
             if (!dateStr) return null;
             let str = String(dateStr).trim();
@@ -702,6 +715,8 @@
                         day = parseInt(parts[2], 10);
                     } else {
                         year = parseInt(parts[2], 10);
+                        // Jika format tahun 2 digit (misal 26 -> 2026)
+                        if (year < 100) year += 2000;
                         month = parseInt(parts[1], 10) - 1;
                         day = parseInt(parts[0], 10);
                     }
@@ -922,7 +937,7 @@
         }
 
         function applyFilters() {
-            const monthVal = document.getElementById('filter-month')?.value || 'ALL';
+            const monthVal = document.getElementById('filter-month')?.value || '09';
             const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
@@ -938,7 +953,10 @@
                     const parsedDate = parseCustomDate(rowDateStr);
                     if (parsedDate) {
                         const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
-                        matchMonth = (m === monthVal);
+                        // Memastikan pemfilteran bulan bekerja tepat di tahun 2026
+                        matchMonth = (m === monthVal && parsedDate.getFullYear() === 2026);
+                    } else {
+                        matchMonth = false;
                     }
                 }
 
@@ -967,11 +985,11 @@
 
         function calculateUnsubmittedSummary(data) {
             const now = new Date();
-            const todayYear = now.getFullYear();
-            const todayMonth = now.getMonth(); 
+            const todayYear = 2026;
+            const todayMonth = 8; // September (0-indexed = 8)
             const todayDateNum = now.getDate();
             const todayDay = String(todayDateNum).padStart(2, '0');
-            const todayMonthStr = String(todayMonth + 1).padStart(2, '0');
+            const todayMonthStr = "09";
             formattedTodayDate = `${todayDay}/${todayMonthStr}/${todayYear}`;
 
             const dateRangeKeys = [];
@@ -993,7 +1011,7 @@
                 const store = extractStore(item);
                 if (rawDateStr && store && store !== '-') {
                     const parsedDate = parseCustomDate(rawDateStr);
-                    if (parsedDate) {
+                    if (parsedDate && parsedDate.getFullYear() === 2026) {
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
                         if (submittedPerDate[dateKey]) {
                             submittedPerDate[dateKey].add(store.toLowerCase().trim());
@@ -1035,7 +1053,7 @@
             const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
             const yesterdayDateObj = new Date(now);
             yesterdayDateObj.setDate(now.getDate() - 1);
-            if (chartYesterdayLabel) chartYesterdayLabel.innerText = `${String(yesterdayDateObj.getDate()).padStart(2, '0')}/${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}/${yesterdayDateObj.getFullYear()}`;
+            if (chartYesterdayLabel) chartYesterdayLabel.innerText = `${String(yesterdayDateObj.getDate()).padStart(2, '0')}/09/2026`;
 
             renderCombinedUnsubmittedTable();
         }
@@ -1158,6 +1176,7 @@
             renderLateChampionSummaryTable();
         }
 
+        // Perbaikan Tabel Berapa Kali Terlambat pada Mode Gelap (Font Neon Purple & Green Glow)
         function renderLateChampionSummaryTable() {
             const tbody = document.getElementById('late-champions-summary-body');
             const summaryBadge = document.getElementById('late-summary-total-badge');
@@ -1179,9 +1198,11 @@
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
+                    <td class="p-2.5 font-bold neon-purple-text text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
                     <td class="p-2.5 font-semibold text-xs">${item.store}</td>
-                    <td class="p-2.5 text-center"><span class="px-2.5 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-bold text-xs border border-purple-500/30">${item.count} Kali</span></td>
+                    <td class="p-2.5 text-center">
+                        <span class="px-2.5 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-extrabold text-xs border border-purple-500/30 neon-green-badge">${item.count} Kali</span>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1262,19 +1283,8 @@
             });
 
             const stores = [...MASTER_STORES];
-            const monthVal = document.getElementById('filter-month')?.value;
-            let year, monthIndex;
-
-            if (monthVal && monthVal !== 'ALL') {
-                monthIndex = parseInt(monthVal, 10) - 1;
-                year = sampleDate ? sampleDate.getFullYear() : new Date().getFullYear();
-            } else if (sampleDate) {
-                year = sampleDate.getFullYear();
-                monthIndex = sampleDate.getMonth();
-            } else {
-                year = new Date().getFullYear();
-                monthIndex = new Date().getMonth();
-            }
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            let year = 2026, monthIndex = parseInt(monthVal, 10) - 1;
 
             const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
             const fullMonthDates = [];
@@ -1374,7 +1384,7 @@
             const now = new Date();
             
             const yesterdayDateObj = new Date(now); yesterdayDateObj.setDate(now.getDate() - 1);
-            const yesterdayKey = `${yesterdayDateObj.getFullYear()}-${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDateObj.getDate()).padStart(2, '0')}`;
+            const yesterdayKey = `2026-09-${String(yesterdayDateObj.getDate()).padStart(2, '0')}`;
 
             let subYest = new Set();
             rawCSVData.forEach(item => {
@@ -1847,7 +1857,7 @@
                 }
             });
 
-            // Perhitungan rata-rata berdasarkan jumlah hari aktif/berjalan di bulan terfilter
+            // Perhitungan rata-rata harian berdasarkan jumlah hari aktif di bulan September 2026
             const daysCount = Math.max(1, activeDates.size);
 
             const avgMac = (totalMac / daysCount).toFixed(1);
