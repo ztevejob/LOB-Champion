@@ -119,13 +119,6 @@
             color: #fda4af !important;
         }
 
-        body:not(.light-mode) .raw-data-lob {
-            color: #39ff14 !important;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
-            background-color: rgba(57, 255, 20, 0.1) !important;
-            border: 1px solid rgba(57, 255, 20, 0.2);
-        }
-
         .light-mode .matrix-symbol-yes {
             background-color: #d1fae5 !important;
             color: #065f46 !important;
@@ -409,42 +402,6 @@
             </div>
         </section>
 
-        <!-- Container Hutang Submit -->
-        <div id="summary-unsubmitted-container" class="glass-card p-4 border-l-4 border-rose-500 space-y-3">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-500/20 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="p-1.5 bg-rose-500/20 text-rose-500 rounded-lg">
-                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-2">
-                            HUTANG SUBMIT (LIST TOKO BELUM SUBMIT) 
-                            <span id="unsubmitted-total-badge" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
-                        </h4>
-                        <p class="text-[11px] opacity-80 font-medium">Akumulasi toko belum submit dari tanggal 1 hingga kemarin (hari ini direport saat endshift).</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 self-end sm:self-auto">
-                    <button onclick="copyCombinedUnsubmittedWaDraft()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
-                        <i data-lucide="message-square" class="w-4 h-4"></i> Copy Draft WA Gabungan
-                    </button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto max-h-[320px]">
-                <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
-                        <tr>
-                            <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
-                            <th class="p-2.5 sticky-header-bg">Nama Toko</th>
-                            <th class="p-2.5 sticky-header-bg">Tanggal Transaksi (Belum Submit)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="combined-unsubmitted-table-body" class="divide-y divide-gray-500/10"></tbody>
-                </table>
-            </div>
-        </div>
-
         <div class="flex-1 overflow-y-auto pr-1 space-y-4">
 
             <!-- Section 1: Overview -->
@@ -566,116 +523,124 @@
                     </div>
                 </div>
 
-                <!-- Chart Toko Paling Banyak Terlambat Submit (Terpisah) -->
-                <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i> Top Store Terbanyak Terlambat Submit
-                    </h3>
-                    <div class="h-72 relative">
-                        <canvas id="chartMostLateStores"></canvas>
-                    </div>
-                </div>
-
-                <!-- Chart Rekap Frekuensi Keterlambatan Per Champion (Terpisah) -->
-                <div class="glass-panel p-4">
-                    <h3 class="font-bold text-sm flex items-center gap-2 mb-4 neon-title-purple">
-                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-purple-500"></i> Chart Frekuensi Keterlambatan Per Champion
-                    </h3>
-                    <div class="h-72 relative">
-                        <canvas id="chartLateChampions"></canvas>
-                    </div>
-                </div>
-
-                <!-- Daftar Toko yang Terlambat (Menggantikan Terlambat Submit) -->
-                <div class="glass-panel p-4 border-l-4 border-amber-500">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
-                            <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
-                                Daftar toko yang terlambat
-                                <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Toko</span>
-                            </h3>
+                <!-- Grid Side-by-Side: Chart Terlambat Store & Champion -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- Chart Toko Paling Banyak Terlambat Submit -->
+                    <div class="glass-panel p-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i> Top Store Terbanyak Terlambat Submit
+                        </h3>
+                        <div class="h-72 relative">
+                            <canvas id="chartMostLateStores"></canvas>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <!-- Dropdown Export Excel & PDF -->
-                            <div class="relative inline-block text-left">
-                                <button onclick="toggleDropdown('dropdown-late-stores')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                                </button>
-                                <div id="dropdown-late-stores" class="hidden absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50">
-                                    <button onclick="exportLateStoresExcel()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
-                                        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Excel
-                                    </button>
-                                    <button onclick="exportLateStoresPDF()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2 border-t border-slate-700">
-                                        <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> PDF
+                    </div>
+
+                    <!-- Chart Rekap Frekuensi Keterlambatan Per Champion -->
+                    <div class="glass-panel p-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4 neon-title-purple">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-purple-500"></i> Chart Frekuensi Keterlambatan Per Champion
+                        </h3>
+                        <div class="h-72 relative">
+                            <canvas id="chartLateChampions"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid Side-by-Side: Tabel Terlambat Store & Champion -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- Daftar Toko yang Terlambat -->
+                    <div class="glass-panel p-4 border-l-4 border-amber-500 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
+                                    <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
+                                        Daftar toko yang terlambat
+                                        <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Toko</span>
+                                    </h3>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="relative inline-block text-left">
+                                        <button onclick="toggleDropdown('dropdown-late-stores')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                        </button>
+                                        <div id="dropdown-late-stores" class="hidden absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50">
+                                            <button onclick="exportLateStoresExcel()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                                <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Excel
+                                            </button>
+                                            <button onclick="exportLateStoresPDF()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2 border-t border-slate-700">
+                                                <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Copy Draft WA
                                     </button>
                                 </div>
                             </div>
-                            <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Copy Draft WA
-                            </button>
+                            <p class="text-xs opacity-90 mb-3 font-medium">Rekap frekuensi keterlambatan submit berdasarkan lokasi toko.</p>
+                            
+                            <div class="overflow-x-auto max-h-[300px]">
+                                <table class="w-full text-xs text-left border-collapse min-w-[350px]">
+                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                        <tr>
+                                            <th class="p-2 text-center w-12 sticky-header-bg">No</th>
+                                            <th class="p-2 sticky-header-bg">Nama Toko</th>
+                                            <th class="p-2 text-center sticky-header-bg">Berapa Kali Terlambat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="late-champions-body" class="divide-y divide-gray-500/10"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-xs opacity-90 mb-3 font-medium">Rekap frekuensi keterlambatan submit berdasarkan lokasi toko.</p>
-                    
-                    <div class="overflow-x-auto max-h-[300px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
-                                <tr>
-                                    <th class="p-2 text-center w-12 sticky-header-bg">No</th>
-                                    <th class="p-2 sticky-header-bg">Nama Toko</th>
-                                    <th class="p-2 text-center sticky-header-bg">Berapa Kali Terlambat</th>
-                                </tr>
-                            </thead>
-                            <tbody id="late-champions-body" class="divide-y divide-gray-500/10"></tbody>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- Tabel Rekap Frekuensi Keterlambatan Per Champion -->
-                <div class="glass-panel p-4 border-l-4 border-purple-500">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
-                            <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2 neon-title-purple">
-                                Rekap Frekuensi Keterlambatan Per Champion
-                                <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-extrabold border border-purple-500/30 neon-green-badge">171 Champion</span>
-                            </h3>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <!-- Dropdown Export Excel & PDF -->
-                            <div class="relative inline-block text-left">
-                                <button onclick="toggleDropdown('dropdown-late-summary')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                                </button>
-                                <div id="dropdown-late-summary" class="hidden absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50">
-                                    <button onclick="exportLateSummaryExcel()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
-                                        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Excel
-                                    </button>
-                                    <button onclick="exportLateSummaryPDF()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2 border-t border-slate-700">
-                                        <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> PDF
+                    <!-- Tabel Rekap Frekuensi Keterlambatan Per Champion -->
+                    <div class="glass-panel p-4 border-l-4 border-purple-500 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
+                                    <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2 neon-title-purple">
+                                        Rekap Frekuensi Keterlambatan Per Champion
+                                        <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-extrabold border border-purple-500/30 neon-green-badge">0 Champion</span>
+                                    </h3>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="relative inline-block text-left">
+                                        <button onclick="toggleDropdown('dropdown-late-summary')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                        </button>
+                                        <div id="dropdown-late-summary" class="hidden absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50">
+                                            <button onclick="exportLateSummaryExcel()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                                <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Excel
+                                            </button>
+                                            <button onclick="exportLateSummaryPDF()" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2 border-t border-slate-700">
+                                                <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy WA Rekap
                                     </button>
                                 </div>
                             </div>
-                            <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy WA Rekap
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-xs opacity-90 mb-3 font-medium">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
+                            <p class="text-xs opacity-90 mb-3 font-medium">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
 
-                    <div class="overflow-x-auto max-h-[300px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
-                                <tr>
-                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
-                                    <th class="p-2.5 sticky-header-bg">Nama Champion</th>
-                                    <th class="p-2.5 sticky-header-bg">Toko</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">Berapa Kali Terlambat</th>
-                                </tr>
-                            </thead>
-                            <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
-                        </table>
+                            <div class="overflow-x-auto max-h-[300px]">
+                                <table class="w-full text-xs text-left border-collapse min-w-[400px]">
+                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                        <tr>
+                                            <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                            <th class="p-2.5 sticky-header-bg">Nama Champion</th>
+                                            <th class="p-2.5 sticky-header-bg">Toko</th>
+                                            <th class="p-2.5 text-center sticky-header-bg">Berapa Kali Terlambat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -768,8 +733,6 @@
         let lateChampionsList = [];
         let lateStoresSummaryList = [];
         let lateChampionSummaryList = [];
-        let cumulativeUnsubmittedList = [];
-        let formattedTodayDate = "";
 
         function toggleDropdown(id) {
             const dropdown = document.getElementById(id);
@@ -1078,7 +1041,6 @@
             }
 
             updateMetricsAndCharts(filteredData);
-            calculateUnsubmittedSummary(rawCSVData);
             renderWoWStoreTable(filteredData);
             renderComplianceMatrix(filteredData);
             renderLateChampionsTable(filteredData);
@@ -1088,127 +1050,52 @@
             renderCharts(filteredData);
         }
 
-        function calculateUnsubmittedSummary(data) {
-            const now = new Date();
-            const todayYear = 2026;
-            const todayMonthStr = "09";
-            const todayDateNum = now.getDate();
-            const todayDay = String(todayDateNum).padStart(2, '0');
-            formattedTodayDate = `${todayDay}/${todayMonthStr}/${todayYear}`;
-
-            const dateRangeKeys = [];
-            const dateRangeLabels = [];
-            for (let d = 1; d < todayDateNum; d++) {
-                const dStr = String(d).padStart(2, '0');
-                const key = `${todayYear}-${todayMonthStr}-${dStr}`;
-                dateRangeKeys.push(key);
-                dateRangeLabels.push(`${dStr}/${todayMonthStr}/${todayYear}`);
-            }
-
-            const submittedPerDate = {};
-            dateRangeKeys.forEach(k => {
-                submittedPerDate[k] = new Set();
-            });
+        function updateMetricsAndCharts(data) {
+            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
+            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
+            const uniqueChampions = new Set();
+            const uniqueStores = new Set();
 
             data.forEach(item => {
-                const rawDateStr = extractDate(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+                const name = extractName(item);
                 const store = extractStore(item);
-                if (rawDateStr && store && store !== '-') {
-                    const parsedDate = parseCustomDate(rawDateStr);
-                    if (parsedDate && parsedDate.getFullYear() === 2026) {
-                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        if (submittedPerDate[dateKey]) {
-                            submittedPerDate[dateKey].add(store.toLowerCase().trim());
-                        }
-                    }
-                }
+
+                if (name && name !== '-') uniqueChampions.add(name);
+                if (store && store !== '-') uniqueStores.add(store);
+
+                if (lob.includes('mac')) { totalMac += qty; if (qty > 0) trxMac++; }
+                else if (lob.includes('iphone')) { totalIphone += qty; if (qty > 0) trxIphone++; }
+                else if (lob.includes('ipad')) { totalIpad += qty; if (qty > 0) trxIpad++; }
+                else if (lob.includes('watch')) { totalWatch += qty; if (qty > 0) trxWatch++; }
             });
 
-            cumulativeUnsubmittedList = [];
+            document.getElementById('kpi-total-mac').innerText = totalMac;
+            document.getElementById('kpi-total-iphone').innerText = totalIphone;
+            document.getElementById('kpi-total-ipad').innerText = totalIpad;
+            document.getElementById('kpi-total-watch').innerText = totalWatch;
 
-            if (dateRangeKeys.length > 0) {
-                MASTER_STORES.forEach(store => {
-                    const cleanStore = store.toLowerCase().trim();
-                    let missingDates = [];
-
-                    dateRangeKeys.forEach((key, index) => {
-                        const submittedSet = submittedPerDate[key];
-                        let isSubmitted = false;
-                        for (let sub of submittedSet) {
-                            if (sub.includes(cleanStore) || cleanStore.includes(sub)) {
-                                isSubmitted = true;
-                                break;
-                            }
-                        }
-                        if (!isSubmitted) {
-                            missingDates.push(dateRangeLabels[index]);
-                        }
-                    });
-
-                    if (missingDates.length > 0) {
-                        cumulativeUnsubmittedList.push({
-                            store: store,
-                            dates: missingDates.join(', ')
-                        });
-                    }
-                });
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            let activeDays = 30;
+            if (monthVal !== 'ALL') {
+                const mIdx = parseInt(monthVal, 10) - 1;
+                activeDays = new Date(2026, mIdx + 1, 0).getDate();
             }
 
-            const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
-            const yesterdayDateObj = new Date(now);
-            yesterdayDateObj.setDate(now.getDate() - 1);
-            if (chartYesterdayLabel) chartYesterdayLabel.innerText = `${String(yesterdayDateObj.getDate()).padStart(2, '0')}/09/2026`;
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / activeDays).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeDays).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeDays).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeDays).toFixed(1);
 
-            renderCombinedUnsubmittedTable();
-        }
+            document.getElementById('kpi-trx-mac').innerText = trxMac;
+            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
+            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
+            document.getElementById('kpi-trx-watch').innerText = trxWatch;
 
-        function renderCombinedUnsubmittedTable() {
-            const tbody = document.getElementById('combined-unsubmitted-table-body');
-            const totalBadge = document.getElementById('unsubmitted-total-badge');
-            
-            if (totalBadge) {
-                totalBadge.innerText = `${cumulativeUnsubmittedList.length} Toko`;
-            }
-
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            if (cumulativeUnsubmittedList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Luar biasa! Semua toko sudah submit lengkap dari tanggal 1 sampai kemarin.</td></tr>';
-                return;
-            }
-
-            cumulativeUnsubmittedList.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                row.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
-                    <td class="p-2.5 font-mono text-rose-600 dark:text-rose-400 font-bold">${item.dates}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function copyCombinedUnsubmittedWaDraft() {
-            if (cumulativeUnsubmittedList.length === 0) {
-                alert('Tidak ada data hutang submit untuk disalin.');
-                return;
-            }
-
-            let text = `*REMINDER: REKAP AKUMULASI HUTANG SUBMIT LOB CHAMPION*\n*(Periode tgl 1 s.d. Kemarin) | Total: ${cumulativeUnsubmittedList.length} Toko*\n\n`;
-            
-            cumulativeUnsubmittedList.forEach((item, idx) => {
-                text += `${idx + 1}. *${item.store}*\n   Belum Submit Tgl: ${item.dates}\n\n`;
-            });
-
-            text += `Mohon kepada rekan-rekan Store Trainer / LOB Champion di toko-toko tersebut untuk segera melengkapi laporan harian yang belum disubmit. Terima kasih atas kerjasamanya! 🙏`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA akumulasi hutang submit berhasil disalin ke clipboard!');
-            }).catch(err => {
-                console.error('Gagal menyalin draft WA gabungan:', err);
-            });
+            document.getElementById('kpi-total-reports').innerText = data.length;
+            document.getElementById('kpi-active-champions').innerText = uniqueChampions.size;
+            document.getElementById('kpi-total-stores').innerText = uniqueStores.size;
         }
 
         function renderLateChampionsTable(data) {
@@ -1494,7 +1381,6 @@
 
             const reportedMap = {};
             const activeDatesSet = new Set();
-            let sampleDate = null;
 
             data.forEach(item => {
                 const store = extractStore(item);
@@ -1504,7 +1390,6 @@
                 if (rawDateStr) {
                     const parsedDate = parseCustomDate(rawDateStr);
                     if (parsedDate) {
-                        if (!sampleDate) sampleDate = parsedDate;
                         const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
                         
                         activeDatesSet.add(dateKey);
@@ -1615,10 +1500,10 @@
             html += `</tbody></table>`;
             container.innerHTML = html;
 
-            renderComplianceCharts(monthIndex, year);
+            renderComplianceCharts();
         }
 
-        function renderComplianceCharts(targetMonthIdx, targetYear) {
+        function renderComplianceCharts() {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
@@ -1644,6 +1529,9 @@
                 return true;
             }).length;
             const submittedYesterday = totalStores - unYestCount;
+
+            const chartYesterdayLabel = document.getElementById('chart-yesterday-date');
+            if (chartYesterdayLabel) chartYesterdayLabel.innerText = `${String(yesterdayDateObj.getDate()).padStart(2, '0')}/09/2026`;
 
             if (chartInstances.complianceYesterday) chartInstances.complianceYesterday.destroy();
             const ctxYesterday = document.getElementById('chartComplianceYesterday')?.getContext('2d');
@@ -1894,53 +1782,44 @@
                     };
                 }
 
-                let period = null;
+                let period = 'tw';
                 if (rowDate) {
-                    if (rowDate >= oneWeekAgo) period = 'tw';
-                    else if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) period = 'lw';
-                } else {
-                    period = 'tw';
+                    if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) period = 'lw';
+                    else if (rowDate >= oneWeekAgo) period = 'tw';
                 }
 
-                if (period) {
-                    if (period === 'tw') storeWoW[matchedMasterStore].totalTW += qty;
-                    if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
+                if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
+                else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
+                else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
+                else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
 
-                    if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
-                    else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
-                    else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
-                    else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
-                }
+                if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
+                else storeWoW[matchedMasterStore].totalTW += qty;
             });
 
-            let index = 1;
-            Object.keys(storeWoW).sort().forEach(storeName => {
-                const d = storeWoW[storeName];
-                let growthBadge = '<span class="opacity-70 font-bold">0%</span>';
+            Object.keys(storeWoW).forEach((storeName, index) => {
+                const item = storeWoW[storeName];
+                const growth = item.totalTW - item.totalLW;
+                let growthBadge = `<span class="text-slate-400 font-bold">0</span>`;
 
-                if (d.totalLW > 0) {
-                    const growthPercent = Math.round(((d.totalTW - d.totalLW) / d.totalLW) * 100);
-                    if (growthPercent > 0) {
-                        growthBadge = `<span class="text-emerald-600 dark:text-emerald-400 font-bold">+${growthPercent}% ▲</span>`;
-                    } else if (growthPercent < 0) {
-                        growthBadge = `<span class="text-rose-600 dark:text-rose-400 font-bold">${growthPercent}% ▼</span>`;
-                    }
-                } else if (d.totalTW > 0) {
-                    growthBadge = `<span class="text-emerald-600 dark:text-emerald-400 font-bold">+100% ▲</span>`;
+                if (growth > 0) {
+                    growthBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px] border border-emerald-500/30">+${growth}</span>`;
+                } else if (growth < 0) {
+                    growthBadge = `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold text-[11px] border border-rose-500/30">${growth}</span>`;
                 }
 
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                row.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index++}</td>
-                    <td class="p-2.5 font-bold text-indigo-700 dark:text-indigo-300">${storeName}</td>
-                    <td class="p-2.5 text-center">${d.mac.lw} / <b class="text-indigo-600 dark:text-indigo-400">${d.mac.tw}</b></td>
-                    <td class="p-2.5 text-center">${d.iphone.lw} / <b class="text-indigo-600 dark:text-indigo-400">${d.iphone.tw}</b></td>
-                    <td class="p-2.5 text-center">${d.ipad.lw} / <b class="text-indigo-600 dark:text-indigo-400">${d.ipad.tw}</b></td>
-                    <td class="p-2.5 text-center">${d.watch.lw} / <b class="text-indigo-600 dark:text-indigo-400">${d.watch.tw}</b></td>
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${storeName}</td>
+                    <td class="p-2.5 text-center font-mono">${item.mac.lw} / <strong class="text-indigo-600 dark:text-indigo-400">${item.mac.tw}</strong></td>
+                    <td class="p-2.5 text-center font-mono">${item.iphone.lw} / <strong class="text-blue-600 dark:text-blue-400">${item.iphone.tw}</strong></td>
+                    <td class="p-2.5 text-center font-mono">${item.ipad.lw} / <strong class="text-cyan-600 dark:text-cyan-400">${item.ipad.tw}</strong></td>
+                    <td class="p-2.5 text-center font-mono">${item.watch.lw} / <strong class="text-emerald-600 dark:text-emerald-400">${item.watch.tw}</strong></td>
                     <td class="p-2.5 text-center">${growthBadge}</td>
                 `;
-                tbody.appendChild(row);
+                tbody.appendChild(tr);
             });
         }
 
@@ -1952,37 +1831,37 @@
             const salesMap = {};
             data.forEach(item => {
                 const name = extractName(item);
-                const lob = extractLOB(item);
                 const store = extractStore(item);
+                const lob = extractLOB(item);
                 const qty = extractQuantity(item);
 
-                if (!salesMap[name]) {
-                    salesMap[name] = { name, lob, store, totalQty: 0 };
+                if (name && name !== '-') {
+                    const key = `${name}___${store}`;
+                    if (!salesMap[key]) {
+                        salesMap[key] = { name, store, lob, totalQty: 0 };
+                    }
+                    salesMap[key].totalQty += qty;
                 }
-                salesMap[name].totalQty += qty;
             });
 
-            const top10 = Object.values(salesMap)
-                .filter(item => item.totalQty > 0 && item.name !== '-')
-                .sort((a, b) => b.totalQty - a.totalQty)
-                .slice(0, 10);
+            const sortedSales = Object.values(salesMap).sort((a, b) => b.totalQty - a.totalQty).slice(0, 10);
 
-            if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center opacity-80 font-medium">Belum ada penjualan tercatat</td></tr>';
+            if (sortedSales.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-[11px] font-medium">Belum ada data penjualan.</td></tr>';
                 return;
             }
 
-            top10.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                row.innerHTML = `
-                    <td class="p-2 font-bold text-amber-600 dark:text-amber-400">#${index + 1}</td>
-                    <td class="p-2 font-bold text-indigo-700 dark:text-indigo-300">${item.name}</td>
-                    <td class="p-2 font-semibold opacity-90">${item.store}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30">${item.lob}</span></td>
-                    <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${item.totalQty}</td>
+            sortedSales.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 font-bold font-mono text-amber-500">#${index + 1}</td>
+                    <td class="p-2 font-bold">${item.name}</td>
+                    <td class="p-2 opacity-80">${item.store}</td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border raw-data-lob">${item.lob}</span></td>
+                    <td class="p-2 text-center font-extrabold text-indigo-600 dark:text-indigo-400">${item.totalQty}</td>
                 `;
-                tbody.appendChild(row);
+                tbody.appendChild(tr);
             });
         }
 
@@ -1997,42 +1876,39 @@
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
 
-                if (store === '-') return;
+                if (store && store !== '-') {
+                    if (!storeMap[store]) {
+                        storeMap[store] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                    }
+                    if (lob.includes('mac')) storeMap[store].mac += qty;
+                    else if (lob.includes('iphone')) storeMap[store].iphone += qty;
+                    else if (lob.includes('ipad')) storeMap[store].ipad += qty;
+                    else if (lob.includes('watch')) storeMap[store].watch += qty;
 
-                if (!storeMap[store]) {
-                    storeMap[store] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, totalQty: 0 };
+                    storeMap[store].total += qty;
                 }
-
-                storeMap[store].totalQty += qty;
-                if (lob.includes('mac')) storeMap[store].mac += qty;
-                else if (lob.includes('iphone')) storeMap[store].iphone += qty;
-                else if (lob.includes('ipad')) storeMap[store].ipad += qty;
-                else if (lob.includes('watch')) storeMap[store].watch += qty;
             });
 
-            const top10 = Object.values(storeMap)
-                .filter(item => item.totalQty > 0)
-                .sort((a, b) => b.totalQty - a.totalQty)
-                .slice(0, 10);
+            const sortedStores = Object.values(storeMap).sort((a, b) => b.total - a.total).slice(0, 10);
 
-            if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center opacity-80 font-medium">Belum ada store dengan penjualan</td></tr>';
+            if (sortedStores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-[11px] font-medium">Belum ada data performa toko.</td></tr>';
                 return;
             }
 
-            top10.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                row.innerHTML = `
-                    <td class="p-2 font-bold text-amber-600 dark:text-amber-400">#${index + 1}</td>
-                    <td class="p-2 font-bold text-sky-700 dark:text-sky-300">${item.store}</td>
-                    <td class="p-2 text-center text-indigo-700 dark:text-indigo-300 font-semibold">${item.mac}</td>
-                    <td class="p-2 text-center text-blue-700 dark:text-blue-300 font-semibold">${item.iphone}</td>
-                    <td class="p-2 text-center text-cyan-700 dark:text-cyan-300 font-semibold">${item.ipad}</td>
-                    <td class="p-2 text-center text-emerald-700 dark:text-emerald-300 font-semibold">${item.watch}</td>
-                    <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${item.totalQty}</td>
+            sortedStores.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 font-bold font-mono text-amber-500">#${index + 1}</td>
+                    <td class="p-2 font-bold">${item.store}</td>
+                    <td class="p-2 text-center font-mono text-indigo-600 dark:text-indigo-400 font-bold">${item.mac}</td>
+                    <td class="p-2 text-center font-mono text-blue-600 dark:text-blue-400 font-bold">${item.iphone}</td>
+                    <td class="p-2 text-center font-mono text-cyan-600 dark:text-cyan-400 font-bold">${item.ipad}</td>
+                    <td class="p-2 text-center font-mono text-emerald-600 dark:text-emerald-400 font-bold">${item.watch}</td>
+                    <td class="p-2 text-center font-extrabold text-indigo-600 dark:text-indigo-400">${item.total}</td>
                 `;
-                tbody.appendChild(row);
+                tbody.appendChild(tr);
             });
         }
 
@@ -2041,100 +1917,30 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center opacity-80 font-medium">Tidak ada data laporan masuk</td></tr>';
+            const latest10 = data.slice(-10).reverse();
+
+            if (latest10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada data transaksi.</td></tr>';
                 return;
             }
 
-            const latest10 = [...data].reverse().slice(0, 10);
-
             latest10.forEach((item, index) => {
-                const qty = extractQuantity(item);
-                const lobVal = extractLOB(item);
-                const nameVal = extractName(item);
-                const storeVal = extractStore(item);
-                const shiftVal = extractShift(item);
-                const dateVal = extractDate(item) || '-';
-
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                row.innerHTML = `
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
                     <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2 opacity-90 font-mono text-[11px] font-semibold">${dateVal}</td>
-                    <td class="p-2 font-bold text-indigo-700 dark:text-indigo-300">${nameVal}</td>
-                    <td class="p-2 font-bold">${storeVal}</td>
-                    <td class="p-2"><span class="px-2.5 py-1 rounded text-xs font-bold raw-data-lob inline-block">${lobVal}</span></td>
-                    <td class="p-2 text-center font-bold ${qty > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'opacity-60'}">${qty}</td>
-                    <td class="p-2 font-semibold">${shiftVal}</td>
+                    <td class="p-2 font-mono">${extractDate(item) || '-'}</td>
+                    <td class="p-2 font-bold">${extractName(item)}</td>
+                    <td class="p-2 opacity-80">${extractStore(item)}</td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border raw-data-lob">${extractLOB(item)}</span></td>
+                    <td class="p-2 text-center font-bold text-indigo-600 dark:text-indigo-400">${extractQuantity(item)}</td>
+                    <td class="p-2 font-medium">${extractShift(item)}</td>
                 `;
-                tbody.appendChild(row);
+                tbody.appendChild(tr);
             });
         }
 
-        function updateMetricsAndCharts(data) {
-            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
-            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
-
-            const reports = data.length;
-            const champions = new Set();
-            const activeDates = new Set();
-            const activeStores = new Set();
-
-            data.forEach(item => {
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-                const name = extractName(item);
-                const store = extractStore(item);
-                const dateStr = extractDate(item);
-
-                if (name && name !== '-') champions.add(name);
-                if (store && store !== '-') activeStores.add(store);
-
-                if (dateStr) {
-                    const parsed = parseCustomDate(dateStr);
-                    if (parsed) activeDates.add(`${parsed.getFullYear()}-${parsed.getMonth()}-${parsed.getDate()}`);
-                }
-
-                if (lob.includes('mac')) {
-                    totalMac += qty;
-                    if (qty > 0) trxMac++;
-                } else if (lob.includes('iphone')) {
-                    totalIphone += qty;
-                    if (qty > 0) trxIphone++;
-                } else if (lob.includes('ipad')) {
-                    totalIpad += qty;
-                    if (qty > 0) trxIpad++;
-                } else if (lob.includes('watch')) {
-                    totalWatch += qty;
-                    if (qty > 0) trxWatch++;
-                }
-            });
-
-            const daysCount = activeDates.size || 1;
-
-            document.getElementById('kpi-total-mac').innerText = totalMac;
-            document.getElementById('kpi-total-iphone').innerText = totalIphone;
-            document.getElementById('kpi-total-ipad').innerText = totalIpad;
-            document.getElementById('kpi-total-watch').innerText = totalWatch;
-
-            document.getElementById('kpi-avg-mac').innerText = (totalMac / daysCount).toFixed(1);
-            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / daysCount).toFixed(1);
-            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / daysCount).toFixed(1);
-            document.getElementById('kpi-avg-watch').innerText = (totalWatch / daysCount).toFixed(1);
-
-            document.getElementById('kpi-trx-mac').innerText = trxMac;
-            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
-            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
-            document.getElementById('kpi-trx-watch').innerText = trxWatch;
-
-            document.getElementById('kpi-total-reports').innerText = reports;
-            document.getElementById('kpi-active-champions').innerText = champions.size;
-            document.getElementById('kpi-total-stores').innerText = activeStores.size;
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchLiveData();
-        });
+        document.addEventListener('DOMContentLoaded', fetchLiveData);
     </script>
 </body>
 </html>
