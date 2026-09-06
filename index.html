@@ -251,8 +251,7 @@
         <div class="pt-4 mt-4 border-t border-gray-500/20 hidden lg:block">
             <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1">
                 <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
-                <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400">Novi Riyanto</p>
-                <p class="text-[9px] opacity-70 border-t border-gray-500/20 pt-1 text-slate-400">Developed in collaboration with Gemini AI</p>
+                <p class="text-xs font-bold neon-green-text">Novi Riyanto</p>
             </div>
         </div>
     </aside>
@@ -555,7 +554,7 @@
                         </div>
                     </div>
 
-                    <!-- Chart Rekap Frekuensi Keterlambatan Per Champion -->
+                    <!-- Chart Daftar Keterlambatan Per Champion -->
                     <div class="glass-panel p-4">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4 neon-title-purple">
                             <i data-lucide="bar-chart-2" class="w-4 h-4 text-purple-500"></i> Chart Frekuensi Keterlambatan Per Champion
@@ -615,14 +614,14 @@
                         </div>
                     </div>
 
-                    <!-- Tabel Rekap Frekuensi Keterlambatan Per Champion -->
+                    <!-- Tabel Daftar Keterlambatan Per Champion -->
                     <div class="glass-panel p-4 border-l-4 border-purple-500 flex flex-col justify-between">
                         <div>
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
                                 <div class="flex items-center gap-2">
                                     <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
                                     <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2 neon-title-purple">
-                                        Rekap Frekuensi Keterlambatan Per Champion
+                                        Daftar Keterlambatan Per Champion
                                         <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-extrabold border border-purple-500/30 neon-green-badge">0 Champion</span>
                                     </h3>
                                 </div>
@@ -1098,29 +1097,26 @@
             document.getElementById('kpi-total-ipad').innerText = totalIpad;
             document.getElementById('kpi-total-watch').innerText = totalWatch;
 
-            const monthVal = document.getElementById('filter-month')?.value || '09';
-            let activeDays = 30;
-            if (monthVal !== 'ALL') {
-                const mIdx = parseInt(monthVal, 10) - 1;
-                activeDays = new Date(2026, mIdx + 1, 0).getDate();
-            }
+            // Mengambil tanggal hari ini lalu dikurangi 1 untuk hari yang sudah completed
+            const today = new Date();
+            const completedDays = Math.max(1, today.getDate() - 1); 
 
-            document.getElementById('kpi-avg-mac').innerText = (totalMac / activeDays).toFixed(1);
-            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / activeDays).toFixed(1);
-            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / activeDays).toFixed(1);
-            document.getElementById('kpi-avg-watch').innerText = (totalWatch / activeDays).toFixed(1);
+            // Kalkulasi Avg Unit & Trx / Hari
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / completedDays).toFixed(1);
 
-            document.getElementById('kpi-trx-mac').innerText = trxMac;
-            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
-            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
-            document.getElementById('kpi-trx-watch').innerText = trxWatch;
+            document.getElementById('kpi-trx-mac').innerText = Math.round(trxMac / completedDays);
+            document.getElementById('kpi-trx-iphone').innerText = Math.round(trxIphone / completedDays);
+            document.getElementById('kpi-trx-ipad').innerText = Math.round(trxIpad / completedDays);
+            document.getElementById('kpi-trx-watch').innerText = Math.round(trxWatch / completedDays);
 
             document.getElementById('kpi-total-reports').innerText = data.length;
             document.getElementById('kpi-active-champions').innerText = uniqueChampions.size;
             document.getElementById('kpi-total-stores').innerText = uniqueStores.size;
         }
 
-        // FUNGSI BARU: Menghitung Akumulasi Toko Belum Submit (Tgl 1 s.d. Kemarin)
         function renderUnsubmittedStoresTable(data) {
             const tbody = document.getElementById('unsubmitted-stores-body');
             const countBadge = document.getElementById('unsubmitted-stores-count');
@@ -1128,20 +1124,18 @@
             tbody.innerHTML = '';
 
             const monthVal = document.getElementById('filter-month')?.value || '09';
-            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8; // Default September (08)
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
             const year = 2026;
 
             const now = new Date();
-            let maxDay = now.getDate() - 1; // Sampai kemarin
+            let maxDay = now.getDate() - 1;
 
-            // Jika memilih bulan lalu, hitung penuh bulan tersebut
             if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
                 maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
             }
 
             if (maxDay < 1) maxDay = 1;
 
-            // Pemetaan tanggal submit per store
             const storeSubmittedDates = {};
             MASTER_STORES.forEach(s => {
                 storeSubmittedDates[s.toLowerCase().trim()] = new Set();
@@ -1156,7 +1150,6 @@
                         const dayNum = parsedDate.getDate();
                         const storeKey = rawStore.toLowerCase().trim();
                         
-                        // Cari toko pendamping di master
                         const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === storeKey || ms.toLowerCase().includes(storeKey) || storeKey.includes(ms.toLowerCase()));
                         if (matchedStore) {
                             storeSubmittedDates[matchedStore.toLowerCase().trim()].add(dayNum);
@@ -1187,7 +1180,6 @@
                 }
             });
 
-            // Urutkan toko berdasarkan jumlah hari belum submit paling banyak
             unsubmittedStoresList.sort((a, b) => b.missingDays.length - a.missingDays.length);
 
             if (countBadge) {
@@ -1212,7 +1204,6 @@
             });
         }
 
-        // FUNGSI BARU: Salin Draft WA Follow-up Toko Belum Submit
         function copyUnsubmittedWaDraft() {
             if (unsubmittedStoresList.length === 0) {
                 alert('Semua toko sudah submit laporan! Tidak ada draft WA yang perlu dikirim.');
@@ -1311,7 +1302,6 @@
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            // 1. Chart Toko Paling Banyak Terlambat
             if (chartInstances.mostLateStores) chartInstances.mostLateStores.destroy();
             const ctxLateStores = document.getElementById('chartMostLateStores')?.getContext('2d');
             if (ctxLateStores) {
@@ -1348,7 +1338,6 @@
                 });
             }
 
-            // 2. Chart Frekuensi Keterlambatan Per Champion
             if (chartInstances.lateChampions) chartInstances.lateChampions.destroy();
             const ctxLateChamp = document.getElementById('chartLateChampions')?.getContext('2d');
             if (ctxLateChamp) {
@@ -1417,7 +1406,6 @@
             });
         }
 
-        /* Export Excel & PDF Functions */
         function exportLateStoresExcel() {
             if (lateStoresSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
             const data = lateStoresSummaryList.map((item, idx) => ({
@@ -1455,22 +1443,22 @@
             }));
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Rekap Keterlambatan Champion");
-            XLSX.writeFile(wb, "Rekap_Frekuensi_Keterlambatan_Champion.xlsx");
+            XLSX.utils.book_append_sheet(wb, ws, "Daftar Keterlambatan Champion");
+            XLSX.writeFile(wb, "Daftar_Keterlambatan_Champion.xlsx");
         }
 
         function exportLateSummaryPDF() {
             if (lateChampionSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("Rekap Frekuensi Keterlambatan Per Champion", 14, 15);
+            doc.text("Daftar Keterlambatan Per Champion", 14, 15);
             const tableData = lateChampionSummaryList.map((item, idx) => [idx + 1, item.name, item.store, item.count]);
             doc.autoTable({
                 head: [["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"]],
                 body: tableData,
                 startY: 20
             });
-            doc.save("Rekap_Frekuensi_Keterlambatan_Champion.pdf");
+            doc.save("Daftar_Keterlambatan_Champion.pdf");
         }
 
         function copyLateChampionSummaryWaDraft() {
@@ -1479,14 +1467,14 @@
                 return;
             }
 
-            let text = `*REKAP FREKUENSI KETERLAMBATAN SUBMIT LOB CHAMPION*\n*(Total: ${lateChampionSummaryList.length} Champion Terlibat)*\n\n`;
+            let text = `*DAFTAR KETERLAMBATAN SUBMIT LOB CHAMPION*\n*(Total: ${lateChampionSummaryList.length} Champion Terlibat)*\n\n`;
             lateChampionSummaryList.forEach((item, idx) => {
                 text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Jumlah Terlambat*: ${item.count} Kali\n\n`;
             });
             text += `Mohon perhatian dan evaluasi bersama agar pengisian laporan dapat dilakukan secara disiplin sebelum jam 12 malam di hari H transaksi. Terima kasih! 🙏`;
 
             navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA Rekap Keterlambatan Champion berhasil disalin!');
+                alert('Draft WA Daftar Keterlambatan Champion berhasil disalin!');
             }).catch(err => {
                 console.error('Gagal menyalin rekap WA:', err);
             });
@@ -1870,27 +1858,24 @@
                 else storeWoW[matchedMasterStore].totalTW += qty;
             });
 
-            Object.keys(storeWoW).forEach((storeName, index) => {
-                const item = storeWoW[storeName];
-                const growth = item.totalTW - item.totalLW;
-                let growthBadge = `<span class="text-slate-400 font-bold">0</span>`;
+            const sortedStores = Object.keys(storeWoW).sort((a, b) => storeWoW[b].totalTW - storeWoW[a].totalTW);
 
-                if (growth > 0) {
-                    growthBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px] border border-emerald-500/30">+${growth}</span>`;
-                } else if (growth < 0) {
-                    growthBadge = `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold text-[11px] border border-rose-500/30">${growth}</span>`;
-                }
+            sortedStores.forEach((storeName, index) => {
+                const s = storeWoW[storeName];
+                const growth = s.totalTW - s.totalLW;
+                const growthText = growth > 0 ? `+${growth}` : `${growth}`;
+                const growthClass = growth > 0 ? 'text-emerald-500 font-bold' : (growth < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
                     <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${storeName}</td>
-                    <td class="p-2.5 text-center font-mono">${item.mac.lw} / <strong class="text-indigo-600 dark:text-indigo-400">${item.mac.tw}</strong></td>
-                    <td class="p-2.5 text-center font-mono">${item.iphone.lw} / <strong class="text-blue-600 dark:text-blue-400">${item.iphone.tw}</strong></td>
-                    <td class="p-2.5 text-center font-mono">${item.ipad.lw} / <strong class="text-cyan-600 dark:text-cyan-400">${item.ipad.tw}</strong></td>
-                    <td class="p-2.5 text-center font-mono">${item.watch.lw} / <strong class="text-emerald-600 dark:text-emerald-400">${item.watch.tw}</strong></td>
-                    <td class="p-2.5 text-center">${growthBadge}</td>
+                    <td class="p-2.5 text-center font-mono">${s.mac.lw} / <span class="font-bold text-indigo-600 dark:text-indigo-400">${s.mac.tw}</span></td>
+                    <td class="p-2.5 text-center font-mono">${s.iphone.lw} / <span class="font-bold text-blue-600 dark:text-blue-400">${s.iphone.tw}</span></td>
+                    <td class="p-2.5 text-center font-mono">${s.ipad.lw} / <span class="font-bold text-cyan-600 dark:text-cyan-400">${s.ipad.tw}</span></td>
+                    <td class="p-2.5 text-center font-mono">${s.watch.lw} / <span class="font-bold text-emerald-600 dark:text-emerald-400">${s.watch.tw}</span></td>
+                    <td class="p-2.5 text-center ${growthClass}">${growthText}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1901,7 +1886,7 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const salesMap = {};
+            const champSales = {};
             data.forEach(item => {
                 const name = extractName(item);
                 const store = extractStore(item);
@@ -1910,29 +1895,29 @@
 
                 if (name && name !== '-') {
                     const key = `${name}___${store}`;
-                    if (!salesMap[key]) {
-                        salesMap[key] = { name, store, lob, totalQty: 0 };
+                    if (!champSales[key]) {
+                        champSales[key] = { name, store, lob, total: 0 };
                     }
-                    salesMap[key].totalQty += qty;
+                    champSales[key].total += qty;
                 }
             });
 
-            const sortedSales = Object.values(salesMap).sort((a, b) => b.totalQty - a.totalQty).slice(0, 10);
+            const top10 = Object.values(champSales).sort((a, b) => b.total - a.total).slice(0, 10);
 
-            if (sortedSales.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-[11px] font-medium">Belum ada data penjualan.</td></tr>';
+            if (top10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Data tidak ditemukan</td></tr>';
                 return;
             }
 
-            sortedSales.forEach((item, index) => {
+            top10.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2 font-bold font-mono text-amber-500">#${index + 1}</td>
-                    <td class="p-2 font-bold">${item.name}</td>
-                    <td class="p-2 opacity-80">${item.store}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border raw-data-lob">${item.lob}</span></td>
-                    <td class="p-2 text-center font-extrabold text-indigo-600 dark:text-indigo-400">${item.totalQty}</td>
+                    <td class="p-2 font-mono font-bold ${index < 3 ? 'text-amber-500 font-extrabold' : 'opacity-80'}">#${index + 1}</td>
+                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.name}</td>
+                    <td class="p-2 opacity-90">${item.store}</td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold text-[10px]">${item.lob}</span></td>
+                    <td class="p-2 text-center font-extrabold text-emerald-600 dark:text-emerald-400">${item.total}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1943,43 +1928,42 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const storeMap = {};
+            const storePerf = {};
             data.forEach(item => {
                 const store = extractStore(item);
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
 
                 if (store && store !== '-') {
-                    if (!storeMap[store]) {
-                        storeMap[store] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                    if (!storePerf[store]) {
+                        storePerf[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
                     }
-                    if (lob.includes('mac')) storeMap[store].mac += qty;
-                    else if (lob.includes('iphone')) storeMap[store].iphone += qty;
-                    else if (lob.includes('ipad')) storeMap[store].ipad += qty;
-                    else if (lob.includes('watch')) storeMap[store].watch += qty;
-                    
-                    storeMap[store].total += qty;
+                    if (lob.includes('mac')) storePerf[store].mac += qty;
+                    else if (lob.includes('iphone')) storePerf[store].iphone += qty;
+                    else if (lob.includes('ipad')) storePerf[store].ipad += qty;
+                    else if (lob.includes('watch')) storePerf[store].watch += qty;
+                    storePerf[store].total += qty;
                 }
             });
 
-            const sortedStores = Object.values(storeMap).sort((a, b) => b.total - a.total).slice(0, 10);
+            const top10 = Object.entries(storePerf).map(([store, perf]) => ({ store, ...perf })).sort((a, b) => b.total - a.total).slice(0, 10);
 
-            if (sortedStores.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-[11px] font-medium">Belum ada data toko.</td></tr>';
+            if (top10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Data tidak ditemukan</td></tr>';
                 return;
             }
 
-            sortedStores.forEach((item, index) => {
+            top10.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2 font-bold font-mono text-emerald-500">#${index + 1}</td>
-                    <td class="p-2 font-bold">${item.store}</td>
+                    <td class="p-2 font-mono font-bold ${index < 3 ? 'text-amber-500 font-extrabold' : 'opacity-80'}">#${index + 1}</td>
+                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
                     <td class="p-2 text-center font-mono text-indigo-600 dark:text-indigo-400">${item.mac}</td>
                     <td class="p-2 text-center font-mono text-blue-600 dark:text-blue-400">${item.iphone}</td>
                     <td class="p-2 text-center font-mono text-cyan-600 dark:text-cyan-400">${item.ipad}</td>
                     <td class="p-2 text-center font-mono text-emerald-600 dark:text-emerald-400">${item.watch}</td>
-                    <td class="p-2 text-center font-extrabold text-amber-500">${item.total}</td>
+                    <td class="p-2 text-center font-extrabold text-emerald-500">${item.total}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1990,10 +1974,10 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const top10Data = data.slice(-10).reverse();
+            const top10Data = data.slice(0, 10);
 
             if (top10Data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-[11px] font-medium">Belum ada transaksi.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Data transaksi tidak ditemukan</td></tr>';
                 return;
             }
 
@@ -2002,21 +1986,20 @@
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
                     <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2 font-mono text-xs">${extractDate(item) || '-'}</td>
+                    <td class="p-2 font-mono">${extractDate(item)}</td>
                     <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${extractName(item)}</td>
-                    <td class="p-2 text-xs">${extractStore(item)}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400">${extractLOB(item)}</span></td>
-                    <td class="p-2 text-center font-extrabold text-indigo-600 dark:text-indigo-400">${extractQuantity(item)}</td>
-                    <td class="p-2 text-xs font-semibold">${extractShift(item)}</td>
+                    <td class="p-2 opacity-90">${extractStore(item)}</td>
+                    <td class="p-2"><span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold text-[10px]">${extractLOB(item)}</span></td>
+                    <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${extractQuantity(item)}</td>
+                    <td class="p-2 font-semibold">${extractShift(item)}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // Inisialisasi awal
         window.onload = function() {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000); // Sync tiap 5 menit
+            setInterval(fetchLiveData, 60000);
         };
     </script>
 </body>
