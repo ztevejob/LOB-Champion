@@ -84,16 +84,9 @@
             text-shadow: none;
         }
 
-        /* Kelas Hijau Neon Mode Gelap untuk Judul & Badge Rekap Keterlambatan */
         body:not(.light-mode) .neon-title-green {
             color: #39ff14 !important;
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
-        }
-        body:not(.light-mode) .neon-badge-green {
-            color: #39ff14 !important;
-            background-color: rgba(57, 255, 20, 0.15) !important;
-            border-color: rgba(57, 255, 20, 0.4) !important;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
         }
 
         body:not(.light-mode) .neon-store-badge {
@@ -107,6 +100,7 @@
             color: #e9d5ff !important;
             text-shadow: 0 0 8px rgba(233, 213, 255, 0.6);
         }
+        
         body:not(.light-mode) .neon-green-badge {
             color: #39ff14 !important;
             border-color: rgba(57, 255, 20, 0.5) !important;
@@ -565,8 +559,8 @@
 
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="glass-panel p-4 flex flex-col justify-between w-full">
+                <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+                    <div class="glass-panel p-4 flex flex-col justify-between max-w-lg mx-auto w-full">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
                             <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i> Status Kepatuhan Kemarin (<span id="chart-yesterday-date">-</span>)
                         </h3>
@@ -574,61 +568,49 @@
                             <canvas id="chartComplianceYesterday"></canvas>
                         </div>
                     </div>
-
-                    <!-- Chart Batang Toko Paling Banyak Telat Submit -->
-                    <div class="glass-panel p-4 flex flex-col justify-between w-full">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
-                            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i> Top Toko Paling Sering Telat Submit
-                        </h3>
-                        <div class="h-64 relative">
-                            <canvas id="chartTopLateStores"></canvas>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Detail Laporan Terlambat Submit -->
-                <div class="glass-panel p-4 border-l-4 border-amber-500">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                <!-- Detail Laporan Daftar Toko Yang Terlambat -->
+                <div class="glass-panel p-4 border-l-4 border-amber-500 space-y-3">
+                    <div class="flex items-center justify-between pb-2 border-b border-gray-500/20">
                         <div class="flex items-center gap-2">
                             <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
                             <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
-                                Terlambat Submit 
-                                <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Laporan</span>
+                                Daftar toko yang terlambat 
+                                <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Toko</span>
                             </h3>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Copy Draft WA
-                            </button>
-                            <!-- Dropdown Export untuk Terlambat Submit -->
+                            <!-- Dropdown Export Tabel Toko Terlambat -->
                             <div class="relative inline-block text-left">
-                                <button onclick="toggleExportDropdown('dropdown-export-late')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
-                                    <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                <button onclick="toggleExportMenu('export-menu-late-stores')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
                                 </button>
-                                <div id="dropdown-export-late" class="hidden absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5 z-30">
+                                <div id="export-menu-late-stores" class="hidden absolute right-0 mt-1 w-32 rounded-md shadow-lg bg-slate-800 border border-gray-700 ring-1 ring-black ring-opacity-5 z-20">
                                     <div class="py-1">
-                                        <button onclick="exportLateSubmit('excel')" class="w-full text-left px-4 py-2 text-xs text-gray-200 hover:bg-slate-700 flex items-center gap-2">
-                                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Export Excel
+                                        <button onclick="exportLateStoresTable('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Excel
                                         </button>
-                                        <button onclick="exportLateSubmit('pdf')" class="w-full text-left px-4 py-2 text-xs text-gray-200 hover:bg-slate-700 flex items-center gap-2">
-                                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> Export PDF
+                                        <button onclick="exportLateStoresTable('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> PDF
                                         </button>
                                     </div>
                                 </div>
                             </div>
+                            <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Copy Draft WA
+                            </button>
                         </div>
                     </div>
-                    <p class="text-xs opacity-90 mb-3 font-medium">Daftar transaksi yang disubmit lewat dari jam 12 malam pada hari H dari waktu transaksi dilakukan.</p>
+                    <p class="text-xs opacity-90 font-medium">Daftar toko yang memiliki transaksi disubmit lewat dari jam 12 malam pada hari H.</p>
                     
                     <div class="overflow-x-auto max-h-[300px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
+                        <table id="table-late-stores" class="w-full text-xs text-left border-collapse min-w-[500px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
                                 <tr>
-                                    <th class="p-2 sticky-header-bg">Nama Champion</th>
-                                    <th class="p-2 sticky-header-bg">Toko</th>
-                                    <th class="p-2 sticky-header-bg">Timestamp</th>
-                                    <th class="p-2 sticky-header-bg">Tanggal Transaksi</th>
+                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama Toko</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Berapa Kali Terlambat</th>
                                 </tr>
                             </thead>
                             <tbody id="late-champions-body" class="divide-y divide-gray-500/10"></tbody>
@@ -636,43 +618,52 @@
                     </div>
                 </div>
 
-                <!-- Tabel Rekap Berapa Kali Champion Terlambat Submit -->
-                <div class="glass-panel p-4 border-l-4 border-purple-500">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                <!-- Tabel Rekap Frekuensi Keterlambatan Per Champion -->
+                <div class="glass-panel p-4 border-l-4 border-purple-500 space-y-4">
+                    <div class="flex items-center justify-between pb-2 border-b border-gray-500/20">
                         <div class="flex items-center gap-2">
                             <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
                             <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 neon-title-green uppercase tracking-wide flex items-center gap-2">
                                 Rekap Frekuensi Keterlambatan Per Champion
-                                <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 neon-badge-green rounded-full text-[10px] font-extrabold border border-purple-500/30">171 Champion</span>
+                                <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 neon-green-badge rounded-full text-[10px] font-extrabold border border-purple-500/30">0 Champion</span>
                             </h3>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy WA Rekap
-                            </button>
-                            <!-- Dropdown Export untuk Rekap Frekuensi Keterlambatan -->
+                            <!-- Dropdown Export Tabel Rekap Champion -->
                             <div class="relative inline-block text-left">
-                                <button onclick="toggleExportDropdown('dropdown-export-summary')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
-                                    <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                <button onclick="toggleExportMenu('export-menu-champion')" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
                                 </button>
-                                <div id="dropdown-export-summary" class="hidden absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5 z-30">
+                                <div id="export-menu-champion" class="hidden absolute right-0 mt-1 w-32 rounded-md shadow-lg bg-slate-800 border border-gray-700 ring-1 ring-black ring-opacity-5 z-20">
                                     <div class="py-1">
-                                        <button onclick="exportLateSummary('excel')" class="w-full text-left px-4 py-2 text-xs text-gray-200 hover:bg-slate-700 flex items-center gap-2">
-                                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Export Excel
+                                        <button onclick="exportChampionLateSummaryTable('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i> Excel
                                         </button>
-                                        <button onclick="exportLateSummary('pdf')" class="w-full text-left px-4 py-2 text-xs text-gray-200 hover:bg-slate-700 flex items-center gap-2">
-                                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> Export PDF
+                                        <button onclick="exportChampionLateSummaryTable('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-400"></i> PDF
                                         </button>
                                     </div>
                                 </div>
                             </div>
+                            <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy WA Rekap
+                            </button>
                         </div>
                     </div>
-                    <p class="text-xs opacity-90 mb-3 font-medium">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
+                    <p class="text-xs opacity-90 font-medium">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
+
+                    <!-- Chart Batang Toko Paling Banyak Telat Submit -->
+                    <div class="bg-black/10 dark:bg-black/20 p-3 rounded-lg border border-gray-500/10">
+                        <h4 class="text-xs font-bold mb-2 flex items-center gap-1.5 opacity-90">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-purple-400"></i> Top Toko Paling Banyak Telat Submit
+                        </h4>
+                        <div class="h-56 relative">
+                            <canvas id="chartTopLateStores"></canvas>
+                        </div>
+                    </div>
 
                     <div class="overflow-x-auto max-h-[300px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
+                        <table id="table-late-champions-summary" class="w-full text-xs text-left border-collapse min-w-[500px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
                                 <tr>
                                     <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
@@ -773,6 +764,7 @@
         let filteredData = [];
         let chartInstances = {};
         let lateChampionsList = [];
+        let lateStoresSummaryList = [];
         let lateChampionSummaryList = [];
         let cumulativeUnsubmittedList = [];
         let formattedTodayDate = "";
@@ -924,6 +916,23 @@
             return item.Timestamp || '';
         }
 
+        function toggleExportMenu(id) {
+            const menu = document.getElementById(id);
+            if (!menu) return;
+            const allMenus = document.querySelectorAll('[id^="export-menu-"]');
+            allMenus.forEach(m => {
+                if (m.id !== id) m.classList.add('hidden');
+            });
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.relative')) {
+                const allMenus = document.querySelectorAll('[id^="export-menu-"]');
+                allMenus.forEach(m => m.classList.add('hidden'));
+            }
+        });
+
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
@@ -963,95 +972,6 @@
             const dateStr = now.toLocaleDateString('id-ID', dateOptions);
             const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
             document.getElementById('last-update').innerText = `${dateStr}, ${timeStr} WIB`;
-        }
-
-        function toggleExportDropdown(id) {
-            const el = document.getElementById(id);
-            if (el) el.classList.toggle('hidden');
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            const dropLate = document.getElementById('dropdown-export-late');
-            const dropSummary = document.getElementById('dropdown-export-summary');
-            if (dropLate && !e.target.closest('#dropdown-export-late') && !e.target.closest('button[onclick*="dropdown-export-late"]')) {
-                dropLate.classList.add('hidden');
-            }
-            if (dropSummary && !e.target.closest('#dropdown-export-summary') && !e.target.closest('button[onclick*="dropdown-export-summary"]')) {
-                dropSummary.classList.add('hidden');
-            }
-        });
-
-        function exportLateSubmit(type) {
-            toggleExportDropdown('dropdown-export-late');
-            if (lateChampionsList.length === 0) {
-                alert('Tidak ada data terlambat submit untuk diexport.');
-                return;
-            }
-
-            if (type === 'excel') {
-                const excelData = lateChampionsList.map(item => ({
-                    'Nama Champion': item.name,
-                    'Toko': item.store,
-                    'Timestamp': item.dateTsStr,
-                    'Tanggal Transaksi': item.dateTxStr
-                }));
-                const worksheet = XLSX.utils.json_to_sheet(excelData);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Terlambat Submit");
-                XLSX.writeFile(workbook, "Data_Terlambat_Submit.xlsx");
-            } else if (type === 'pdf') {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.text("Laporan Terlambat Submit LOB Champion", 14, 15);
-                const tableColumn = ["Nama Champion", "Toko", "Timestamp", "Tanggal Transaksi"];
-                const tableRows = lateChampionsList.map(item => [
-                    item.name, item.store, item.dateTsStr, item.dateTxStr
-                ]);
-                doc.autoTable({
-                    head: [tableColumn],
-                    body: tableRows,
-                    startY: 20,
-                    theme: 'striped'
-                });
-                doc.save("Data_Terlambat_Submit.pdf");
-            }
-        }
-
-        function exportLateSummary(type) {
-            toggleExportDropdown('dropdown-export-summary');
-            if (lateChampionSummaryList.length === 0) {
-                alert('Tidak ada data rekap keterlambatan untuk diexport.');
-                return;
-            }
-
-            if (type === 'excel') {
-                const excelData = lateChampionSummaryList.map((item, idx) => ({
-                    'No': idx + 1,
-                    'Nama Champion': item.name,
-                    'Toko': item.store,
-                    'Berapa Kali Terlambat': item.count
-                }));
-                const worksheet = XLSX.utils.json_to_sheet(excelData);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Keterlambatan");
-                XLSX.writeFile(workbook, "Rekap_Keterlambatan_Champion.xlsx");
-            } else if (type === 'pdf') {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.text("Rekap Frekuensi Keterlambatan Per Champion", 14, 15);
-                const tableColumn = ["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"];
-                const tableRows = lateChampionSummaryList.map((item, idx) => [
-                    idx + 1, item.name, item.store, `${item.count} Kali`
-                ]);
-                doc.autoTable({
-                    head: [tableColumn],
-                    body: tableRows,
-                    startY: 20,
-                    theme: 'striped'
-                });
-                doc.save("Rekap_Keterlambatan_Champion.pdf");
-            }
         }
 
         function fetchLiveData() {
@@ -1292,6 +1212,7 @@
             const totalLateBadge = document.getElementById('late-submit-total-badge');
 
             lateChampionsList = [];
+            const storeSummaryMap = {};
             const summaryMap = {};
 
             data.forEach(item => {
@@ -1314,13 +1235,15 @@
                                 dateTsStr: tsStr
                             });
 
-                            const key = `${name.toLowerCase().trim()}___${store.toLowerCase().trim()}`;
+                            const storeKey = store.toLowerCase().trim();
+                            if (!storeSummaryMap[storeKey]) {
+                                storeSummaryMap[storeKey] = { store, count: 0 };
+                            }
+                            storeSummaryMap[storeKey].count += 1;
+
+                            const key = `${name.toLowerCase().trim()}___${storeKey}`;
                             if (!summaryMap[key]) {
-                                summaryMap[key] = {
-                                    name,
-                                    store,
-                                    count: 0
-                                };
+                                summaryMap[key] = { name, store, count: 0 };
                             }
                             summaryMap[key].count += 1;
                         }
@@ -1328,25 +1251,27 @@
                 }
             });
 
+            lateStoresSummaryList = Object.values(storeSummaryMap).sort((a, b) => b.count - a.count);
             lateChampionSummaryList = Object.values(summaryMap).sort((a, b) => b.count - a.count);
 
             if (totalLateBadge) {
-                totalLateBadge.innerText = `${lateChampionsList.length} Laporan`;
+                totalLateBadge.innerText = `${lateStoresSummaryList.length} Toko`;
             }
 
             if (tbody) {
                 tbody.innerHTML = '';
-                if (lateChampionsList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada Champion terlambat submit.</td></tr>';
+                if (lateStoresSummaryList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada toko terlambat submit.</td></tr>';
                 } else {
-                    lateChampionsList.forEach(item => {
+                    lateStoresSummaryList.forEach((item, index) => {
                         const tr = document.createElement('tr');
                         tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                         tr.innerHTML = `
-                            <td class="p-2 font-bold text-amber-700 dark:text-amber-300 text-xs">${item.name}</td>
-                            <td class="p-2 font-semibold text-xs">${item.store}</td>
-                            <td class="p-2 font-mono text-[11px] font-extrabold text-amber-600 dark:text-amber-400">${item.dateTsStr}</td>
-                            <td class="p-2 font-mono text-[11px] font-bold text-indigo-700 dark:text-indigo-300">${item.dateTxStr}</td>
+                            <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                            <td class="p-2.5 font-bold text-amber-700 dark:text-amber-300 text-xs">${item.store}</td>
+                            <td class="p-2.5 text-center">
+                                <span class="px-2.5 py-1 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full font-extrabold text-xs border border-amber-500/30">${item.count} Kali</span>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -1361,33 +1286,20 @@
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            const storeLateCount = {};
-            lateChampionsList.forEach(item => {
-                if (item.store && item.store !== '-') {
-                    storeLateCount[item.store] = (storeLateCount[item.store] || 0) + 1;
-                }
-            });
-
-            const sortedStores = Object.keys(storeLateCount)
-                .map(store => ({ store, count: storeLateCount[store] }))
-                .sort((a, b) => b.count - a.count)
-                .slice(0, 5);
-
-            const labels = sortedStores.map(s => s.store.length > 20 ? s.store.substring(0, 18) + '...' : s.store);
-            const dataValues = sortedStores.map(s => s.count);
+            const top5Stores = lateStoresSummaryList.slice(0, 5);
 
             if (chartInstances.topLateStores) chartInstances.topLateStores.destroy();
-            const ctxTopLate = document.getElementById('chartTopLateStores')?.getContext('2d');
-            if (ctxTopLate) {
-                chartInstances.topLateStores = new Chart(ctxTopLate, {
+            const ctxChart = document.getElementById('chartTopLateStores')?.getContext('2d');
+            if (ctxChart) {
+                chartInstances.topLateStores = new Chart(ctxChart, {
                     type: 'bar',
                     data: {
-                        labels: labels.length > 0 ? labels : ['Tidak Ada Data'],
+                        labels: top5Stores.map(s => s.store.length > 25 ? s.store.substring(0, 25) + '...' : s.store),
                         datasets: [{
                             label: 'Jumlah Terlambat',
-                            data: dataValues.length > 0 ? dataValues : [0],
-                            backgroundColor: '#f43f5e',
-                            borderRadius: 6
+                            data: top5Stores.map(s => s.count),
+                            backgroundColor: '#a855f7',
+                            borderRadius: 4
                         }]
                     },
                     options: {
@@ -1401,12 +1313,18 @@
                                 align: 'center',
                                 color: '#ffffff',
                                 font: { weight: 'bold', size: 11 },
-                                formatter: (val) => val > 0 ? val : ''
+                                formatter: (val) => val + 'x'
                             }
                         },
                         scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold', size: 10 } } }
+                            x: { 
+                                ticks: { color: textColor, font: { weight: 'bold' }, stepSize: 1 },
+                                grid: { color: 'rgba(156, 163, 175, 0.1)' }
+                            },
+                            y: { 
+                                ticks: { color: textColor, font: { weight: 'bold', size: 10 } },
+                                grid: { display: false }
+                            }
                         }
                     }
                 });
@@ -1444,6 +1362,69 @@
             });
         }
 
+        function exportLateStoresTable(type) {
+            document.getElementById('export-menu-late-stores')?.classList.add('hidden');
+            if (lateStoresSummaryList.length === 0) {
+                alert('Tidak ada data toko terlambat untuk diexport.');
+                return;
+            }
+
+            if (type === 'excel') {
+                const data = lateStoresSummaryList.map((item, idx) => ({
+                    'No': idx + 1,
+                    'Nama Toko': item.store,
+                    'Berapa Kali Terlambat': item.count
+                }));
+                const worksheet = XLSX.utils.json_to_sheet(data);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Daftar Toko Terlambat");
+                XLSX.writeFile(workbook, "Daftar_Toko_Terlambat_Submit.xlsx");
+            } else if (type === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("Daftar Toko yang Terlambat Submit", 14, 15);
+                const tableData = lateStoresSummaryList.map((item, idx) => [idx + 1, item.store, `${item.count} Kali`]);
+                doc.autoTable({
+                    head: [['No', 'Nama Toko', 'Berapa Kali Terlambat']],
+                    body: tableData,
+                    startY: 20
+                });
+                doc.save("Daftar_Toko_Terlambat_Submit.pdf");
+            }
+        }
+
+        function exportChampionLateSummaryTable(type) {
+            document.getElementById('export-menu-champion')?.classList.add('hidden');
+            if (lateChampionSummaryList.length === 0) {
+                alert('Tidak ada data keterlambatan Champion untuk diexport.');
+                return;
+            }
+
+            if (type === 'excel') {
+                const data = lateChampionSummaryList.map((item, idx) => ({
+                    'No': idx + 1,
+                    'Nama Champion': item.name,
+                    'Toko': item.store,
+                    'Berapa Kali Terlambat': item.count
+                }));
+                const worksheet = XLSX.utils.json_to_sheet(data);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Keterlambatan Champion");
+                XLSX.writeFile(workbook, "Rekap_Frekuensi_Keterlambatan_Per_Champion.xlsx");
+            } else if (type === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("Rekap Frekuensi Keterlambatan Per Champion", 14, 15);
+                const tableData = lateChampionSummaryList.map((item, idx) => [idx + 1, item.name, item.store, `${item.count} Kali`]);
+                doc.autoTable({
+                    head: [['No', 'Nama Champion', 'Toko', 'Berapa Kali Terlambat']],
+                    body: tableData,
+                    startY: 20
+                });
+                doc.save("Rekap_Frekuensi_Keterlambatan_Per_Champion.pdf");
+            }
+        }
+
         function copyLateChampionSummaryWaDraft() {
             if (lateChampionSummaryList.length === 0) {
                 alert('Tidak ada data keterlambatan Champion untuk disalin.');
@@ -1464,19 +1445,19 @@
         }
 
         function copyLateChampionsWaDraft() {
-            if (lateChampionsList.length === 0) {
-                alert('Tidak ada data keterlambatan submit untuk dibuatkan draft WA.');
+            if (lateStoresSummaryList.length === 0) {
+                alert('Tidak ada data toko terlambat submit untuk dibuatkan draft WA.');
                 return;
             }
 
-            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (Total: ${lateChampionsList.length} laporan, dikirim lewat dari jam 12 malam pada hari H):\n\n`;
-            lateChampionsList.forEach((item, idx) => {
-                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
+            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar *TOKO YANG TERLAMBAT SUBMIT* (Total: ${lateStoresSummaryList.length} Toko, transaksi dikirim lewat dari jam 12 malam pada hari H):\n\n`;
+            lateStoresSummaryList.forEach((item, idx) => {
+                text += `${idx + 1}. *Toko*: ${item.store}\n   *Jumlah Terlambat*: ${item.count} Kali\n\n`;
             });
             text += `Mohon ke depannya agar laporan dapat diinput tepat waktu di hari H transaksi ya. Terima kasih atas kerjasamanya! 🙏`;
 
             navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA Terlambat Submit berhasil disalin ke clipboard!');
+                alert('Draft WA Toko Terlambat Submit berhasil disalin ke clipboard!');
             }).catch(err => {
                 console.error('Gagal menyalin draft WA:', err);
             });
@@ -2096,47 +2077,43 @@
                 }
 
                 if (champName && champName !== '-') champions.add(champName);
-                if (storeName && storeName !== '-') activeStores.add(storeName.toLowerCase().trim());
+                if (storeName && storeName !== '-') activeStores.add(storeName);
 
                 if (rawDateStr) {
-                    const parsedDate = parseCustomDate(rawDateStr);
-                    if (parsedDate) {
-                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                    const parsed = parseCustomDate(rawDateStr);
+                    if (parsed) {
+                        const dateKey = `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`;
                         activeDates.add(dateKey);
                     }
                 }
             });
 
-            const activeDaysCount = activeDates.size || 1;
+            document.getElementById('kpi-total-mac').innerText = totalMac;
+            document.getElementById('kpi-total-iphone').innerText = totalIphone;
+            document.getElementById('kpi-total-ipad').innerText = totalIpad;
+            document.getElementById('kpi-total-watch').innerText = totalWatch;
 
-            const setKPI = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = val;
-            };
+            const daysCount = activeDates.size > 0 ? activeDates.size : 1;
 
-            setKPI('kpi-total-mac', totalMac);
-            setKPI('kpi-total-iphone', totalIphone);
-            setKPI('kpi-total-ipad', totalIpad);
-            setKPI('kpi-total-watch', totalWatch);
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / daysCount).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / daysCount).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / daysCount).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / daysCount).toFixed(1);
 
-            setKPI('kpi-avg-mac', (totalMac / activeDaysCount).toFixed(1));
-            setKPI('kpi-avg-iphone', (totalIphone / activeDaysCount).toFixed(1));
-            setKPI('kpi-avg-ipad', (totalIpad / activeDaysCount).toFixed(1));
-            setKPI('kpi-avg-watch', (totalWatch / activeDaysCount).toFixed(1));
+            document.getElementById('kpi-trx-mac').innerText = trxMac;
+            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
+            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
+            document.getElementById('kpi-trx-watch').innerText = trxWatch;
 
-            setKPI('kpi-trx-mac', trxMac);
-            setKPI('kpi-trx-iphone', trxIphone);
-            setKPI('kpi-trx-ipad', trxIpad);
-            setKPI('kpi-trx-watch', trxWatch);
-
-            setKPI('kpi-total-reports', reports);
-            setKPI('kpi-active-champions', champions.size);
-            setKPI('kpi-total-stores', MASTER_STORES.length);
+            document.getElementById('kpi-total-reports').innerText = reports;
+            document.getElementById('kpi-active-champions').innerText = champions.size;
+            document.getElementById('kpi-total-stores').innerText = activeStores.size;
         }
 
-        window.onload = function() {
+        window.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-        };
+            setInterval(fetchLiveData, 60000);
+        });
     </script>
 </body>
 </html>
