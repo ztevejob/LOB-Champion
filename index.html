@@ -1077,19 +1077,54 @@
             const uniqueChampions = new Set();
             const uniqueStores = new Set();
 
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+            const year = 2026;
+
+            const now = new Date();
+            let maxDay = now.getDate() - 1;
+
+            if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
+                maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
+            }
+
+            if (maxDay < 1) maxDay = 1;
+
+            // Hitung hanya data transaksi tanggal 1 s.d. Kemarin
             data.forEach(item => {
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
                 const name = extractName(item);
                 const store = extractStore(item);
+                const rawDateStr = extractDate(item);
 
                 if (name && name !== '-') uniqueChampions.add(name);
                 if (store && store !== '-') uniqueStores.add(store);
 
-                if (lob.includes('mac')) { totalMac += qty; if (qty > 0) trxMac++; }
-                else if (lob.includes('iphone')) { totalIphone += qty; if (qty > 0) trxIphone++; }
-                else if (lob.includes('ipad')) { totalIpad += qty; if (qty > 0) trxIpad++; }
-                else if (lob.includes('watch')) { totalWatch += qty; if (qty > 0) trxWatch++; }
+                let isWithinRange = false;
+                if (rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
+                        const dayNum = parsedDate.getDate();
+                        if (dayNum >= 1 && dayNum <= maxDay) {
+                            isWithinRange = true;
+                        }
+                    }
+                }
+
+                if (lob.includes('mac')) { 
+                    totalMac += qty; 
+                    if (qty > 0 && isWithinRange) trxMac++; 
+                } else if (lob.includes('iphone')) { 
+                    totalIphone += qty; 
+                    if (qty > 0 && isWithinRange) trxIphone++; 
+                } else if (lob.includes('ipad')) { 
+                    totalIpad += qty; 
+                    if (qty > 0 && isWithinRange) trxIpad++; 
+                } else if (lob.includes('watch')) { 
+                    totalWatch += qty; 
+                    if (qty > 0 && isWithinRange) trxWatch++; 
+                }
             });
 
             document.getElementById('kpi-total-mac').innerText = totalMac;
@@ -1097,9 +1132,7 @@
             document.getElementById('kpi-total-ipad').innerText = totalIpad;
             document.getElementById('kpi-total-watch').innerText = totalWatch;
 
-            // Mengambil tanggal hari ini lalu dikurangi 1 untuk hari yang sudah completed
-            const today = new Date();
-            const completedDays = Math.max(1, today.getDate() - 1); 
+            const completedDays = maxDay;
 
             // Kalkulasi Avg Unit & Trx / Hari
             document.getElementById('kpi-avg-mac').innerText = (totalMac / completedDays).toFixed(1);
@@ -1107,10 +1140,10 @@
             document.getElementById('kpi-avg-ipad').innerText = (totalIpad / completedDays).toFixed(1);
             document.getElementById('kpi-avg-watch').innerText = (totalWatch / completedDays).toFixed(1);
 
-            document.getElementById('kpi-trx-mac').innerText = Math.round(trxMac / completedDays);
-            document.getElementById('kpi-trx-iphone').innerText = Math.round(trxIphone / completedDays);
-            document.getElementById('kpi-trx-ipad').innerText = Math.round(trxIpad / completedDays);
-            document.getElementById('kpi-trx-watch').innerText = Math.round(trxWatch / completedDays);
+            document.getElementById('kpi-trx-mac').innerText = trxMac;
+            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
+            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
+            document.getElementById('kpi-trx-watch').innerText = trxWatch;
 
             document.getElementById('kpi-total-reports').innerText = data.length;
             document.getElementById('kpi-active-champions').innerText = uniqueChampions.size;
@@ -1210,7 +1243,7 @@
                 return;
             }
 
-            let text = `*REMINDER: REKAP TOKO BELUM SUBMIT LAPORAN HARI AN LOB CHAMPION*\n*(Tanggal 1 s.d. Kemarin)*\n\nDear All Champion / Store Manager,\nMohon bantuan untuk melengkapi pengisian laporan harian toko berikut yang belum di-submit:\n\n`;
+            let text = `*REMINDER: REKAP TOKO BELUM SUBMIT LAPORAN HARIAN LOB CHAMPION*\n*(Tanggal 1 s.d. Kemarin)*\n\nDear All Champion / Store Manager,\nMohon bantuan untuk melengkapi pengisian laporan harian toko berikut yang belum di-submit:\n\n`;
 
             unsubmittedStoresList.forEach((item, idx) => {
                 text += `${idx + 1}. *${item.store}*\n   *Tanggal Belum Submit*: ${item.formattedDates} (${item.missingDays.length} Hari)\n\n`;
@@ -1625,6 +1658,125 @@
             container.innerHTML = html;
         }
 
+        function renderTop10Sales(data) {
+            const tbody = document.getElementById('top10-sales-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const salesMap = {};
+            data.forEach(item => {
+                const name = extractName(item);
+                const store = extractStore(item);
+                const lob = extractLOB(item);
+                const qty = extractQuantity(item);
+
+                if (name && name !== '-') {
+                    const key = `${name.toLowerCase().trim()}___${store.toLowerCase().trim()}`;
+                    if (!salesMap[key]) {
+                        salesMap[key] = { name, store, lob, totalQty: 0 };
+                    }
+                    salesMap[key].totalQty += qty;
+                }
+            });
+
+            const top10 = Object.values(salesMap).sort((a, b) => b.totalQty - a.totalQty).slice(0, 10);
+
+            if (top10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Tidak ada data.</td></tr>';
+                return;
+            }
+
+            top10.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 font-mono font-bold text-center opacity-80">${index + 1}</td>
+                    <td class="p-2 font-bold text-indigo-600 dark:text-indigo-300">${item.name}</td>
+                    <td class="p-2">${item.store}</td>
+                    <td class="p-2 font-semibold">${item.lob}</td>
+                    <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${item.totalQty}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderTop10Stores(data) {
+            const tbody = document.getElementById('top10-stores-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const storeMap = {};
+            data.forEach(item => {
+                const store = extractStore(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                if (store && store !== '-') {
+                    const key = store.toLowerCase().trim();
+                    if (!storeMap[key]) {
+                        storeMap[key] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                    }
+
+                    if (lob.includes('mac')) storeMap[key].mac += qty;
+                    else if (lob.includes('iphone')) storeMap[key].iphone += qty;
+                    else if (lob.includes('ipad')) storeMap[key].ipad += qty;
+                    else if (lob.includes('watch')) storeMap[key].watch += qty;
+
+                    storeMap[key].total += qty;
+                }
+            });
+
+            const top10 = Object.values(storeMap).sort((a, b) => b.total - a.total).slice(0, 10);
+
+            if (top10.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Tidak ada data.</td></tr>';
+                return;
+            }
+
+            top10.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 font-mono font-bold text-center opacity-80">${index + 1}</td>
+                    <td class="p-2 font-bold text-indigo-600 dark:text-indigo-300">${item.store}</td>
+                    <td class="p-2 text-center font-semibold text-indigo-500">${item.mac}</td>
+                    <td class="p-2 text-center font-semibold text-blue-500">${item.iphone}</td>
+                    <td class="p-2 text-center font-semibold text-cyan-500">${item.ipad}</td>
+                    <td class="p-2 text-center font-semibold text-emerald-500">${item.watch}</td>
+                    <td class="p-2 text-center font-extrabold text-slate-900 dark:text-slate-100">${item.total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderRawDataTable(data) {
+            const tbody = document.getElementById('raw-data-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const top10Latest = [...data].reverse().slice(0, 10);
+
+            if (top10Latest.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Tidak ada transaksi.</td></tr>';
+                return;
+            }
+
+            top10Latest.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2 font-mono">${extractDate(item)}</td>
+                    <td class="p-2 font-bold">${extractName(item)}</td>
+                    <td class="p-2">${extractStore(item)}</td>
+                    <td class="p-2 font-semibold text-indigo-500">${extractLOB(item)}</td>
+                    <td class="p-2 text-center font-extrabold text-emerald-500">${extractQuantity(item)}</td>
+                    <td class="p-2 font-semibold">${extractShift(item)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         function renderCharts(data) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -1881,126 +2033,10 @@
             });
         }
 
-        function renderTop10Sales(data) {
-            const tbody = document.getElementById('top10-sales-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const champSales = {};
-            data.forEach(item => {
-                const name = extractName(item);
-                const store = extractStore(item);
-                const lob = extractLOB(item);
-                const qty = extractQuantity(item);
-
-                if (name && name !== '-') {
-                    const key = `${name}___${store}`;
-                    if (!champSales[key]) {
-                        champSales[key] = { name, store, lob, total: 0 };
-                    }
-                    champSales[key].total += qty;
-                }
-            });
-
-            const top10 = Object.values(champSales).sort((a, b) => b.total - a.total).slice(0, 10);
-
-            if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Data tidak ditemukan</td></tr>';
-                return;
-            }
-
-            top10.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 font-mono font-bold ${index < 3 ? 'text-amber-500 font-extrabold' : 'opacity-80'}">#${index + 1}</td>
-                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.name}</td>
-                    <td class="p-2 opacity-90">${item.store}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold text-[10px]">${item.lob}</span></td>
-                    <td class="p-2 text-center font-extrabold text-emerald-600 dark:text-emerald-400">${item.total}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderTop10Stores(data) {
-            const tbody = document.getElementById('top10-stores-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const storePerf = {};
-            data.forEach(item => {
-                const store = extractStore(item);
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-
-                if (store && store !== '-') {
-                    if (!storePerf[store]) {
-                        storePerf[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
-                    }
-                    if (lob.includes('mac')) storePerf[store].mac += qty;
-                    else if (lob.includes('iphone')) storePerf[store].iphone += qty;
-                    else if (lob.includes('ipad')) storePerf[store].ipad += qty;
-                    else if (lob.includes('watch')) storePerf[store].watch += qty;
-                    storePerf[store].total += qty;
-                }
-            });
-
-            const top10 = Object.entries(storePerf).map(([store, perf]) => ({ store, ...perf })).sort((a, b) => b.total - a.total).slice(0, 10);
-
-            if (top10.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Data tidak ditemukan</td></tr>';
-                return;
-            }
-
-            top10.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 font-mono font-bold ${index < 3 ? 'text-amber-500 font-extrabold' : 'opacity-80'}">#${index + 1}</td>
-                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
-                    <td class="p-2 text-center font-mono text-indigo-600 dark:text-indigo-400">${item.mac}</td>
-                    <td class="p-2 text-center font-mono text-blue-600 dark:text-blue-400">${item.iphone}</td>
-                    <td class="p-2 text-center font-mono text-cyan-600 dark:text-cyan-400">${item.ipad}</td>
-                    <td class="p-2 text-center font-mono text-emerald-600 dark:text-emerald-400">${item.watch}</td>
-                    <td class="p-2 text-center font-extrabold text-emerald-500">${item.total}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderRawDataTable(data) {
-            const tbody = document.getElementById('raw-data-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const top10Data = data.slice(0, 10);
-
-            if (top10Data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Data transaksi tidak ditemukan</td></tr>';
-                return;
-            }
-
-            top10Data.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2 font-mono">${extractDate(item)}</td>
-                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${extractName(item)}</td>
-                    <td class="p-2 opacity-90">${extractStore(item)}</td>
-                    <td class="p-2"><span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold text-[10px]">${extractLOB(item)}</span></td>
-                    <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${extractQuantity(item)}</td>
-                    <td class="p-2 font-semibold">${extractShift(item)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.onload = function() {
+        window.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-            setInterval(fetchLiveData, 60000);
-        };
+            setInterval(fetchLiveData, 300000);
+        });
     </script>
 </body>
 </html>
