@@ -84,6 +84,16 @@
             text-shadow: none;
         }
 
+        /* PERBAIKAN: Title Neon Red untuk Toko Belum Submit */
+        .neon-red-title {
+            color: #ff0055 !important;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.7), 0 0 20px rgba(255, 0, 85, 0.4) !important;
+        }
+        .light-mode .neon-red-title {
+            color: #e11d48 !important;
+            text-shadow: none !important;
+        }
+
         body:not(.light-mode) .neon-store-badge {
             color: #39ff14 !important;
             border-color: rgba(57, 255, 20, 0.4) !important;
@@ -426,8 +436,9 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
                         <div class="flex items-center gap-2">
                             <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
-                            <h3 class="font-bold text-sm text-rose-600 dark:text-rose-400 uppercase tracking-wide flex items-center gap-2">
-                                List Toko Belum Submit (Tgl 1 s.d. Kemarin)
+                            <!-- PERBAIKAN: Judul Merah Neon -->
+                            <h3 class="font-extrabold text-sm uppercase tracking-wide flex items-center gap-2 neon-red-title">
+                                LIST TOKO BELUM SUBMIT (TGL 1 S.D. KEMARIN)
                                 <span id="unsubmitted-stores-count" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
                             </h3>
                         </div>
@@ -505,54 +516,76 @@
 
             <!-- Section 2: Performa WoW -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
-                
-                <!-- SUMMARY TW vs LW UNTUK ALL LOB -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="glass-card p-4 flex flex-col justify-between">
-                        <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
-                            <span>Last Week (All LOB)</span>
-                            <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+                <!-- PERBAIKAN: Layout Side by Side untuk Chart WoW & Summary TW vs LW per LOB -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-sm flex items-center gap-2">
+                                <i data-lucide="trending-up" class="w-4 h-4 text-indigo-500"></i> Komparasi Global: Week Ini vs Week Sebelumnya (Per LOB)
+                            </h3>
+                            <span class="text-[10px] px-2 py-0.5 bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-bold rounded border border-indigo-500/30">Live WoW Chart</span>
                         </div>
-                        <div class="text-2xl font-black text-slate-300" id="summary-lw-total">0 Unit</div>
+                        <div class="h-72 relative"><canvas id="chartWoWGlobal"></canvas></div>
                     </div>
 
-                    <div class="glass-card p-4 flex flex-col justify-between">
-                        <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-indigo-400 mb-1">
-                            <span>This Week (All LOB)</span>
-                            <i data-lucide="zap" class="w-4 h-4 text-indigo-400"></i>
-                        </div>
-                        <div class="text-2xl font-black text-indigo-400" id="summary-tw-total">0 Unit</div>
-                    </div>
+                    <!-- Summary TW vs LW per LOB (Side-by-Side) -->
+                    <div class="glass-panel p-4 flex flex-col justify-between border-l-4 border-indigo-500">
+                        <div>
+                            <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
+                                <h3 class="font-bold text-sm text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                                    <i data-lucide="pie-chart" class="w-4 h-4"></i> Summary TW vs LW
+                                </h3>
+                                <span class="text-[10px] opacity-70 font-semibold">Per LOB Data</span>
+                            </div>
 
-                    <div class="glass-card p-4 flex flex-col justify-between">
-                        <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">
-                            <span>Growth WoW</span>
-                            <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400" id="summary-growth-icon"></i>
+                            <div class="space-y-2 text-xs" id="wow-summary-container">
+                                <!-- Dynamic Summary Content -->
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-indigo-600 dark:text-indigo-300">Mac</span>
+                                    <div class="text-right">
+                                        <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-blue-600 dark:text-blue-300">iPhone</span>
+                                    <div class="text-right">
+                                        <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-cyan-600 dark:text-cyan-300">iPad</span>
+                                    <div class="text-right">
+                                        <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-emerald-600 dark:text-emerald-300">Watch</span>
+                                    <div class="text-right">
+                                        <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-2xl font-black" id="summary-growth-unit">0 Unit</span>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded-full" id="summary-growth-pct">0%</span>
+
+                        <div class="mt-3 pt-3 border-t border-gray-500/20 bg-indigo-500/10 p-2.5 rounded-lg border border-indigo-500/20" id="wow-total-growth-box">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold">Total Unit Global</span>
+                                <span class="font-bold text-emerald-500" id="wow-total-growth-val">0 Unit</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- CHART KOMPARASI GLOBAL -->
-                <div class="glass-panel p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
-                            <i data-lucide="trending-up" class="w-4 h-4 text-indigo-500"></i> Komparasi Global: Week Ini vs Week Sebelumnya (Per LOB)
-                        </h3>
-                    </div>
-                    <div class="h-72 relative"><canvas id="chartWoWGlobal"></canvas></div>
-                </div>
-
-                <!-- TABEL DETAIL KOMPARASI PER STORE -->
                 <div class="glass-panel p-4">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-bold text-sm flex items-center gap-2">
                             <i data-lucide="store" class="w-4 h-4 text-purple-500"></i> Detail Komparasi per Store (This Week vs Last Week)
                         </h3>
-                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge">Total 98 Store</span>
+                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total 98 Store</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[650px]">
@@ -861,15 +894,6 @@
             return isNaN(standardDate.getTime()) ? null : standardDate;
         }
 
-        // Fungsi bantu mendapatkan nomor ISO Week
-        function getWeekNumber(date) {
-            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-            const dayNum = d.getUTCDay() || 7;
-            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-        }
-
         function extractLOB(item) {
             if (!item) return '-';
             const keys = Object.keys(item);
@@ -1104,7 +1128,7 @@
 
             updateMetricsAndCharts(filteredData);
             renderUnsubmittedStoresTable(filteredData);
-            renderWoWStoreTable(filteredData);
+            renderWoWStoreTable(rawCSVData); // Gunakan rawCSVData agar kalkulasi tanggal LW/TW utuh
             renderComplianceMatrix(filteredData);
             renderLateChampionsTable(filteredData);
             renderTop10Sales(filteredData);
@@ -1932,24 +1956,35 @@
                 });
             }
 
-            // PERBAIKAN WOW DENGAN PENENTUAN ISO WEEK NUMBER
+            // PERBAIKAN: Hitung Data WoW Menggunakan Raw Data Utuh agar Week Lalu (LW) Tidak Terpotong Filter Bulan
             const now = new Date();
-            const currentWeek = getWeekNumber(now);
-            const previousWeek = currentWeek - 1;
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+            
+            const startTW = new Date(today);
+            startTW.setDate(today.getDate() - 6);
+            startTW.setHours(0, 0, 0, 0);
+
+            const endLW = new Date(startTW);
+            endLW.setMilliseconds(-1);
+
+            const startLW = new Date(endLW);
+            startLW.setDate(endLW.getDate() - 6);
+            startLW.setHours(0, 0, 0, 0);
 
             const wowData = { LW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 }, TW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 } };
 
-            data.forEach(item => {
+            rawCSVData.forEach(item => {
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
                 const rowDate = parseCustomDate(extractDate(item));
 
                 if (rowDate) {
-                    const rowWeek = getWeekNumber(rowDate);
                     let period = null;
-                    
-                    if (rowWeek === currentWeek) period = 'TW';
-                    else if (rowWeek === previousWeek) period = 'LW';
+                    if (rowDate >= startLW && rowDate <= endLW) {
+                        period = 'LW';
+                    } else if (rowDate >= startTW && rowDate <= today) {
+                        period = 'TW';
+                    }
 
                     if (period) {
                         if (lob.includes('mac')) wowData[period].Mac += qty;
@@ -1960,21 +1995,8 @@
                 }
             });
 
-            // UPDATE SUMMARY CARD PERFORMA ALL LOB
-            const totalLW = Object.values(wowData.LW).reduce((a, b) => a + b, 0);
-            const totalTW = Object.values(wowData.TW).reduce((a, b) => a + b, 0);
-            const totalGrowth = totalTW - totalLW;
-            const growthPct = totalLW > 0 ? ((totalGrowth / totalLW) * 100).toFixed(1) : (totalTW > 0 ? '100' : '0');
-
-            document.getElementById('summary-lw-total').innerText = `${totalLW} Unit`;
-            document.getElementById('summary-tw-total').innerText = `${totalTW} Unit`;
-            document.getElementById('summary-growth-unit').innerText = `${totalGrowth > 0 ? '+' : ''}${totalGrowth} Unit`;
-            
-            const pctEl = document.getElementById('summary-growth-pct');
-            if (pctEl) {
-                pctEl.innerText = `${totalGrowth >= 0 ? '+' : ''}${growthPct}%`;
-                pctEl.className = `text-xs font-bold px-2 py-0.5 rounded-full ${totalGrowth >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
-            }
+            // PERBAIKAN: Render Summary Side-by-Side WoW
+            renderWoWSummary(wowData);
 
             if (chartInstances.wow) chartInstances.wow.destroy();
             const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
@@ -1984,8 +2006,8 @@
                     data: {
                         labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [
-                            { label: 'Last Week', data: Object.values(wowData.LW), backgroundColor: '#94a3b8' },
-                            { label: 'This Week', data: Object.values(wowData.TW), backgroundColor: '#6366f1' }
+                            { label: 'Last Week (LW)', data: Object.values(wowData.LW), backgroundColor: '#94a3b8', borderRadius: 4 },
+                            { label: 'This Week (TW)', data: Object.values(wowData.TW), backgroundColor: '#6366f1', borderRadius: 4 }
                         ]
                     },
                     options: {
@@ -1997,7 +2019,8 @@
                                 anchor: 'center',
                                 align: 'center',
                                 color: '#ffffff',
-                                font: { weight: 'bold', size: 10 }
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val > 0 ? val : ''
                             }
                         },
                         scales: {
@@ -2009,14 +2032,74 @@
             }
         }
 
+        // PERBAIKAN: Fungsi Khusus Render Summary WoW Side-by-Side
+        function renderWoWSummary(wowData) {
+            const container = document.getElementById('wow-summary-container');
+            const totalGrowthBox = document.getElementById('wow-total-growth-val');
+            if (!container) return;
+
+            const lobs = [
+                { name: 'Mac', color: 'text-indigo-600 dark:text-indigo-300' },
+                { name: 'iPhone', color: 'text-blue-600 dark:text-blue-300' },
+                { name: 'iPad', color: 'text-cyan-600 dark:text-cyan-300' },
+                { name: 'Watch', color: 'text-emerald-600 dark:text-emerald-300' }
+            ];
+
+            let html = '';
+            let totalLW = 0, totalTW = 0;
+
+            lobs.forEach(lob => {
+                const lw = wowData.LW[lob.name] || 0;
+                const tw = wowData.TW[lob.name] || 0;
+                totalLW += lw;
+                totalTW += tw;
+
+                const diff = tw - lw;
+                let pct = lw > 0 ? ((diff / lw) * 100).toFixed(1) : (tw > 0 ? '+100' : '0');
+                const isPositive = diff >= 0;
+                const badgeClass = isPositive ? 'text-emerald-500' : 'text-rose-500';
+                const sign = isPositive ? '+' : '';
+
+                html += `
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <span class="font-bold ${lob.color}">${lob.name}</span>
+                        <div class="text-right">
+                            <span class="font-mono text-slate-400">LW: ${lw}</span> <span class="mx-1 opacity-50">→</span> <span class="font-bold">TW: ${tw}</span>
+                            <span class="block text-[10px] font-extrabold ${badgeClass}">${sign}${diff} (${sign}${pct}%)</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            if (totalGrowthBox) {
+                const totalDiff = totalTW - totalLW;
+                const totalSign = totalDiff >= 0 ? '+' : '';
+                const totalClass = totalDiff >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                totalGrowthBox.innerHTML = `<span class="${totalClass}">${totalTW} Unit (${totalSign}${totalDiff} WoW)</span>`;
+            }
+        }
+
+        // PERBAIKAN: Render Tabel Store WoW Menggunakan Date Range yang Tepat
         function renderWoWStoreTable(data) {
             const tbody = document.getElementById('wow-store-table-body');
             if (!tbody) return;
             tbody.innerHTML = '';
 
             const now = new Date();
-            const currentWeek = getWeekNumber(now);
-            const previousWeek = currentWeek - 1;
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+            const startTW = new Date(today);
+            startTW.setDate(today.getDate() - 6);
+            startTW.setHours(0, 0, 0, 0);
+
+            const endLW = new Date(startTW);
+            endLW.setMilliseconds(-1);
+
+            const startLW = new Date(endLW);
+            startLW.setDate(endLW.getDate() - 6);
+            startLW.setHours(0, 0, 0, 0);
 
             const storeWoW = {};
             
@@ -2037,7 +2120,16 @@
                 const qty = extractQuantity(item);
                 const rowDate = parseCustomDate(extractDate(item));
 
-                if (!rawStore || rawStore === '-') return;
+                if (!rawStore || rawStore === '-' || !rowDate) return;
+
+                let period = null;
+                if (rowDate >= startLW && rowDate <= endLW) {
+                    period = 'lw';
+                } else if (rowDate >= startTW && rowDate <= today) {
+                    period = 'tw';
+                }
+
+                if (!period) return;
 
                 const matchedMasterStore = MASTER_STORES.find(s => 
                     s.toLowerCase().trim() === rawStore.toLowerCase().trim() ||
@@ -2056,26 +2148,21 @@
                     };
                 }
 
-                if (rowDate) {
-                    const rowWeek = getWeekNumber(rowDate);
-                    let period = null;
+                if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
+                else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
+                else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
+                else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
 
-                    if (rowWeek === currentWeek) period = 'tw';
-                    else if (rowWeek === previousWeek) period = 'lw';
-
-                    if (period) {
-                        if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
-                        else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
-                        else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
-                        else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
-
-                        if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
-                        else storeWoW[matchedMasterStore].totalTW += qty;
-                    }
-                }
+                if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
+                else storeWoW[matchedMasterStore].totalTW += qty;
             });
 
             const sortedStores = Object.keys(storeWoW).sort((a, b) => storeWoW[b].totalTW - storeWoW[a].totalTW);
+
+            const countBadge = document.getElementById('wow-store-total-badge');
+            if (countBadge) {
+                countBadge.innerText = `Total ${sortedStores.length} Store`;
+            }
 
             sortedStores.forEach((storeName, index) => {
                 const s = storeWoW[storeName];
