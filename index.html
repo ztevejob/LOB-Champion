@@ -246,6 +246,44 @@
                     <i data-lucide="database" class="w-4 h-4 shrink-0"></i> Log Transaksi
                 </button>
             </nav>
+
+            <!-- Summary WoW untuk All LOB di Sidebar -->
+            <div class="mt-4 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 space-y-2">
+                <div class="flex items-center justify-between border-b border-gray-500/20 pb-1">
+                    <span class="text-[11px] font-bold tracking-wider uppercase text-indigo-400">Summary WoW</span>
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5 text-indigo-400"></i>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+                    <div class="bg-black/10 dark:bg-white/5 p-1.5 rounded">
+                        <span class="opacity-70 block">Mac</span>
+                        <div class="flex justify-between font-bold">
+                            <span id="sb-wow-mac-lw">0</span> → <span id="sb-wow-mac-tw" class="text-indigo-400">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/10 dark:bg-white/5 p-1.5 rounded">
+                        <span class="opacity-70 block">iPhone</span>
+                        <div class="flex justify-between font-bold">
+                            <span id="sb-wow-iphone-lw">0</span> → <span id="sb-wow-iphone-tw" class="text-blue-400">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/10 dark:bg-white/5 p-1.5 rounded">
+                        <span class="opacity-70 block">iPad</span>
+                        <div class="flex justify-between font-bold">
+                            <span id="sb-wow-ipad-lw">0</span> → <span id="sb-wow-ipad-tw" class="text-cyan-400">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/10 dark:bg-white/5 p-1.5 rounded">
+                        <span class="opacity-70 block">Watch</span>
+                        <div class="flex justify-between font-bold">
+                            <span id="sb-wow-watch-lw">0</span> → <span id="sb-wow-watch-tw" class="text-emerald-400">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-indigo-600/20 p-1.5 rounded text-[11px] flex justify-between items-center font-bold">
+                    <span>Total Growth</span>
+                    <span id="sb-wow-total-growth" class="neon-green-text">0%</span>
+                </div>
+            </div>
         </div>
 
         <div class="pt-4 mt-4 border-t border-gray-500/20 hidden lg:block">
@@ -1777,6 +1815,30 @@
             });
         }
 
+        function getWoWPeriods() {
+            // Menentukan acuan tanggal terbaru dari data atau hari ini
+            let maxDate = new Date();
+            if (rawCSVData.length > 0) {
+                let latestParsed = null;
+                rawCSVData.forEach(item => {
+                    const d = parseCustomDate(extractDate(item));
+                    if (d && (!latestParsed || d > latestParsed)) latestParsed = d;
+                });
+                if (latestParsed) maxDate = latestParsed;
+            }
+
+            const currentDay = maxDate.getDay(); // 0: Sun, 1: Mon, ...
+            const diffToMon = (currentDay === 0 ? 6 : currentDay - 1);
+            
+            const startTW = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate() - diffToMon, 0, 0, 0);
+            const endTW = new Date(startTW.getFullYear(), startTW.getMonth(), startTW.getDate() + 7, 0, 0, 0);
+            
+            const startLW = new Date(startTW.getFullYear(), startTW.getMonth(), startTW.getDate() - 7, 0, 0, 0);
+            const endLW = startTW;
+
+            return { startTW, endTW, startLW, endLW };
+        }
+
         function renderCharts(data) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -1892,10 +1954,8 @@
                 });
             }
 
-            const now = new Date();
-            const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
-            const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(now.getDate() - 14);
-
+            // --- PERBAIKAN LOGIKA WOW GLOBAL ---
+            const { startTW, endTW, startLW, endLW } = getWoWPeriods();
             const wowData = { LW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 }, TW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 } };
 
             data.forEach(item => {
@@ -1903,17 +1963,39 @@
                 const qty = extractQuantity(item);
                 const rowDate = parseCustomDate(extractDate(item));
 
-                let period = 'TW';
                 if (rowDate) {
-                    if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) period = 'LW';
-                    else if (rowDate >= oneWeekAgo) period = 'TW';
-                }
+                    let period = null;
+                    if (rowDate >= startTW && rowDate < endTW) period = 'TW';
+                    else if (rowDate >= startLW && rowDate < endLW) period = 'LW';
 
-                if (lob.includes('mac')) wowData[period].Mac += qty;
-                else if (lob.includes('iphone')) wowData[period].iPhone += qty;
-                else if (lob.includes('ipad')) wowData[period].iPad += qty;
-                else if (lob.includes('watch')) wowData[period].Watch += qty;
+                    if (period) {
+                        if (lob.includes('mac')) wowData[period].Mac += qty;
+                        else if (lob.includes('iphone')) wowData[period].iPhone += qty;
+                        else if (lob.includes('ipad')) wowData[period].iPad += qty;
+                        else if (lob.includes('watch')) wowData[period].Watch += qty;
+                    }
+                }
             });
+
+            // Update Summary di Sidebar
+            document.getElementById('sb-wow-mac-lw').innerText = wowData.LW.Mac;
+            document.getElementById('sb-wow-mac-tw').innerText = wowData.TW.Mac;
+            document.getElementById('sb-wow-iphone-lw').innerText = wowData.LW.iPhone;
+            document.getElementById('sb-wow-iphone-tw').innerText = wowData.TW.iPhone;
+            document.getElementById('sb-wow-ipad-lw').innerText = wowData.LW.iPad;
+            document.getElementById('sb-wow-ipad-tw').innerText = wowData.TW.iPad;
+            document.getElementById('sb-wow-watch-lw').innerText = wowData.LW.Watch;
+            document.getElementById('sb-wow-watch-tw').innerText = wowData.TW.Watch;
+
+            const totalLW = wowData.LW.Mac + wowData.LW.iPhone + wowData.LW.iPad + wowData.LW.Watch;
+            const totalTW = wowData.TW.Mac + wowData.TW.iPhone + wowData.TW.iPad + wowData.TW.Watch;
+            let growthTotal = totalLW > 0 ? (((totalTW - totalLW) / totalLW) * 100).toFixed(1) : (totalTW > 0 ? 100 : 0);
+            
+            const growthEl = document.getElementById('sb-wow-total-growth');
+            if (growthEl) {
+                growthEl.innerText = `${growthTotal > 0 ? '+' : ''}${growthTotal}%`;
+                growthEl.className = growthTotal >= 0 ? 'neon-green-text' : 'text-rose-500 font-bold';
+            }
 
             if (chartInstances.wow) chartInstances.wow.destroy();
             const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
@@ -1953,10 +2035,7 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const now = new Date();
-            const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
-            const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(now.getDate() - 14);
-
+            const { startTW, endTW, startLW, endLW } = getWoWPeriods();
             const storeWoW = {};
             
             MASTER_STORES.forEach(store => {
@@ -1976,66 +2055,57 @@
                 const qty = extractQuantity(item);
                 const rowDate = parseCustomDate(extractDate(item));
 
-                if (!rawStore || rawStore === '-') return;
+                if (rawStore && rawStore !== '-' && rowDate) {
+                    const storeKey = rawStore.toLowerCase().trim();
+                    const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === storeKey || ms.toLowerCase().includes(storeKey) || storeKey.includes(ms.toLowerCase()));
+                    
+                    if (matchedStore) {
+                        let period = null;
+                        if (rowDate >= startTW && rowDate < endTW) period = 'tw';
+                        else if (rowDate >= startLW && rowDate < endLW) period = 'lw';
 
-                const matchedMasterStore = MASTER_STORES.find(s => 
-                    s.toLowerCase().trim() === rawStore.toLowerCase().trim() ||
-                    s.toLowerCase().includes(rawStore.toLowerCase()) || 
-                    rawStore.toLowerCase().includes(s.toLowerCase())
-                ) || rawStore;
+                        if (period) {
+                            if (lob.includes('mac')) storeWoW[matchedStore].mac[period] += qty;
+                            else if (lob.includes('iphone')) storeWoW[matchedStore].iphone[period] += qty;
+                            else if (lob.includes('ipad')) storeWoW[matchedStore].ipad[period] += qty;
+                            else if (lob.includes('watch')) storeWoW[matchedStore].watch[period] += qty;
 
-                if (!storeWoW[matchedMasterStore]) {
-                    storeWoW[matchedMasterStore] = {
-                        mac: { lw: 0, tw: 0 },
-                        iphone: { lw: 0, tw: 0 },
-                        ipad: { lw: 0, tw: 0 },
-                        watch: { lw: 0, tw: 0 },
-                        totalLW: 0,
-                        totalTW: 0
-                    };
+                            if (period === 'tw') storeWoW[matchedStore].totalTW += qty;
+                            if (period === 'lw') storeWoW[matchedStore].totalLW += qty;
+                        }
+                    }
                 }
-
-                let period = 'tw';
-                if (rowDate) {
-                    if (rowDate >= twoWeeksAgo && rowDate < oneWeekAgo) period = 'lw';
-                    else if (rowDate >= oneWeekAgo) period = 'tw';
-                }
-
-                if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
-                else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
-                else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
-                else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
-
-                if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
-                else storeWoW[matchedMasterStore].totalTW += qty;
             });
 
             const sortedStores = Object.keys(storeWoW).sort((a, b) => storeWoW[b].totalTW - storeWoW[a].totalTW);
 
-            sortedStores.forEach((storeName, index) => {
-                const s = storeWoW[storeName];
-                const growth = s.totalTW - s.totalLW;
-                const growthText = growth > 0 ? `+${growth}` : `${growth}`;
-                const growthClass = growth > 0 ? 'text-emerald-500 font-bold' : (growth < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
+            sortedStores.forEach((store, index) => {
+                const item = storeWoW[store];
+                const growth = item.totalLW > 0 ? (((item.totalTW - item.totalLW) / item.totalLW) * 100).toFixed(0) : (item.totalTW > 0 ? 100 : 0);
+                const isPositive = growth >= 0;
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${storeName}</td>
-                    <td class="p-2.5 text-center font-mono">${s.mac.lw} / <span class="font-bold text-indigo-600 dark:text-indigo-400">${s.mac.tw}</span></td>
-                    <td class="p-2.5 text-center font-mono">${s.iphone.lw} / <span class="font-bold text-blue-600 dark:text-blue-400">${s.iphone.tw}</span></td>
-                    <td class="p-2.5 text-center font-mono">${s.ipad.lw} / <span class="font-bold text-cyan-600 dark:text-cyan-400">${s.ipad.tw}</span></td>
-                    <td class="p-2.5 text-center font-mono">${s.watch.lw} / <span class="font-bold text-emerald-600 dark:text-emerald-400">${s.watch.tw}</span></td>
-                    <td class="p-2.5 text-center ${growthClass}">${growthText}</td>
+                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${store}</td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-70">${item.mac.lw}</span> / <span class="font-bold text-indigo-500">${item.mac.tw}</span></td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-70">${item.iphone.lw}</span> / <span class="font-bold text-blue-500">${item.iphone.tw}</span></td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-70">${item.ipad.lw}</span> / <span class="font-bold text-cyan-500">${item.ipad.tw}</span></td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-70">${item.watch.lw}</span> / <span class="font-bold text-emerald-500">${item.watch.tw}</span></td>
+                    <td class="p-2.5 text-center font-bold">
+                        <span class="px-2 py-0.5 rounded text-[11px] font-extrabold ${isPositive ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30'}">
+                            ${isPositive ? '+' : ''}${growth}%
+                        </span>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000);
         });
     </script>
 </body>
