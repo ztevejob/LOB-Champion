@@ -117,6 +117,29 @@
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
         }
 
+        body:not(.light-mode) .matrix-symbol-yes {
+            background-color: rgba(57, 255, 20, 0.2) !important;
+            color: #39ff14 !important;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+        }
+
+        body:not(.light-mode) .matrix-symbol-no {
+            background-color: rgba(244, 63, 94, 0.25) !important;
+            color: #fda4af !important;
+        }
+
+        .light-mode .matrix-symbol-yes {
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+
+        .light-mode .matrix-symbol-no {
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+            font-weight: bold;
+        }
+
         body {
             background: var(--bg-gradient);
             color: var(--text-main);
@@ -152,6 +175,11 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
         .nav-active {
             background-color: rgba(99, 102, 241, 0.25) !important;
             color: var(--accent) !important;
@@ -163,7 +191,6 @@
             background-color: var(--header-bg) !important;
         }
 
-        /* Mobile Bottom Dock Navigation */
         .mobile-dock {
             position: fixed;
             bottom: 0;
@@ -193,9 +220,6 @@
             padding: 4px 8px;
             border-radius: 8px;
             transition: all 0.2s ease;
-            background: transparent;
-            border: none;
-            cursor: pointer;
         }
 
         .dock-item.active {
@@ -237,32 +261,32 @@
                 <div class="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span data-i18n="autoSync">Auto Sync</span>
+                        <span>Auto Sync</span>
                     </div>
                     <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
                 </div>
 
                 <button onclick="resetFilters()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold hover:bg-rose-500/30 transition">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                    <span data-i18n="resetFilter">Reset Filter</span>
+                    <span>Reset Filter</span>
                 </button>
             </div>
 
             <nav class="flex flex-col gap-1.5" id="sidebar-nav">
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span data-i18n="overview">Overview</span>
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> Overview
                 </button>
                 <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> <span data-i18n="wowPerf">WoW Perf.</span>
+                    <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> WoW Perf.
                 </button>
                 <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> <span data-i18n="compliance">Kedisiplinan</span>
+                    <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> Kedisiplinan
                 </button>
                 <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span data-i18n="logTrans">Log Transaksi</span>
+                    <i data-lucide="database" class="w-4 h-4 shrink-0"></i> Log Transaksi
                 </button>
                 <button onclick="showSection('settings')" id="btn-settings" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="settings" class="w-4 h-4 shrink-0"></i> <span data-i18n="settings">Pengaturan</span>
+                    <i data-lucide="settings" class="w-4 h-4 shrink-0"></i> Pengaturan
                 </button>
             </nav>
         </div>
@@ -286,27 +310,27 @@
         </div>
     </div>
 
-    <!-- Mobile Bottom Dock (Diperbarui dengan Pengaturan) -->
+    <!-- Mobile Bottom Dock -->
     <div class="mobile-dock lg:hidden">
         <button onclick="showSection('overview')" id="dock-overview" class="dock-item active">
-            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-            <span data-i18n="overview">Overview</span>
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            <span>Overview</span>
         </button>
         <button onclick="showSection('wow-perf')" id="dock-wow-perf" class="dock-item">
-            <i data-lucide="trending-up" class="w-4 h-4"></i>
-            <span data-i18n="wowPerf">WoW</span>
+            <i data-lucide="trending-up" class="w-5 h-5"></i>
+            <span>WoW</span>
         </button>
         <button onclick="showSection('compliance')" id="dock-compliance" class="dock-item">
-            <i data-lucide="calendar-check" class="w-4 h-4"></i>
-            <span data-i18n="compliance">Disiplin</span>
+            <i data-lucide="calendar-check" class="w-5 h-5"></i>
+            <span>Kedisiplinan</span>
         </button>
         <button onclick="showSection('raw-data')" id="dock-raw-data" class="dock-item">
-            <i data-lucide="database" class="w-4 h-4"></i>
-            <span data-i18n="logTrans">Log</span>
+            <i data-lucide="database" class="w-5 h-5"></i>
+            <span>Log Trans.</span>
         </button>
         <button onclick="showSection('settings')" id="dock-settings" class="dock-item">
-            <i data-lucide="settings" class="w-4 h-4"></i>
-            <span data-i18n="settings">Pengaturan</span>
+            <i data-lucide="settings" class="w-5 h-5"></i>
+            <span>Pengaturan</span>
         </button>
     </div>
 
@@ -319,7 +343,7 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full md:w-auto text-xs">
                 <div>
-                    <label class="block opacity-90 mb-1 text-[10px] font-bold" data-i18n="filterMonth">Filter Month</label>
+                    <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Month</label>
                     <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
                         <option value="ALL">Semua Bulan</option>
                         <option value="01">Januari</option>
@@ -337,19 +361,19 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block opacity-90 mb-1 text-[10px] font-bold" data-i18n="filterStore">Filter Store</label>
+                    <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Store</label>
                     <select id="filter-store" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
                         <option value="ALL">Semua Store</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block opacity-90 mb-1 text-[10px] font-bold" data-i18n="filterLOB">Filter LOB</label>
+                    <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter LOB</label>
                     <select id="filter-lob" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
                         <option value="ALL">Semua LOB</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block opacity-90 mb-1 text-[10px] font-bold" data-i18n="filterShift">Filter Shift</label>
+                    <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Shift</label>
                     <select id="filter-shift" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
                         <option value="ALL">Semua Shift</option>
                     </select>
@@ -618,7 +642,7 @@
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 
-                <!-- Compliance Summary Cards -->
+                <!-- Compliance Summary Cards (Dedicated Summary di Kedisiplinan) -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-rose-500">
                         <span class="text-[11px] opacity-80 font-bold uppercase">Toko Belum Submit (s.d. Kemarin)</span>
@@ -634,7 +658,7 @@
                     </div>
                 </div>
 
-                <!-- List Toko Belum Submit -->
+                <!-- Dipindahkan: List Toko Belum Submit (Akumulasi Tanggal 1 s.d. Kemarin) -->
                 <div class="glass-panel p-4 border-l-4 border-rose-500">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
                         <div class="flex items-center gap-2">
@@ -835,45 +859,51 @@
                 </div>
             </div>
 
-            <!-- Section 5: Pengaturan (Settings) -->
+            <!-- Section 5: Pengaturan -->
             <div id="sec-settings" class="content-section hidden space-y-4">
                 <div class="glass-panel p-6 max-w-2xl mx-auto space-y-6">
-                    <div class="border-b border-gray-500/20 pb-4">
-                        <h3 class="text-lg font-bold flex items-center gap-2" data-i18n="settings">
-                            <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i> Pengaturan Dashboard
-                        </h3>
-                        <p class="text-xs opacity-70 mt-1">Atur preferensi tampilan, bahasa, serta informasi aplikasi.</p>
+                    <div class="flex items-center gap-3 pb-4 border-b border-gray-500/20">
+                        <div class="p-2.5 bg-indigo-600 rounded-lg text-white">
+                            <i data-lucide="settings" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base leading-tight">Pengaturan Dashboard</h3>
+                            <p class="text-xs text-indigo-400 font-medium">Kustomisasi preferensi tampilan dan bahasa</p>
+                        </div>
                     </div>
 
-                    <!-- Pilihan Mode Tampilan -->
+                    <!-- Pilihan Bahasa -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+                            <i data-lucide="globe" class="w-4 h-4"></i> Pilih Bahasa / Select Language
+                        </label>
+                        <select id="setting-language" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="id" selected>Bahasa Indonesia</option>
+                            <option value="en">English</option>
+                            <option value="in">India (हिन्दी)</option>
+                        </select>
+                    </div>
+
+                    <!-- Mode Tampilan (Gelap / Terang) -->
                     <div class="flex items-center justify-between p-3 rounded-lg bg-black/5 dark:bg-white/5 border border-gray-500/10">
-                        <div>
-                            <p class="text-sm font-bold" data-i18n="themeSetting">Mode Tampilan</p>
-                            <p class="text-xs opacity-70">Ubah antara Mode Gelap dan Mode Terang.</p>
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="moon" id="setting-theme-icon" class="w-5 h-5 text-indigo-400"></i>
+                            <div>
+                                <p class="text-xs font-bold">Mode Tampilan</p>
+                                <p class="text-[10px] opacity-70">Alihkan antara Mode Gelap dan Mode Terang</p>
+                            </div>
                         </div>
-                        <button onclick="toggleTheme()" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition">
-                            <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+                        <button onclick="toggleTheme()" class="px-3 py-1.5 rounded-lg glass-card text-xs font-bold hover:bg-black/10 dark:hover:bg-white/10 transition border border-gray-500/20">
                             <span id="theme-text">Mode Gelap</span>
                         </button>
                     </div>
 
-                    <!-- Pilihan Bahasa -->
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-black/5 dark:bg-white/5 border border-gray-500/10">
-                        <div>
-                            <p class="text-sm font-bold" data-i18n="langSetting">Bahasa / Language</p>
-                            <p class="text-xs opacity-70">Pilih bahasa tampilan untuk dashboard.</p>
+                    <!-- Concept & Curation Credit -->
+                    <div class="pt-4 border-t border-gray-500/20">
+                        <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1">
+                            <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
+                            <p class="text-sm font-extrabold neon-green-text">Novi Riyanto</p>
                         </div>
-                        <select id="setting-language" onchange="changeLanguage(this.value)" class="bg-slate-900/50 border border-gray-500/20 rounded-lg px-3 py-1.5 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                            <option value="id" selected>Bahasa Indonesia 🇮🇩</option>
-                            <option value="en">English 🇬🇧</option>
-                            <option value="hi">Hindi (हिंदी) 🇮🇳</option>
-                        </select>
-                    </div>
-
-                    <!-- Dipindahkan: Concept & Curation Credit -->
-                    <div class="p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1 mt-6">
-                        <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
-                        <p class="text-sm font-extrabold neon-green-text">Novi Riyanto</p>
                     </div>
                 </div>
             </div>
@@ -926,64 +956,176 @@
         let rawCSVData = [];
         let filteredData = [];
         let chartInstances = {};
+        let lateChampionsList = [];
+        let lateStoresSummaryList = [];
+        let lateChampionSummaryList = [];
+        let unsubmittedStoresList = [];
+        let logTransaksiStoresData = [];
 
-        // Translation Dictionary (ID, EN, HI)
-        const i18n = {
-            id: {
-                overview: "Overview",
-                wowPerf: "WoW Perf.",
-                compliance: "Kedisiplinan",
-                logTrans: "Log Transaksi",
-                settings: "Pengaturan",
-                autoSync: "Auto Sync",
-                resetFilter: "Reset Filter",
-                filterMonth: "Filter Bulan",
-                filterStore: "Filter Toko",
-                filterLOB: "Filter LOB",
-                filterShift: "Filter Shift",
-                themeSetting: "Mode Tampilan",
-                langSetting: "Bahasa / Language"
-            },
-            en: {
-                overview: "Overview",
-                wowPerf: "WoW Perf.",
-                compliance: "Compliance",
-                logTrans: "Transaction Log",
-                settings: "Settings",
-                autoSync: "Auto Sync",
-                resetFilter: "Reset Filter",
-                filterMonth: "Filter Month",
-                filterStore: "Filter Store",
-                filterLOB: "Filter LOB",
-                filterShift: "Filter Shift",
-                themeSetting: "Display Theme",
-                langSetting: "Language"
-            },
-            hi: {
-                overview: "अवलोकन",
-                wowPerf: "WoW प्रदर्शन",
-                compliance: "अनुपालन",
-                logTrans: "लेन-देन लॉग",
-                settings: "सेटिंग्स",
-                autoSync: "ऑटो सिंक",
-                resetFilter: "फ़िल्टर रीसेट",
-                filterMonth: "माह फ़िल्टर",
-                filterStore: "स्टोर फ़िल्टर",
-                filterLOB: "LOB फ़िल्टर",
-                filterShift: "शिफ्ट फ़िल्टर",
-                themeSetting: "प्रदर्शन मोड",
-                langSetting: "भाषा"
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
             }
-        };
+        }
 
-        function changeLanguage(langKey) {
-            const langData = i18n[langKey] || i18n.id;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (langData[key]) {
-                    el.innerText = langData[key];
+        window.onclick = function(event) {
+            if (!event.target.matches('button') && !event.target.closest('button')) {
+                const dropdowns = document.getElementsByClassName("z-50");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    let openDropdown = dropdowns[i];
+                    if (!openDropdown.classList.contains('hidden')) {
+                        openDropdown.classList.add('hidden');
+                    }
                 }
-            });
+            }
+        }
+
+        function parseQuantity(val) {
+            if (val === undefined || val === null) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            let str = String(val).trim();
+            if (str === '') return 0;
+            str = str.replace(/[^0-9.-]/g, '');
+            const parsed = parseInt(str, 10);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function parseCustomDate(dateStr) {
+            if (!dateStr) return null;
+            let str = String(dateStr).trim();
+            if (!str) return null;
+            
+            let timePart = "";
+            if (str.includes(' ')) {
+                const parts = str.split(' ');
+                str = parts[0];
+                timePart = parts[1] || "";
+            }
+
+            let year, month, day;
+            if (str.includes('/') || str.includes('-')) {
+                const parts = str.split(/[\/\-]/);
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) {
+                        year = parseInt(parts[0], 10);
+                        month = parseInt(parts[1], 10) - 1;
+                        day = parseInt(parts[2], 10);
+                    } else {
+                        year = parseInt(parts[2], 10);
+                        if (year < 100) year += 2000;
+                        month = parseInt(parts[1], 10) - 1;
+                        day = parseInt(parts[0], 10);
+                    }
+                }
+            }
+
+            let hours = 0, minutes = 0, seconds = 0;
+            if (timePart && timePart.includes(':')) {
+                const t = timePart.split(':');
+                hours = parseInt(t[0], 10) || 0;
+                minutes = parseInt(t[1], 10) || 0;
+                seconds = parseInt(t[2], 10) || 0;
+            }
+
+            if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                return new Date(year, month, day, hours, minutes, seconds);
+            }
+
+            const standardDate = new Date(dateStr);
+            return isNaN(standardDate.getTime()) ? null : standardDate;
+        }
+
+        function extractLOB(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'champion lob' || cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('produk')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Champion LOB'] || item.LOB || '-';
+        }
+
+        function extractName(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if ((cleanKey.includes('nama') || cleanKey.includes('champion') || cleanKey.includes('sa')) && !cleanKey.includes('toko') && !cleanKey.includes('store') && !cleanKey.includes('email')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Nama Champion/ SA'] || item['Nama Champion'] || item.Nama || '-';
+        }
+
+        function extractStore(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'store' || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
+                    const val = item[k];
+                    if (val !== undefined && val !== null && String(val).trim() !== '') {
+                        return String(val).trim();
+                    }
+                }
+            }
+            return item.Store ? String(item.Store).trim() : '-';
+        }
+
+        function extractQuantity(item) {
+            if (!item) return 0;
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'total qty' || cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah')) {
+                    return parseQuantity(item[k]);
+                }
+            }
+            return parseQuantity(item['Total Qty'] || item.Qty || item.Quantity || 0);
+        }
+
+        function extractShift(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'shift' || cleanKey.includes('shift kerja')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item.Shift || '-';
+        }
+
+        function extractDate(item) {
+            if (!item) return '';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'tanggal_transaksi' || cleanKey.includes('tanggal transaksi') || cleanKey === 'tanggal') {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Tanggal_Transaksi'] || item['Tanggal Transaksi'] || item.Tanggal || '';
+        }
+
+        function extractTimestamp(item) {
+            if (!item) return '';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('timestamp') || cleanKey.includes('waktu')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item.Timestamp || '';
         }
 
         function showSection(sectionId) {
@@ -1013,15 +1155,1176 @@
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
             
-            const desktopIcon = document.getElementById('theme-icon');
-            if (desktopIcon) desktopIcon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+            const settingIcon = document.getElementById('setting-theme-icon');
+            if (settingIcon) settingIcon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
 
-            document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
+            const themeTextElements = document.querySelectorAll('#theme-text');
+            themeTextElements.forEach(el => {
+                el.innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
+            });
+
             lucide.createIcons();
             applyFilters();
         }
 
-        // Jalankan fetch data secara otomatis
+        function resetFilters() {
+            document.getElementById('filter-month').value = '09';
+            document.getElementById('filter-store').value = 'ALL';
+            document.getElementById('filter-lob').value = 'ALL';
+            document.getElementById('filter-shift').value = 'ALL';
+            applyFilters();
+        }
+
+        function updateFormattedTimestamp() {
+            const now = new Date();
+            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+            const dateStr = now.toLocaleDateString('id-ID', dateOptions);
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
+            const displayStr = `${dateStr}, ${timeStr} WIB`;
+            
+            document.getElementById('last-update').innerText = displayStr;
+            const mobileSync = document.getElementById('last-update-mobile');
+            if (mobileSync) mobileSync.innerText = displayStr;
+        }
+
+        function fetchLiveData() {
+            const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
+
+            Papa.parse(cacheBusterUrl, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    rawCSVData = results.data;
+                    populateDropdownFilters(rawCSVData);
+                    applyFilters();
+                    updateFormattedTimestamp();
+                },
+                error: function(err) {
+                    console.error('Error auto-sync CSV:', err);
+                }
+            });
+        }
+
+        function populateDropdownFilters(data) {
+            const storeSelect = document.getElementById('filter-store');
+            const lobSelect = document.getElementById('filter-lob');
+            const shiftSelect = document.getElementById('filter-shift');
+
+            const currentStore = storeSelect?.value || 'ALL';
+            const currentLOB = lobSelect?.value || 'ALL';
+            const currentShift = shiftSelect?.value || 'ALL';
+
+            const stores = new Set(MASTER_STORES);
+            const lobs = new Set();
+            const shifts = new Set();
+
+            data.forEach(item => {
+                const store = extractStore(item);
+                const lob = extractLOB(item);
+                const shift = extractShift(item);
+
+                if (store && store !== '-') stores.add(store);
+                if (lob && lob !== '-') lobs.add(lob);
+                if (shift && shift !== '-') shifts.add(shift);
+            });
+
+            if (storeSelect) {
+                storeSelect.innerHTML = '<option value="ALL">Semua Store</option>';
+                Array.from(stores).sort().forEach(store => {
+                    storeSelect.innerHTML += `<option value="${store}" ${store === currentStore ? 'selected' : ''}>${store}</option>`;
+                });
+            }
+
+            if (lobSelect) {
+                lobSelect.innerHTML = '<option value="ALL">Semua LOB</option>';
+                Array.from(lobs).sort().forEach(lob => {
+                    lobSelect.innerHTML += `<option value="${lob}" ${lob === currentLOB ? 'selected' : ''}>${lob}</option>`;
+                });
+            }
+
+            if (shiftSelect) {
+                shiftSelect.innerHTML = '<option value="ALL">Semua Shift</option>';
+                Array.from(shifts).sort().forEach(shift => {
+                    shiftSelect.innerHTML += `<option value="${shift}" ${shift === currentShift ? 'selected' : ''}>${shift}</option>`;
+                });
+            }
+        }
+
+        function applyFilters() {
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
+            const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
+            const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
+
+            filteredData = rawCSVData.filter(row => {
+                const rowStore = extractStore(row).toLowerCase();
+                const rowLOB = extractLOB(row);
+                const rowShift = extractShift(row);
+                const rowDateStr = extractDate(row);
+
+                let matchMonth = true;
+                if (monthVal !== 'ALL' && rowDateStr) {
+                    const parsedDate = parseCustomDate(rowDateStr);
+                    if (parsedDate) {
+                        const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                        matchMonth = (m === monthVal && parsedDate.getFullYear() === 2026);
+                    } else {
+                        matchMonth = false;
+                    }
+                }
+
+                const matchStore = (storeVal === 'all' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
+                const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
+                const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
+
+                return matchMonth && matchStore && matchLOB && matchShift;
+            });
+
+            const badgeEl = document.getElementById('total-stores-badge');
+            if (badgeEl) {
+                badgeEl.innerText = `Total ${MASTER_STORES.length} Toko`;
+            }
+
+            updateMetricsAndCharts(filteredData);
+            renderUnsubmittedStoresTable(filteredData);
+            renderWoWStoreTable(rawCSVData);
+            renderComplianceMatrix(filteredData);
+            renderLateChampionsTable(filteredData);
+            renderTop10Sales(filteredData);
+            renderTop10Stores(filteredData);
+            renderRawDataTable(filteredData);
+            renderCharts(filteredData);
+        }
+
+        function updateMetricsAndCharts(data) {
+            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
+            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
+            const uniqueChampions = new Set();
+            const uniqueStores = new Set();
+
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+            const year = 2026;
+
+            const now = new Date();
+            let maxDay = now.getDate() - 1;
+
+            if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
+                maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
+            }
+
+            if (maxDay < 1) maxDay = 1;
+
+            data.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+                const name = extractName(item);
+                const store = extractStore(item);
+                const rawDateStr = extractDate(item);
+
+                if (name && name !== '-') uniqueChampions.add(name);
+                if (store && store !== '-') uniqueStores.add(store);
+
+                let isWithinRange = false;
+                if (rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
+                        const dayNum = parsedDate.getDate();
+                        if (dayNum >= 1 && dayNum <= maxDay) {
+                            isWithinRange = true;
+                        }
+                    }
+                }
+
+                if (lob.includes('mac')) { 
+                    totalMac += qty; 
+                    if (qty > 0 && isWithinRange) trxMac++; 
+                } else if (lob.includes('iphone')) { 
+                    totalIphone += qty; 
+                    if (qty > 0 && isWithinRange) trxIphone++; 
+                } else if (lob.includes('ipad')) { 
+                    totalIpad += qty; 
+                    if (qty > 0 && isWithinRange) trxIpad++; 
+                } else if (lob.includes('watch')) { 
+                    totalWatch += qty; 
+                    if (qty > 0 && isWithinRange) trxWatch++; 
+                }
+            });
+
+            document.getElementById('kpi-total-mac').innerText = totalMac;
+            document.getElementById('kpi-total-iphone').innerText = totalIphone;
+            document.getElementById('kpi-total-ipad').innerText = totalIpad;
+            document.getElementById('kpi-total-watch').innerText = totalWatch;
+
+            const completedDays = maxDay;
+
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / completedDays).toFixed(1);
+
+            document.getElementById('kpi-trx-mac').innerText = trxMac;
+            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
+            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
+            document.getElementById('kpi-trx-watch').innerText = trxWatch;
+
+            document.getElementById('kpi-total-reports').innerText = data.length;
+            document.getElementById('kpi-active-champions').innerText = uniqueChampions.size;
+            document.getElementById('kpi-total-stores').innerText = uniqueStores.size;
+        }
+
+        function renderUnsubmittedStoresTable(data) {
+            const tbody = document.getElementById('unsubmitted-stores-body');
+            const countBadge = document.getElementById('unsubmitted-stores-count');
+            const summaryUnsubmittedCount = document.getElementById('summary-unsubmitted-count');
+            
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+            const year = 2026;
+
+            const now = new Date();
+            let maxDay = now.getDate() - 1;
+
+            if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
+                maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
+            }
+
+            if (maxDay < 1) maxDay = 1;
+
+            const storeSubmittedDates = {};
+            MASTER_STORES.forEach(s => {
+                storeSubmittedDates[s.toLowerCase().trim()] = new Set();
+            });
+
+            data.forEach(item => {
+                const rawStore = extractStore(item);
+                const rawDateStr = extractDate(item);
+                if (rawStore && rawStore !== '-' && rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
+                        const dayNum = parsedDate.getDate();
+                        const storeKey = rawStore.toLowerCase().trim();
+                        
+                        const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === storeKey || ms.toLowerCase().includes(storeKey) || storeKey.includes(ms.toLowerCase()));
+                        if (matchedStore) {
+                            storeSubmittedDates[matchedStore.toLowerCase().trim()].add(dayNum);
+                        }
+                    }
+                }
+            });
+
+            unsubmittedStoresList = [];
+
+            MASTER_STORES.forEach(store => {
+                const storeKey = store.toLowerCase().trim();
+                const submittedSet = storeSubmittedDates[storeKey] || new Set();
+                const missingDays = [];
+
+                for (let d = 1; d <= maxDay; d++) {
+                    if (!submittedSet.has(d)) {
+                        missingDays.push(d);
+                    }
+                }
+
+                if (missingDays.length > 0) {
+                    unsubmittedStoresList.push({
+                        store: store,
+                        missingDays: missingDays,
+                        formattedDates: missingDays.map(d => `${String(d).padStart(2, '0')}/${String(selectedMonthIdx + 1).padStart(2, '0')}`).join(', ')
+                    });
+                }
+            });
+
+            unsubmittedStoresList.sort((a, b) => b.missingDays.length - a.missingDays.length);
+
+            if (countBadge) countBadge.innerText = `${unsubmittedStoresList.length} Toko`;
+            if (summaryUnsubmittedCount) summaryUnsubmittedCount.innerText = `${unsubmittedStoresList.length} Store`;
+
+            if (unsubmittedStoresList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-emerald-500 font-bold text-xs">Semua toko telah submit laporan dengan lengkap! 🎉</td></tr>';
+                return;
+            }
+
+            unsubmittedStoresList.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
+                    <td class="p-2 font-mono text-rose-600 dark:text-rose-400 font-medium">${item.formattedDates}</td>
+                    <td class="p-2 text-center font-extrabold text-rose-600 dark:text-rose-400">${item.missingDays.length} Hari</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function copyUnsubmittedWaDraft() {
+            if (unsubmittedStoresList.length === 0) {
+                alert('Semua toko sudah submit laporan! Tidak ada draft WA yang perlu dikirim.');
+                return;
+            }
+
+            let text = `*REMINDER: REKAP TOKO BELUM SUBMIT LAPORAN HARIAN LOB CHAMPION*\n*(Tanggal 1 s.d. Kemarin)*\n\nDear All Champion / Store Manager,\nMohon bantuan untuk melengkapi pengisian laporan harian toko berikut yang belum di-submit:\n\n`;
+
+            unsubmittedStoresList.forEach((item, idx) => {
+                text += `${idx + 1}. *${item.store}*\n   *Tanggal Belum Submit*: ${item.formattedDates} (${item.missingDays.length} Hari)\n\n`;
+            });
+
+            text += `Mohon laporan dapat segera diisi dan ditindaklanjuti demi kelengkapan data performa harian. Terima kasih atas kerja samanya! 🙏`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Draft WA Follow-up Toko Belum Submit berhasil disalin ke clipboard!');
+            }).catch(err => {
+                console.error('Gagal menyalin draft WA:', err);
+            });
+        }
+
+        function renderLateChampionsTable(data) {
+            const tbody = document.getElementById('late-champions-body');
+            const totalLateBadge = document.getElementById('late-submit-total-badge');
+            const summaryLateEventsCount = document.getElementById('summary-late-events-count');
+
+            lateChampionsList = [];
+            const summaryMap = {};
+            const storeSummaryMap = {};
+            let totalLateEvents = 0;
+
+            data.forEach(item => {
+                const name = extractName(item);
+                const store = extractStore(item);
+                const rawDateStr = extractDate(item);
+                const tsStr = extractTimestamp(item);
+
+                if (rawDateStr && tsStr && name !== '-' && store !== '-') {
+                    const dateTx = parseCustomDate(rawDateStr);
+                    const dateTs = parseCustomDate(tsStr);
+
+                    if (dateTx && dateTs) {
+                        const txDayEnd = new Date(dateTx.getFullYear(), dateTx.getMonth(), dateTx.getDate(), 23, 59, 59, 999);
+                        if (dateTs > txDayEnd) {
+                            totalLateEvents++;
+                            lateChampionsList.push({
+                                name,
+                                store,
+                                dateTxStr: rawDateStr,
+                                dateTsStr: tsStr
+                            });
+
+                            const key = `${name.toLowerCase().trim()}___${store.toLowerCase().trim()}`;
+                            if (!summaryMap[key]) {
+                                summaryMap[key] = { name, store, count: 0 };
+                            }
+                            summaryMap[key].count += 1;
+
+                            const storeKey = store.toLowerCase().trim();
+                            if (!storeSummaryMap[storeKey]) {
+                                storeSummaryMap[storeKey] = { store, count: 0 };
+                            }
+                            storeSummaryMap[storeKey].count += 1;
+                        }
+                    }
+                }
+            });
+
+            lateChampionSummaryList = Object.values(summaryMap).sort((a, b) => b.count - a.count);
+            lateStoresSummaryList = Object.values(storeSummaryMap).sort((a, b) => b.count - a.count);
+
+            if (totalLateBadge) totalLateBadge.innerText = `${lateStoresSummaryList.length} Toko`;
+            if (summaryLateEventsCount) summaryLateEventsCount.innerText = `${totalLateEvents} Kejadian`;
+
+            if (tbody) {
+                tbody.innerHTML = '';
+                if (lateStoresSummaryList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada toko yang terlambat submit.</td></tr>';
+                } else {
+                    lateStoresSummaryList.forEach((item, index) => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                        tr.innerHTML = `
+                            <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                            <td class="p-2 font-bold text-slate-900 dark:text-slate-100 text-xs">${item.store}</td>
+                            <td class="p-2 text-center font-bold text-amber-600 dark:text-amber-400 text-xs">${item.count} Kali</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            }
+
+            renderLateChampionSummaryTable();
+            renderLateCharts();
+        }
+
+        function renderLateCharts() {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            if (chartInstances.mostLateStores) chartInstances.mostLateStores.destroy();
+            const ctxLateStores = document.getElementById('chartMostLateStores')?.getContext('2d');
+            if (ctxLateStores) {
+                const top10LateStores = lateStoresSummaryList.slice(0, 10);
+                chartInstances.mostLateStores = new Chart(ctxLateStores, {
+                    type: 'bar',
+                    data: {
+                        labels: top10LateStores.map(s => s.store),
+                        datasets: [{
+                            label: 'Jumlah Keterlambatan',
+                            data: top10LateStores.map(s => s.count),
+                            backgroundColor: '#f43f5e',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+
+            if (chartInstances.lateChampions) chartInstances.lateChampions.destroy();
+            const ctxLateChamp = document.getElementById('chartLateChampions')?.getContext('2d');
+            if (ctxLateChamp) {
+                const top10LateChamp = lateChampionSummaryList.slice(0, 10);
+                chartInstances.lateChampions = new Chart(ctxLateChamp, {
+                    type: 'bar',
+                    data: {
+                        labels: top10LateChamp.map(c => c.name),
+                        datasets: [{
+                            label: 'Frekuensi Terlambat',
+                            data: top10LateChamp.map(c => c.count),
+                            backgroundColor: '#a855f7',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderLateChampionSummaryTable() {
+            const tbody = document.getElementById('late-champions-summary-body');
+            const summaryBadge = document.getElementById('late-summary-total-badge');
+
+            if (summaryBadge) {
+                summaryBadge.innerText = `${lateChampionSummaryList.length} Champion`;
+            }
+
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (lateChampionSummaryList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada rekap keterlambatan Champion.</td></tr>';
+                return;
+            }
+
+            lateChampionSummaryList.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2.5 font-bold neon-purple-text text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
+                    <td class="p-2.5 font-semibold text-xs">${item.store}</td>
+                    <td class="p-2.5 text-center">
+                        <span class="px-2.5 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-extrabold text-xs border border-purple-500/30 neon-green-badge">${item.count} Kali</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportLateStoresExcel() {
+            if (lateStoresSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
+            const data = lateStoresSummaryList.map((item, idx) => ({
+                "No": idx + 1,
+                "Nama Toko": item.store,
+                "Berapa Kali Terlambat": item.count
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Daftar Toko Terlambat");
+            XLSX.writeFile(wb, "Daftar_Toko_Terlambat.xlsx");
+        }
+
+        function exportLateStoresPDF() {
+            if (lateStoresSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Daftar Toko Yang Terlambat", 14, 15);
+            const tableData = lateStoresSummaryList.map((item, idx) => [idx + 1, item.store, item.count]);
+            doc.autoTable({
+                head: [["No", "Nama Toko", "Berapa Kali Terlambat"]],
+                body: tableData,
+                startY: 20
+            });
+            doc.save("Daftar_Toko_Terlambat.pdf");
+        }
+
+        function exportLateSummaryExcel() {
+            if (lateChampionSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
+            const data = lateChampionSummaryList.map((item, idx) => ({
+                "No": idx + 1,
+                "Nama Champion": item.name,
+                "Toko": item.store,
+                "Berapa Kali Terlambat": item.count
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Daftar Keterlambatan Champion");
+            XLSX.writeFile(wb, "Daftar_Keterlambatan_Champion.xlsx");
+        }
+
+        function exportLateSummaryPDF() {
+            if (lateChampionSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Daftar Keterlambatan Per Champion", 14, 15);
+            const tableData = lateChampionSummaryList.map((item, idx) => [idx + 1, item.name, item.store, item.count]);
+            doc.autoTable({
+                head: [["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"]],
+                body: tableData,
+                startY: 20
+            });
+            doc.save("Daftar_Keterlambatan_Champion.pdf");
+        }
+
+        function exportLogTransaksiExcel() {
+            if (logTransaksiStoresData.length === 0) return alert("Tidak ada data untuk diexport!");
+            const data = logTransaksiStoresData.map((item, idx) => ({
+                "No": idx + 1,
+                "Nama Toko": item.store,
+                "Mac": item.mac,
+                "iPhone": item.iphone,
+                "iPad": item.ipad,
+                "Watch": item.watch,
+                "Total Unit": item.total
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Log Transaksi Masuk Store");
+            XLSX.writeFile(wb, "Log_Transaksi_Masuk_Store.xlsx");
+        }
+
+        function exportLogTransaksiPDF() {
+            if (logTransaksiStoresData.length === 0) return alert("Tidak ada data untuk diexport!");
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Log Transaksi Masuk Store (Breakdown per LOB)", 14, 15);
+            const tableData = logTransaksiStoresData.map((item, idx) => [
+                idx + 1, item.store, item.mac, item.iphone, item.ipad, item.watch, item.total
+            ]);
+            doc.autoTable({
+                head: [["No", "Nama Toko", "Mac", "iPhone", "iPad", "Watch", "Total Unit"]],
+                body: tableData,
+                startY: 20
+            });
+            doc.save("Log_Transaksi_Masuk_Store.pdf");
+        }
+
+        function copyLateChampionSummaryWaDraft() {
+            if (lateChampionSummaryList.length === 0) {
+                alert('Tidak ada data keterlambatan Champion untuk disalin.');
+                return;
+            }
+
+            let text = `*DAFTAR KETERLAMBATAN SUBMIT LOB CHAMPION*\n*(Total: ${lateChampionSummaryList.length} Champion Terlibat)*\n\n`;
+            lateChampionSummaryList.forEach((item, idx) => {
+                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Jumlah Terlambat*: ${item.count} Kali\n\n`;
+            });
+            text += `Mohon perhatian dan evaluasi bersama agar pengisian laporan dapat dilakukan secara disiplin sebelum jam 12 malam di hari H transaksi. Terima kasih! 🙏`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Draft WA Daftar Keterlambatan Champion berhasil disalin!');
+            }).catch(err => {
+                console.error('Gagal menyalin rekap WA:', err);
+            });
+        }
+
+        function copyLateChampionsWaDraft() {
+            if (lateChampionsList.length === 0) {
+                alert('Tidak ada data keterlambatan submit untuk dibuatkan draft WA.');
+                return;
+            }
+
+            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (Total: ${lateChampionsList.length} laporan, dikirim lewat dari jam 12 malam pada hari H):\n\n`;
+            lateChampionsList.forEach((item, idx) => {
+                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
+            });
+            text += `Mohon ke depannya agar laporan dapat diinput tepat waktu di hari H transaksi ya. Terima kasih atas kerjasamanya! 🙏`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Draft WA Terlambat Submit berhasil disalin ke clipboard!');
+            }).catch(err => {
+                console.error('Gagal menyalin draft WA:', err);
+            });
+        }
+
+        function renderComplianceMatrix(data) {
+            const container = document.getElementById('compliance-matrix-container');
+            const summaryAvgCompliance = document.getElementById('summary-avg-compliance');
+            if (!container) return;
+
+            const reportedMap = {};
+            const activeDatesSet = new Set();
+
+            data.forEach(item => {
+                const store = extractStore(item);
+                const rawDateStr = extractDate(item);
+                const shift = extractShift(item).toLowerCase();
+
+                if (rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate) {
+                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                        
+                        activeDatesSet.add(dateKey);
+
+                        if (!reportedMap[dateKey]) reportedMap[dateKey] = { pagi: new Set(), middle: new Set(), siang: new Set() };
+                        
+                        if (store && store !== '-') {
+                            if (shift.includes('pagi') || shift.includes('morning') || shift.includes('shift 1') || shift === '1') {
+                                reportedMap[dateKey].pagi.add(store.toLowerCase().trim());
+                            } else if (shift.includes('middle') || shift.includes('mid') || shift.includes('shift 2') || shift === '2') {
+                                reportedMap[dateKey].middle.add(store.toLowerCase().trim());
+                            } else {
+                                reportedMap[dateKey].siang.add(store.toLowerCase().trim());
+                            }
+                        }
+                    }
+                }
+            });
+
+            const stores = [...MASTER_STORES];
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            let year = 2026, monthIndex = parseInt(monthVal, 10) - 1;
+
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            const fullMonthDates = [];
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayStr = String(day).padStart(2, '0');
+                const monthStr = String(monthIndex + 1).padStart(2, '0');
+                const dateKey = `${year}-${monthStr}-${dayStr}`;
+                fullMonthDates.push({ key: dateKey, label: `${dayStr}/${monthStr}`, isActive: activeDatesSet.has(dateKey) });
+            }
+
+            const activeDaysCount = activeDatesSet.size > 0 ? activeDatesSet.size : fullMonthDates.length;
+            const totalActiveSlots = activeDaysCount * 3;
+
+            let totalGlobalComplianceSum = 0;
+
+            let html = `
+                <table class="w-full text-xs text-center border-collapse border border-gray-500/20 min-w-[900px]">
+                    <thead class="sticky top-0 z-20 sticky-header-bg shadow-md font-bold">
+                        <tr class="border-b border-gray-500/20">
+                            <th rowspan="2" class="p-2 text-center w-10 border-r border-gray-500/20 sticky left-0 z-30 sticky-header-bg">No.</th>
+                            <th rowspan="2" class="p-2 text-left border-r border-gray-500/20 min-w-[180px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
+            `;
+
+            fullMonthDates.forEach(d => {
+                html += `<th colspan="3" class="p-1 border-r border-gray-500/20 text-[10px] ${d.isActive ? 'text-indigo-400 font-extrabold' : 'opacity-40'}">${d.label}</th>`;
+            });
+
+            html += `<th rowspan="2" class="p-2 text-center border-l border-gray-500/20 min-w-[80px] sticky-header-bg">Kepatuhan</th></tr><tr class="border-b border-gray-500/20 text-[9px]">`;
+
+            fullMonthDates.forEach(d => {
+                html += `<th class="p-1 border-r border-gray-500/10">P</th><th class="p-1 border-r border-gray-500/10">M</th><th class="p-1 border-r border-gray-500/20">S</th>`;
+            });
+
+            html += `</tr></thead><tbody class="divide-y divide-gray-500/10">`;
+
+            stores.forEach((store, idx) => {
+                const storeKey = store.toLowerCase().trim();
+                let storeSubmittedSlots = 0;
+
+                let rowHtml = `<tr class="hover:bg-black/5 dark:hover:bg-white/5 transition">
+                    <td class="p-2 text-center font-mono opacity-80 font-bold border-r border-gray-500/20 sticky left-0 z-10 sticky-header-bg">${idx + 1}</td>
+                    <td class="p-2 text-left font-bold border-r border-gray-500/20 sticky left-10 z-10 sticky-header-bg text-slate-900 dark:text-slate-100">${store}</td>`;
+
+                fullMonthDates.forEach(d => {
+                    const dateData = reportedMap[d.key];
+                    const hasPagi = dateData ? dateData.pagi.has(storeKey) : false;
+                    const hasMiddle = dateData ? dateData.middle.has(storeKey) : false;
+                    const hasSiang = dateData ? dateData.siang.has(storeKey) : false;
+
+                    if (hasPagi) storeSubmittedSlots++;
+                    if (hasMiddle) storeSubmittedSlots++;
+                    if (hasSiang) storeSubmittedSlots++;
+
+                    rowHtml += `<td class="p-1 border-r border-gray-500/10 ${hasPagi ? 'matrix-symbol-yes' : 'matrix-symbol-no'}">${hasPagi ? '✓' : '✗'}</td>`;
+                    rowHtml += `<td class="p-1 border-r border-gray-500/10 ${hasMiddle ? 'matrix-symbol-yes' : 'matrix-symbol-no'}">${hasMiddle ? '✓' : '✗'}</td>`;
+                    rowHtml += `<td class="p-1 border-r border-gray-500/20 ${hasSiang ? 'matrix-symbol-yes' : 'matrix-symbol-no'}">${hasSiang ? '✓' : '✗'}</td>`;
+                });
+
+                const storeRate = totalActiveSlots > 0 ? ((storeSubmittedSlots / totalActiveSlots) * 100).toFixed(0) : 0;
+                totalGlobalComplianceSum += parseFloat(storeRate);
+
+                rowHtml += `<td class="p-2 font-extrabold border-l border-gray-500/20 ${storeRate >= 80 ? 'text-emerald-500' : 'text-rose-500'}">${storeRate}%</td></tr>`;
+                html += rowHtml;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+
+            const globalAvg = stores.length > 0 ? (totalGlobalComplianceSum / stores.length).toFixed(1) : 0;
+            if (summaryAvgCompliance) summaryAvgCompliance.innerText = `${globalAvg}%`;
+        }
+
+        function renderTop10Sales(data) {
+            const tbody = document.getElementById('top10-sales-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const salesMap = {};
+            data.forEach(item => {
+                const name = extractName(item);
+                const store = extractStore(item);
+                const lob = extractLOB(item);
+                const qty = extractQuantity(item);
+
+                if (name && name !== '-') {
+                    const key = `${name}___${store}`;
+                    if (!salesMap[key]) {
+                        salesMap[key] = { name, store, lob, total: 0 };
+                    }
+                    salesMap[key].total += qty;
+                }
+            });
+
+            const sorted = Object.values(salesMap).sort((a, b) => b.total - a.total).slice(0, 10);
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs font-bold">Tidak ada data sales.</td></tr>';
+                return;
+            }
+
+            sorted.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 font-mono font-bold">${index + 1}</td>
+                    <td class="p-2 font-bold">${item.name}</td>
+                    <td class="p-2 opacity-80">${item.store}</td>
+                    <td class="p-2 font-semibold text-indigo-400">${item.lob}</td>
+                    <td class="p-2 text-center font-bold text-emerald-500">${item.total} Unit</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderTop10Stores(data) {
+            const tbody = document.getElementById('top10-stores-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const storeMap = {};
+            data.forEach(item => {
+                const store = extractStore(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                if (store && store !== '-') {
+                    if (!storeMap[store]) {
+                        storeMap[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                    }
+                    if (lob.includes('mac')) storeMap[store].mac += qty;
+                    else if (lob.includes('iphone')) storeMap[store].iphone += qty;
+                    else if (lob.includes('ipad')) storeMap[store].ipad += qty;
+                    else if (lob.includes('watch')) storeMap[store].watch += qty;
+                    storeMap[store].total += qty;
+                }
+            });
+
+            const sorted = Object.entries(storeMap)
+                .map(([store, obj]) => ({ store, ...obj }))
+                .sort((a, b) => b.total - a.total)
+                .slice(0, 10);
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs font-bold">Tidak ada data toko.</td></tr>';
+                return;
+            }
+
+            sorted.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 font-mono font-bold">${index + 1}</td>
+                    <td class="p-2 font-bold">${item.store}</td>
+                    <td class="p-2 text-center font-mono">${item.mac}</td>
+                    <td class="p-2 text-center font-mono">${item.iphone}</td>
+                    <td class="p-2 text-center font-mono">${item.ipad}</td>
+                    <td class="p-2 text-center font-mono">${item.watch}</td>
+                    <td class="p-2 text-center font-extrabold text-emerald-500">${item.total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderWoWStoreTable(allData) {
+            const tbody = document.getElementById('wow-store-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const now = new Date();
+            const currentYear = 2026;
+            
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+
+            let twStart, twEnd, lwStart, lwEnd;
+
+            if (monthVal !== 'ALL' && selectedMonthIdx === now.getMonth()) {
+                const day = now.getDate();
+                const dayOfWeek = now.getDay() || 7; 
+                
+                twStart = new Date(currentYear, selectedMonthIdx, day - dayOfWeek + 1);
+                twEnd = new Date(currentYear, selectedMonthIdx, day);
+
+                lwStart = new Date(currentYear, selectedMonthIdx, day - dayOfWeek - 6);
+                lwEnd = new Date(currentYear, selectedMonthIdx, day - dayOfWeek);
+            } else {
+                twStart = new Date(currentYear, selectedMonthIdx, 15);
+                twEnd = new Date(currentYear, selectedMonthIdx, 21);
+                lwStart = new Date(currentYear, selectedMonthIdx, 8);
+                lwEnd = new Date(currentYear, selectedMonthIdx, 14);
+            }
+
+            const storeWoWMap = {};
+            MASTER_STORES.forEach(s => {
+                storeWoWMap[s] = {
+                    tw: { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 },
+                    lw: { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 }
+                };
+            });
+
+            let globalTW = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+            let globalLW = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+
+            allData.forEach(item => {
+                const storeStr = extractStore(item);
+                const dateStr = extractDate(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                if (storeStr && dateStr) {
+                    const dateObj = parseCustomDate(dateStr);
+                    if (dateObj) {
+                        let matchedStore = MASTER_STORES.find(s => s.toLowerCase().trim() === storeStr.toLowerCase().trim() || storeStr.toLowerCase().includes(s.toLowerCase()));
+
+                        if (matchedStore) {
+                            const isTW = (dateObj >= twStart && dateObj <= twEnd);
+                            const isLW = (dateObj >= lwStart && dateObj <= lwEnd);
+
+                            if (isTW) {
+                                if (lob.includes('mac')) storeWoWMap[matchedStore].tw.mac += qty;
+                                else if (lob.includes('iphone')) storeWoWMap[matchedStore].tw.iphone += qty;
+                                else if (lob.includes('ipad')) storeWoWMap[matchedStore].tw.ipad += qty;
+                                else if (lob.includes('watch')) storeWoWMap[matchedStore].tw.watch += qty;
+                                storeWoWMap[matchedStore].tw.total += qty;
+
+                                if (lob.includes('mac')) globalTW.mac += qty;
+                                else if (lob.includes('iphone')) globalTW.iphone += qty;
+                                else if (lob.includes('ipad')) globalTW.ipad += qty;
+                                else if (lob.includes('watch')) globalTW.watch += qty;
+                                globalTW.total += qty;
+                            } else if (isLW) {
+                                if (lob.includes('mac')) storeWoWMap[matchedStore].lw.mac += qty;
+                                else if (lob.includes('iphone')) storeWoWMap[matchedStore].lw.iphone += qty;
+                                else if (lob.includes('ipad')) storeWoWMap[matchedStore].lw.ipad += qty;
+                                else if (lob.includes('watch')) storeWoWMap[matchedStore].lw.watch += qty;
+                                storeWoWMap[matchedStore].lw.total += qty;
+
+                                if (lob.includes('mac')) globalLW.mac += qty;
+                                else if (lob.includes('iphone')) globalLW.iphone += qty;
+                                else if (lob.includes('ipad')) globalLW.ipad += qty;
+                                else if (lob.includes('watch')) globalLW.watch += qty;
+                                globalLW.total += qty;
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateWoWGlobalSummary(globalTW, globalLW);
+
+            MASTER_STORES.forEach((store, index) => {
+                const data = storeWoWMap[store];
+                const growth = data.lw.total > 0 ? (((data.tw.total - data.lw.total) / data.lw.total) * 100).toFixed(0) : (data.tw.total > 0 ? 100 : 0);
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${store}</td>
+                    <td class="p-2.5 text-center font-mono">${data.lw.mac} / <strong class="text-indigo-400">${data.tw.mac}</strong></td>
+                    <td class="p-2.5 text-center font-mono">${data.lw.iphone} / <strong class="text-blue-400">${data.tw.iphone}</strong></td>
+                    <td class="p-2.5 text-center font-mono">${data.lw.ipad} / <strong class="text-cyan-400">${data.tw.ipad}</strong></td>
+                    <td class="p-2.5 text-center font-mono">${data.lw.watch} / <strong class="text-emerald-400">${data.tw.watch}</strong></td>
+                    <td class="p-2.5 text-center font-bold ${growth >= 0 ? 'text-emerald-500' : 'text-rose-500'}">${growth >= 0 ? '+' : ''}${growth}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateWoWGlobalSummary(tw, lw) {
+            const container = document.getElementById('wow-summary-container');
+            if (!container) return;
+
+            const calcPct = (twVal, lwVal) => {
+                if (lwVal === 0) return twVal > 0 ? '+100%' : '0%';
+                const diff = ((twVal - lwVal) / lwVal) * 100;
+                return `${diff >= 0 ? '+' : ''}${diff.toFixed(0)}%`;
+            };
+
+            container.innerHTML = `
+                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                    <span class="font-bold text-indigo-600 dark:text-indigo-300">Mac</span>
+                    <div class="text-right">
+                        <span class="font-mono text-slate-400">LW: ${lw.mac}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${tw.mac}</span>
+                        <span class="block text-[10px] font-bold ${tw.mac >= lw.mac ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(tw.mac, lw.mac)}</span>
+                    </div>
+                </div>
+                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                    <span class="font-bold text-blue-600 dark:text-blue-300">iPhone</span>
+                    <div class="text-right">
+                        <span class="font-mono text-slate-400">LW: ${lw.iphone}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${tw.iphone}</span>
+                        <span class="block text-[10px] font-bold ${tw.iphone >= lw.iphone ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(tw.iphone, lw.iphone)}</span>
+                    </div>
+                </div>
+                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                    <span class="font-bold text-cyan-600 dark:text-cyan-300">iPad</span>
+                    <div class="text-right">
+                        <span class="font-mono text-slate-400">LW: ${lw.ipad}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${tw.ipad}</span>
+                        <span class="block text-[10px] font-bold ${tw.ipad >= lw.ipad ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(tw.ipad, lw.ipad)}</span>
+                    </div>
+                </div>
+                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                    <span class="font-bold text-emerald-600 dark:text-emerald-300">Watch</span>
+                    <div class="text-right">
+                        <span class="font-mono text-slate-400">LW: ${lw.watch}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${tw.watch}</span>
+                        <span class="block text-[10px] font-bold ${tw.watch >= lw.watch ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(tw.watch, lw.watch)}</span>
+                    </div>
+                </div>
+            `;
+
+            const totalBox = document.getElementById('wow-total-growth-val');
+            if (totalBox) {
+                totalBox.innerText = `${tw.total} Unit (${calcPct(tw.total, lw.total)})`;
+            }
+
+            renderWoWGlobalChart(tw, lw);
+        }
+
+        function renderWoWGlobalChart(tw, lw) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            if (chartInstances.wowGlobal) chartInstances.wowGlobal.destroy();
+            const ctx = document.getElementById('chartWoWGlobal')?.getContext('2d');
+            if (ctx) {
+                chartInstances.wowGlobal = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            { label: 'Last Week (LW)', data: [lw.mac, lw.iphone, lw.ipad, lw.watch], backgroundColor: '#94a3b8', borderRadius: 4 },
+                            { label: 'This Week (TW)', data: [tw.mac, tw.iphone, tw.ipad, tw.watch], backgroundColor: '#6366f1', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { weight: 'bold', size: 10 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderRawDataTable(data) {
+            const tbody = document.getElementById('raw-data-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const storeMap = {};
+            data.forEach(item => {
+                const store = extractStore(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                if (store && store !== '-') {
+                    if (!storeMap[store]) {
+                        storeMap[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                    }
+                    if (lob.includes('mac')) storeMap[store].mac += qty;
+                    else if (lob.includes('iphone')) storeMap[store].iphone += qty;
+                    else if (lob.includes('ipad')) storeMap[store].ipad += qty;
+                    else if (lob.includes('watch')) storeMap[store].watch += qty;
+                    storeMap[store].total += qty;
+                }
+            });
+
+            logTransaksiStoresData = Object.entries(storeMap)
+                .map(([store, obj]) => ({ store, ...obj }))
+                .sort((a, b) => b.total - a.total);
+
+            if (logTransaksiStoresData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs font-bold">Tidak ada log transaksi.</td></tr>';
+                return;
+            }
+
+            logTransaksiStoresData.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
+                    <td class="p-2 text-center font-mono">${item.mac}</td>
+                    <td class="p-2 text-center font-mono">${item.iphone}</td>
+                    <td class="p-2 text-center font-mono">${item.ipad}</td>
+                    <td class="p-2 text-center font-mono">${item.watch}</td>
+                    <td class="p-2 text-center font-extrabold text-emerald-500">${item.total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderCharts(data) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            let lobTotal = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let shiftTotal = { pagi: { mac: 0, iphone: 0, ipad: 0, watch: 0 }, middle: { mac: 0, iphone: 0, ipad: 0, watch: 0 }, siang: { mac: 0, iphone: 0, ipad: 0, watch: 0 } };
+
+            data.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                const shift = extractShift(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                let key = 'other';
+                if (lob.includes('mac')) key = 'mac';
+                else if (lob.includes('iphone')) key = 'iphone';
+                else if (lob.includes('ipad')) key = 'ipad';
+                else if (lob.includes('watch')) key = 'watch';
+
+                if (key !== 'other') {
+                    lobTotal[key] += qty;
+
+                    let sKey = 'siang';
+                    if (shift.includes('pagi') || shift.includes('morning') || shift.includes('shift 1') || shift === '1') sKey = 'pagi';
+                    else if (shift.includes('middle') || shift.includes('mid') || shift.includes('shift 2') || shift === '2') sKey = 'middle';
+
+                    shiftTotal[sKey][key] += qty;
+                }
+            });
+
+            if (chartInstances.lob) chartInstances.lob.destroy();
+            const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
+            if (ctxLOB) {
+                chartInstances.lob = new Chart(ctxLOB, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [{
+                            data: [lobTotal.mac, lobTotal.iphone, lobTotal.ipad, lobTotal.watch],
+                            backgroundColor: ['#6366f1', '#3b82f6', '#06b6d4', '#10b981']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right', labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (val) => val > 0 ? val : ''
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (chartInstances.shift) chartInstances.shift.destroy();
+            const ctxShift = document.getElementById('chartShift')?.getContext('2d');
+            if (ctxShift) {
+                chartInstances.shift = new Chart(ctxShift, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Pagi', 'Middle', 'Siang'],
+                        datasets: [
+                            { label: 'Mac', data: [shiftTotal.pagi.mac, shiftTotal.middle.mac, shiftTotal.siang.mac], backgroundColor: '#6366f1' },
+                            { label: 'iPhone', data: [shiftTotal.pagi.iphone, shiftTotal.middle.iphone, shiftTotal.siang.iphone], backgroundColor: '#3b82f6' },
+                            { label: 'iPad', data: [shiftTotal.pagi.ipad, shiftTotal.middle.ipad, shiftTotal.siang.ipad], backgroundColor: '#06b6d4' },
+                            { label: 'Watch', data: [shiftTotal.pagi.watch, shiftTotal.middle.watch, shiftTotal.siang.watch], backgroundColor: '#10b981' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (val) => val > 0 ? val : ''
+                            }
+                        },
+                        scales: {
+                            x: { stacked: true, ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { stacked: true, ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
         window.onload = function() {
             fetchLiveData();
         };
