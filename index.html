@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard Monitoring LOB Champion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,6 +24,7 @@
             --text-sub: #cbd5e1;
             --accent: #6366f1;
             --header-bg: #0f172a;
+            --dock-bg: rgba(15, 23, 42, 0.85);
         }
 
         .light-mode {
@@ -36,6 +37,7 @@
             --text-sub: #1e293b;
             --accent: #4f46e5;
             --header-bg: #ffffff;
+            --dock-bg: rgba(255, 255, 255, 0.9);
         }
 
         .light-mode .text-slate-300,
@@ -84,7 +86,6 @@
             text-shadow: none;
         }
 
-        /* PERBAIKAN: Title Neon Red untuk Toko Belum Submit */
         .neon-red-title {
             color: #ff0055 !important;
             text-shadow: 0 0 10px rgba(255, 0, 85, 0.7), 0 0 20px rgba(255, 0, 85, 0.4) !important;
@@ -145,8 +146,9 @@
             background: var(--bg-gradient);
             color: var(--text-main);
             min-height: 100vh;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .glass-sidebar {
@@ -181,6 +183,27 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
         }
 
+        .mobile-dock {
+            background: var(--dock-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+        }
+
+        .dock-item {
+            color: var(--text-sub);
+            transition: all 0.2s ease;
+        }
+
+        .dock-item.dock-active {
+            color: #6366f1;
+            transform: translateY(-2px);
+        }
+        .light-mode .dock-item.dock-active {
+            color: #4f46e5;
+        }
+
         .nav-active {
             background-color: rgba(99, 102, 241, 0.25) !important;
             color: var(--accent) !important;
@@ -193,8 +216,8 @@
         }
 
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 4px;
+            height: 4px;
         }
         ::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.05);
@@ -203,46 +226,56 @@
             background: var(--accent);
             border-radius: 3px;
         }
+
+        @media (max-width: 1023px) {
+            .pb-mobile-dock {
+                padding-bottom: 5rem !important;
+            }
+        }
     </style>
 </head>
-<body class="flex flex-col lg:flex-row min-h-screen p-2 md:p-4 gap-4">
+<body class="flex flex-col lg:flex-row min-h-screen p-2 md:p-4 gap-4 pb-mobile-dock">
 
-    <!-- Sidebar Responsive -->
-    <aside id="sidebar" class="w-full lg:w-64 glass-sidebar p-4 flex flex-col justify-between shrink-0 z-20">
+    <!-- Sidebar Responsive (Hidden Nav di Mobile, diganti Dock) -->
+    <aside id="sidebar" class="w-full lg:w-64 glass-sidebar p-3 md:p-4 flex flex-col justify-between shrink-0 z-20">
         <div>
-            <div class="flex items-center justify-between pb-4 border-b border-gray-500/20">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-500/20">
                 <div class="flex items-center gap-3">
-                    <div class="p-2 bg-indigo-600 rounded-lg text-white">
-                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                    <div class="p-2 bg-indigo-600 rounded-lg text-white shadow-md">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5 md:w-6 md:h-6"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-base md:text-lg leading-tight">LOB Champion</h1>
-                        <p class="text-xs text-indigo-500 font-semibold">Analytics Dashboard</p>
+                        <p class="text-[11px] text-indigo-500 font-semibold">Analytics Dashboard</p>
                     </div>
                 </div>
+                <button onclick="toggleTheme()" class="lg:hidden p-2 rounded-lg glass-card text-xs">
+                    <i data-lucide="moon" id="theme-icon-mobile" class="w-4 h-4"></i>
+                </button>
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-1 gap-2 my-4">
-                <div class="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center">
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-2 my-3">
+                <div class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center col-span-2 lg:col-span-1">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>Auto Sync</span>
+                        <span class="text-[11px]">Auto Sync</span>
                     </div>
                     <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
                 </div>
 
-                <button onclick="toggleTheme()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg glass-card text-xs font-bold hover:bg-black/5 dark:hover:bg-white/10 transition">
+                <button onclick="toggleTheme()" class="hidden lg:flex items-center justify-center gap-2 px-3 py-2 rounded-lg glass-card text-xs font-bold hover:bg-black/5 dark:hover:bg-white/10 transition">
                     <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
                     <span id="theme-text">Mode Gelap</span>
                 </button>
 
                 <button onclick="resetFilters()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold hover:bg-rose-500/30 transition col-span-2 lg:col-span-1">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                     <span>Reset Filter</span>
                 </button>
             </div>
 
-            <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-1.5" id="sidebar-nav">
+            <!-- Desktop Sidebar Navigation -->
+            <nav class="hidden lg:grid grid-cols-1 gap-1.5" id="sidebar-nav">
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> Overview
                 </button>
@@ -252,31 +285,53 @@
                 <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                     <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> Kedisiplinan
                 </button>
-                <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition col-span-2 sm:col-span-1">
+                <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs md:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                     <i data-lucide="database" class="w-4 h-4 shrink-0"></i> Log Transaksi
                 </button>
             </nav>
         </div>
 
-        <div class="pt-4 mt-4 border-t border-gray-500/20 hidden lg:block">
-            <div class="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1">
-                <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
+        <div class="pt-3 mt-3 border-t border-gray-500/20 hidden lg:block">
+            <div class="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center space-y-0.5">
+                <p class="text-[9px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
                 <p class="text-xs font-bold neon-green-text">Novi Riyanto</p>
             </div>
         </div>
     </aside>
 
+    <!-- Navigation Mobile Dock (iOS / Android Style) -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 mobile-dock px-3 py-2">
+        <div class="flex items-center justify-around max-w-md mx-auto">
+            <button onclick="showSection('overview')" id="dock-overview" class="dock-item dock-active flex flex-col items-center gap-1 p-1">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">Overview</span>
+            </button>
+            <button onclick="showSection('wow-perf')" id="dock-wow-perf" class="dock-item flex flex-col items-center gap-1 p-1">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">WoW Perf</span>
+            </button>
+            <button onclick="showSection('compliance')" id="dock-compliance" class="dock-item flex flex-col items-center gap-1 p-1">
+                <i data-lucide="calendar-check" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">Kedisiplinan</span>
+            </button>
+            <button onclick="showSection('raw-data')" id="dock-raw-data" class="dock-item flex flex-col items-center gap-1 p-1">
+                <i data-lucide="database" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">Log Data</span>
+            </button>
+        </div>
+    </div>
+
     <main class="flex-1 flex flex-col gap-4 overflow-hidden w-full">
 
-        <header class="glass-panel p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <header class="glass-panel p-3 md:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-4">
             <div>
-                <h2 class="text-lg md:text-xl font-bold" id="page-title">Overview</h2>
+                <h2 class="text-base md:text-xl font-bold" id="page-title">Overview</h2>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full md:w-auto text-xs">
                 <div>
                     <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Month</label>
-                    <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold text-xs">
                         <option value="ALL">Semua Bulan</option>
                         <option value="01">Januari</option>
                         <option value="02">Februari</option>
@@ -294,19 +349,19 @@
                 </div>
                 <div>
                     <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Store</label>
-                    <select id="filter-store" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <select id="filter-store" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold text-xs">
                         <option value="ALL">Semua Store</option>
                     </select>
                 </div>
                 <div>
                     <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter LOB</label>
-                    <select id="filter-lob" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <select id="filter-lob" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold text-xs">
                         <option value="ALL">Semua LOB</option>
                     </select>
                 </div>
                 <div>
                     <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Shift</label>
-                    <select id="filter-shift" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <select id="filter-shift" onchange="applyFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold text-xs">
                         <option value="ALL">Semua Shift</option>
                     </select>
                 </div>
@@ -314,8 +369,8 @@
         </header>
 
         <!-- KPI Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="glass-card p-4 flex flex-col justify-between">
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+            <div class="glass-card p-3 md:p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Total Unit / LOB</p>
                     <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-500"></i>
@@ -340,7 +395,7 @@
                 </div>
             </div>
 
-            <div class="glass-card p-4 flex flex-col justify-between">
+            <div class="glass-card p-3 md:p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Average / Hari / LOB</p>
                     <i data-lucide="calculator" class="w-4 h-4 text-purple-500"></i>
@@ -389,7 +444,7 @@
                 </div>
             </div>
 
-            <div class="glass-card p-4 flex flex-col justify-between">
+            <div class="glass-card p-3 md:p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Ringkasan Aktivitas</p>
                     <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
@@ -397,15 +452,15 @@
                 <div class="grid grid-cols-3 gap-2 text-center">
                     <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
                         <span class="opacity-80 block text-[10px] font-bold">Laporan</span>
-                        <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400" id="kpi-total-reports">0</span>
+                        <span class="text-base md:text-lg font-bold text-emerald-600 dark:text-emerald-400" id="kpi-total-reports">0</span>
                     </div>
                     <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
                         <span class="opacity-80 block text-[10px] font-bold">Champion</span>
-                        <span class="text-lg font-bold text-amber-600 dark:text-amber-400" id="kpi-active-champions">0</span>
+                        <span class="text-base md:text-lg font-bold text-amber-600 dark:text-amber-400" id="kpi-active-champions">0</span>
                     </div>
                     <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
                         <span class="opacity-80 block text-[10px] font-bold">Toko</span>
-                        <span class="text-lg font-bold text-indigo-600 dark:text-indigo-400" id="kpi-total-stores">0</span>
+                        <span class="text-base md:text-lg font-bold text-indigo-600 dark:text-indigo-400" id="kpi-total-stores">0</span>
                     </div>
                 </div>
             </div>
@@ -416,64 +471,32 @@
             <!-- Section 1: Overview -->
             <div id="sec-overview" class="content-section space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="glass-panel p-4 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                    <div class="glass-panel p-3 md:p-4 flex flex-col justify-between">
+                        <h3 class="font-bold text-xs md:text-sm flex items-center gap-2 mb-3 md:mb-4">
                             <i data-lucide="smartphone" class="w-4 h-4 text-indigo-500"></i> Total Penjualan per Kategori LOB
                         </h3>
-                        <div class="h-64 relative"><canvas id="chartLOB"></canvas></div>
+                        <div class="h-56 md:h-64 relative"><canvas id="chartLOB"></canvas></div>
                     </div>
                     
-                    <div class="glass-panel p-4 flex flex-col justify-between">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                    <div class="glass-panel p-3 md:p-4 flex flex-col justify-between">
+                        <h3 class="font-bold text-xs md:text-sm flex items-center gap-2 mb-3 md:mb-4">
                             <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i> Penjualan per Shift (Breakdown per LOB)
                         </h3>
-                        <div class="h-64 relative"><canvas id="chartShift"></canvas></div>
-                    </div>
-                </div>
-
-                <!-- List Toko Belum Submit (Akumulasi Tanggal 1 s.d. Kemarin) -->
-                <div class="glass-panel p-4 border-l-4 border-rose-500">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
-                            <!-- PERBAIKAN: Judul Merah Neon -->
-                            <h3 class="font-extrabold text-sm uppercase tracking-wide flex items-center gap-2 neon-red-title">
-                                LIST TOKO BELUM SUBMIT (TGL 1 S.D. KEMARIN)
-                                <span id="unsubmitted-stores-count" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
-                            </h3>
-                        </div>
-                        <button onclick="copyUnsubmittedWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5 shadow">
-                            <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Draft WA Follow-up
-                        </button>
-                    </div>
-                    <p class="text-xs opacity-80 mb-3 font-medium">Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 bulan terpilih hingga kemarin.</p>
-                    
-                    <div class="overflow-x-auto max-h-[350px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
-                                <tr>
-                                    <th class="p-2 text-center w-12 sticky-header-bg">No</th>
-                                    <th class="p-2 sticky-header-bg">Nama Store</th>
-                                    <th class="p-2 sticky-header-bg">Tanggal Belum Submit</th>
-                                    <th class="p-2 text-center w-28 sticky-header-bg">Total Hari</th>
-                                </tr>
-                            </thead>
-                            <tbody id="unsubmitted-stores-body" class="divide-y divide-gray-500/10"></tbody>
-                        </table>
+                        <div class="h-56 md:h-64 relative"><canvas id="chartShift"></canvas></div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="glass-panel p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-sm flex items-center gap-2">
+                    <div class="glass-panel p-3 md:p-4">
+                        <div class="flex items-center justify-between mb-3 md:mb-4">
+                            <h3 class="font-bold text-xs md:text-sm flex items-center gap-2">
                                 <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Top 10 Champion Sales
                             </h3>
                             <span class="text-[10px] opacity-80 font-bold">Semua LOB</span>
                         </div>
                         <div class="overflow-x-auto max-h-[400px]">
-                            <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-                                <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                            <table class="w-full text-xs text-left border-collapse min-w-[450px]">
+                                <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold text-[11px]">
                                     <tr>
                                         <th class="p-2 sticky-header-bg">Rank</th>
                                         <th class="p-2 sticky-header-bg">Nama</th>
@@ -487,16 +510,16 @@
                         </div>
                     </div>
 
-                    <div class="glass-panel p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-sm flex items-center gap-2">
+                    <div class="glass-panel p-3 md:p-4">
+                        <div class="flex items-center justify-between mb-3 md:mb-4">
+                            <h3 class="font-bold text-xs md:text-sm flex items-center gap-2">
                                 <i data-lucide="building-2" class="w-4 h-4 text-emerald-500"></i> Top 10 Store Performance
                             </h3>
                             <span class="text-[10px] opacity-80 font-bold">Detail per LOB</span>
                         </div>
                         <div class="overflow-x-auto max-h-[400px]">
-                            <table class="w-full text-xs text-left border-collapse min-w-[550px]">
-                                <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                            <table class="w-full text-xs text-left border-collapse min-w-[500px]">
+                                <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold text-[11px]">
                                     <tr>
                                         <th class="p-2 sticky-header-bg">Rank</th>
                                         <th class="p-2 sticky-header-bg">Nama Store</th>
@@ -516,30 +539,27 @@
 
             <!-- Section 2: Performa WoW -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
-                <!-- PERBAIKAN: Layout Side by Side untuk Chart WoW & Summary TW vs LW per LOB -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-sm flex items-center gap-2">
+                    <div class="glass-panel p-3 md:p-4 lg:col-span-2 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-3 md:mb-4">
+                            <h3 class="font-bold text-xs md:text-sm flex items-center gap-2">
                                 <i data-lucide="trending-up" class="w-4 h-4 text-indigo-500"></i> Komparasi Global: Week Ini vs Week Sebelumnya (Per LOB)
                             </h3>
                             <span class="text-[10px] px-2 py-0.5 bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-bold rounded border border-indigo-500/30">Live WoW Chart</span>
                         </div>
-                        <div class="h-72 relative"><canvas id="chartWoWGlobal"></canvas></div>
+                        <div class="h-56 md:h-72 relative"><canvas id="chartWoWGlobal"></canvas></div>
                     </div>
 
-                    <!-- Summary TW vs LW per LOB (Side-by-Side) -->
-                    <div class="glass-panel p-4 flex flex-col justify-between border-l-4 border-indigo-500">
+                    <div class="glass-panel p-3 md:p-4 flex flex-col justify-between border-l-4 border-indigo-500">
                         <div>
                             <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
-                                <h3 class="font-bold text-sm text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                                <h3 class="font-bold text-xs md:text-sm text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
                                     <i data-lucide="pie-chart" class="w-4 h-4"></i> Summary TW vs LW
                                 </h3>
                                 <span class="text-[10px] opacity-70 font-semibold">Per LOB Data</span>
                             </div>
 
                             <div class="space-y-2 text-xs" id="wow-summary-container">
-                                <!-- Dynamic Summary Content -->
                                 <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
                                     <span class="font-bold text-indigo-600 dark:text-indigo-300">Mac</span>
                                     <div class="text-right">
@@ -580,16 +600,16 @@
                     </div>
                 </div>
 
-                <div class="glass-panel p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2">
+                <div class="glass-panel p-3 md:p-4">
+                    <div class="flex items-center justify-between mb-3 md:mb-4">
+                        <h3 class="font-bold text-xs md:text-sm flex items-center gap-2">
                             <i data-lucide="store" class="w-4 h-4 text-purple-500"></i> Detail Komparasi per Store (This Week vs Last Week)
                         </h3>
-                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total 98 Store</span>
+                        <span class="text-[11px] px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total 98 Store</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[650px]">
-                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                        <table class="w-full text-xs text-left border-collapse min-w-[600px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold text-[11px]">
                                 <tr>
                                     <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
                                     <th class="p-2.5 sticky-header-bg">Nama Store</th>
@@ -608,24 +628,54 @@
 
             <!-- Section 3: Kedisiplinan & Matriks -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
+                
+                <!-- LIST TOKO BELUM SUBMIT (DIPINDAHKAN KE TAB KEDISIPLINAN) -->
+                <div class="glass-panel p-3 md:p-4 border-l-4 border-rose-500 shadow-md">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500 shrink-0"></i>
+                            <h3 class="font-extrabold text-xs md:text-sm uppercase tracking-wide flex flex-wrap items-center gap-2 neon-red-title">
+                                LIST TOKO BELUM SUBMIT (TGL 1 S.D. KEMARIN)
+                                <span id="unsubmitted-stores-count" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
+                            </h3>
+                        </div>
+                        <button onclick="copyUnsubmittedWaDraft()" class="w-full sm:w-auto px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                            <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Draft WA Follow-up
+                        </button>
+                    </div>
+                    <p class="text-[11px] md:text-xs opacity-80 mb-3 font-medium">Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 bulan terpilih hingga kemarin.</p>
+                    
+                    <div class="overflow-x-auto max-h-[350px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[450px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold text-[11px]">
+                                <tr>
+                                    <th class="p-2 text-center w-10 sticky-header-bg">No</th>
+                                    <th class="p-2 sticky-header-bg">Nama Store</th>
+                                    <th class="p-2 sticky-header-bg">Tanggal Belum Submit</th>
+                                    <th class="p-2 text-center w-24 sticky-header-bg">Total Hari</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unsubmitted-stores-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Grid Side-by-Side: Chart Terlambat Store & Champion -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <!-- Chart Toko Paling Banyak Terlambat Submit -->
-                    <div class="glass-panel p-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                    <div class="glass-panel p-3 md:p-4">
+                        <h3 class="font-bold text-xs md:text-sm flex items-center gap-2 mb-3 md:mb-4">
                             <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i> Top Store Terbanyak Terlambat Submit
                         </h3>
-                        <div class="h-72 relative">
+                        <div class="h-56 md:h-72 relative">
                             <canvas id="chartMostLateStores"></canvas>
                         </div>
                     </div>
 
-                    <!-- Chart Daftar Keterlambatan Per Champion -->
-                    <div class="glass-panel p-4">
-                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4 neon-title-purple">
+                    <div class="glass-panel p-3 md:p-4">
+                        <h3 class="font-bold text-xs md:text-sm flex items-center gap-2 mb-3 md:mb-4 neon-title-purple">
                             <i data-lucide="bar-chart-2" class="w-4 h-4 text-purple-500"></i> Chart Frekuensi Keterlambatan Per Champion
                         </h3>
-                        <div class="h-72 relative">
+                        <div class="h-56 md:h-72 relative">
                             <canvas id="chartLateChampions"></canvas>
                         </div>
                     </div>
@@ -633,20 +683,19 @@
 
                 <!-- Grid Side-by-Side: Tabel Terlambat Store & Champion -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <!-- Daftar Toko yang Terlambat -->
-                    <div class="glass-panel p-4 border-l-4 border-amber-500 flex flex-col justify-between">
+                    <div class="glass-panel p-3 md:p-4 border-l-4 border-amber-500 flex flex-col justify-between">
                         <div>
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
                                 <div class="flex items-center gap-2">
-                                    <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
-                                    <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
+                                    <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500 shrink-0"></i>
+                                    <h3 class="font-bold text-xs md:text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
                                         Daftar toko yang terlambat
                                         <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Toko</span>
                                     </h3>
                                 </div>
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                                     <div class="relative inline-block text-left">
-                                        <button onclick="toggleDropdown('dropdown-late-stores')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <button onclick="toggleDropdown('dropdown-late-stores')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
                                             <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
                                         </button>
                                         <div id="dropdown-late-stores" class="hidden absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50">
@@ -658,18 +707,18 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                        <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Copy Draft WA
+                                    <button onclick="copyLateChampionsWaDraft()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Draft WA
                                     </button>
                                 </div>
                             </div>
                             <p class="text-xs opacity-90 mb-3 font-medium">Rekap frekuensi keterlambatan submit berdasarkan lokasi toko.</p>
                             
                             <div class="overflow-x-auto max-h-[300px]">
-                                <table class="w-full text-xs text-left border-collapse min-w-[350px]">
-                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                <table class="w-full text-xs text-left border-collapse min-w-[320px]">
+                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold text-[11px]">
                                         <tr>
-                                            <th class="p-2 text-center w-12 sticky-header-bg">No</th>
+                                            <th class="p-2 text-center w-10 sticky-header-bg">No</th>
                                             <th class="p-2 sticky-header-bg">Nama Toko</th>
                                             <th class="p-2 text-center sticky-header-bg">Berapa Kali Terlambat</th>
                                         </tr>
@@ -680,20 +729,19 @@
                         </div>
                     </div>
 
-                    <!-- Tabel Daftar Keterlambatan Per Champion -->
-                    <div class="glass-panel p-4 border-l-4 border-purple-500 flex flex-col justify-between">
+                    <div class="glass-panel p-3 md:p-4 border-l-4 border-purple-500 flex flex-col justify-between">
                         <div>
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
                                 <div class="flex items-center gap-2">
-                                    <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
-                                    <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2 neon-title-purple">
+                                    <i data-lucide="user-x" class="w-5 h-5 text-purple-500 shrink-0"></i>
+                                    <h3 class="font-bold text-xs md:text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2 neon-title-purple">
                                         Daftar Keterlambatan Per Champion
                                         <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-extrabold border border-purple-500/30 neon-green-badge">0 Champion</span>
                                     </h3>
                                 </div>
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                                     <div class="relative inline-block text-left">
-                                        <button onclick="toggleDropdown('dropdown-late-summary')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <button onclick="toggleDropdown('dropdown-late-summary')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
                                             <i data-lucide="download" class="w-3.5 h-3.5"></i> Export <i data-lucide="chevron-down" class="w-3 h-3"></i>
                                         </button>
                                         <div id="dropdown-late-summary" class="hidden absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-md shadow-lg z-50">
@@ -705,21 +753,21 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
-                                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy WA Rekap
+                                    <button onclick="copyLateChampionSummaryWaDraft()" class="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> WA Rekap
                                     </button>
                                 </div>
                             </div>
                             <p class="text-xs opacity-90 mb-3 font-medium">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
 
                             <div class="overflow-x-auto max-h-[300px]">
-                                <table class="w-full text-xs text-left border-collapse min-w-[400px]">
-                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                <table class="w-full text-xs text-left border-collapse min-w-[360px]">
+                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold text-[11px]">
                                         <tr>
-                                            <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                            <th class="p-2.5 w-10 text-center sticky-header-bg">No.</th>
                                             <th class="p-2.5 sticky-header-bg">Nama Champion</th>
                                             <th class="p-2.5 sticky-header-bg">Toko</th>
-                                            <th class="p-2.5 text-center sticky-header-bg">Berapa Kali Terlambat</th>
+                                            <th class="p-2.5 text-center sticky-header-bg">Terlambat</th>
                                         </tr>
                                     </thead>
                                     <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
@@ -729,11 +777,11 @@
                     </div>
                 </div>
 
-                <div class="glass-panel p-4">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+                <div class="glass-panel p-3 md:p-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3 md:mb-4">
                         <div>
-                            <h3 class="font-bold text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi, Middle, & Siang)</h3>
-                            <p class="text-[11px] opacity-80 mt-0.5 font-semibold">Berdasarkan Tanggal Transaksi & Shift periode terfilter</p>
+                            <h3 class="font-bold text-xs md:text-sm">Matriks Kedisiplinan Pelaporan Harian Store (Pagi, Middle, & Siang)</h3>
+                            <p class="text-[10px] md:text-[11px] opacity-80 mt-0.5 font-semibold">Berdasarkan Tanggal Transaksi & Shift periode terfilter</p>
                         </div>
                         <span id="total-stores-badge" class="text-xs font-bold px-3 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-full border border-indigo-500/30 neon-store-badge">Memuat...</span>
                     </div>
@@ -743,16 +791,16 @@
 
             <!-- Section 4: Log Transaksi Masuk -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
-                <div class="glass-panel p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm">Log Transaksi Masuk (10 Transaksi Terbaru)</h3>
+                <div class="glass-panel p-3 md:p-4">
+                    <div class="flex items-center justify-between mb-3 md:mb-4">
+                        <h3 class="font-bold text-xs md:text-sm">Log Transaksi Masuk (10 Transaksi Terbaru)</h3>
                         <span class="text-[10px] px-2.5 py-1 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-full font-bold">Real-time Top 10</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[600px]">
-                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                        <table class="w-full text-xs text-left border-collapse min-w-[550px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold text-[11px]">
                                 <tr>
-                                    <th class="p-2 text-center w-12 sticky-header-bg">No.</th>
+                                    <th class="p-2 text-center w-10 sticky-header-bg">No.</th>
                                     <th class="p-2 sticky-header-bg">Tanggal Transaksi</th>
                                     <th class="p-2 sticky-header-bg">Nama</th>
                                     <th class="p-2 sticky-header-bg">Store</th>
@@ -988,25 +1036,41 @@
 
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            
+            // Sidebar active
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+            const btnSidebar = document.getElementById(`btn-${sectionId}`);
+            if (btnSidebar) btnSidebar.classList.add('nav-active');
+
+            // Dock active
+            document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('dock-active'));
+            const btnDock = document.getElementById(`dock-${sectionId}`);
+            if (btnDock) btnDock.classList.add('dock-active');
 
             document.getElementById(`sec-${sectionId}`).classList.remove('hidden');
-            document.getElementById(`btn-${sectionId}`).classList.add('nav-active');
 
             const titles = {
                 'overview': 'Overview',
                 'wow-perf': 'Komparasi Week-on-Week',
-                'compliance': 'Matriks Kedisiplinan Store',
+                'compliance': 'Kedisiplinan Store & Champion',
                 'raw-data': 'Data Transaksi Mentah'
             };
             document.getElementById('page-title').innerText = titles[sectionId] || 'Dashboard';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
-            document.getElementById('theme-icon').setAttribute('data-lucide', isLight ? 'sun' : 'moon');
-            document.getElementById('theme-text').innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
+            
+            const iconDesktop = document.getElementById('theme-icon');
+            const iconMobile = document.getElementById('theme-icon-mobile');
+            if (iconDesktop) iconDesktop.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+            if (iconMobile) iconMobile.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+            
+            const textTheme = document.getElementById('theme-text');
+            if (textTheme) textTheme.innerText = isLight ? 'Mode Terang' : 'Mode Gelap';
+
             lucide.createIcons();
             applyFilters();
         }
@@ -1128,7 +1192,7 @@
 
             updateMetricsAndCharts(filteredData);
             renderUnsubmittedStoresTable(filteredData);
-            renderWoWStoreTable(rawCSVData); // Gunakan rawCSVData agar kalkulasi tanggal LW/TW utuh
+            renderWoWStoreTable(rawCSVData);
             renderComplianceMatrix(filteredData);
             renderLateChampionsTable(filteredData);
             renderTop10Sales(filteredData);
@@ -1292,10 +1356,10 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
-                    <td class="p-2 font-mono text-rose-600 dark:text-rose-400 font-medium">${item.formattedDates}</td>
-                    <td class="p-2 text-center font-extrabold text-rose-600 dark:text-rose-400">${item.missingDays.length} Hari</td>
+                    <td class="p-2 text-center font-mono opacity-80 font-bold text-xs">${index + 1}</td>
+                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100 text-xs">${item.store}</td>
+                    <td class="p-2 font-mono text-rose-600 dark:text-rose-400 font-medium text-xs">${item.formattedDates}</td>
+                    <td class="p-2 text-center font-extrabold text-rose-600 dark:text-rose-400 text-xs">${item.missingDays.length} Hari</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1382,7 +1446,7 @@
                         const tr = document.createElement('tr');
                         tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                         tr.innerHTML = `
-                            <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                            <td class="p-2 text-center font-mono opacity-80 font-bold text-xs">${index + 1}</td>
                             <td class="p-2 font-bold text-slate-900 dark:text-slate-100 text-xs">${item.store}</td>
                             <td class="p-2 text-center font-bold text-amber-600 dark:text-amber-400 text-xs">${item.count} Kali</td>
                         `;
@@ -1423,13 +1487,13 @@
                                 anchor: 'center',
                                 align: 'center',
                                 color: '#ffffff',
-                                font: { weight: 'bold', size: 11 },
+                                font: { weight: 'bold', size: 10 },
                                 formatter: Math.round
                             }
                         },
                         scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                            x: { ticks: { color: textColor, font: { weight: 'bold', size: 9 } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold', size: 9 } } }
                         }
                     }
                 });
@@ -1459,13 +1523,13 @@
                                 anchor: 'center',
                                 align: 'center',
                                 color: '#ffffff',
-                                font: { weight: 'bold', size: 11 },
+                                font: { weight: 'bold', size: 10 },
                                 formatter: Math.round
                             }
                         },
                         scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                            x: { ticks: { color: textColor, font: { weight: 'bold', size: 9 } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold', size: 9 } } }
                         }
                     }
                 });
@@ -1492,11 +1556,11 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold neon-purple-text text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
-                    <td class="p-2.5 font-semibold text-xs">${item.store}</td>
-                    <td class="p-2.5 text-center">
-                        <span class="px-2.5 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-extrabold text-xs border border-purple-500/30 neon-green-badge">${item.count} Kali</span>
+                    <td class="p-2 text-center font-mono opacity-80 font-bold text-xs">${index + 1}</td>
+                    <td class="p-2 font-bold neon-purple-text text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
+                    <td class="p-2 font-semibold text-xs">${item.store}</td>
+                    <td class="p-2 text-center">
+                        <span class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-extrabold text-[11px] border border-purple-500/30 neon-green-badge">${item.count} Kali</span>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1648,20 +1712,20 @@
             const totalActiveSlots = activeDaysCount * 3;
 
             let html = `
-                <table class="w-full text-xs text-center border-collapse border border-gray-500/20 min-w-[900px]">
+                <table class="w-full text-xs text-center border-collapse border border-gray-500/20 min-w-[850px]">
                     <thead class="sticky top-0 z-20 sticky-header-bg shadow-md font-bold">
                         <tr class="border-b border-gray-500/20">
                             <th rowspan="2" class="p-2 text-center w-10 border-r border-gray-500/20 sticky left-0 z-30 sticky-header-bg">No.</th>
-                            <th rowspan="2" class="p-2 text-left border-r border-gray-500/20 min-w-[180px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
+                            <th rowspan="2" class="p-2 text-left border-r border-gray-500/20 min-w-[160px] sticky left-10 z-30 sticky-header-bg">Nama Store</th>
             `;
 
             fullMonthDates.forEach(d => {
                 const colHeaderStyle = d.isActive ? 'text-indigo-600 dark:text-indigo-300 font-bold' : 'opacity-60';
-                html += `<th colspan="3" class="p-1 border-r border-gray-500/20 min-w-[60px] text-[10px] font-mono sticky-header-bg ${colHeaderStyle}">${d.label}</th>`;
+                html += `<th colspan="3" class="p-1 border-r border-gray-500/20 min-w-[55px] text-[10px] font-mono sticky-header-bg ${colHeaderStyle}">${d.label}</th>`;
             });
 
             html += `
-                            <th rowspan="2" class="p-2 min-w-[90px] sticky-header-bg">Kepatuhan</th>
+                            <th rowspan="2" class="p-2 min-w-[80px] sticky-header-bg">Kepatuhan</th>
                         </tr>
                         <tr class="border-b border-gray-500/20 text-[9px]">
             `;
@@ -1714,7 +1778,7 @@
                 }
 
                 html += `<td class="p-2 text-center font-bold">
-                    <span class="px-2 py-0.5 rounded border text-[11px] inline-block ${rateBadgeClass}">${complianceRate}%</span>
+                    <span class="px-1.5 py-0.5 rounded border text-[10px] inline-block ${rateBadgeClass}">${complianceRate}%</span>
                 </td></tr>`;
             });
 
@@ -1807,10 +1871,217 @@
                     <td class="p-2 text-center font-semibold text-blue-500">${item.iphone}</td>
                     <td class="p-2 text-center font-semibold text-cyan-500">${item.ipad}</td>
                     <td class="p-2 text-center font-semibold text-emerald-500">${item.watch}</td>
-                    <td class="p-2 text-center font-extrabold text-slate-900 dark:text-slate-100">${item.total}</td>
+                    <td class="p-2 text-center font-bold text-amber-500">${item.total}</td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        function renderWoWStoreTable(data) {
+            const tbody = document.getElementById('wow-store-table-body');
+            const totalBadge = document.getElementById('wow-store-total-badge');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const now = new Date();
+            const currentDay = now.getDate();
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : now.getMonth();
+
+            const twStart = Math.max(1, currentDay - 6);
+            const twEnd = currentDay;
+            const lwStart = Math.max(1, twStart - 7);
+            const lwEnd = Math.max(1, twStart - 1);
+
+            const storeWoWMap = {};
+            MASTER_STORES.forEach(store => {
+                storeWoWMap[store.toLowerCase().trim()] = {
+                    store: store,
+                    macLW: 0, macTW: 0,
+                    iphoneLW: 0, iphoneTW: 0,
+                    ipadLW: 0, ipadTW: 0,
+                    watchLW: 0, watchTW: 0,
+                    totalLW: 0, totalTW: 0
+                };
+            });
+
+            data.forEach(item => {
+                const rawStore = extractStore(item);
+                const rawDateStr = extractDate(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                if (rawStore && rawStore !== '-' && rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate && parsedDate.getMonth() === selectedMonthIdx && parsedDate.getFullYear() === 2026) {
+                        const day = parsedDate.getDate();
+                        const storeKey = rawStore.toLowerCase().trim();
+
+                        const matchedKey = Object.keys(storeWoWMap).find(k => k === storeKey || k.includes(storeKey) || storeKey.includes(k));
+                        
+                        if (matchedKey && storeWoWMap[matchedKey]) {
+                            const isTW = (day >= twStart && day <= twEnd);
+                            const isLW = (day >= lwStart && day <= lwEnd);
+
+                            if (isTW || isLW) {
+                                if (lob.includes('mac')) {
+                                    if (isTW) storeWoWMap[matchedKey].macTW += qty;
+                                    if (isLW) storeWoWMap[matchedKey].macLW += qty;
+                                } else if (lob.includes('iphone')) {
+                                    if (isTW) storeWoWMap[matchedKey].iphoneTW += qty;
+                                    if (isLW) storeWoWMap[matchedKey].iphoneLW += qty;
+                                } else if (lob.includes('ipad')) {
+                                    if (isTW) storeWoWMap[matchedKey].ipadTW += qty;
+                                    if (isLW) storeWoWMap[matchedKey].ipadLW += qty;
+                                } else if (lob.includes('watch')) {
+                                    if (isTW) storeWoWMap[matchedKey].watchTW += qty;
+                                    if (isLW) storeWoWMap[matchedKey].watchLW += qty;
+                                }
+
+                                if (isTW) storeWoWMap[matchedKey].totalTW += qty;
+                                if (isLW) storeWoWMap[matchedKey].totalLW += qty;
+                            }
+                        }
+                    }
+                }
+            });
+
+            const storeList = Object.values(storeWoWMap);
+            if (totalBadge) totalBadge.innerText = `Total ${storeList.length} Store`;
+
+            storeList.forEach((item, index) => {
+                const growth = item.totalTW - item.totalLW;
+                let growthClass = 'text-gray-400';
+                let growthText = '0';
+                if (growth > 0) {
+                    growthClass = 'text-emerald-500 font-bold';
+                    growthText = `+${growth}`;
+                } else if (growth < 0) {
+                    growthClass = 'text-rose-500 font-bold';
+                    growthText = `${growth}`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-60">${item.macLW}</span> / <span class="font-bold text-indigo-500">${item.macTW}</span></td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-60">${item.iphoneLW}</span> / <span class="font-bold text-blue-500">${item.iphoneTW}</span></td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-60">${item.ipadLW}</span> / <span class="font-bold text-cyan-500">${item.ipadTW}</span></td>
+                    <td class="p-2.5 text-center font-mono"><span class="opacity-60">${item.watchLW}</span> / <span class="font-bold text-emerald-500">${item.watchTW}</span></td>
+                    <td class="p-2.5 text-center font-mono ${growthClass}">${growthText}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Calculate WoW Summary Global
+            let macLW = 0, macTW = 0, iphoneLW = 0, iphoneTW = 0, ipadLW = 0, ipadTW = 0, watchLW = 0, watchTW = 0;
+            storeList.forEach(s => {
+                macLW += s.macLW; macTW += s.macTW;
+                iphoneLW += s.iphoneLW; iphoneTW += s.iphoneTW;
+                ipadLW += s.ipadLW; ipadTW += s.ipadTW;
+                watchLW += s.watchLW; watchTW += s.watchTW;
+            });
+
+            const totalLWAll = macLW + iphoneLW + ipadLW + watchLW;
+            const totalTWAll = macTW + iphoneTW + ipadTW + watchTW;
+
+            const calcPct = (tw, lw) => {
+                if (lw === 0) return tw > 0 ? '+100%' : '0%';
+                const diff = ((tw - lw) / lw) * 100;
+                return `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%`;
+            };
+
+            const wowContainer = document.getElementById('wow-summary-container');
+            if (wowContainer) {
+                wowContainer.innerHTML = `
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <span class="font-bold text-indigo-600 dark:text-indigo-300">Mac</span>
+                        <div class="text-right">
+                            <span class="font-mono opacity-70">LW: ${macLW}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${macTW}</span>
+                            <span class="block text-[10px] font-bold ${macTW >= macLW ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(macTW, macLW)}</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <span class="font-bold text-blue-600 dark:text-blue-300">iPhone</span>
+                        <div class="text-right">
+                            <span class="font-mono opacity-70">LW: ${iphoneLW}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${iphoneTW}</span>
+                            <span class="block text-[10px] font-bold ${iphoneTW >= iphoneLW ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(iphoneTW, iphoneLW)}</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <span class="font-bold text-cyan-600 dark:text-cyan-300">iPad</span>
+                        <div class="text-right">
+                            <span class="font-mono opacity-70">LW: ${ipadLW}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${ipadTW}</span>
+                            <span class="block text-[10px] font-bold ${ipadTW >= ipadLW ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(ipadTW, ipadLW)}</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <span class="font-bold text-emerald-600 dark:text-emerald-300">Watch</span>
+                        <div class="text-right">
+                            <span class="font-mono opacity-70">LW: ${watchLW}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${watchTW}</span>
+                            <span class="block text-[10px] font-bold ${watchTW >= watchLW ? 'text-emerald-500' : 'text-rose-500'}">${calcPct(watchTW, watchLW)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const growthValEl = document.getElementById('wow-total-growth-val');
+            if (growthValEl) {
+                const totalDiff = totalTWAll - totalLWAll;
+                growthValEl.innerText = `${totalTWAll} Unit (${totalDiff >= 0 ? '+' : ''}${totalDiff})`;
+                growthValEl.className = `font-bold ${totalDiff >= 0 ? 'text-emerald-500' : 'text-rose-500'}`;
+            }
+
+            renderWoWChart(macLW, macTW, iphoneLW, iphoneTW, ipadLW, ipadTW, watchLW, watchTW);
+        }
+
+        function renderWoWChart(macLW, macTW, iphoneLW, iphoneTW, ipadLW, ipadTW, watchLW, watchTW) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            if (chartInstances.wowGlobal) chartInstances.wowGlobal.destroy();
+            const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
+            if (ctxWoW) {
+                chartInstances.wowGlobal = new Chart(ctxWoW, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            {
+                                label: 'Last Week (LW)',
+                                data: [macLW, iphoneLW, ipadLW, watchLW],
+                                backgroundColor: 'rgba(148, 163, 184, 0.6)',
+                                borderRadius: 6
+                            },
+                            {
+                                label: 'This Week (TW)',
+                                data: [macTW, iphoneTW, ipadTW, watchTW],
+                                backgroundColor: '#6366f1',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold', size: 10 } } },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'start',
+                                color: textColor,
+                                font: { weight: 'bold', size: 10 }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
         }
 
         function renderRawDataTable(data) {
@@ -1818,24 +2089,24 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const top10Latest = [...data].reverse().slice(0, 10);
+            const top10Data = data.slice(0, 10);
 
-            if (top10Latest.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Tidak ada transaksi.</td></tr>';
+            if (top10Data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Tidak ada data transaksi.</td></tr>';
                 return;
             }
 
-            top10Latest.forEach((item, index) => {
+            top10Data.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
+                    <td class="p-2 font-mono font-bold text-center opacity-80">${index + 1}</td>
                     <td class="p-2 font-mono">${extractDate(item)}</td>
-                    <td class="p-2 font-bold">${extractName(item)}</td>
+                    <td class="p-2 font-bold text-indigo-600 dark:text-indigo-300">${extractName(item)}</td>
                     <td class="p-2">${extractStore(item)}</td>
-                    <td class="p-2 font-semibold text-indigo-500">${extractLOB(item)}</td>
-                    <td class="p-2 text-center font-extrabold text-emerald-500">${extractQuantity(item)}</td>
-                    <td class="p-2 font-semibold">${extractShift(item)}</td>
+                    <td class="p-2 font-semibold">${extractLOB(item)}</td>
+                    <td class="p-2 text-center font-bold text-emerald-600 dark:text-emerald-400">${extractQuantity(item)}</td>
+                    <td class="p-2 font-mono text-slate-400">${extractShift(item)}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1845,350 +2116,99 @@
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            const lobCounts = {};
+            let mac = 0, iphone = 0, ipad = 0, watch = 0;
+            const shiftData = {
+                'Pagi': { mac: 0, iphone: 0, ipad: 0, watch: 0 },
+                'Middle': { mac: 0, iphone: 0, ipad: 0, watch: 0 },
+                'Siang': { mac: 0, iphone: 0, ipad: 0, watch: 0 }
+            };
+
             data.forEach(item => {
-                const lob = extractLOB(item);
+                const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
-                lobCounts[lob] = (lobCounts[lob] || 0) + qty;
+                const shift = extractShift(item).toLowerCase();
+
+                let category = '';
+                if (lob.includes('mac')) { mac += qty; category = 'mac'; }
+                else if (lob.includes('iphone')) { iphone += qty; category = 'iphone'; }
+                else if (lob.includes('ipad')) { ipad += qty; category = 'ipad'; }
+                else if (lob.includes('watch')) { watch += qty; category = 'watch'; }
+
+                let shiftCategory = 'Siang';
+                if (shift.includes('pagi') || shift.includes('morning') || shift.includes('1')) shiftCategory = 'Pagi';
+                else if (shift.includes('middle') || shift.includes('mid') || shift.includes('2')) shiftCategory = 'Middle';
+
+                if (category && shiftData[shiftCategory]) {
+                    shiftData[shiftCategory][category] += qty;
+                }
             });
 
-            const lobPalette = ['#6366f1', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#14b8a6'];
-
+            // Chart LOB
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
-                const labels = Object.keys(lobCounts);
                 chartInstances.lob = new Chart(ctxLOB, {
-                    type: 'bar',
+                    type: 'doughnut',
                     data: {
-                        labels: labels,
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [{
-                            label: 'Unit Terjual',
-                            data: Object.values(lobCounts),
-                            backgroundColor: lobPalette.slice(0, labels.length),
-                            borderRadius: 6
+                            data: [mac, iphone, ipad, watch],
+                            backgroundColor: ['#6366f1', '#3b82f6', '#06b6d4', '#10b981'],
+                            borderWidth: 0
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
+                            legend: { position: 'bottom', labels: { color: textColor, font: { weight: 'bold', size: 10 } } },
                             datalabels: {
-                                anchor: 'center',
-                                align: 'center',
                                 color: '#ffffff',
                                 font: { weight: 'bold', size: 11 },
-                                formatter: Math.round
+                                formatter: (val) => val > 0 ? val : ''
                             }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
                         }
                     }
                 });
             }
 
-            const shiftsSet = new Set();
-            const lobsSet = new Set(['Mac', 'iPhone', 'iPad', 'Watch']);
-            const shiftLobMatrix = {};
-
-            data.forEach(item => {
-                const shift = extractShift(item);
-                let lob = extractLOB(item);
-                const qty = extractQuantity(item);
-
-                const lobLower = lob.toLowerCase();
-                if (lobLower.includes('mac')) lob = 'Mac';
-                else if (lobLower.includes('iphone')) lob = 'iPhone';
-                else if (lobLower.includes('ipad')) lob = 'iPad';
-                else if (lobLower.includes('watch')) lob = 'Watch';
-
-                if (shift && shift !== '-') {
-                    shiftsSet.add(shift);
-                    lobsSet.add(lob);
-                    if (!shiftLobMatrix[shift]) shiftLobMatrix[shift] = {};
-                    shiftLobMatrix[shift][lob] = (shiftLobMatrix[shift][lob] || 0) + qty;
-                }
-            });
-
-            const shiftLabels = Array.from(shiftsSet).sort();
-            const lobList = Array.from(lobsSet);
-
-            const shiftDatasets = lobList.map((lob, idx) => {
-                const colors = ['#6366f1', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
-                return {
-                    label: lob,
-                    data: shiftLabels.map(s => (shiftLobMatrix[s] && shiftLobMatrix[s][lob]) ? shiftLobMatrix[s][lob] : 0),
-                    backgroundColor: colors[idx % colors.length],
-                    borderRadius: 4
-                };
-            });
-
+            // Chart Shift
             if (chartInstances.shift) chartInstances.shift.destroy();
             const ctxShift = document.getElementById('chartShift')?.getContext('2d');
             if (ctxShift) {
                 chartInstances.shift = new Chart(ctxShift, {
                     type: 'bar',
                     data: {
-                        labels: shiftLabels.length > 0 ? shiftLabels : ['Pagi', 'Middle', 'Siang'],
-                        datasets: shiftDatasets
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { labels: { color: textColor, font: { size: 10, weight: 'bold' } } },
-                            datalabels: {
-                                anchor: 'center',
-                                align: 'center',
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 9 },
-                                formatter: (val) => val > 0 ? val : ''
-                            }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
-                        }
-                    }
-                });
-            }
-
-            // PERBAIKAN: Hitung Data WoW Menggunakan Raw Data Utuh agar Week Lalu (LW) Tidak Terpotong Filter Bulan
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-            
-            const startTW = new Date(today);
-            startTW.setDate(today.getDate() - 6);
-            startTW.setHours(0, 0, 0, 0);
-
-            const endLW = new Date(startTW);
-            endLW.setMilliseconds(-1);
-
-            const startLW = new Date(endLW);
-            startLW.setDate(endLW.getDate() - 6);
-            startLW.setHours(0, 0, 0, 0);
-
-            const wowData = { LW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 }, TW: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 } };
-
-            rawCSVData.forEach(item => {
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-                const rowDate = parseCustomDate(extractDate(item));
-
-                if (rowDate) {
-                    let period = null;
-                    if (rowDate >= startLW && rowDate <= endLW) {
-                        period = 'LW';
-                    } else if (rowDate >= startTW && rowDate <= today) {
-                        period = 'TW';
-                    }
-
-                    if (period) {
-                        if (lob.includes('mac')) wowData[period].Mac += qty;
-                        else if (lob.includes('iphone')) wowData[period].iPhone += qty;
-                        else if (lob.includes('ipad')) wowData[period].iPad += qty;
-                        else if (lob.includes('watch')) wowData[period].Watch += qty;
-                    }
-                }
-            });
-
-            // PERBAIKAN: Render Summary Side-by-Side WoW
-            renderWoWSummary(wowData);
-
-            if (chartInstances.wow) chartInstances.wow.destroy();
-            const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
-            if (ctxWoW) {
-                chartInstances.wow = new Chart(ctxWoW, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        labels: ['Shift Pagi', 'Shift Middle', 'Shift Siang'],
                         datasets: [
-                            { label: 'Last Week (LW)', data: Object.values(wowData.LW), backgroundColor: '#94a3b8', borderRadius: 4 },
-                            { label: 'This Week (TW)', data: Object.values(wowData.TW), backgroundColor: '#6366f1', borderRadius: 4 }
+                            { label: 'Mac', data: [shiftData['Pagi'].mac, shiftData['Middle'].mac, shiftData['Siang'].mac], backgroundColor: '#6366f1' },
+                            { label: 'iPhone', data: [shiftData['Pagi'].iphone, shiftData['Middle'].iphone, shiftData['Siang'].iphone], backgroundColor: '#3b82f6' },
+                            { label: 'iPad', data: [shiftData['Pagi'].ipad, shiftData['Middle'].ipad, shiftData['Siang'].ipad], backgroundColor: '#06b6d4' },
+                            { label: 'Watch', data: [shiftData['Pagi'].watch, shiftData['Middle'].watch, shiftData['Siang'].watch], backgroundColor: '#10b981' }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            legend: { position: 'bottom', labels: { color: textColor, font: { weight: 'bold', size: 10 } } },
                             datalabels: {
-                                anchor: 'center',
-                                align: 'center',
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 10 },
-                                formatter: (val) => val > 0 ? val : ''
+                                display: false
                             }
                         },
                         scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                            x: { stacked: true, ticks: { color: textColor, font: { weight: 'bold', size: 10 } } },
+                            y: { stacked: true, ticks: { color: textColor, font: { weight: 'bold', size: 10 } } }
                         }
                     }
                 });
             }
         }
 
-        // PERBAIKAN: Fungsi Khusus Render Summary WoW Side-by-Side
-        function renderWoWSummary(wowData) {
-            const container = document.getElementById('wow-summary-container');
-            const totalGrowthBox = document.getElementById('wow-total-growth-val');
-            if (!container) return;
-
-            const lobs = [
-                { name: 'Mac', color: 'text-indigo-600 dark:text-indigo-300' },
-                { name: 'iPhone', color: 'text-blue-600 dark:text-blue-300' },
-                { name: 'iPad', color: 'text-cyan-600 dark:text-cyan-300' },
-                { name: 'Watch', color: 'text-emerald-600 dark:text-emerald-300' }
-            ];
-
-            let html = '';
-            let totalLW = 0, totalTW = 0;
-
-            lobs.forEach(lob => {
-                const lw = wowData.LW[lob.name] || 0;
-                const tw = wowData.TW[lob.name] || 0;
-                totalLW += lw;
-                totalTW += tw;
-
-                const diff = tw - lw;
-                let pct = lw > 0 ? ((diff / lw) * 100).toFixed(1) : (tw > 0 ? '+100' : '0');
-                const isPositive = diff >= 0;
-                const badgeClass = isPositive ? 'text-emerald-500' : 'text-rose-500';
-                const sign = isPositive ? '+' : '';
-
-                html += `
-                    <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
-                        <span class="font-bold ${lob.color}">${lob.name}</span>
-                        <div class="text-right">
-                            <span class="font-mono text-slate-400">LW: ${lw}</span> <span class="mx-1 opacity-50">→</span> <span class="font-bold">TW: ${tw}</span>
-                            <span class="block text-[10px] font-extrabold ${badgeClass}">${sign}${diff} (${sign}${pct}%)</span>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-
-            if (totalGrowthBox) {
-                const totalDiff = totalTW - totalLW;
-                const totalSign = totalDiff >= 0 ? '+' : '';
-                const totalClass = totalDiff >= 0 ? 'text-emerald-500' : 'text-rose-500';
-                totalGrowthBox.innerHTML = `<span class="${totalClass}">${totalTW} Unit (${totalSign}${totalDiff} WoW)</span>`;
-            }
-        }
-
-        // PERBAIKAN: Render Tabel Store WoW Menggunakan Date Range yang Tepat
-        function renderWoWStoreTable(data) {
-            const tbody = document.getElementById('wow-store-table-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-
-            const startTW = new Date(today);
-            startTW.setDate(today.getDate() - 6);
-            startTW.setHours(0, 0, 0, 0);
-
-            const endLW = new Date(startTW);
-            endLW.setMilliseconds(-1);
-
-            const startLW = new Date(endLW);
-            startLW.setDate(endLW.getDate() - 6);
-            startLW.setHours(0, 0, 0, 0);
-
-            const storeWoW = {};
-            
-            MASTER_STORES.forEach(store => {
-                storeWoW[store] = {
-                    mac: { lw: 0, tw: 0 },
-                    iphone: { lw: 0, tw: 0 },
-                    ipad: { lw: 0, tw: 0 },
-                    watch: { lw: 0, tw: 0 },
-                    totalLW: 0,
-                    totalTW: 0
-                };
-            });
-
-            data.forEach(item => {
-                const rawStore = extractStore(item);
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-                const rowDate = parseCustomDate(extractDate(item));
-
-                if (!rawStore || rawStore === '-' || !rowDate) return;
-
-                let period = null;
-                if (rowDate >= startLW && rowDate <= endLW) {
-                    period = 'lw';
-                } else if (rowDate >= startTW && rowDate <= today) {
-                    period = 'tw';
-                }
-
-                if (!period) return;
-
-                const matchedMasterStore = MASTER_STORES.find(s => 
-                    s.toLowerCase().trim() === rawStore.toLowerCase().trim() ||
-                    s.toLowerCase().includes(rawStore.toLowerCase()) || 
-                    rawStore.toLowerCase().includes(s.toLowerCase())
-                ) || rawStore;
-
-                if (!storeWoW[matchedMasterStore]) {
-                    storeWoW[matchedMasterStore] = {
-                        mac: { lw: 0, tw: 0 },
-                        iphone: { lw: 0, tw: 0 },
-                        ipad: { lw: 0, tw: 0 },
-                        watch: { lw: 0, tw: 0 },
-                        totalLW: 0,
-                        totalTW: 0
-                    };
-                }
-
-                if (lob.includes('mac')) storeWoW[matchedMasterStore].mac[period] += qty;
-                else if (lob.includes('iphone')) storeWoW[matchedMasterStore].iphone[period] += qty;
-                else if (lob.includes('ipad')) storeWoW[matchedMasterStore].ipad[period] += qty;
-                else if (lob.includes('watch')) storeWoW[matchedMasterStore].watch[period] += qty;
-
-                if (period === 'lw') storeWoW[matchedMasterStore].totalLW += qty;
-                else storeWoW[matchedMasterStore].totalTW += qty;
-            });
-
-            const sortedStores = Object.keys(storeWoW).sort((a, b) => storeWoW[b].totalTW - storeWoW[a].totalTW);
-
-            const countBadge = document.getElementById('wow-store-total-badge');
-            if (countBadge) {
-                countBadge.innerText = `Total ${sortedStores.length} Store`;
-            }
-
-            sortedStores.forEach((storeName, index) => {
-                const s = storeWoW[storeName];
-                const growth = s.totalTW - s.totalLW;
-                const growthText = growth > 0 ? `+${growth}` : `${growth}`;
-                const growthClass = growth > 0 ? 'text-emerald-500 font-bold' : (growth < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100">${storeName}</td>
-                    <td class="p-2.5 text-center font-mono">${s.mac.lw} / <span class="font-bold text-indigo-600 dark:text-indigo-400">${s.mac.tw}</span></td>
-                    <td class="p-2.5 text-center font-mono">${s.iphone.lw} / <span class="font-bold text-blue-600 dark:text-blue-400">${s.iphone.tw}</span></td>
-                    <td class="p-2.5 text-center font-mono">${s.ipad.lw} / <span class="font-bold text-cyan-600 dark:text-cyan-400">${s.ipad.tw}</span></td>
-                    <td class="p-2.5 text-center font-mono">${s.watch.lw} / <span class="font-bold text-emerald-600 dark:text-emerald-400">${s.watch.tw}</span></td>
-                    <td class="p-2.5 text-center ${growthClass}">${growthText}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
+        window.onload = function() {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000);
-        });
+            setInterval(fetchLiveData, 30000);
+        };
     </script>
 </body>
 </html>
