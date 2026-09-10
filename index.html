@@ -336,7 +336,7 @@
 
     <main class="flex-1 flex flex-col gap-4 overflow-hidden w-full">
 
-        <!-- Global Header Controls (KPI Disembunyikan Saat Menu Pengaturan Aktif) -->
+        <!-- Global Header Controls -->
         <div id="global-kpi-container" class="space-y-4">
             <header class="glass-panel p-3 md:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
                 <div>
@@ -578,28 +578,28 @@
                             <div class="space-y-2 text-xs" id="wow-summary-container">
                                 <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
                                     <span class="font-bold text-amber-500 dark:text-amber-400">Mac</span>
-                                    <div class="text-right">
+                                    <div class="text-right" id="wow-sum-mac">
                                         <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
                                         <span class="block text-[10px] font-bold text-slate-400">0%</span>
                                     </div>
                                 </div>
                                 <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
                                     <span class="font-bold text-rose-500 dark:text-rose-400">iPhone</span>
-                                    <div class="text-right">
+                                    <div class="text-right" id="wow-sum-iphone">
                                         <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
                                         <span class="block text-[10px] font-bold text-slate-400">0%</span>
                                     </div>
                                 </div>
                                 <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
                                     <span class="font-bold text-emerald-500 dark:text-emerald-400">iPad</span>
-                                    <div class="text-right">
+                                    <div class="text-right" id="wow-sum-ipad">
                                         <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
                                         <span class="block text-[10px] font-bold text-slate-400">0%</span>
                                     </div>
                                 </div>
                                 <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
                                     <span class="font-bold text-blue-500 dark:text-blue-400">Watch</span>
-                                    <div class="text-right">
+                                    <div class="text-right" id="wow-sum-watch">
                                         <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
                                         <span class="block text-[10px] font-bold text-slate-400">0%</span>
                                     </div>
@@ -862,7 +862,7 @@
                 </div>
             </div>
 
-            <!-- Section 5: Pengaturan (Murni Pengaturan Saja) -->
+            <!-- Section 5: Pengaturan -->
             <div id="sec-settings" class="content-section hidden space-y-4">
                 <div class="glass-panel p-6 max-w-2xl mx-auto space-y-6">
                     <div class="flex items-center gap-3 pb-4 border-b border-gray-500/20">
@@ -883,7 +883,6 @@
                         <select id="setting-language" onchange="changeLanguage(this.value)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             <option value="id" selected>Bahasa Indonesia</option>
                             <option value="en">English</option>
-                            <option value="in">India (हिन्दी)</option>
                         </select>
                     </div>
 
@@ -920,12 +919,11 @@
 
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
 
-        // Warna LOB Konsisten: Kuning (Mac), Merah (iPhone), Hijau (iPad), Biru (Watch)
         const LOB_COLORS = {
-            mac: '#f59e0b',    // Kuning Amber
-            iphone: '#ef4444', // Merah
-            ipad: '#10b981',   // Hijau
-            watch: '#3b82f6'   // Biru
+            mac: '#f59e0b',
+            iphone: '#ef4444',
+            ipad: '#10b981',
+            watch: '#3b82f6'
         };
 
         const MASTER_STORES = [
@@ -964,7 +962,6 @@
             "M290 Digimap Mandau City Mall", "M293 Digimap Salatiga"
         ];
 
-        // Kamus Bahasa (i18n)
         const i18n = {
             id: {
                 autoSync: "Auto Sync",
@@ -1035,41 +1032,6 @@
                 selectLanguage: "Select Language",
                 displayMode: "Display Mode",
                 displayModeDesc: "Switch between Dark Mode and Light Mode"
-            },
-            in: {
-                autoSync: "ऑटो सिंक",
-                resetFilter: "फ़िल्टर रीसेट करें",
-                navOverview: "अवलोकन",
-                navWow: "WoW प्रदर्शन",
-                navCompliance: "अनुपालन",
-                navRaw: "लेन-देन लॉग",
-                navSettings: "सेटिंग्स",
-                filterMonth: "महीना फ़िल्टर",
-                filterStore: "स्टोर फ़िल्टर",
-                filterLob: "LOB फ़िल्टर",
-                filterShift: "शिफ्ट फ़िल्टर",
-                kpiTotalUnit: "कुल इकाइयाँ / LOB",
-                kpiAvgDay: "औसत / दिन / LOB",
-                kpiActivitySummary: "गतिविधि सारांश",
-                lblReports: "रिपोर्ट",
-                lblChampion: "चैंपियन",
-                lblStores: "स्टोर",
-                chartLOBTitle: "LOB श्रेणी के अनुसार कुल बिक्री",
-                chartShiftTitle: "बिक्री प्रति शिफ्ट (LOB विवरण)",
-                top10SalesTitle: "शीर्ष 10 चैंपियन बिक्री",
-                top10StoreTitle: "शीर्ष 10 स्टोर प्रदर्शन",
-                allLob: "सभी LOB",
-                detailLob: "प्रति LOB विवरण",
-                thName: "नाम",
-                thStore: "स्टोर",
-                thTotalUnit: "कुल इकाइयाँ",
-                thStoreName: "स्टोर का नाम",
-                thTotal: "कुल",
-                settingsTitle: "डैशबोर्ड सेटिंग्स",
-                settingsSubtitle: "सूपरेंस और भाषा प्राथमिकताओं को अनुकूलित करें",
-                selectLanguage: "भाषा चुनें",
-                displayMode: "प्रदर्शन मोड",
-                displayModeDesc: "डार्क मोड और लाइट मोड के बीच स्विच करें"
             }
         };
 
@@ -1081,7 +1043,6 @@
         let lateStoresSummaryList = [];
         let lateChampionSummaryList = [];
         let unsubmittedStoresList = [];
-        let logTransaksiStoresData = [];
 
         function changeLanguage(lang) {
             if (!i18n[lang]) return;
@@ -1280,7 +1241,6 @@
             const mobileDockBtn = document.getElementById(`dock-${sectionId}`);
             if (mobileDockBtn) mobileDockBtn.classList.add('active');
 
-            // Sembunyikan Header KPI jika di Menu Pengaturan
             const globalKpi = document.getElementById('global-kpi-container');
             if (globalKpi) {
                 if (sectionId === 'settings') {
@@ -1400,6 +1360,14 @@
             }
         }
 
+        function getWeekNumber(d) {
+            const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            const dayNum = date.getUTCDay() || 7;
+            date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+            return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+        }
+
         function applyFilters() {
             const monthVal = document.getElementById('filter-month')?.value || '09';
             const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
@@ -1437,12 +1405,9 @@
 
             updateMetricsAndCharts(filteredData);
             renderUnsubmittedStoresTable(filteredData);
-            renderWoWStoreTable(rawCSVData);
-            renderComplianceMatrix(filteredData);
+            renderWoWPerformance(filteredData);
+            renderWoWStoreTable(filteredData);
             renderLateChampionsTable(filteredData);
-            renderTop10Sales(filteredData);
-            renderTop10Stores(filteredData);
-            renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
 
@@ -1523,11 +1488,201 @@
             document.getElementById('kpi-total-stores').innerText = uniqueStores.size;
         }
 
+        function renderWoWPerformance(data) {
+            const now = new Date();
+            const currentWeek = getWeekNumber(now);
+            const lastWeek = currentWeek - 1;
+
+            let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+
+            data.forEach(item => {
+                const dateStr = extractDate(item);
+                const parsedDate = parseCustomDate(dateStr);
+                if (parsedDate) {
+                    const itemWeek = getWeekNumber(parsedDate);
+                    const lob = extractLOB(item).toLowerCase();
+                    const qty = extractQuantity(item);
+
+                    let targetObj = null;
+                    if (itemWeek === currentWeek) targetObj = twData;
+                    else if (itemWeek === lastWeek) targetObj = lwData;
+
+                    if (targetObj) {
+                        if (lob.includes('mac')) targetObj.mac += qty;
+                        else if (lob.includes('iphone')) targetObj.iphone += qty;
+                        else if (lob.includes('ipad')) targetObj.ipad += qty;
+                        else if (lob.includes('watch')) targetObj.watch += qty;
+                    }
+                }
+            });
+
+            // Update Summary TW vs LW UI
+            const lobs = ['mac', 'iphone', 'ipad', 'watch'];
+            let totalLW = 0, totalTW = 0;
+
+            lobs.forEach(lob => {
+                const lwVal = lwData[lob];
+                const twVal = twData[lob];
+                totalLW += lwVal;
+                totalTW += twVal;
+
+                let pctChange = 0;
+                if (lwVal > 0) {
+                    pctChange = (((twVal - lwVal) / lwVal) * 100).toFixed(1);
+                } else if (twVal > 0) {
+                    pctChange = 100;
+                }
+
+                const colorClass = pctChange >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = pctChange >= 0 ? '+' : '';
+
+                const container = document.getElementById(`wow-sum-${lob}`);
+                if (container) {
+                    container.innerHTML = `
+                        <span class="font-mono text-slate-400">LW: ${lwVal}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${twVal}</span>
+                        <span class="block text-[10px] font-bold ${colorClass}">${sign}${pctChange}%</span>
+                    `;
+                }
+            });
+
+            const totalGrowthVal = document.getElementById('wow-total-growth-val');
+            if (totalGrowthVal) {
+                let totalPct = totalLW > 0 ? (((totalTW - totalLW) / totalLW) * 100).toFixed(1) : (totalTW > 0 ? 100 : 0);
+                const sign = totalPct >= 0 ? '+' : '';
+                totalGrowthVal.innerText = `${totalTW} Unit (${sign}${totalPct}%)`;
+            }
+
+            // Render Chart WoW Global
+            if (chartInstances.wowGlobal) chartInstances.wowGlobal.destroy();
+            const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
+            if (ctxWoW) {
+                const isLight = document.body.classList.contains('light-mode');
+                const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+                chartInstances.wowGlobal = new Chart(ctxWoW, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            {
+                                label: 'Last Week (LW)',
+                                data: [lwData.mac, lwData.iphone, lwData.ipad, lwData.watch],
+                                backgroundColor: '#64748b',
+                                borderRadius: 4
+                            },
+                            {
+                                label: 'This Week (TW)',
+                                data: [twData.mac, twData.iphone, twData.ipad, twData.watch],
+                                backgroundColor: '#6366f1',
+                                borderRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderWoWStoreTable(data) {
+            const tbody = document.getElementById('wow-store-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const now = new Date();
+            const currentWeek = getWeekNumber(now);
+            const lastWeek = currentWeek - 1;
+
+            const storeMap = {};
+            MASTER_STORES.forEach(s => {
+                storeMap[s] = {
+                    mac: { lw: 0, tw: 0 },
+                    iphone: { lw: 0, tw: 0 },
+                    ipad: { lw: 0, tw: 0 },
+                    watch: { lw: 0, tw: 0 }
+                };
+            });
+
+            data.forEach(item => {
+                const rawStore = extractStore(item);
+                const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === rawStore.toLowerCase().trim() || ms.toLowerCase().includes(rawStore.toLowerCase()) || rawStore.toLowerCase().includes(ms.toLowerCase()));
+                
+                if (matchedStore) {
+                    const parsedDate = parseCustomDate(extractDate(item));
+                    if (parsedDate) {
+                        const itemWeek = getWeekNumber(parsedDate);
+                        const lob = extractLOB(item).toLowerCase();
+                        const qty = extractQuantity(item);
+                        
+                        let weekKey = null;
+                        if (itemWeek === currentWeek) weekKey = 'tw';
+                        else if (itemWeek === lastWeek) weekKey = 'lw';
+
+                        if (weekKey) {
+                            if (lob.includes('mac')) storeMap[matchedStore].mac[weekKey] += qty;
+                            else if (lob.includes('iphone')) storeMap[matchedStore].iphone[weekKey] += qty;
+                            else if (lob.includes('ipad')) storeMap[matchedStore].ipad[weekKey] += qty;
+                            else if (lob.includes('watch')) storeMap[matchedStore].watch[weekKey] += qty;
+                        }
+                    }
+                }
+            });
+
+            let index = 1;
+            Object.keys(storeMap).forEach(store => {
+                const s = storeMap[store];
+                const totalLW = s.mac.lw + s.iphone.lw + s.ipad.lw + s.watch.lw;
+                const totalTW = s.mac.tw + s.iphone.tw + s.ipad.tw + s.watch.tw;
+
+                let growthPct = 0;
+                if (totalLW > 0) {
+                    growthPct = (((totalTW - totalLW) / totalLW) * 100).toFixed(1);
+                } else if (totalTW > 0) {
+                    growthPct = 100;
+                }
+
+                const colorClass = growthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = growthPct >= 0 ? '+' : '';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index++}</td>
+                    <td class="p-2.5 font-bold">${store}</td>
+                    <td class="p-2.5 text-center font-mono">${s.mac.lw} / <b>${s.mac.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.iphone.lw} / <b>${s.iphone.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.ipad.lw} / <b>${s.ipad.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.watch.lw} / <b>${s.watch.tw}</b></td>
+                    <td class="p-2.5 text-center font-bold ${colorClass}">${totalTW} (${sign}${growthPct}%)</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const badge = document.getElementById('wow-store-total-badge');
+            if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
+        }
+
         function renderCharts(data) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            // 1. Chart Total Penjualan per Kategori LOB (Kuning, Merah, Hijau, Biru)
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
@@ -1573,7 +1728,6 @@
                 });
             }
 
-            // 2. Chart Penjualan per Shift Breakdown LOB (NON-STACKED / Grouped Bar Chart)
             if (chartInstances.shift) chartInstances.shift.destroy();
             const ctxShift = document.getElementById('chartShift')?.getContext('2d');
             if (ctxShift) {
@@ -1603,39 +1757,17 @@
                     data: {
                         labels: ['Shift Pagi', 'Shift Middle', 'Shift Siang'],
                         datasets: [
-                            {
-                                label: 'Mac',
-                                data: [shiftData.Pagi.Mac, shiftData.Middle.Mac, shiftData.Siang.Mac],
-                                backgroundColor: LOB_COLORS.mac,
-                                borderRadius: 4
-                            },
-                            {
-                                label: 'iPhone',
-                                data: [shiftData.Pagi.iPhone, shiftData.Middle.iPhone, shiftData.Siang.iPhone],
-                                backgroundColor: LOB_COLORS.iphone,
-                                borderRadius: 4
-                            },
-                            {
-                                label: 'iPad',
-                                data: [shiftData.Pagi.iPad, shiftData.Middle.iPad, shiftData.Siang.iPad],
-                                backgroundColor: LOB_COLORS.ipad,
-                                borderRadius: 4
-                            },
-                            {
-                                label: 'Watch',
-                                data: [shiftData.Pagi.Watch, shiftData.Middle.Watch, shiftData.Siang.Watch],
-                                backgroundColor: LOB_COLORS.watch,
-                                borderRadius: 4
-                            }
+                            { label: 'Mac', data: [shiftData.Pagi.Mac, shiftData.Middle.Mac, shiftData.Siang.Mac], backgroundColor: LOB_COLORS.mac, borderRadius: 4 },
+                            { label: 'iPhone', data: [shiftData.Pagi.iPhone, shiftData.Middle.iPhone, shiftData.Siang.iPhone], backgroundColor: LOB_COLORS.iphone, borderRadius: 4 },
+                            { label: 'iPad', data: [shiftData.Pagi.iPad, shiftData.Middle.iPad, shiftData.Siang.iPad], backgroundColor: LOB_COLORS.ipad, borderRadius: 4 },
+                            { label: 'Watch', data: [shiftData.Pagi.Watch, shiftData.Middle.Watch, shiftData.Siang.Watch], backgroundColor: LOB_COLORS.watch, borderRadius: 4 }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: {
-                                labels: { color: textColor, font: { weight: 'bold', size: 10 } }
-                            },
+                            legend: { labels: { color: textColor, font: { weight: 'bold', size: 10 } } },
                             datalabels: {
                                 anchor: 'center',
                                 align: 'center',
@@ -1786,23 +1918,14 @@
                         const txDayEnd = new Date(dateTx.getFullYear(), dateTx.getMonth(), dateTx.getDate(), 23, 59, 59, 999);
                         if (dateTs > txDayEnd) {
                             totalLateEvents++;
-                            lateChampionsList.push({
-                                name,
-                                store,
-                                dateTxStr: rawDateStr,
-                                dateTsStr: tsStr
-                            });
+                            lateChampionsList.push({ name, store, dateTxStr: rawDateStr, dateTsStr: tsStr });
 
                             const key = `${name.toLowerCase().trim()}___${store.toLowerCase().trim()}`;
-                            if (!summaryMap[key]) {
-                                summaryMap[key] = { name, store, count: 0 };
-                            }
+                            if (!summaryMap[key]) summaryMap[key] = { name, store, count: 0 };
                             summaryMap[key].count += 1;
 
                             const storeKey = store.toLowerCase().trim();
-                            if (!storeSummaryMap[storeKey]) {
-                                storeSummaryMap[storeKey] = { store, count: 0 };
-                            }
+                            if (!storeSummaryMap[storeKey]) storeSummaryMap[storeKey] = { store, count: 0 };
                             storeSummaryMap[storeKey].count += 1;
                         }
                     }
@@ -1849,25 +1972,14 @@
                     type: 'bar',
                     data: {
                         labels: top10LateStores.map(s => s.store),
-                        datasets: [{
-                            label: 'Jumlah Keterlambatan',
-                            data: top10LateStores.map(s => s.count),
-                            backgroundColor: '#f43f5e',
-                            borderRadius: 6
-                        }]
+                        datasets: [{ label: 'Jumlah Keterlambatan', data: top10LateStores.map(s => s.count), backgroundColor: '#f43f5e', borderRadius: 6 }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false },
-                            datalabels: {
-                                anchor: 'center',
-                                align: 'center',
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 11 },
-                                formatter: Math.round
-                            }
+                            datalabels: { anchor: 'center', align: 'center', color: '#ffffff', font: { weight: 'bold', size: 11 }, formatter: Math.round }
                         },
                         scales: {
                             x: { ticks: { color: textColor, font: { weight: 'bold' } } },
@@ -1885,25 +1997,14 @@
                     type: 'bar',
                     data: {
                         labels: top10LateChamp.map(c => c.name),
-                        datasets: [{
-                            label: 'Frekuensi Terlambat',
-                            data: top10LateChamp.map(c => c.count),
-                            backgroundColor: '#a855f7',
-                            borderRadius: 6
-                        }]
+                        datasets: [{ label: 'Frekuensi Terlambat', data: top10LateChamp.map(c => c.count), backgroundColor: '#a855f7', borderRadius: 6 }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false },
-                            datalabels: {
-                                anchor: 'center',
-                                align: 'center',
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 11 },
-                                formatter: Math.round
-                            }
+                            datalabels: { anchor: 'center', align: 'center', color: '#ffffff', font: { weight: 'bold', size: 11 }, formatter: Math.round }
                         },
                         scales: {
                             x: { ticks: { color: textColor, font: { weight: 'bold' } } },
@@ -1918,15 +2019,12 @@
             const tbody = document.getElementById('late-champions-summary-body');
             const summaryBadge = document.getElementById('late-summary-total-badge');
 
-            if (summaryBadge) {
-                summaryBadge.innerText = `${lateChampionSummaryList.length} Champion`;
-            }
-
+            if (summaryBadge) summaryBadge.innerText = `${lateChampionSummaryList.length} Champion`;
             if (!tbody) return;
             tbody.innerHTML = '';
 
             if (lateChampionSummaryList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada rekap keterlambatan Champion.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">Tidak ada data keterlambatan Champion.</td></tr>';
                 return;
             }
 
@@ -1935,398 +2033,9 @@
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold neon-purple-text text-purple-700 dark:text-purple-300 text-xs">${item.name}</td>
-                    <td class="p-2.5 font-semibold text-xs">${item.store}</td>
-                    <td class="p-2.5 text-center">
-                        <span class="px-2.5 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full font-extrabold text-xs border border-purple-500/30 neon-green-badge">${item.count} Kali</span>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function exportLateStoresExcel() {
-            if (lateStoresSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
-            const data = lateStoresSummaryList.map((item, idx) => ({
-                "No": idx + 1,
-                "Nama Toko": item.store,
-                "Berapa Kali Terlambat": item.count
-            }));
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Daftar Toko Terlambat");
-            XLSX.writeFile(wb, "Daftar_Toko_Terlambat.xlsx");
-        }
-
-        function exportLateStoresPDF() {
-            if (lateStoresSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Daftar Toko Yang Terlambat", 14, 15);
-            const tableData = lateStoresSummaryList.map((item, idx) => [idx + 1, item.store, item.count]);
-            doc.autoTable({
-                head: [["No", "Nama Toko", "Berapa Kali Terlambat"]],
-                body: tableData,
-                startY: 20
-            });
-            doc.save("Daftar_Toko_Terlambat.pdf");
-        }
-
-        function exportLateSummaryExcel() {
-            if (lateChampionSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
-            const data = lateChampionSummaryList.map((item, idx) => ({
-                "No": idx + 1,
-                "Nama Champion": item.name,
-                "Toko": item.store,
-                "Berapa Kali Terlambat": item.count
-            }));
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Daftar Keterlambatan Champion");
-            XLSX.writeFile(wb, "Daftar_Keterlambatan_Champion.xlsx");
-        }
-
-        function exportLateSummaryPDF() {
-            if (lateChampionSummaryList.length === 0) return alert("Tidak ada data untuk diexport!");
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Daftar Keterlambatan Per Champion", 14, 15);
-            const tableData = lateChampionSummaryList.map((item, idx) => [idx + 1, item.name, item.store, item.count]);
-            doc.autoTable({
-                head: [["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"]],
-                body: tableData,
-                startY: 20
-            });
-            doc.save("Daftar_Keterlambatan_Champion.pdf");
-        }
-
-        function exportLogTransaksiExcel() {
-            if (logTransaksiStoresData.length === 0) return alert("Tidak ada data untuk diexport!");
-            const data = logTransaksiStoresData.map((item, idx) => ({
-                "No": idx + 1,
-                "Nama Toko": item.store,
-                "Mac": item.mac,
-                "iPhone": item.iphone,
-                "iPad": item.ipad,
-                "Watch": item.watch,
-                "Total Unit": item.total
-            }));
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Log Transaksi Masuk Store");
-            XLSX.writeFile(wb, "Log_Transaksi_Masuk_Store.xlsx");
-        }
-
-        function exportLogTransaksiPDF() {
-            if (logTransaksiStoresData.length === 0) return alert("Tidak ada data untuk diexport!");
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Log Transaksi Masuk Store (Breakdown per LOB)", 14, 15);
-            const tableData = logTransaksiStoresData.map((item, idx) => [
-                idx + 1, item.store, item.mac, item.iphone, item.ipad, item.watch, item.total
-            ]);
-            doc.autoTable({
-                head: [["No", "Nama Toko", "Mac", "iPhone", "iPad", "Watch", "Total Unit"]],
-                body: tableData,
-                startY: 20
-            });
-            doc.save("Log_Transaksi_Masuk_Store.pdf");
-        }
-
-        function copyLateChampionSummaryWaDraft() {
-            if (lateChampionSummaryList.length === 0) {
-                alert('Tidak ada data keterlambatan Champion untuk disalin.');
-                return;
-            }
-
-            let text = `*DAFTAR KETERLAMBATAN SUBMIT LOB CHAMPION*\n*(Total: ${lateChampionSummaryList.length} Champion Terlibat)*\n\n`;
-            lateChampionSummaryList.forEach((item, idx) => {
-                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Jumlah Terlambat*: ${item.count} Kali\n\n`;
-            });
-            text += `Mohon perhatian dan evaluasi bersama agar pengisian laporan dapat dilakukan secara disiplin sebelum jam 12 malam di hari H transaksi. Terima kasih! 🙏`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA Daftar Keterlambatan Champion berhasil disalin!');
-            }).catch(err => {
-                console.error('Gagal menyalin rekap WA:', err);
-            });
-        }
-
-        function copyLateChampionsWaDraft() {
-            if (lateChampionsList.length === 0) {
-                alert('Tidak ada data keterlambatan submit untuk dibuatkan draft WA.');
-                return;
-            }
-
-            let text = `Halo rekan-rekan LOB Champion,\n\nBerikut adalah daftar laporan yang *TERLAMBAT SUBMIT* (Total: ${lateChampionsList.length} laporan, dikirim lewat dari jam 12 malam pada hari H):\n\n`;
-            lateChampionsList.forEach((item, idx) => {
-                text += `${idx + 1}. *Nama Champion*: ${item.name}\n   *Toko*: ${item.store}\n   *Timestamp*: ${item.dateTsStr}\n   *Tgl Transaksi*: ${item.dateTxStr}\n\n`;
-            });
-            text += `Mohon ke depannya agar laporan dapat diinput tepat waktu di hari H transaksi ya. Terima kasih atas kerjasamanya! 🙏`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA Terlambat Submit berhasil disalin ke clipboard!');
-            }).catch(err => {
-                console.error('Gagal menyalin draft WA:', err);
-            });
-        }
-
-        function renderComplianceMatrix(data) {
-            const container = document.getElementById('compliance-matrix-container');
-            const summaryAvgCompliance = document.getElementById('summary-avg-compliance');
-            if (!container) return;
-
-            const reportedMap = {};
-            const activeDatesSet = new Set();
-
-            data.forEach(item => {
-                const store = extractStore(item);
-                const rawDateStr = extractDate(item);
-                const shift = extractShift(item).toLowerCase();
-
-                if (rawDateStr) {
-                    const parsedDate = parseCustomDate(rawDateStr);
-                    if (parsedDate) {
-                        const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-                        activeDatesSet.add(dateKey);
-
-                        if (!reportedMap[store]) reportedMap[store] = {};
-                        if (!reportedMap[store][dateKey]) reportedMap[store][dateKey] = new Set();
-
-                        if (shift.includes('pagi')) reportedMap[store][dateKey].add('pagi');
-                        else if (shift.includes('mid')) reportedMap[store][dateKey].add('middle');
-                        else if (shift.includes('siang') || shift.includes('sore') || shift.includes('malam')) reportedMap[store][dateKey].add('siang');
-                    }
-                }
-            });
-
-            const sortedDates = Array.from(activeDatesSet).sort();
-            let totalPossibleSlots = MASTER_STORES.length * sortedDates.length * 3;
-            let totalFilledSlots = 0;
-
-            let html = `<table class="w-full text-xs text-center border-collapse min-w-[700px]">
-                <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
-                    <tr>
-                        <th class="p-2 text-left sticky-header-bg">Nama Toko</th>`;
-
-            sortedDates.forEach(d => {
-                const parts = d.split('-');
-                html += `<th class="p-2 sticky-header-bg" colspan="3">${parts[2]}/${parts[1]}</th>`;
-            });
-            html += `</tr><tr><th class="p-1 sticky-header-bg"></th>`;
-
-            sortedDates.forEach(() => {
-                html += `<th class="p-1 text-[9px] opacity-70 sticky-header-bg">P</th>
-                         <th class="p-1 text-[9px] opacity-70 sticky-header-bg">M</th>
-                         <th class="p-1 text-[9px] opacity-70 sticky-header-bg">S</th>`;
-            });
-            html += `</tr></thead><tbody class="divide-y divide-gray-500/10">`;
-
-            MASTER_STORES.forEach(store => {
-                html += `<tr class="hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <td class="p-2 text-left font-bold truncate max-w-[180px]">${store}</td>`;
-
-                sortedDates.forEach(d => {
-                    const shiftsSubmitted = reportedMap[store]?.[d] || new Set();
-
-                    ['pagi', 'middle', 'siang'].forEach(s => {
-                        if (shiftsSubmitted.has(s)) {
-                            totalFilledSlots++;
-                            html += `<td class="p-1"><span class="matrix-symbol-yes inline-block w-4 h-4 rounded text-[10px] leading-4 font-bold">✓</span></td>`;
-                        } else {
-                            html += `<td class="p-1"><span class="matrix-symbol-no inline-block w-4 h-4 rounded text-[10px] leading-4 font-bold">✗</span></td>`;
-                        }
-                    });
-                });
-                html += `</tr>`;
-            });
-
-            html += `</tbody></table>`;
-            container.innerHTML = html;
-
-            const complianceRate = totalPossibleSlots > 0 ? ((totalFilledSlots / totalPossibleSlots) * 100).toFixed(1) : 0;
-            if (summaryAvgCompliance) summaryAvgCompliance.innerText = `${complianceRate}%`;
-        }
-
-        function renderTop10Sales(data) {
-            const tbody = document.getElementById('top10-sales-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const salesMap = {};
-            data.forEach(item => {
-                const name = extractName(item);
-                const store = extractStore(item);
-                const lob = extractLOB(item);
-                const qty = extractQuantity(item);
-
-                if (name && name !== '-') {
-                    const key = `${name}___${store}`;
-                    if (!salesMap[key]) {
-                        salesMap[key] = { name, store, lob, total: 0 };
-                    }
-                    salesMap[key].total += qty;
-                }
-            });
-
-            const sorted = Object.values(salesMap).sort((a, b) => b.total - a.total).slice(0, 10);
-
-            sorted.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 font-mono font-bold opacity-80">${index + 1}</td>
-                    <td class="p-2 font-bold">${item.name}</td>
-                    <td class="p-2 opacity-90">${item.store}</td>
-                    <td class="p-2 font-semibold text-indigo-500 dark:text-indigo-400">${item.lob}</td>
-                    <td class="p-2 text-center font-extrabold text-emerald-500">${item.total}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderTop10Stores(data) {
-            const tbody = document.getElementById('top10-stores-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const storeMap = {};
-            data.forEach(item => {
-                const store = extractStore(item);
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-
-                if (store && store !== '-') {
-                    if (!storeMap[store]) {
-                        storeMap[store] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
-                    }
-                    if (lob.includes('mac')) storeMap[store].mac += qty;
-                    else if (lob.includes('iphone')) storeMap[store].iphone += qty;
-                    else if (lob.includes('ipad')) storeMap[store].ipad += qty;
-                    else if (lob.includes('watch')) storeMap[store].watch += qty;
-
-                    storeMap[store].total += qty;
-                }
-            });
-
-            const sorted = Object.values(storeMap).sort((a, b) => b.total - a.total).slice(0, 10);
-
-            sorted.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 font-mono font-bold opacity-80">${index + 1}</td>
-                    <td class="p-2 font-bold">${item.store}</td>
-                    <td class="p-2 text-center text-amber-500 font-semibold">${item.mac}</td>
-                    <td class="p-2 text-center text-rose-500 font-semibold">${item.iphone}</td>
-                    <td class="p-2 text-center text-emerald-500 font-semibold">${item.ipad}</td>
-                    <td class="p-2 text-center text-blue-500 font-semibold">${item.watch}</td>
-                    <td class="p-2 text-center font-extrabold text-indigo-500">${item.total}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderRawDataTable(data) {
-            const tbody = document.getElementById('raw-data-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const storeMap = {};
-            data.forEach(item => {
-                const store = extractStore(item);
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-
-                if (store && store !== '-') {
-                    if (!storeMap[store]) {
-                        storeMap[store] = { store, mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
-                    }
-                    if (lob.includes('mac')) storeMap[store].mac += qty;
-                    else if (lob.includes('iphone')) storeMap[store].iphone += qty;
-                    else if (lob.includes('ipad')) storeMap[store].ipad += qty;
-                    else if (lob.includes('watch')) storeMap[store].watch += qty;
-
-                    storeMap[store].total += qty;
-                }
-            });
-
-            logTransaksiStoresData = Object.values(storeMap).sort((a, b) => b.total - a.total);
-
-            logTransaksiStoresData.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 text-center font-mono font-bold opacity-80">${index + 1}</td>
-                    <td class="p-2 font-bold">${item.store}</td>
-                    <td class="p-2 text-center text-amber-500 font-semibold">${item.mac}</td>
-                    <td class="p-2 text-center text-rose-500 font-semibold">${item.iphone}</td>
-                    <td class="p-2 text-center text-emerald-500 font-semibold">${item.ipad}</td>
-                    <td class="p-2 text-center text-blue-500 font-semibold">${item.watch}</td>
-                    <td class="p-2 text-center font-extrabold text-emerald-500">${item.total}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderWoWStoreTable(rawAllData) {
-            const tbody = document.getElementById('wow-store-table-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const twData = {};
-            const lwData = {};
-
-            MASTER_STORES.forEach(s => {
-                twData[s] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
-                lwData[s] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
-            });
-
-            rawAllData.forEach(item => {
-                const store = extractStore(item);
-                const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
-                const dateStr = extractDate(item);
-
-                if (store && dateStr) {
-                    const parsed = parseCustomDate(dateStr);
-                    if (parsed) {
-                        const day = parsed.getDate();
-                        const isTW = day >= 8 && day <= 14;
-                        const isLW = day >= 1 && day <= 7;
-
-                        const matched = MASTER_STORES.find(ms => ms.toLowerCase().trim() === store.toLowerCase().trim());
-                        if (matched) {
-                            const target = isTW ? twData[matched] : (isLW ? lwData[matched] : null);
-                            if (target) {
-                                if (lob.includes('mac')) target.mac += qty;
-                                else if (lob.includes('iphone')) target.iphone += qty;
-                                else if (lob.includes('ipad')) target.ipad += qty;
-                                else if (lob.includes('watch')) target.watch += qty;
-                                target.total += qty;
-                            }
-                        }
-                    }
-                }
-            });
-
-            MASTER_STORES.forEach((store, idx) => {
-                const tw = twData[store];
-                const lw = lwData[store];
-                const diff = tw.total - lw.total;
-                const growthText = diff > 0 ? `+${diff}` : `${diff}`;
-                const growthColor = diff > 0 ? 'text-emerald-500' : (diff < 0 ? 'text-rose-500' : 'text-slate-400');
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
-                    <td class="p-2.5 font-bold">${store}</td>
-                    <td class="p-2.5 text-center font-mono">${lw.mac} / <b class="text-amber-500">${tw.mac}</b></td>
-                    <td class="p-2.5 text-center font-mono">${lw.iphone} / <b class="text-rose-500">${tw.iphone}</b></td>
-                    <td class="p-2.5 text-center font-mono">${lw.ipad} / <b class="text-emerald-500">${tw.ipad}</b></td>
-                    <td class="p-2.5 text-center font-mono">${lw.watch} / <b class="text-blue-500">${tw.watch}</b></td>
-                    <td class="p-2.5 text-center font-bold ${growthColor}">${growthText}</td>
+                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100 text-xs">${item.name}</td>
+                    <td class="p-2.5 text-slate-700 dark:text-slate-300 text-xs">${item.store}</td>
+                    <td class="p-2.5 text-center font-bold text-purple-600 dark:text-purple-400 text-xs">${item.count} Kali</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -2334,7 +2043,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000);
         });
     </script>
 </body>
