@@ -496,6 +496,7 @@
                                         <th class="p-2 sticky-header-bg" data-i18n="thStore">Store</th>
                                         <th class="p-2 sticky-header-bg" data-i18n="thSalesLob">Sales LOB</th>
                                         <th class="p-2 text-center sticky-header-bg" data-i18n="thTotalUnit">Total Unit</th>
+                                        <th class="p-2 text-center sticky-header-bg">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="top10-sales-body" class="divide-y divide-gray-500/10"></tbody>
@@ -699,6 +700,16 @@
                                     </h3>
                                 </div>
                                 <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <button onclick="toggleDropdown('export-late-stores')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                        </button>
+                                        <div id="export-late-stores" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                            <button onclick="exportLateStores('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                            <button onclick="exportLateStores('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                            <button onclick="exportLateStores('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                        </div>
+                                    </div>
                                     <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
                                         <i data-lucide="message-square" class="w-3.5 h-3.5"></i> <span data-i18n="btnCopyWa">Copy Draft WA</span>
                                     </button>
@@ -732,6 +743,16 @@
                                     </h3>
                                 </div>
                                 <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <button onclick="toggleDropdown('export-late-champions')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                        </button>
+                                        <div id="export-late-champions" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                            <button onclick="exportLateChampions('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                            <button onclick="exportLateChampions('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                            <button onclick="exportLateChampions('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                        </div>
+                                    </div>
                                     <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
                                         <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span data-i18n="btnCopyWaRekap">Copy WA Rekap</span>
                                     </button>
@@ -747,6 +768,7 @@
                                             <th class="p-2.5 sticky-header-bg" data-i18n="thChampionName">Nama Champion</th>
                                             <th class="p-2.5 sticky-header-bg" data-i18n="thStore">Toko</th>
                                             <th class="p-2.5 text-center sticky-header-bg" data-i18n="thLateCount">Berapa Kali Terlambat</th>
+                                            <th class="p-2.5 text-center sticky-header-bg">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
@@ -763,6 +785,16 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Masuk (Semua Toko)</h3>
                         <div class="flex items-center gap-2">
+                            <div class="relative">
+                                <button onclick="toggleDropdown('export-raw-data')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                </button>
+                                <div id="export-raw-data" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                    <button onclick="exportRawData('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                    <button onclick="exportRawData('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                    <button onclick="exportRawData('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                </div>
+                            </div>
                             <span class="text-[10px] px-2.5 py-1 bg-emerald-500/20 rounded-full font-bold neon-green-text" data-i18n="realtimeBadge">Real-time Data</span>
                         </div>
                     </div>
@@ -835,6 +867,61 @@
 
         </div>
     </main>
+
+    <!-- Modal Form Submit Manual Champion -->
+    <div id="modal-submit-champion" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 w-full max-w-md border border-gray-500/30 rounded-xl space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-500/20 pb-3">
+                <h3 class="font-bold text-sm text-indigo-400 flex items-center gap-2">
+                    <i data-lucide="file-plus" class="w-4 h-4"></i> Submit Transaksi Champion
+                </h3>
+                <button onclick="closeSubmitModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="form-submit-champion" onsubmit="handleChampionSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">Nama Champion</label>
+                    <input type="text" id="modal-champion-name" readonly class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 text-slate-300 font-semibold cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Store / Toko</label>
+                    <input type="text" id="modal-champion-store" readonly class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 text-slate-300 font-semibold cursor-not-allowed">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold mb-1">Kategori LOB</label>
+                        <select id="modal-lob" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
+                            <option value="Mac">Mac</option>
+                            <option value="iPhone">iPhone</option>
+                            <option value="iPad">iPad</option>
+                            <option value="Watch">Watch</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">Shift</label>
+                        <select id="modal-shift" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
+                            <option value="Pagi">Pagi</option>
+                            <option value="Middle">Middle</option>
+                            <option value="Siang">Siang</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Jumlah Unit Qty</label>
+                    <input type="number" id="modal-qty" min="1" value="1" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Tanggal Transaksi</label>
+                    <input type="date" id="modal-date" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
+                </div>
+                <div class="pt-2 flex gap-2 justify-end">
+                    <button type="button" onclick="closeSubmitModal()" class="px-3 py-1.5 rounded bg-gray-600 hover:bg-gray-500 font-bold">Batal</button>
+                    <button type="submit" class="px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold">Submit Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         Chart.register(ChartDataLabels);
@@ -1508,7 +1595,7 @@
                 const sortedSales = Object.values(salesMap).sort((a, b) => b.total - a.total).slice(0, 10);
 
                 if (sortedSales.length === 0) {
-                    salesBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
+                    salesBody.innerHTML = '<tr><td colspan="6" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
                 } else {
                     sortedSales.forEach((s, idx) => {
                         const tr = document.createElement('tr');
@@ -1519,6 +1606,11 @@
                             <td class="p-2 opacity-80">${s.store}</td>
                             <td class="p-2 font-semibold text-indigo-400">${s.lob}</td>
                             <td class="p-2 text-center font-bold text-emerald-400">${s.total}</td>
+                            <td class="p-2 text-center">
+                                <button onclick="openSubmitModal('${s.name.replace(/'/g, "\\'")}', '${s.store.replace(/'/g, "\\'")}')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-bold">
+                                    + Submit
+                                </button>
+                            </td>
                         `;
                         salesBody.appendChild(tr);
                     });
@@ -1811,6 +1903,236 @@
             if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
         }
 
+        function renderLateChampionsTable(data) {
+            const storeBody = document.getElementById('late-champions-body');
+            const summaryBody = document.getElementById('late-champions-summary-body');
+
+            if (!storeBody || !summaryBody) return;
+
+            storeBody.innerHTML = '';
+            summaryBody.innerHTML = '';
+
+            const storeLateMap = {};
+            const championLateMap = {};
+            let totalLateEvents = 0;
+
+            data.forEach(item => {
+                const ts = extractTimestamp(item);
+                const txDate = extractDate(item);
+                const name = extractName(item);
+                const store = extractStore(item);
+
+                if (ts && txDate) {
+                    const tsParsed = parseCustomDate(ts);
+                    const txParsed = parseCustomDate(txDate);
+
+                    if (tsParsed && txParsed) {
+                        const cutoff = new Date(txParsed);
+                        cutoff.setDate(cutoff.getDate() + 1);
+                        cutoff.setHours(12, 0, 0, 0);
+
+                        if (tsParsed > cutoff) {
+                            totalLateEvents++;
+                            if (store && store !== '-') {
+                                storeLateMap[store] = (storeLateMap[store] || 0) + 1;
+                            }
+                            if (name && name !== '-') {
+                                const key = `${name}___${store}`;
+                                if (!championLateMap[key]) {
+                                    championLateMap[key] = { name, store, count: 0 };
+                                }
+                                championLateMap[key].count++;
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('summary-late-events-count').innerText = `${totalLateEvents} Kejadian`;
+
+            lateStoresSummaryList = Object.entries(storeLateMap).map(([store, count]) => ({ store, count })).sort((a,b) => b.count - a.count);
+            lateChampionSummaryList = Object.values(championLateMap).sort((a,b) => b.count - a.count);
+
+            document.getElementById('late-submit-total-badge').innerText = `${lateStoresSummaryList.length} Toko`;
+            document.getElementById('late-summary-total-badge').innerText = `${lateChampionSummaryList.length} Champion`;
+
+            if (lateStoresSummaryList.length === 0) {
+                storeBody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-xs">Tidak ada keterlambatan.</td></tr>';
+            } else {
+                lateStoresSummaryList.forEach((s, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                    tr.innerHTML = `
+                        <td class="p-2 font-mono text-center opacity-80 font-bold">${idx + 1}</td>
+                        <td class="p-2 font-bold">${s.store}</td>
+                        <td class="p-2 text-center font-bold text-amber-500">${s.count} Kali</td>
+                    `;
+                    storeBody.appendChild(tr);
+                });
+            }
+
+            if (lateChampionSummaryList.length === 0) {
+                summaryBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Tidak ada keterlambatan Champion.</td></tr>';
+            } else {
+                lateChampionSummaryList.forEach((c, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-mono text-center opacity-80 font-bold">${idx + 1}</td>
+                        <td class="p-2.5 font-bold">${c.name}</td>
+                        <td class="p-2.5 opacity-80">${c.store}</td>
+                        <td class="p-2.5 text-center font-bold text-purple-400">${c.count} Kali</td>
+                        <td class="p-2.5 text-center">
+                            <button onclick="openSubmitModal('${c.name.replace(/'/g, "\\'")}', '${c.store.replace(/'/g, "\\'")}')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-bold">
+                                + Submit
+                            </button>
+                        </td>
+                    `;
+                    summaryBody.appendChild(tr);
+                });
+            }
+
+            // Charts
+            renderComplianceCharts(lateStoresSummaryList.slice(0, 10), lateChampionSummaryList.slice(0, 10));
+        }
+
+        function renderComplianceCharts(topStores, topChampions) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            if (chartInstances.mostLateStores) chartInstances.mostLateStores.destroy();
+            const ctxStore = document.getElementById('chartMostLateStores')?.getContext('2d');
+            if (ctxStore) {
+                chartInstances.mostLateStores = new Chart(ctxStore, {
+                    type: 'bar',
+                    data: {
+                        labels: topStores.map(s => s.store.length > 20 ? s.store.substring(0, 18) + '...' : s.store),
+                        datasets: [{
+                            label: 'Jumlah Terlambat',
+                            data: topStores.map(s => s.count),
+                            backgroundColor: '#ef4444',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { color: '#fff', font: { weight: 'bold' } }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor } },
+                            y: { ticks: { color: textColor, font: { size: 10 } } }
+                        }
+                    }
+                });
+            }
+
+            if (chartInstances.lateChampions) chartInstances.lateChampions.destroy();
+            const ctxChamp = document.getElementById('chartLateChampions')?.getContext('2d');
+            if (ctxChamp) {
+                chartInstances.lateChampions = new Chart(ctxChamp, {
+                    type: 'bar',
+                    data: {
+                        labels: topChampions.map(c => c.name),
+                        datasets: [{
+                            label: 'Jumlah Terlambat',
+                            data: topChampions.map(c => c.count),
+                            backgroundColor: '#a855f7',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { color: '#fff', font: { weight: 'bold' } }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 10 } } },
+                            y: { ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderUnsubmittedStoresTable(data) {
+            const tbody = document.getElementById('unsubmitted-stores-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const now = new Date();
+            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const monthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : now.getMonth();
+            const year = 2026;
+
+            let lastDay = now.getDate() - 1;
+            if (monthIdx !== now.getMonth()) {
+                lastDay = new Date(year, monthIdx + 1, 0).getDate();
+            }
+            if (lastDay < 1) lastDay = 1;
+
+            const submittedDatesByStore = {};
+            MASTER_STORES.forEach(s => submittedDatesByStore[s] = new Set());
+
+            data.forEach(item => {
+                const store = extractStore(item);
+                const dateStr = extractDate(item);
+                if (store && dateStr) {
+                    const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === store.toLowerCase().trim() || ms.toLowerCase().includes(store.toLowerCase()) || store.toLowerCase().includes(ms.toLowerCase()));
+                    if (matchedStore) {
+                        const parsed = parseCustomDate(dateStr);
+                        if (parsed && parsed.getFullYear() === year && parsed.getMonth() === monthIdx) {
+                            submittedDatesByStore[matchedStore].add(parsed.getDate());
+                        }
+                    }
+                }
+            });
+
+            unsubmittedStoresList = [];
+
+            MASTER_STORES.forEach(store => {
+                const missingDays = [];
+                for (let d = 1; d <= lastDay; d++) {
+                    if (!submittedDatesByStore[store].has(d)) {
+                        missingDays.push(d);
+                    }
+                }
+                if (missingDays.length > 0) {
+                    unsubmittedStoresList.push({
+                        store,
+                        missingDays,
+                        totalDays: missingDays.length
+                    });
+                }
+            });
+
+            unsubmittedStoresList.sort((a, b) => b.totalDays - a.totalDays);
+
+            document.getElementById('summary-unsubmitted-count').innerText = `${unsubmittedStoresList.length} Store`;
+            document.getElementById('unsubmitted-stores-count').innerText = `${unsubmittedStoresList.length} Toko`;
+
+            if (unsubmittedStoresList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Semua toko sudah submit lengkap!</td></tr>';
+            } else {
+                unsubmittedStoresList.forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                    tr.innerHTML = `
+                        <td class="p-2 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                        <td class="p-2 font-bold">${item.store}</td>
+                        <td class="p-2 font-mono text-rose-400">Tgl: ${item.missingDays.join(', ')}</td>
+                        <td class="p-2 text-center font-bold text-rose-500">${item.totalDays} Hari</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
         function renderCharts(data) {
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
@@ -1887,295 +2209,192 @@
                 chartInstances.shift = new Chart(ctxShift, {
                     type: 'bar',
                     data: {
-                        labels: ['Shift Pagi', 'Shift Middle', 'Shift Siang'],
+                        labels: ['Pagi', 'Middle', 'Siang'],
                         datasets: [
-                            { label: 'Mac', data: [shiftData.Pagi.Mac, shiftData.Middle.Mac, shiftData.Siang.Mac], backgroundColor: LOB_COLORS.mac, borderRadius: 4 },
-                            { label: 'iPhone', data: [shiftData.Pagi.iPhone, shiftData.Middle.iPhone, shiftData.Siang.iPhone], backgroundColor: LOB_COLORS.iphone, borderRadius: 4 },
-                            { label: 'iPad', data: [shiftData.Pagi.iPad, shiftData.Middle.iPad, shiftData.Siang.iPad], backgroundColor: LOB_COLORS.ipad, borderRadius: 4 },
-                            { label: 'Watch', data: [shiftData.Pagi.Watch, shiftData.Middle.Watch, shiftData.Siang.Watch], backgroundColor: LOB_COLORS.watch, borderRadius: 4 }
+                            { label: 'Mac', data: [shiftData.Pagi.Mac, shiftData.Middle.Mac, shiftData.Siang.Mac], backgroundColor: LOB_COLORS.mac },
+                            { label: 'iPhone', data: [shiftData.Pagi.iPhone, shiftData.Middle.iPhone, shiftData.Siang.iPhone], backgroundColor: LOB_COLORS.iphone },
+                            { label: 'iPad', data: [shiftData.Pagi.iPad, shiftData.Middle.iPad, shiftData.Siang.iPad], backgroundColor: LOB_COLORS.ipad },
+                            { label: 'Watch', data: [shiftData.Pagi.Watch, shiftData.Middle.Watch, shiftData.Siang.Watch], backgroundColor: LOB_COLORS.watch }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { labels: { color: textColor, font: { weight: 'bold', size: 10 } } },
-                            datalabels: {
-                                anchor: 'center',
-                                align: 'center',
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 10 },
-                                formatter: function(val) { return val > 0 ? val : ''; }
-                            }
+                            legend: { labels: { color: textColor } },
+                            datalabels: { display: false }
                         },
                         scales: {
-                            x: { stacked: false, ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { stacked: false, ticks: { color: textColor, font: { weight: 'bold' } } }
+                            x: { stacked: true, ticks: { color: textColor } },
+                            y: { stacked: true, ticks: { color: textColor } }
                         }
                     }
                 });
             }
         }
 
-        function renderUnsubmittedStoresTable(data) {
-            const tbody = document.getElementById('unsubmitted-stores-body');
-            const countBadge = document.getElementById('unsubmitted-stores-count');
-            const summaryUnsubmittedCount = document.getElementById('summary-unsubmitted-count');
-            
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const monthVal = document.getElementById('filter-month')?.value || '09';
-            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
-            const year = 2026;
-
-            const now = new Date();
-            let maxDay = now.getDate() - 1;
-
-            if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
-                maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
-            }
-
-            if (maxDay < 1) maxDay = 1;
-
-            const storeSubmittedDates = {};
-            MASTER_STORES.forEach(s => {
-                storeSubmittedDates[s.toLowerCase().trim()] = new Set();
-            });
-
-            data.forEach(item => {
-                const rawStore = extractStore(item);
-                const rawDateStr = extractDate(item);
-                if (rawStore && rawStore !== '-' && rawDateStr) {
-                    const parsedDate = parseCustomDate(rawDateStr);
-                    if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
-                        const dayNum = parsedDate.getDate();
-                        const storeKey = rawStore.toLowerCase().trim();
-                        
-                        const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === storeKey || ms.toLowerCase().includes(storeKey) || storeKey.includes(ms.toLowerCase()));
-                        if (matchedStore) {
-                            storeSubmittedDates[matchedStore.toLowerCase().trim()].add(dayNum);
-                        }
-                    }
-                }
-            });
-
-            unsubmittedStoresList = [];
-
-            MASTER_STORES.forEach(store => {
-                const storeKey = store.toLowerCase().trim();
-                const submittedSet = storeSubmittedDates[storeKey] || new Set();
-                const missingDays = [];
-
-                for (let d = 1; d <= maxDay; d++) {
-                    if (!submittedSet.has(d)) {
-                        missingDays.push(d);
-                    }
-                }
-
-                if (missingDays.length > 0) {
-                    unsubmittedStoresList.push({
-                        store: store,
-                        missingDays: missingDays,
-                        formattedDates: missingDays.map(d => `${String(d).padStart(2, '0')}/${String(selectedMonthIdx + 1).padStart(2, '0')}`).join(', ')
-                    });
-                }
-            });
-
-            unsubmittedStoresList.sort((a, b) => b.missingDays.length - a.missingDays.length);
-
-            if (countBadge) countBadge.innerText = `${unsubmittedStoresList.length} ${currentLang === 'id' ? 'Toko' : 'Stores'}`;
-            if (summaryUnsubmittedCount) summaryUnsubmittedCount.innerText = `${unsubmittedStoresList.length} ${currentLang === 'id' ? 'Store' : 'Stores'}`;
-
-            if (unsubmittedStoresList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-emerald-500 font-bold text-xs">${currentLang === 'id' ? 'Semua toko telah submit laporan dengan lengkap! 🎉' : 'All stores have fully submitted their reports! 🎉'}</td></tr>`;
-                return;
-            }
-
-            unsubmittedStoresList.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2 font-bold text-slate-900 dark:text-slate-100">${item.store}</td>
-                    <td class="p-2 font-mono text-rose-600 dark:text-rose-400 font-medium">${item.formattedDates}</td>
-                    <td class="p-2 text-center font-extrabold text-rose-600 dark:text-rose-400">${item.missingDays.length} ${currentLang === 'id' ? 'Hari' : 'Days'}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+        // Functions untuk Modal Submit Champion
+        function openSubmitModal(name, store) {
+            document.getElementById('modal-champion-name').value = name;
+            document.getElementById('modal-champion-store').value = store;
+            document.getElementById('modal-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('modal-submit-champion').classList.remove('hidden');
         }
 
+        function closeSubmitModal() {
+            document.getElementById('modal-submit-champion').classList.add('hidden');
+        }
+
+        function handleChampionSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('modal-champion-name').value;
+            const store = document.getElementById('modal-champion-store').value;
+            const lob = document.getElementById('modal-lob').value;
+            const shift = document.getElementById('modal-shift').value;
+            const qty = parseInt(document.getElementById('modal-qty').value, 10);
+            const date = document.getElementById('modal-date').value;
+
+            const newEntry = {
+                'Timestamp': new Date().toLocaleString('id-ID'),
+                'Nama Champion/ SA': name,
+                'Store': store,
+                'Champion LOB': lob,
+                'Shift': shift,
+                'Total Qty': qty,
+                'Tanggal_Transaksi': date
+            };
+
+            rawCSVData.push(newEntry);
+            applyFilters();
+            closeSubmitModal();
+            alert(`Berhasil menambahkan data transaksi untuk Champion ${name}!`);
+        }
+
+        // Functions untuk Export
+        function downloadCSV(filename, headers, rows) {
+            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+            rows.forEach(row => {
+                csvContent += row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",") + "\n";
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadExcel(filename, headers, rows) {
+            const data = [headers, ...rows];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+            XLSX.writeFile(wb, filename);
+        }
+
+        function downloadPDF(title, headers, rows) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text(title, 14, 15);
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 20,
+                theme: 'striped'
+            });
+            doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
+        }
+
+        // Export Daftar Toko Terlambat
+        function exportLateStores(type) {
+            const headers = ["No", "Nama Toko", "Berapa Kali Terlambat"];
+            const rows = lateStoresSummaryList.map((s, i) => [i + 1, s.store, s.count]);
+            if (type === 'csv') downloadCSV("daftar_toko_terlambat.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("daftar_toko_terlambat.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Daftar Toko Terlambat", headers, rows);
+        }
+
+        // Export Keterlambatan Per Champion
+        function exportLateChampions(type) {
+            const headers = ["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"];
+            const rows = lateChampionSummaryList.map((c, i) => [i + 1, c.name, c.store, c.count]);
+            if (type === 'csv') downloadCSV("keterlambatan_per_champion.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("keterlambatan_per_champion.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Daftar Keterlambatan Per Champion", headers, rows);
+        }
+
+        // Export Log Transaksi Masuk
+        function exportRawData(type) {
+            const storeSummaryMap = {};
+            filteredData.forEach(item => {
+                const store = extractStore(item);
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+
+                if (store && store !== '-') {
+                    if (!storeSummaryMap[store]) storeSummaryMap[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                    if (lob.includes('mac')) storeSummaryMap[store].mac += qty;
+                    else if (lob.includes('iphone')) storeSummaryMap[store].iphone += qty;
+                    else if (lob.includes('ipad')) storeSummaryMap[store].ipad += qty;
+                    else if (lob.includes('watch')) storeSummaryMap[store].watch += qty;
+                    storeSummaryMap[store].total += qty;
+                }
+            });
+
+            const headers = ["No", "Nama Toko", "Mac", "iPhone", "iPad", "Watch", "Total Unit"];
+            const rows = Object.entries(storeSummaryMap).map(([store, d], i) => [i + 1, store, d.mac, d.iphone, d.ipad, d.watch, d.total]);
+
+            if (type === 'csv') downloadCSV("log_transaksi_masuk.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("log_transaksi_masuk.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Log Transaksi Masuk", headers, rows);
+        }
+
+        // Copy WA Drafts
         function copyUnsubmittedWaDraft() {
             if (unsubmittedStoresList.length === 0) {
-                alert(currentLang === 'id' ? 'Semua toko sudah submit laporan! Tidak ada draft WA yang perlu dikirim.' : 'All stores have submitted their reports!');
+                alert("Semua toko sudah submit!");
                 return;
             }
-
-            let text = `*REMINDER: REKAP TOKO BELUM SUBMIT LAPORAN HARIAN LOB CHAMPION*\n*(Tanggal 1 s.d. Kemarin)*\n\nDear All Champion / Store Manager,\nMohon bantuan untuk melengkapi pengisian laporan harian toko berikut yang belum di-submit:\n\n`;
-
-            unsubmittedStoresList.forEach((item, idx) => {
-                text += `${idx + 1}. *${item.store}*\n   *Tanggal Belum Submit*: ${item.formattedDates} (${item.missingDays.length} Hari)\n\n`;
+            let text = "*REMINDER TOKO BELUM SUBMIT LAPORAN*\n\nMohon untuk store berikut segera melakukan submit laporan transaksi harian:\n";
+            unsubmittedStoresList.forEach((s, i) => {
+                text += `${i + 1}. ${s.store} (Belum submit ${s.totalDays} hari: Tgl ${s.missingDays.join(', ')})\n`;
             });
-
-            text += `Mohon laporan dapat segera diisi dan ditindaklanjuti demi kelengkapan data performa harian. Terima kasih atas kerja samanya! 🙏`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Draft WA Follow-up Toko Belum Submit berhasil disalin ke clipboard!');
-            }).catch(err => {
-                console.error('Gagal menyalin draft WA:', err);
-            });
+            text += "\nTerima kasih atas kerjasamanya!";
+            navigator.clipboard.writeText(text);
+            alert("Draft WA Toko Belum Submit berhasil disalin ke clipboard!");
         }
 
-        function renderLateChampionsTable(data) {
-            const tbody = document.getElementById('late-champions-body');
-            const totalLateBadge = document.getElementById('late-submit-total-badge');
-            const summaryLateEventsCount = document.getElementById('summary-late-events-count');
-
-            lateChampionsList = [];
-            const summaryMap = {};
-            const storeSummaryMap = {};
-            let totalLateEvents = 0;
-
-            data.forEach(item => {
-                const name = extractName(item);
-                const store = extractStore(item);
-                const rawDateStr = extractDate(item);
-                const tsStr = extractTimestamp(item);
-
-                if (rawDateStr && tsStr && name !== '-' && store !== '-') {
-                    const dateTx = parseCustomDate(rawDateStr);
-                    const dateTs = parseCustomDate(tsStr);
-
-                    if (dateTx && dateTs) {
-                        const txDayEnd = new Date(dateTx.getFullYear(), dateTx.getMonth(), dateTx.getDate(), 23, 59, 59, 999);
-                        if (dateTs > txDayEnd) {
-                            totalLateEvents++;
-                            lateChampionsList.push({ name, store, dateTxStr: rawDateStr, dateTsStr: tsStr });
-
-                            const key = `${name.toLowerCase().trim()}___${store.toLowerCase().trim()}`;
-                            if (!summaryMap[key]) summaryMap[key] = { name, store, count: 0 };
-                            summaryMap[key].count += 1;
-
-                            const storeKey = store.toLowerCase().trim();
-                            if (!storeSummaryMap[storeKey]) storeSummaryMap[storeKey] = { store, count: 0 };
-                            storeSummaryMap[storeKey].count += 1;
-                        }
-                    }
-                }
+        function copyLateChampionsWaDraft() {
+            if (lateStoresSummaryList.length === 0) {
+                alert("Tidak ada data keterlambatan toko.");
+                return;
+            }
+            let text = "*REKAP KETERLAMBATAN SUBMIT PER TOKO*\n\nBerikut daftar toko yang mengalami keterlambatan submit:\n";
+            lateStoresSummaryList.forEach((s, i) => {
+                text += `${i + 1}. ${s.store} - ${s.count} Kali Terlambat\n`;
             });
-
-            lateChampionSummaryList = Object.values(summaryMap).sort((a, b) => b.count - a.count);
-            lateStoresSummaryList = Object.values(storeSummaryMap).sort((a, b) => b.count - a.count);
-
-            if (totalLateBadge) totalLateBadge.innerText = `${lateStoresSummaryList.length} ${currentLang === 'id' ? 'Toko' : 'Stores'}`;
-            if (summaryLateEventsCount) summaryLateEventsCount.innerText = `${totalLateEvents} ${currentLang === 'id' ? 'Kejadian' : 'Events'}`;
-
-            if (tbody) {
-                tbody.innerHTML = '';
-                if (lateStoresSummaryList.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center opacity-80 text-[11px] font-medium">${currentLang === 'id' ? 'Tidak ada toko yang terlambat submit.' : 'No late store submissions found.'}</td></tr>`;
-                } else {
-                    lateStoresSummaryList.forEach((item, index) => {
-                        const tr = document.createElement('tr');
-                        tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                        tr.innerHTML = `
-                            <td class="p-2 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                            <td class="p-2 font-bold text-slate-900 dark:text-slate-100 text-xs">${item.store}</td>
-                            <td class="p-2 text-center font-bold text-amber-600 dark:text-amber-400 text-xs">${item.count} ${currentLang === 'id' ? 'Kali' : 'Times'}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                }
-            }
-
-            renderLateChampionSummaryTable();
-            renderLateCharts();
+            navigator.clipboard.writeText(text);
+            alert("Draft WA berhasil disalin ke clipboard!");
         }
 
-        function renderLateCharts() {
-            const isLight = document.body.classList.contains('light-mode');
-            const textColor = isLight ? '#0f172a' : '#f8fafc';
-
-            if (chartInstances.mostLateStores) chartInstances.mostLateStores.destroy();
-            const ctxLateStores = document.getElementById('chartMostLateStores')?.getContext('2d');
-            if (ctxLateStores) {
-                const top10LateStores = lateStoresSummaryList.slice(0, 10);
-                chartInstances.mostLateStores = new Chart(ctxLateStores, {
-                    type: 'bar',
-                    data: {
-                        labels: top10LateStores.map(s => s.store),
-                        datasets: [{ label: currentLang === 'id' ? 'Jumlah Keterlambatan' : 'Late Count', data: top10LateStores.map(s => s.count), backgroundColor: '#f43f5e', borderRadius: 6 }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            datalabels: { anchor: 'center', align: 'center', color: '#ffffff', font: { weight: 'bold', size: 11 }, formatter: Math.round }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
-                        }
-                    }
-                });
-            }
-
-            if (chartInstances.lateChampions) chartInstances.lateChampions.destroy();
-            const ctxLateChamp = document.getElementById('chartLateChampions')?.getContext('2d');
-            if (ctxLateChamp) {
-                const top10LateChamp = lateChampionSummaryList.slice(0, 10);
-                chartInstances.lateChampions = new Chart(ctxLateChamp, {
-                    type: 'bar',
-                    data: {
-                        labels: top10LateChamp.map(c => c.name),
-                        datasets: [{ label: currentLang === 'id' ? 'Frekuensi Terlambat' : 'Late Frequency', data: top10LateChamp.map(c => c.count), backgroundColor: '#a855f7', borderRadius: 6 }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            datalabels: { anchor: 'center', align: 'center', color: '#ffffff', font: { weight: 'bold', size: 11 }, formatter: Math.round }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
-                        }
-                    }
-                });
-            }
-        }
-
-        function renderLateChampionSummaryTable() {
-            const tbody = document.getElementById('late-champions-summary-body');
-            const summaryBadge = document.getElementById('late-summary-total-badge');
-
-            if (summaryBadge) summaryBadge.innerText = `${lateChampionSummaryList.length} Champion`;
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
+        function copyLateChampionSummaryWaDraft() {
             if (lateChampionSummaryList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center opacity-80 text-[11px] font-medium">${currentLang === 'id' ? 'Tidak ada data keterlambatan Champion.' : 'No Champion late submission data.'}</td></tr>`;
+                alert("Tidak ada data keterlambatan champion.");
                 return;
             }
-
-            lateChampionSummaryList.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-900 dark:text-slate-100 text-xs">${item.name}</td>
-                    <td class="p-2.5 text-slate-700 dark:text-slate-300 text-xs">${item.store}</td>
-                    <td class="p-2.5 text-center font-bold text-purple-600 dark:text-purple-400 text-xs">${item.count} ${currentLang === 'id' ? 'Kali' : 'Times'}</td>
-                `;
-                tbody.appendChild(tr);
+            let text = "*REKAP KETERLAMBATAN SUBMIT PER CHAMPION*\n\nBerikut rekap keterlambatan Champion:\n";
+            lateChampionSummaryList.forEach((c, i) => {
+                text += `${i + 1}. ${c.name} (${c.store}) - ${c.count} Kali Terlambat\n`;
             });
+            navigator.clipboard.writeText(text);
+            alert("Draft WA Rekap Champion berhasil disalin ke clipboard!");
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        window.onload = function() {
             fetchLiveData();
-        });
+            setInterval(fetchLiveData, 300000); // 5 Menit
+        };
     </script>
 </body>
 </html>
