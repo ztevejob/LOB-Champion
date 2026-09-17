@@ -2356,7 +2356,7 @@
                 alert("Semua toko sudah submit!");
                 return;
             }
-            let text = "*REMINDER TOKO BELUM SUBMIT LAPORAN*\n\nMohon untuk store berikut segera melakukan submit laporan transaksi harian:\n";
+            let text = "*REMINDER TOKO BELUM SUBMIT LAPORAN*\n\nMohon ingatkan Championnya Store berikut segera melakukan submit laporan transaksi harian:\n";
             unsubmittedStoresList.forEach((s, i) => {
                 text += `${i + 1}. ${s.store} (Belum submit ${s.totalDays} hari: Tgl ${s.missingDays.join(', ')})\n`;
             });
