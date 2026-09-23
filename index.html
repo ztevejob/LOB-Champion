@@ -361,7 +361,7 @@
             </header>
 
             <!-- KPI Grid -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <section class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                 <div class="glass-card p-3 md:p-4 flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
                         <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400" data-i18n="kpiTotalUnit">Total Unit / LOB</p>
@@ -435,27 +435,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="glass-card p-3 md:p-4 flex flex-col justify-between sm:col-span-2 lg:col-span-1">
-                    <div class="flex items-center justify-between mb-2">
-                        <p class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400" data-i18n="kpiActivitySummary">Ringkasan Aktivitas</p>
-                        <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-center">
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                            <span class="opacity-80 block text-[10px] font-bold" data-i18n="lblReports">Laporan</span>
-                            <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400" id="kpi-total-reports">0</span>
-                        </div>
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                            <span class="opacity-80 block text-[10px] font-bold" data-i18n="lblChampion">Champion</span>
-                            <span class="text-lg font-bold text-amber-600 dark:text-amber-400" id="kpi-active-champions">0</span>
-                        </div>
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
-                            <span class="opacity-80 block text-[10px] font-bold" data-i18n="lblStores">Toko</span>
-                            <span class="text-lg font-bold text-indigo-600 dark:text-indigo-400" id="kpi-total-stores">0</span>
-                        </div>
-                    </div>
-                </div>
             </section>
         </div>
 
@@ -473,9 +452,9 @@
                     
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
-                            <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i> <span data-i18n="chartShiftTitle">Penjualan per Shift (Breakdown per LOB)</span>
+                            <i data-lucide="calculator" class="w-4 h-4 text-purple-500"></i> <span data-i18n="chartAvgTitle">Average / Hari / LOB</span>
                         </h3>
-                        <div class="h-64 relative"><canvas id="chartShift"></canvas></div>
+                        <div class="h-64 relative"><canvas id="chartAvgPerDay"></canvas></div>
                     </div>
                 </div>
 
@@ -992,12 +971,8 @@
                 optAllShifts: "Semua Shift",
                 kpiTotalUnit: "Total Unit / LOB",
                 kpiAvgDay: "Average / Hari / LOB",
-                kpiActivitySummary: "Ringkasan Aktivitas",
-                lblReports: "Laporan",
-                lblChampion: "Champion",
-                lblStores: "Toko",
                 chartLOBTitle: "Total Penjualan per Kategori LOB",
-                chartShiftTitle: "Penjualan per Shift (Breakdown per LOB)",
+                chartAvgTitle: "Average / Hari / LOB",
                 top10SalesTitle: "Top 10 Champion Sales",
                 top10StoreTitle: "Top 10 Store Performance",
                 allLob: "Semua LOB",
@@ -1061,12 +1036,8 @@
                 optAllShifts: "All Shifts",
                 kpiTotalUnit: "Total Units / LOB",
                 kpiAvgDay: "Average / Day / LOB",
-                kpiActivitySummary: "Activity Summary",
-                lblReports: "Reports",
-                lblChampion: "Champion",
-                lblStores: "Stores",
                 chartLOBTitle: "Total Sales by LOB Category",
-                chartShiftTitle: "Sales per Shift (Breakdown by LOB)",
+                chartAvgTitle: "Average / Day / LOB",
                 top10SalesTitle: "Top 10 Champion Sales",
                 top10StoreTitle: "Top 10 Store Performance",
                 allLob: "All LOB",
@@ -1498,8 +1469,6 @@
         function updateMetricsAndCharts(data) {
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
-            const uniqueChampions = new Set();
-            const uniqueStores = new Set();
 
             const monthVal = document.getElementById('filter-month')?.value || '09';
             const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
@@ -1517,12 +1486,7 @@
             data.forEach(item => {
                 const lob = extractLOB(item).toLowerCase();
                 const qty = extractQuantity(item);
-                const name = extractName(item);
-                const store = extractStore(item);
                 const rawDateStr = extractDate(item);
-
-                if (name && name !== '-') uniqueChampions.add(name);
-                if (store && store !== '-') uniqueStores.add(store);
 
                 let isWithinRange = false;
                 if (rawDateStr) {
@@ -1566,10 +1530,6 @@
             document.getElementById('kpi-trx-iphone').innerText = trxIphone;
             document.getElementById('kpi-trx-ipad').innerText = trxIpad;
             document.getElementById('kpi-trx-watch').innerText = trxWatch;
-
-            document.getElementById('kpi-total-reports').innerText = data.length;
-            document.getElementById('kpi-active-champions').innerText = uniqueChampions.size;
-            document.getElementById('kpi-total-stores').innerText = uniqueStores.size;
         }
 
         function renderTop10Tables(data) {
@@ -2137,6 +2097,7 @@
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
+            // Chart Total Penjualan per LOB
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
@@ -2182,51 +2143,63 @@
                 });
             }
 
-            if (chartInstances.shift) chartInstances.shift.destroy();
-            const ctxShift = document.getElementById('chartShift')?.getContext('2d');
-            if (ctxShift) {
-                let shiftData = {
-                    Pagi: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 },
-                    Middle: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 },
-                    Siang: { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 }
-                };
-
+            // Chart Average / Hari / LOB (Column Chart)
+            if (chartInstances.avgPerDay) chartInstances.avgPerDay.destroy();
+            const ctxAvg = document.getElementById('chartAvgPerDay')?.getContext('2d');
+            if (ctxAvg) {
+                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 };
                 data.forEach(item => {
-                    let s = extractShift(item).toLowerCase();
                     const lob = extractLOB(item).toLowerCase();
                     const qty = extractQuantity(item);
-
-                    let shiftKey = 'Pagi';
-                    if (s.includes('mid')) shiftKey = 'Middle';
-                    else if (s.includes('siang') || s.includes('sore') || s.includes('malam')) shiftKey = 'Siang';
-
-                    if (lob.includes('mac')) shiftData[shiftKey].Mac += qty;
-                    else if (lob.includes('iphone')) shiftData[shiftKey].iPhone += qty;
-                    else if (lob.includes('ipad')) shiftData[shiftKey].iPad += qty;
-                    else if (lob.includes('watch')) shiftData[shiftKey].Watch += qty;
+                    if (lob.includes('mac')) lobTotals.Mac += qty;
+                    else if (lob.includes('iphone')) lobTotals.iPhone += qty;
+                    else if (lob.includes('ipad')) lobTotals.iPad += qty;
+                    else if (lob.includes('watch')) lobTotals.Watch += qty;
                 });
 
-                chartInstances.shift = new Chart(ctxShift, {
+                const monthVal = document.getElementById('filter-month')?.value || '09';
+                const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+                const now = new Date();
+                let maxDay = now.getDate() - 1;
+                if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
+                    maxDay = new Date(2026, selectedMonthIdx + 1, 0).getDate();
+                }
+                if (maxDay < 1) maxDay = 1;
+
+                const avgData = [
+                    (lobTotals.Mac / maxDay).toFixed(1),
+                    (lobTotals.iPhone / maxDay).toFixed(1),
+                    (lobTotals.iPad / maxDay).toFixed(1),
+                    (lobTotals.Watch / maxDay).toFixed(1)
+                ];
+
+                chartInstances.avgPerDay = new Chart(ctxAvg, {
                     type: 'bar',
                     data: {
-                        labels: ['Pagi', 'Middle', 'Siang'],
-                        datasets: [
-                            { label: 'Mac', data: [shiftData.Pagi.Mac, shiftData.Middle.Mac, shiftData.Siang.Mac], backgroundColor: LOB_COLORS.mac },
-                            { label: 'iPhone', data: [shiftData.Pagi.iPhone, shiftData.Middle.iPhone, shiftData.Siang.iPhone], backgroundColor: LOB_COLORS.iphone },
-                            { label: 'iPad', data: [shiftData.Pagi.iPad, shiftData.Middle.iPad, shiftData.Siang.iPad], backgroundColor: LOB_COLORS.ipad },
-                            { label: 'Watch', data: [shiftData.Pagi.Watch, shiftData.Middle.Watch, shiftData.Siang.Watch], backgroundColor: LOB_COLORS.watch }
-                        ]
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [{
+                            label: 'Average / Hari',
+                            data: avgData,
+                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
+                            borderRadius: 8
+                        }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { labels: { color: textColor } },
-                            datalabels: { display: false }
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (val) => val
+                            }
                         },
                         scales: {
-                            x: { stacked: true, ticks: { color: textColor } },
-                            y: { stacked: true, ticks: { color: textColor } }
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
                         }
                     }
                 });
