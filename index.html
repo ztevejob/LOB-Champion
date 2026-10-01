@@ -100,11 +100,7 @@
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
         }
 
-        body:not(.light-mode) .neon-purple-text {
-            color: #39ff14 !important;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
-        }
-        
+        body:not(.light-mode) .neon-purple-text,
         body:not(.light-mode) .neon-title-purple {
             color: #39ff14 !important;
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
@@ -125,17 +121,8 @@
             transition: all 0.3s ease;
         }
 
-        .glass-sidebar {
+        .glass-sidebar, .glass-panel {
             background: var(--sidebar-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
-        }
-
-        .glass-panel {
-            background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
@@ -170,9 +157,7 @@
 
         .mobile-dock {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             z-index: 50;
             background: var(--sidebar-bg);
             backdrop-filter: blur(20px);
@@ -191,10 +176,10 @@
             align-items: center;
             justify-content: center;
             color: var(--text-sub);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             gap: 2px;
-            padding: 4px 8px;
+            padding: 4px 6px;
             border-radius: 8px;
             transition: all 0.2s ease;
         }
@@ -204,17 +189,9 @@
             background: rgba(99, 102, 241, 0.15);
         }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     </style>
 </head>
 <body class="flex flex-col lg:flex-row min-h-screen p-2 md:p-4 pb-20 lg:pb-4 gap-4">
@@ -253,6 +230,9 @@
                 <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span data-i18n="navOverview">Overview</span>
                 </button>
+                <button onclick="showSection('mom-perf')" id="btn-mom-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                    <i data-lucide="calendar-range" class="w-4 h-4 shrink-0"></i> <span data-i18n="navMom">MoM Perf.</span>
+                </button>
                 <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                     <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> <span data-i18n="navWow">WoW Perf.</span>
                 </button>
@@ -290,24 +270,24 @@
     <!-- Mobile Bottom Dock -->
     <div class="mobile-dock lg:hidden">
         <button onclick="showSection('overview')" id="dock-overview" class="dock-item active">
-            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
             <span data-i18n="navOverview">Overview</span>
         </button>
+        <button onclick="showSection('mom-perf')" id="dock-mom-perf" class="dock-item">
+            <i data-lucide="calendar-range" class="w-4 h-4"></i>
+            <span data-i18n="navMom">MoM</span>
+        </button>
         <button onclick="showSection('wow-perf')" id="dock-wow-perf" class="dock-item">
-            <i data-lucide="trending-up" class="w-5 h-5"></i>
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
             <span data-i18n="navWow">WoW</span>
         </button>
         <button onclick="showSection('compliance')" id="dock-compliance" class="dock-item">
-            <i data-lucide="calendar-check" class="w-5 h-5"></i>
+            <i data-lucide="calendar-check" class="w-4 h-4"></i>
             <span data-i18n="navCompliance">Kedisiplinan</span>
         </button>
         <button onclick="showSection('raw-data')" id="dock-raw-data" class="dock-item">
-            <i data-lucide="database" class="w-5 h-5"></i>
+            <i data-lucide="database" class="w-4 h-4"></i>
             <span data-i18n="navRaw">Log Trans.</span>
-        </button>
-        <button onclick="showSection('settings')" id="dock-settings" class="dock-item">
-            <i data-lucide="settings" class="w-5 h-5"></i>
-            <span data-i18n="navSettings">Pengaturan</span>
         </button>
     </div>
 
@@ -333,8 +313,8 @@
                             <option value="06">Juni</option>
                             <option value="07">Juli</option>
                             <option value="08">Agustus</option>
-                            <option value="09" selected>September</option>
-                            <option value="10">Oktober</option>
+                            <option value="09">September</option>
+                            <option value="10" selected>Oktober</option>
                             <option value="11">November</option>
                             <option value="12">Desember</option>
                         </select>
@@ -510,6 +490,95 @@
                 </div>
             </div>
 
+            <!-- Section BARU: Performa MoM (Month on Month) -->
+            <div id="sec-mom-perf" class="content-section hidden space-y-4">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-sm flex items-center gap-2">
+                                <i data-lucide="calendar-range" class="w-4 h-4 text-cyan-500"></i> <span data-i18n="momGlobalTitle">Komparasi Global: Bulan Ini vs Bulan Sebelumnya (Per LOB)</span>
+                            </h3>
+                            <span class="text-[10px] px-2 py-0.5 bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold rounded border border-cyan-500/30" data-i18n="momBadge">MoM Analytics</span>
+                        </div>
+                        <div class="h-72 relative"><canvas id="chartMoMGlobal"></canvas></div>
+                    </div>
+
+                    <div class="glass-panel p-4 flex flex-col justify-between border-l-4 border-cyan-500">
+                        <div>
+                            <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-500/20">
+                                <h3 class="font-bold text-sm text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
+                                    <i data-lucide="pie-chart" class="w-4 h-4"></i> <span data-i18n="momSummaryTitle">Summary MoM</span>
+                                </h3>
+                                <span class="text-[10px] opacity-70 font-semibold" data-i18n="perLobData">Per LOB Data</span>
+                            </div>
+
+                            <div class="space-y-2 text-xs" id="mom-summary-container">
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-amber-500 dark:text-amber-400">Mac</span>
+                                    <div class="text-right" id="mom-sum-mac">
+                                        <span class="font-mono text-slate-400">LM: 0</span> <span class="mx-1">→</span> <span class="font-bold">CM: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-rose-500 dark:text-rose-400">iPhone</span>
+                                    <div class="text-right" id="mom-sum-iphone">
+                                        <span class="font-mono text-slate-400">LM: 0</span> <span class="mx-1">→</span> <span class="font-bold">CM: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-emerald-500 dark:text-emerald-400">iPad</span>
+                                    <div class="text-right" id="mom-sum-ipad">
+                                        <span class="font-mono text-slate-400">LM: 0</span> <span class="mx-1">→</span> <span class="font-bold">CM: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-blue-500 dark:text-blue-400">Watch</span>
+                                    <div class="text-right" id="mom-sum-watch">
+                                        <span class="font-mono text-slate-400">LM: 0</span> <span class="mx-1">→</span> <span class="font-bold">CM: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 pt-3 border-t border-gray-500/20 bg-cyan-500/10 p-2.5 rounded-lg border border-cyan-500/20">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold" data-i18n="totalUnitGlobal">Total Unit Global</span>
+                                <span class="font-bold text-emerald-500" id="mom-total-growth-val">0 Unit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="store" class="w-4 h-4 text-cyan-500"></i> <span data-i18n="momStoreDetailTitle">Detail Komparasi MoM per Store</span>
+                        </h3>
+                        <span class="text-xs px-2.5 py-1 bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-bold rounded-full border border-cyan-500/30" id="mom-store-total-badge">Total Store</span>
+                    </div>
+                    <div class="overflow-x-auto max-h-[500px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[650px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                    <th class="p-2.5 sticky-header-bg" data-i18n="thStoreName">Nama Store</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Mac (LM / CM)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPhone (LM / CM)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPad (LM / CM)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Watch (LM / CM)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg" data-i18n="thGrowthTotal">Growth Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mom-store-table-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- Section 2: Performa WoW -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -578,7 +647,7 @@
                         <h3 class="font-bold text-sm flex items-center gap-2">
                             <i data-lucide="store" class="w-4 h-4 text-purple-500"></i> <span data-i18n="wowStoreDetailTitle">Detail Komparasi per Store (This Week vs Last Week)</span>
                         </h3>
-                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total 98 Store</span>
+                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total Store</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[650px]">
@@ -601,8 +670,6 @@
 
             <!-- Section 3: Kedisiplinan -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
-                
-                <!-- Compliance Summary Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-rose-500">
                         <span class="text-[11px] opacity-80 font-bold uppercase" data-i18n="summaryUnsubmitted">Toko Belum Submit (s.d. Kemarin)</span>
@@ -614,7 +681,6 @@
                     </div>
                 </div>
 
-                <!-- List Toko Belum Submit -->
                 <div class="glass-panel p-4 border-l-4 border-rose-500">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
                         <div class="flex items-center gap-2">
@@ -645,7 +711,6 @@
                     </div>
                 </div>
 
-                <!-- Chart Terlambat Store & Champion -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="glass-panel p-4">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
@@ -666,7 +731,6 @@
                     </div>
                 </div>
 
-                <!-- Tabel Terlambat Store & Champion -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 border-l-4 border-amber-500 flex flex-col justify-between">
                         <div>
@@ -809,7 +873,6 @@
                         </div>
                     </div>
 
-                    <!-- Pilihan Bahasa -->
                     <div class="space-y-2">
                         <label class="block text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
                             <i data-lucide="globe" class="w-4 h-4"></i> <span data-i18n="selectLanguage">Pilih Bahasa / Select Language</span>
@@ -820,7 +883,6 @@
                         </select>
                     </div>
 
-                    <!-- Mode Tampilan (Gelap / Terang) -->
                     <div class="flex items-center justify-between p-3 rounded-lg bg-black/5 dark:bg-white/5 border border-gray-500/10">
                         <div class="flex items-center gap-3">
                             <i data-lucide="moon" id="setting-theme-icon" class="w-5 h-5 text-indigo-400"></i>
@@ -834,7 +896,6 @@
                         </button>
                     </div>
 
-                    <!-- Concept & Curation Credit -->
                     <div class="pt-4 border-t border-gray-500/20">
                         <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1">
                             <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
@@ -957,6 +1018,7 @@
                 autoSync: "Auto Sync",
                 resetFilter: "Reset Filter",
                 navOverview: "Overview",
+                navMom: "MoM Perf.",
                 navWow: "WoW Perf.",
                 navCompliance: "Kedisiplinan",
                 navRaw: "Log Transaksi",
@@ -983,6 +1045,10 @@
                 thTotalUnit: "Total Unit",
                 thStoreName: "Nama Store",
                 thTotal: "Total",
+                momGlobalTitle: "Komparasi Global: Bulan Ini vs Bulan Sebelumnya (Per LOB)",
+                momSummaryTitle: "Summary MoM",
+                momBadge: "MoM Analytics",
+                momStoreDetailTitle: "Detail Komparasi MoM per Store",
                 wowGlobalTitle: "Komparasi Global: Week Ini vs Week Sebelumnya (Per LOB)",
                 liveWowChart: "Live WoW Chart",
                 wowSummaryTitle: "Summary TW vs LW",
@@ -1022,6 +1088,7 @@
                 autoSync: "Auto Sync",
                 resetFilter: "Reset Filter",
                 navOverview: "Overview",
+                navMom: "MoM Perf.",
                 navWow: "WoW Perf.",
                 navCompliance: "Compliance",
                 navRaw: "Transaction Log",
@@ -1048,6 +1115,10 @@
                 thTotalUnit: "Total Units",
                 thStoreName: "Store Name",
                 thTotal: "Total",
+                momGlobalTitle: "Global Comparison: Current Month vs Last Month (Per LOB)",
+                momSummaryTitle: "MoM Summary",
+                momBadge: "MoM Analytics",
+                momStoreDetailTitle: "MoM Store Comparison Detail",
                 wowGlobalTitle: "Global Comparison: This Week vs Last Week (Per LOB)",
                 liveWowChart: "Live WoW Chart",
                 wowSummaryTitle: "TW vs LW Summary",
@@ -1088,7 +1159,6 @@
         let rawCSVData = [];
         let filteredData = [];
         let chartInstances = {};
-        let lateChampionsList = [];
         let lateStoresSummaryList = [];
         let lateChampionSummaryList = [];
         let unsubmittedStoresList = [];
@@ -1111,6 +1181,7 @@
 
             const titles = {
                 'overview': i18n[lang].navOverview,
+                'mom-perf': i18n[lang].navMom,
                 'wow-perf': i18n[lang].navWow,
                 'compliance': i18n[lang].navCompliance,
                 'raw-data': i18n[lang].navRaw,
@@ -1310,6 +1381,7 @@
 
             const titles = {
                 'overview': i18n[currentLang].navOverview,
+                'mom-perf': i18n[currentLang].navMom,
                 'wow-perf': i18n[currentLang].navWow,
                 'compliance': i18n[currentLang].navCompliance,
                 'raw-data': i18n[currentLang].navRaw,
@@ -1335,7 +1407,7 @@
         }
 
         function resetFilters() {
-            document.getElementById('filter-month').value = '09';
+            document.getElementById('filter-month').value = '10';
             document.getElementById('filter-store').value = 'ALL';
             document.getElementById('filter-lob').value = 'ALL';
             document.getElementById('filter-shift').value = 'ALL';
@@ -1427,7 +1499,7 @@
         }
 
         function applyFilters() {
-            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const monthVal = document.getElementById('filter-month')?.value || '10';
             const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
@@ -1459,6 +1531,8 @@
             updateMetricsAndCharts(filteredData);
             renderTop10Tables(filteredData);
             renderUnsubmittedStoresTable(filteredData);
+            renderMoMPerformance();
+            renderMoMStoreTable();
             renderWoWPerformance(filteredData);
             renderWoWStoreTable(filteredData);
             renderLateChampionsTable(filteredData);
@@ -1470,8 +1544,8 @@
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
             let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
 
-            const monthVal = document.getElementById('filter-month')?.value || '09';
-            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+            const monthVal = document.getElementById('filter-month')?.value || '10';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
             const year = 2026;
 
             const now = new Date();
@@ -1532,8 +1606,210 @@
             document.getElementById('kpi-trx-watch').innerText = trxWatch;
         }
 
+        // FUNGSI BARU: Render Performa MoM Global
+        function renderMoMPerformance() {
+            const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
+            const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
+            const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
+
+            const currentMonthIdx = 9; // Oktober (0-indexed: 9)
+            const lastMonthIdx = 8;    // September (0-indexed: 8)
+
+            let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+
+            rawCSVData.forEach(item => {
+                const rowStore = extractStore(item).toLowerCase();
+                const rowLOB = extractLOB(item);
+                const rowShift = extractShift(item);
+                const rowDateStr = extractDate(item);
+
+                const matchStore = (storeVal === 'all' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
+                const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
+                const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
+
+                if (matchStore && matchLOB && matchShift && rowDateStr) {
+                    const parsedDate = parseCustomDate(rowDateStr);
+                    if (parsedDate && parsedDate.getFullYear() === 2026) {
+                        const m = parsedDate.getMonth();
+                        const qty = extractQuantity(item);
+                        const lob = rowLOB.toLowerCase();
+
+                        let targetObj = null;
+                        if (m === currentMonthIdx) targetObj = cmData;
+                        else if (m === lastMonthIdx) targetObj = lmData;
+
+                        if (targetObj) {
+                            if (lob.includes('mac')) targetObj.mac += qty;
+                            else if (lob.includes('iphone')) targetObj.iphone += qty;
+                            else if (lob.includes('ipad')) targetObj.ipad += qty;
+                            else if (lob.includes('watch')) targetObj.watch += qty;
+                        }
+                    }
+                }
+            });
+
+            const lobs = ['mac', 'iphone', 'ipad', 'watch'];
+            let totalLM = 0, totalCM = 0;
+
+            lobs.forEach(lob => {
+                const lmVal = lmData[lob];
+                const cmVal = cmData[lob];
+                totalLM += lmVal;
+                totalCM += cmVal;
+
+                let pctChange = 0;
+                if (lmVal > 0) {
+                    pctChange = (((cmVal - lmVal) / lmVal) * 100).toFixed(1);
+                } else if (cmVal > 0) {
+                    pctChange = 100;
+                }
+
+                const colorClass = pctChange >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = pctChange >= 0 ? '+' : '';
+
+                const container = document.getElementById(`mom-sum-${lob}`);
+                if (container) {
+                    container.innerHTML = `
+                        <span class="font-mono text-slate-400">LM: ${lmVal}</span> <span class="mx-1">→</span> <span class="font-bold">CM: ${cmVal}</span>
+                        <span class="block text-[10px] font-bold ${colorClass}">${sign}${pctChange}%</span>
+                    `;
+                }
+            });
+
+            const totalGrowthVal = document.getElementById('mom-total-growth-val');
+            if (totalGrowthVal) {
+                let totalPct = totalLM > 0 ? (((totalCM - totalLM) / totalLM) * 100).toFixed(1) : (totalCM > 0 ? 100 : 0);
+                const sign = totalPct >= 0 ? '+' : '';
+                totalGrowthVal.innerText = `${totalCM} Unit (${sign}${totalPct}%)`;
+            }
+
+            if (chartInstances.momGlobal) chartInstances.momGlobal.destroy();
+            const ctxMoM = document.getElementById('chartMoMGlobal')?.getContext('2d');
+            if (ctxMoM) {
+                const isLight = document.body.classList.contains('light-mode');
+                const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+                chartInstances.momGlobal = new Chart(ctxMoM, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            {
+                                label: 'Bulan Lalu (Sept)',
+                                data: [lmData.mac, lmData.iphone, lmData.ipad, lmData.watch],
+                                backgroundColor: '#64748b',
+                                borderRadius: 4
+                            },
+                            {
+                                label: 'Bulan Ini (Okt)',
+                                data: [cmData.mac, cmData.iphone, cmData.ipad, cmData.watch],
+                                backgroundColor: '#06b6d4',
+                                borderRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        // FUNGSI BARU: Render Performa MoM Per Store Table
+        function renderMoMStoreTable() {
+            const tbody = document.getElementById('mom-store-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const currentMonthIdx = 9; // Oktober
+            const lastMonthIdx = 8;    // September
+
+            const storeMap = {};
+            MASTER_STORES.forEach(s => {
+                storeMap[s] = {
+                    mac: { lm: 0, cm: 0 },
+                    iphone: { lm: 0, cm: 0 },
+                    ipad: { lm: 0, cm: 0 },
+                    watch: { lm: 0, cm: 0 }
+                };
+            });
+
+            rawCSVData.forEach(item => {
+                const rawStore = extractStore(item);
+                const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === rawStore.toLowerCase().trim() || ms.toLowerCase().includes(rawStore.toLowerCase()) || rawStore.toLowerCase().includes(ms.toLowerCase()));
+                
+                if (matchedStore) {
+                    const parsedDate = parseCustomDate(extractDate(item));
+                    if (parsedDate && parsedDate.getFullYear() === 2026) {
+                        const m = parsedDate.getMonth();
+                        const lob = extractLOB(item).toLowerCase();
+                        const qty = extractQuantity(item);
+                        
+                        let monthKey = null;
+                        if (m === currentMonthIdx) monthKey = 'cm';
+                        else if (m === lastMonthIdx) monthKey = 'lm';
+
+                        if (monthKey) {
+                            if (lob.includes('mac')) storeMap[matchedStore].mac[monthKey] += qty;
+                            else if (lob.includes('iphone')) storeMap[matchedStore].iphone[monthKey] += qty;
+                            else if (lob.includes('ipad')) storeMap[matchedStore].ipad[monthKey] += qty;
+                            else if (lob.includes('watch')) storeMap[matchedStore].watch[monthKey] += qty;
+                        }
+                    }
+                }
+            });
+
+            let index = 1;
+            Object.keys(storeMap).forEach(store => {
+                const s = storeMap[store];
+                const totalLM = s.mac.lm + s.iphone.lm + s.ipad.lm + s.watch.lm;
+                const totalCM = s.mac.cm + s.iphone.cm + s.ipad.cm + s.watch.cm;
+
+                let growthPct = 0;
+                if (totalLM > 0) {
+                    growthPct = (((totalCM - totalLM) / totalLM) * 100).toFixed(1);
+                } else if (totalCM > 0) {
+                    growthPct = 100;
+                }
+
+                const colorClass = growthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = growthPct >= 0 ? '+' : '';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index++}</td>
+                    <td class="p-2.5 font-bold">${store}</td>
+                    <td class="p-2.5 text-center font-mono">${s.mac.lm} / <b>${s.mac.cm}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.iphone.lm} / <b>${s.iphone.cm}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.ipad.lm} / <b>${s.ipad.cm}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.watch.lm} / <b>${s.watch.cm}</b></td>
+                    <td class="p-2.5 text-center font-bold ${colorClass}">${totalCM} (${sign}${growthPct}%)</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const badge = document.getElementById('mom-store-total-badge');
+            if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
+        }
+
         function renderTop10Tables(data) {
-            // Top 10 Champion Sales
             const salesBody = document.getElementById('top10-sales-body');
             if (salesBody) {
                 salesBody.innerHTML = '';
@@ -1577,7 +1853,6 @@
                 }
             }
 
-            // Top 10 Store Performance
             const storeBody = document.getElementById('top10-stores-body');
             if (storeBody) {
                 storeBody.innerHTML = '';
@@ -1952,7 +2227,6 @@
                 });
             }
 
-            // Charts
             renderComplianceCharts(lateStoresSummaryList.slice(0, 10), lateChampionSummaryList.slice(0, 10));
         }
 
@@ -2026,7 +2300,7 @@
             tbody.innerHTML = '';
 
             const now = new Date();
-            const monthVal = document.getElementById('filter-month')?.value || '09';
+            const monthVal = document.getElementById('filter-month')?.value || '10';
             const monthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : now.getMonth();
             const year = 2026;
 
@@ -2097,7 +2371,6 @@
             const isLight = document.body.classList.contains('light-mode');
             const textColor = isLight ? '#0f172a' : '#f8fafc';
 
-            // Chart Total Penjualan per LOB
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
@@ -2143,7 +2416,6 @@
                 });
             }
 
-            // Chart Average / Hari / LOB (Column Chart)
             if (chartInstances.avgPerDay) chartInstances.avgPerDay.destroy();
             const ctxAvg = document.getElementById('chartAvgPerDay')?.getContext('2d');
             if (ctxAvg) {
@@ -2157,8 +2429,8 @@
                     else if (lob.includes('watch')) lobTotals.Watch += qty;
                 });
 
-                const monthVal = document.getElementById('filter-month')?.value || '09';
-                const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 8;
+                const monthVal = document.getElementById('filter-month')?.value || '10';
+                const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
                 const now = new Date();
                 let maxDay = now.getDate() - 1;
                 if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
@@ -2206,7 +2478,6 @@
             }
         }
 
-        // Functions untuk Modal Submit Champion
         function openSubmitModal(name, store) {
             document.getElementById('modal-champion-name').value = name;
             document.getElementById('modal-champion-store').value = store;
@@ -2243,7 +2514,6 @@
             alert(`Berhasil menambahkan data transaksi untuk Champion ${name}!`);
         }
 
-        // Functions untuk Export
         function downloadCSV(filename, headers, rows) {
             let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
             rows.forEach(row => {
@@ -2279,7 +2549,6 @@
             doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
         }
 
-        // Export Daftar Toko Terlambat
         function exportLateStores(type) {
             const headers = ["No", "Nama Toko", "Berapa Kali Terlambat"];
             const rows = lateStoresSummaryList.map((s, i) => [i + 1, s.store, s.count]);
@@ -2288,7 +2557,6 @@
             else if (type === 'pdf') downloadPDF("Daftar Toko Terlambat", headers, rows);
         }
 
-        // Export Keterlambatan Per Champion
         function exportLateChampions(type) {
             const headers = ["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"];
             const rows = lateChampionSummaryList.map((c, i) => [i + 1, c.name, c.store, c.count]);
@@ -2297,7 +2565,6 @@
             else if (type === 'pdf') downloadPDF("Daftar Keterlambatan Per Champion", headers, rows);
         }
 
-        // Export Log Transaksi Masuk
         function exportRawData(type) {
             const storeSummaryMap = {};
             filteredData.forEach(item => {
@@ -2323,7 +2590,6 @@
             else if (type === 'pdf') downloadPDF("Log Transaksi Masuk", headers, rows);
         }
 
-        // Copy WA Drafts
         function copyUnsubmittedWaDraft() {
             if (unsubmittedStoresList.length === 0) {
                 alert("Semua toko sudah submit!");
