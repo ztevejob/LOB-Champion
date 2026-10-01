@@ -672,7 +672,7 @@
             <div id="sec-compliance" class="content-section hidden space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-rose-500">
-                        <span class="text-[11px] opacity-80 font-bold uppercase" data-i18n="summaryUnsubmitted">Toko Belum Submit (s.d. Kemarin)</span>
+                        <span class="text-[11px] opacity-80 font-bold uppercase" data-i18n="summaryUnsubmitted">Toko Belum Submit (s.d. Hari Ini)</span>
                         <span class="text-xl font-extrabold text-rose-500" id="summary-unsubmitted-count">0 Store</span>
                     </div>
                     <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-amber-500">
@@ -686,7 +686,7 @@
                         <div class="flex items-center gap-2">
                             <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
                             <h3 class="font-extrabold text-sm uppercase tracking-wide flex items-center gap-2 neon-red-title">
-                                <span data-i18n="unsubmittedStoresTitle">LIST TOKO BELUM SUBMIT (TGL 1 S.D. KEMARIN)</span>
+                                <span data-i18n="unsubmittedStoresTitle">LIST TOKO BELUM SUBMIT (TGL 1 S.D. HARI INI)</span>
                                 <span id="unsubmitted-stores-count" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
                             </h3>
                         </div>
@@ -694,7 +694,7 @@
                             <i data-lucide="message-square" class="w-3.5 h-3.5"></i> <span data-i18n="btnDraftWa">Draft WA Follow-up</span>
                         </button>
                     </div>
-                    <p class="text-xs opacity-80 mb-3 font-medium" data-i18n="unsubmittedStoresDesc">Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 bulan terpilih hingga kemarin.</p>
+                    <p class="text-xs opacity-80 mb-3 font-medium" data-i18n="unsubmittedStoresDesc">Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 bulan terpilih hingga hari ini.</p>
                     
                     <div class="overflow-x-auto max-h-[350px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[500px]">
@@ -1056,10 +1056,10 @@
                 totalUnitGlobal: "Total Unit Global",
                 wowStoreDetailTitle: "Detail Komparasi per Store (This Week vs Last Week)",
                 thGrowthTotal: "Growth Total",
-                summaryUnsubmitted: "Toko Belum Submit (s.d. Kemarin)",
+                summaryUnsubmitted: "Toko Belum Submit (s.d. Hari Ini)",
                 summaryLateEvents: "Total Kejadian Terlambat Submit",
-                unsubmittedStoresTitle: "LIST TOKO BELUM SUBMIT (TGL 1 S.D. KEMARIN)",
-                unsubmittedStoresDesc: "Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 bulan terpilih hingga kemarin.",
+                unsubmittedStoresTitle: "LIST TOKO BELUM SUBMIT (TGL 1 S.D. HARI INI)",
+                unsubmittedStoresDesc: "Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 bulan terpilih hingga hari ini.",
                 btnDraftWa: "Draft WA Follow-up",
                 thUnsubmittedDates: "Tanggal Belum Submit",
                 thTotalDays: "Total Hari",
@@ -1126,10 +1126,10 @@
                 totalUnitGlobal: "Total Global Units",
                 wowStoreDetailTitle: "Store Comparison Detail (This Week vs Last Week)",
                 thGrowthTotal: "Total Growth",
-                summaryUnsubmitted: "Unsubmitted Stores (Up to Yesterday)",
+                summaryUnsubmitted: "Unsubmitted Stores (Up to Today)",
                 summaryLateEvents: "Total Late Submission Events",
-                unsubmittedStoresTitle: "UNSUBMITTED STORES LIST (1ST TO YESTERDAY)",
-                unsubmittedStoresDesc: "Accumulative list of stores that have not filled out daily transaction reports from the 1st of the month to yesterday.",
+                unsubmittedStoresTitle: "UNSUBMITTED STORES LIST (1ST TO TODAY)",
+                unsubmittedStoresDesc: "Accumulative list of stores that have not filled out daily transaction reports from the 1st of the month to today.",
                 btnDraftWa: "Draft WA Follow-up",
                 thUnsubmittedDates: "Unsubmitted Dates",
                 thTotalDays: "Total Days",
@@ -1549,7 +1549,7 @@
             const year = 2026;
 
             const now = new Date();
-            let maxDay = now.getDate() - 1;
+            let maxDay = now.getDate();
 
             if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
                 maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
@@ -1606,14 +1606,14 @@
             document.getElementById('kpi-trx-watch').innerText = trxWatch;
         }
 
-        // FUNGSI BARU: Render Performa MoM Global
+        // FUNGSI: Render Performa MoM Global
         function renderMoMPerformance() {
             const storeVal = (document.getElementById('filter-store')?.value || 'ALL').toLowerCase();
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
-            const currentMonthIdx = 9; // Oktober (0-indexed: 9)
-            const lastMonthIdx = 8;    // September (0-indexed: 8)
+            const currentMonthIdx = 9; // Oktober (0-indexed)
+            const lastMonthIdx = 8;    // September (0-indexed)
 
             let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
             let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
@@ -1731,7 +1731,7 @@
             }
         }
 
-        // FUNGSI BARU: Render Performa MoM Per Store Table
+        // FUNGSI: Render Performa MoM Per Store Table
         function renderMoMStoreTable() {
             const tbody = document.getElementById('mom-store-table-body');
             if (!tbody) return;
@@ -2294,6 +2294,7 @@
             }
         }
 
+        // FUNGSI PERBAIKAN LOGIKA KEDISIPLINAN (CHECK TANGGAL 1 S.D. HARI INI)
         function renderUnsubmittedStoresTable(data) {
             const tbody = document.getElementById('unsubmitted-stores-body');
             if (!tbody) return;
@@ -2301,14 +2302,18 @@
 
             const now = new Date();
             const monthVal = document.getElementById('filter-month')?.value || '10';
-            const monthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : now.getMonth();
-            const year = 2026;
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : now.getMonth();
+            const selectedYear = 2026;
 
-            let lastDay = now.getDate() - 1;
-            if (monthIdx !== now.getMonth()) {
-                lastDay = new Date(year, monthIdx + 1, 0).getDate();
+            let targetLastDay = 1;
+
+            if (selectedMonthIdx === now.getMonth() && selectedYear === now.getFullYear()) {
+                // Bulan Berjalan: Cek dari Tgl 1 sampai Hari Ini
+                targetLastDay = now.getDate(); 
+            } else {
+                // Bulan Lalu: Cek Tgl 1 sampai Hari Terakhir Bulan Tersebut
+                targetLastDay = new Date(selectedYear, selectedMonthIdx + 1, 0).getDate();
             }
-            if (lastDay < 1) lastDay = 1;
 
             const submittedDatesByStore = {};
             MASTER_STORES.forEach(s => submittedDatesByStore[s] = new Set());
@@ -2317,10 +2322,15 @@
                 const store = extractStore(item);
                 const dateStr = extractDate(item);
                 if (store && dateStr) {
-                    const matchedStore = MASTER_STORES.find(ms => ms.toLowerCase().trim() === store.toLowerCase().trim() || ms.toLowerCase().includes(store.toLowerCase()) || store.toLowerCase().includes(ms.toLowerCase()));
+                    const matchedStore = MASTER_STORES.find(ms => 
+                        ms.toLowerCase().trim() === store.toLowerCase().trim() || 
+                        ms.toLowerCase().includes(store.toLowerCase()) || 
+                        store.toLowerCase().includes(ms.toLowerCase())
+                    );
+                    
                     if (matchedStore) {
                         const parsed = parseCustomDate(dateStr);
-                        if (parsed && parsed.getFullYear() === year && parsed.getMonth() === monthIdx) {
+                        if (parsed && parsed.getFullYear() === selectedYear && parsed.getMonth() === selectedMonthIdx) {
                             submittedDatesByStore[matchedStore].add(parsed.getDate());
                         }
                     }
@@ -2331,7 +2341,7 @@
 
             MASTER_STORES.forEach(store => {
                 const missingDays = [];
-                for (let d = 1; d <= lastDay; d++) {
+                for (let d = 1; d <= targetLastDay; d++) {
                     if (!submittedDatesByStore[store].has(d)) {
                         missingDays.push(d);
                     }
@@ -2347,11 +2357,13 @@
 
             unsubmittedStoresList.sort((a, b) => b.totalDays - a.totalDays);
 
-            document.getElementById('summary-unsubmitted-count').innerText = `${unsubmittedStoresList.length} Store`;
-            document.getElementById('unsubmitted-stores-count').innerText = `${unsubmittedStoresList.length} Toko`;
+            const summaryCount = document.getElementById('summary-unsubmitted-count');
+            const badgeCount = document.getElementById('unsubmitted-stores-count');
+            if (summaryCount) summaryCount.innerText = `${unsubmittedStoresList.length} Store`;
+            if (badgeCount) badgeCount.innerText = `${unsubmittedStoresList.length} Toko`;
 
             if (unsubmittedStoresList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Semua toko sudah submit lengkap!</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs text-emerald-400 font-bold">Semua toko sudah submit lengkap!</td></tr>';
             } else {
                 unsubmittedStoresList.forEach((item, idx) => {
                     const tr = document.createElement('tr');
@@ -2432,7 +2444,7 @@
                 const monthVal = document.getElementById('filter-month')?.value || '10';
                 const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
                 const now = new Date();
-                let maxDay = now.getDate() - 1;
+                let maxDay = now.getDate();
                 if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
                     maxDay = new Date(2026, selectedMonthIdx + 1, 0).getDate();
                 }
@@ -2632,7 +2644,7 @@
 
         window.onload = function() {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000); // 5 Menit
+            setInterval(fetchLiveData, 300000); // Auto refresh tiap 5 Menit
         };
     </script>
 </body>
