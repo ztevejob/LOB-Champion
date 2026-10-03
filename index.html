@@ -558,7 +558,19 @@
                         <h3 class="font-bold text-sm flex items-center gap-2">
                             <i data-lucide="store" class="w-4 h-4 text-cyan-500"></i> <span data-i18n="momStoreDetailTitle">Detail Komparasi MoM per Store</span>
                         </h3>
-                        <span class="text-xs px-2.5 py-1 bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-bold rounded-full border border-cyan-500/30" id="mom-store-total-badge">Total Store</span>
+                        <div class="flex items-center gap-2">
+                            <div class="relative">
+                                <button onclick="toggleDropdown('export-mom-stores')" class="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                </button>
+                                <div id="export-mom-stores" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                    <button onclick="exportMomStores('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-cyan-600">CSV</button>
+                                    <button onclick="exportMomStores('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-cyan-600">Excel</button>
+                                    <button onclick="exportMomStores('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-cyan-600">PDF</button>
+                                </div>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-bold rounded-full border border-cyan-500/30" id="mom-store-total-badge">Total Store</span>
+                        </div>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[650px]">
@@ -1162,6 +1174,7 @@
         let lateStoresSummaryList = [];
         let lateChampionSummaryList = [];
         let unsubmittedStoresList = [];
+        let momStoresDataList = [];
 
         function changeLanguage(lang) {
             if (!i18n[lang]) return;
@@ -1265,16 +1278,13 @@
             return isNaN(standardDate.getTime()) ? null : standardDate;
         }
 
-        // FUNGSI PERBAIKAN: Pencocokan nama toko cerdas (fuzzy store matching)
         function findMasterStore(rawStoreName) {
             if (!rawStoreName || rawStoreName === '-') return null;
             const cleaned = String(rawStoreName).trim().toLowerCase();
             
-            // 1. Match Exact
             let found = MASTER_STORES.find(ms => ms.toLowerCase() === cleaned);
             if (found) return found;
 
-            // 2. Match berdasarkan kode Toko (contoh: M121, M206, M133)
             const codeMatch = cleaned.match(/m\d{3}/i);
             if (codeMatch) {
                 const code = codeMatch[0].toLowerCase();
@@ -1282,7 +1292,6 @@
                 if (found) return found;
             }
 
-            // 3. Substring matching
             found = MASTER_STORES.find(ms => {
                 const msClean = ms.toLowerCase();
                 return msClean.includes(cleaned) || cleaned.includes(msClean.replace(/^m\d+\s+digimap\s+/, ''));
@@ -1556,12 +1565,12 @@
 
             updateMetricsAndCharts(filteredData);
             renderTop10Tables(filteredData);
-            renderUnsubmittedStoresTable(rawCSVData); // Gunakan data utuh untuk riwayat kedisiplinan September s/d hari ini
+            renderUnsubmittedStoresTable(rawCSVData);
             renderMoMPerformance();
             renderMoMStoreTable();
             renderWoWPerformance(filteredData);
             renderWoWStoreTable(filteredData);
-            renderLateChampionsTable(rawCSVData); // Gunakan data utuh untuk evaluasi Keterlambatan
+            renderLateChampionsTable(rawCSVData);
             renderRawDataTable(filteredData);
             renderCharts(filteredData);
         }
@@ -1798,7 +1807,9 @@
                 }
             });
 
+            momStoresDataList = [];
             let index = 1;
+
             Object.keys(storeMap).forEach(store => {
                 const s = storeMap[store];
                 const totalLM = s.mac.lm + s.iphone.lm + s.ipad.lm + s.watch.lm;
@@ -1813,6 +1824,15 @@
 
                 const colorClass = growthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
                 const sign = growthPct >= 0 ? '+' : '';
+
+                momStoresDataList.push({
+                    store,
+                    macLM: s.mac.lm, macCM: s.mac.cm,
+                    iphoneLM: s.iphone.lm, iphoneCM: s.iphone.cm,
+                    ipadLM: s.ipad.lm, ipadCM: s.ipad.cm,
+                    watchLM: s.watch.lm, watchCM: s.watch.cm,
+                    totalCM, growthPct: `${sign}${growthPct}%`
+                });
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
@@ -2160,7 +2180,6 @@
             if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
         }
 
-        // FUNGSI PERBAIKAN: Hitung Keterlambatan Submit Laporan berdasarkan Timestamp & Cutoff 12:00 WIB
         function renderLateChampionsTable(allData) {
             const storeBody = document.getElementById('late-champions-body');
             const summaryBody = document.getElementById('late-champions-summary-body');
@@ -2186,7 +2205,6 @@
                     const txParsed = parseCustomDate(txDateStr);
 
                     if (tsParsed && txParsed) {
-                        // Cutoff: Tanggal Transaksi + 1 hari jam 12:00:00 WIB
                         const cutoff = new Date(txParsed.getFullYear(), txParsed.getMonth(), txParsed.getDate() + 1, 12, 0, 0);
 
                         if (tsParsed > cutoff) {
@@ -2317,7 +2335,6 @@
             }
         }
 
-        // FUNGSI PERBAIKAN: Hitung Toko Belum Submit (Mencakup 1 September s/d Kemarin secara Akumulatif)
         function renderUnsubmittedStoresTable(allData) {
             const tbody = document.getElementById('unsubmitted-stores-body');
             if (!tbody) return;
@@ -2325,8 +2342,7 @@
 
             const now = new Date();
             
-            // Batas Evaluasi: 1 September 2026 s/d Kemarin (now - 1 hari)
-            const startDate = new Date(2026, 8, 1); // 1 September 2026
+            const startDate = new Date(2026, 8, 1);
             const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
 
             if (endDate < startDate) {
@@ -2334,7 +2350,6 @@
                 return;
             }
 
-            // Pemetaan tanggal submit per toko (key: store, value: Set("YYYY-MM-DD"))
             const submittedDatesByStore = {};
             MASTER_STORES.forEach(s => submittedDatesByStore[s] = new Set());
 
@@ -2355,7 +2370,6 @@
 
             unsubmittedStoresList = [];
 
-            // Loop setiap hari dari 1 September hingga Kemarin
             MASTER_STORES.forEach(store => {
                 const missingDates = [];
                 let curr = new Date(startDate);
@@ -2574,7 +2588,7 @@
 
         function downloadPDF(title, headers, rows) {
             const { jsPDF } = window.jspdf;
-            doc = new jsPDF();
+            const doc = new jsPDF();
             doc.text(title, 14, 15);
             doc.autoTable({
                 head: [headers],
@@ -2583,6 +2597,22 @@
                 theme: 'striped'
             });
             doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
+        }
+
+        function exportMomStores(type) {
+            const headers = ["No", "Nama Store", "Mac (LM / CM)", "iPhone (LM / CM)", "iPad (LM / CM)", "Watch (LM / CM)", "Growth Total"];
+            const rows = momStoresDataList.map((s, i) => [
+                i + 1,
+                s.store,
+                `${s.macLM} / ${s.macCM}`,
+                `${s.iphoneLM} / ${s.iphoneCM}`,
+                `${s.ipadLM} / ${s.ipadCM}`,
+                `${s.watchLM} / ${s.watchCM}`,
+                `${s.totalCM} (${s.growthPct})`
+            ]);
+            if (type === 'csv') downloadCSV("detail_komparasi_mom_per_store.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("detail_komparasi_mom_per_store.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Detail Komparasi MoM per Store", headers, rows);
         }
 
         function exportLateStores(type) {
@@ -2668,7 +2698,7 @@
 
         window.onload = function() {
             fetchLiveData();
-            setInterval(fetchLiveData, 300000); // 5 Menit
+            setInterval(fetchLiveData, 300000);
         };
     </script>
 </body>
