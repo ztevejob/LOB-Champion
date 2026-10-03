@@ -573,15 +573,15 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[650px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[850px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
                                 <tr>
-                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                    <th class="p-2.5 w-10 text-center sticky-header-bg">No.</th>
                                     <th class="p-2.5 sticky-header-bg" data-i18n="thStoreName">Nama Store</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">Mac (LM / CM)</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">iPhone (LM / CM)</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">iPad (LM / CM)</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">Watch (LM / CM)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Mac (LM / CM / Grw)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPhone (LM / CM / Grw)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPad (LM / CM / Grw)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Watch (LM / CM / Grw)</th>
                                     <th class="p-2.5 text-center sticky-header-bg" data-i18n="thGrowthTotal">Growth Total</th>
                                 </tr>
                             </thead>
@@ -1765,6 +1765,7 @@
             }
         }
 
+        // FUNGSI PERBAIKAN: Menampilkan Komparasi & Growth Total Per LOB (Mac, iPhone, iPad, Watch)
         function renderMoMStoreTable() {
             const tbody = document.getElementById('mom-store-table-body');
             if (!tbody) return;
@@ -1810,28 +1811,46 @@
             momStoresDataList = [];
             let index = 1;
 
+            const calcLobGrowth = (lm, cm) => {
+                const diff = cm - lm;
+                let pct = 0;
+                if (lm > 0) pct = (((cm - lm) / lm) * 100).toFixed(0);
+                else if (cm > 0) pct = 100;
+                const sign = pct >= 0 ? '+' : '';
+                return {
+                    str: `${sign}${pct}%`,
+                    diffStr: `${sign}${diff}`,
+                    isPositive: pct >= 0
+                };
+            };
+
             Object.keys(storeMap).forEach(store => {
                 const s = storeMap[store];
                 const totalLM = s.mac.lm + s.iphone.lm + s.ipad.lm + s.watch.lm;
                 const totalCM = s.mac.cm + s.iphone.cm + s.ipad.cm + s.watch.cm;
 
-                let growthPct = 0;
+                const macGrw = calcLobGrowth(s.mac.lm, s.mac.cm);
+                const iphoneGrw = calcLobGrowth(s.iphone.lm, s.iphone.cm);
+                const ipadGrw = calcLobGrowth(s.ipad.lm, s.ipad.cm);
+                const watchGrw = calcLobGrowth(s.watch.lm, s.watch.cm);
+
+                let totalGrowthPct = 0;
                 if (totalLM > 0) {
-                    growthPct = (((totalCM - totalLM) / totalLM) * 100).toFixed(1);
+                    totalGrowthPct = (((totalCM - totalLM) / totalLM) * 100).toFixed(1);
                 } else if (totalCM > 0) {
-                    growthPct = 100;
+                    totalGrowthPct = 100;
                 }
 
-                const colorClass = growthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
-                const sign = growthPct >= 0 ? '+' : '';
+                const totalColorClass = totalGrowthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const totalSign = totalGrowthPct >= 0 ? '+' : '';
 
                 momStoresDataList.push({
                     store,
-                    macLM: s.mac.lm, macCM: s.mac.cm,
-                    iphoneLM: s.iphone.lm, iphoneCM: s.iphone.cm,
-                    ipadLM: s.ipad.lm, ipadCM: s.ipad.cm,
-                    watchLM: s.watch.lm, watchCM: s.watch.cm,
-                    totalCM, growthPct: `${sign}${growthPct}%`
+                    macLM: s.mac.lm, macCM: s.mac.cm, macGrw: macGrw.str,
+                    iphoneLM: s.iphone.lm, iphoneCM: s.iphone.cm, iphoneGrw: iphoneGrw.str,
+                    ipadLM: s.ipad.lm, ipadCM: s.ipad.cm, ipadGrw: ipadGrw.str,
+                    watchLM: s.watch.lm, watchCM: s.watch.cm, watchGrw: watchGrw.str,
+                    totalLM, totalCM, totalGrowthPct: `${totalSign}${totalGrowthPct}%`
                 });
 
                 const tr = document.createElement('tr');
@@ -1839,11 +1858,23 @@
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index++}</td>
                     <td class="p-2.5 font-bold">${store}</td>
-                    <td class="p-2.5 text-center font-mono">${s.mac.lm} / <b>${s.mac.cm}</b></td>
-                    <td class="p-2.5 text-center font-mono">${s.iphone.lm} / <b>${s.iphone.cm}</b></td>
-                    <td class="p-2.5 text-center font-mono">${s.ipad.lm} / <b>${s.ipad.cm}</b></td>
-                    <td class="p-2.5 text-center font-mono">${s.watch.lm} / <b>${s.watch.cm}</b></td>
-                    <td class="p-2.5 text-center font-bold ${colorClass}">${totalCM} (${sign}${growthPct}%)</td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.mac.lm} / <b>${s.mac.cm}</b> 
+                        <span class="block text-[10px] font-bold ${macGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${macGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.iphone.lm} / <b>${s.iphone.cm}</b> 
+                        <span class="block text-[10px] font-bold ${iphoneGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${iphoneGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.ipad.lm} / <b>${s.ipad.cm}</b> 
+                        <span class="block text-[10px] font-bold ${ipadGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${ipadGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.watch.lm} / <b>${s.watch.cm}</b> 
+                        <span class="block text-[10px] font-bold ${watchGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${watchGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-bold ${totalColorClass}">${totalCM} (${totalSign}${totalGrowthPct}%)</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -2588,27 +2619,35 @@
 
         function downloadPDF(title, headers, rows) {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const doc = new jsPDF('landscape');
             doc.text(title, 14, 15);
             doc.autoTable({
                 head: [headers],
                 body: rows,
                 startY: 20,
-                theme: 'striped'
+                theme: 'striped',
+                styles: { fontSize: 8 }
             });
             doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
         }
 
         function exportMomStores(type) {
-            const headers = ["No", "Nama Store", "Mac (LM / CM)", "iPhone (LM / CM)", "iPad (LM / CM)", "Watch (LM / CM)", "Growth Total"];
+            const headers = [
+                "No", "Nama Store", 
+                "Mac (LM / CM / Grw)", 
+                "iPhone (LM / CM / Grw)", 
+                "iPad (LM / CM / Grw)", 
+                "Watch (LM / CM / Grw)", 
+                "Growth Total"
+            ];
             const rows = momStoresDataList.map((s, i) => [
                 i + 1,
                 s.store,
-                `${s.macLM} / ${s.macCM}`,
-                `${s.iphoneLM} / ${s.iphoneCM}`,
-                `${s.ipadLM} / ${s.ipadCM}`,
-                `${s.watchLM} / ${s.watchCM}`,
-                `${s.totalCM} (${s.growthPct})`
+                `${s.macLM} / ${s.macCM} (${s.macGrw})`,
+                `${s.iphoneLM} / ${s.iphoneCM} (${s.iphoneGrw})`,
+                `${s.ipadLM} / ${s.ipadCM} (${s.ipadGrw})`,
+                `${s.watchLM} / ${s.watchCM} (${s.watchGrw})`,
+                `${s.totalCM} (${s.totalGrowthPct})`
             ]);
             if (type === 'csv') downloadCSV("detail_komparasi_mom_per_store.csv", headers, rows);
             else if (type === 'excel') downloadExcel("detail_komparasi_mom_per_store.xlsx", headers, rows);
