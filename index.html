@@ -977,7 +977,7 @@
         };
 
         const MASTER_STORES = [
-            "M108 Digimap Trans Studio Mall Bandung", "M116 Digimap Beachwalk Bali", "M117 Digimap Plaza Senayan", 
+            "M133 Digimap Trans Studio Mall Bandung", "M116 Digimap Beachwalk Bali", "M132 Digimap Plaza Senayan", 
             "M118 Digimap Pondok Indah Mall 3", "M119 Digimap Centrepoint Mall Medan", "M120 Digimap Sun Plaza Medan", 
             "M121 Digimap Tunjungan Plaza 3 Surabaya", "M122 Digimap Galaxy Mall Surabaya", "M123 Digimap Mall Bali Galeria", 
             "M124 Digimap Pacific Place", "M125 Digimap Supermall Karawaci", "M126 Digimap Ciputra World Surabaya", 
@@ -1274,7 +1274,7 @@
             let found = MASTER_STORES.find(ms => ms.toLowerCase() === cleaned);
             if (found) return found;
 
-            // 2. Match berdasarkan kode Toko (contoh: M121, M206, M108)
+            // 2. Match berdasarkan kode Toko (contoh: M121, M206, M133)
             const codeMatch = cleaned.match(/m\d{3}/i);
             if (codeMatch) {
                 const code = codeMatch[0].toLowerCase();
