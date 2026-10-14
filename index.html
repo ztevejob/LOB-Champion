@@ -455,7 +455,6 @@
                                         <th class="p-2 sticky-header-bg" data-i18n="thStore">Store</th>
                                         <th class="p-2 sticky-header-bg" data-i18n="thSalesLob">Sales LOB</th>
                                         <th class="p-2 text-center sticky-header-bg" data-i18n="thTotalUnit">Total Unit</th>
-                                        <th class="p-2 text-center sticky-header-bg">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="top10-sales-body" class="divide-y divide-gray-500/10"></tbody>
@@ -823,7 +822,6 @@
                                             <th class="p-2.5 sticky-header-bg" data-i18n="thChampionName">Nama Champion</th>
                                             <th class="p-2.5 sticky-header-bg" data-i18n="thStore">Toko</th>
                                             <th class="p-2.5 text-center sticky-header-bg" data-i18n="thLateCount">Berapa Kali Terlambat</th>
-                                            <th class="p-2.5 text-center sticky-header-bg">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
@@ -920,61 +918,6 @@
         </div>
     </main>
 
-    <!-- Modal Form Submit Manual Champion -->
-    <div id="modal-submit-champion" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-panel p-6 w-full max-w-md border border-gray-500/30 rounded-xl space-y-4">
-            <div class="flex items-center justify-between border-b border-gray-500/20 pb-3">
-                <h3 class="font-bold text-sm text-indigo-400 flex items-center gap-2">
-                    <i data-lucide="file-plus" class="w-4 h-4"></i> Submit Transaksi Champion
-                </h3>
-                <button onclick="closeSubmitModal()" class="text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <form id="form-submit-champion" onsubmit="handleChampionSubmit(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold mb-1">Nama Champion</label>
-                    <input type="text" id="modal-champion-name" readonly class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 text-slate-300 font-semibold cursor-not-allowed">
-                </div>
-                <div>
-                    <label class="block font-bold mb-1">Store / Toko</label>
-                    <input type="text" id="modal-champion-store" readonly class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 text-slate-300 font-semibold cursor-not-allowed">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-bold mb-1">Kategori LOB</label>
-                        <select id="modal-lob" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
-                            <option value="Mac">Mac</option>
-                            <option value="iPhone">iPhone</option>
-                            <option value="iPad">iPad</option>
-                            <option value="Watch">Watch</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-1">Shift</label>
-                        <select id="modal-shift" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
-                            <option value="Pagi">Pagi</option>
-                            <option value="Middle">Middle</option>
-                            <option value="Siang">Siang</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-bold mb-1">Jumlah Unit Qty</label>
-                    <input type="number" id="modal-qty" min="1" value="1" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
-                </div>
-                <div>
-                    <label class="block font-bold mb-1">Tanggal Transaksi</label>
-                    <input type="date" id="modal-date" required class="w-full bg-slate-900/50 border border-gray-500/30 rounded p-2 font-semibold">
-                </div>
-                <div class="pt-2 flex gap-2 justify-end">
-                    <button type="button" onclick="closeSubmitModal()" class="px-3 py-1.5 rounded bg-gray-600 hover:bg-gray-500 font-bold">Batal</button>
-                    <button type="submit" class="px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold">Submit Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
         Chart.register(ChartDataLabels);
         lucide.createIcons();
@@ -989,39 +932,108 @@
         };
 
         const MASTER_STORES = [
-            "M133 Digimap Trans Studio Mall Bandung", "M116 Digimap Beachwalk Bali", "M132 Digimap Plaza Senayan", 
-            "M118 Digimap Pondok Indah Mall 3", "M119 Digimap Centrepoint Mall Medan", "M120 Digimap Sun Plaza Medan", 
-            "M121 Digimap Tunjungan Plaza 3 Surabaya", "M122 Digimap Galaxy Mall Surabaya", "M123 Digimap Mall Bali Galeria", 
-            "M124 Digimap Pacific Place", "M125 Digimap Supermall Karawaci", "M126 Digimap Ciputra World Surabaya", 
-            "M127 Digimap Lotte Shopping Avenue", "M128 Digimap Emporium Mall", "M129 Digimap Mall Puri Indah", 
-            "M130 Digimap Sunset Road", "M131 Digimap Grand Indonesia", "M201 Digimap Trans Studio Mall Cibubur", 
-            "M203 Digimap AEON Mall BSD", "M205 Digimap Paskal 23 Bandung", "M206 Digimap Pakuwon Mall Surabaya", 
-            "M212 Digimap Sunter Mall", "M214 Digimap AEON Mall Sentul", "M215 Digimap Mall Taman Anggrek", 
-            "M216 Digimap Tentrem Mall Semarang", "M217 Digimap Blok M Plaza", "M218 Digimap Plaza Balikpapan", 
-            "M219 Digimap Basko Padang", "M220 Digimap Malioboro Mall", "M221 Digimap A Yani Pontianak", 
-            "M222 Digimap Palembang Indah Mall", "M223 Digimap Roxy Square Jember", "M224 Digimap WTC Jambi", 
-            "M225 Digimap Citimall Dumai", "M226 Digimap Ambon City Center", "M227 Digimap AEON Tanjung Barat", 
-            "M228 Digimap Citimall Cianjur 2", "M229 Digimap Trans Icon Surabaya", "M230 Digimap The Park Kendari", 
-            "M231 Digimap Gress Mall Gresik", "M232 Digimap Pakuwon Mall Solo", "M233 Digimap Unimas District Sidoarjo", 
-            "M234 Digimap Citra Grand Cibubur", "M235 Digimap Lippo Plaza Kramat Jati", "M236 Digimap Palu Grand Mall", 
-            "M237 Digimap Solo Square", "M238 Digimap Pondok Indah Mall 2", "M239 Digimap Icon Mall Bali", 
-            "M240 Digimap Pasific Mall Tegal", "M241 Digimap Revo Mall", "M243 Digimap Aeon Mall Delta Mas", 
-            "M244 Digimap Java Mall Semarang", "M245 Digimap Living World Kota Wisata", "M246 Digimap Malang Town Square", 
-            "M247 Digimap Lippo Plaza Jambi", "M248 Digimap Suncity Mall Sidoarjo", "M249 Digimap Lippo Plaza Palangkaraya", 
-            "M250 Digimap Lippo Plaza Batu", "M251 Digimap The Kings Shopping Centre", "M252 Digimap Binjai Mall", 
-            "M253 Digimap Plaza Surabaya", "M254 Digimap basko city mall", "M255 Digimap Antasari Place", 
-            "M256 Digimap Lippo Plaza Lubuklinggau", "M257 Digimap City Plaza Jatinegara", "M258 Digimap Lippo Plaza Manado", 
-            "M259 Digimap Jatinangor Town Square", "M260 Digimap Kudus Extention Mall", "M261 Digimap PIK Elang Laut", 
-            "M262 Digimap Suzuya Merdeka Square Siantar", "M263 Digimap Citimall Sampit", "M264 Digimap Plaza Semanggi", 
-            "M265 Digimap IRH Soekarno MERR", "M266 Digimap HIVE Harapan Indah", "M267 Digimap Mall Cijantung", 
-            "M268 Digimap Diana Mall Timika", "M269 Digimap Tenth Avenue", "M270 Digimap Citymall Lahat", 
-            "M271 Digimap Mall Indramayu", "M272 Digimap Kota Baru Parahyangan", "M273 Digimap Metro Lampung", 
-            "M274 Digimap Ciputat", "M275 Digimap Citimall Baturaja", "M276 Digimap Shila At Sawangan", 
-            "M277 Digimap Citimall Tuban", "M278 Digimap Ass Brebes Mall", "M279 Digimap Ciumbuleuit Street", 
-            "M281 Digimap Ngaliyan Semarang", "M282 Digimap Citimall Pangkalan Bun", "M283 Digimap Basuki Rahmat Tulungagung", 
-            "M284 Digimap BSD City Loka", "M285 Digimap Blitar Square", "M286 Digimap Citimall Prabumulih", 
-            "M287 Digimap Grand Tarakan", "M288 Digimap Mojopahit Street Mojokerto", "M289 Digimap Maleo Town Square", 
-            "M290 Digimap Mandau City Mall", "M293 Digimap Salatiga"
+            "M116 Digimap Beachwalk Bali",
+            "M118 Digimap Pondok Indah Mall 3",
+            "M119 Digimap Centrepoint Mall Medan",
+            "M120 Digimap Sun Plaza Medan",
+            "M121 Digimap Tunjungan Plaza 3 Surabaya",
+            "M122 Digimap Galaxy Mall Surabaya",
+            "M123 Digimap Mall Bali Galeria",
+            "M124 Digimap Pacific Place",
+            "M125 Digimap Supermall Karawaci",
+            "M126 Digimap Ciputra World Surabaya",
+            "M127 Digimap Lotte Shopping Avenue",
+            "M128 Digimap Emporium Mall",
+            "M129 Digimap Mall Puri Indah",
+            "M130 Digimap Sunset Road",
+            "M131 Digimap Grand Indonesia",
+            "M132 Digimap Plaza Senayan",
+            "M133 Digimap Trans Studio Mall Bandung",
+            "M201 Digimap Trans Studio Mall Cibubur",
+            "M203 Digimap AEON Mall BSD",
+            "M205 Digimap Paskal 23 Bandung",
+            "M206 Digimap Pakuwon Mall Surabaya",
+            "M212 Digimap Sunter Mall",
+            "M214 Digimap AEON Mall Sentul",
+            "M215 Digimap Mall Taman Anggrek",
+            "M216 Digimap Tentrem Mall Semarang",
+            "M217 Digimap Blok M Plaza",
+            "M218 Digimap Plaza Balikpapan",
+            "M219 Digimap Basko Padang",
+            "M220 Digimap Malioboro Mall",
+            "M221 Digimap A Yani Pontianak",
+            "M222 Digimap Palembang Indah Mall",
+            "M223 Digimap Roxy Square Jember",
+            "M224 Digimap WTC Jambi",
+            "M225 Digimap Citimall Dumai",
+            "M226 Digimap Ambon City Center",
+            "M227 Digimap AEON Tanjung Barat",
+            "M228 Digimap Citimall Cianjur 2",
+            "M229 Digimap Trans Icon Surabaya",
+            "M230 Digimap The Park Kendari",
+            "M231 Digimap Gress Mall Gresik",
+            "M232 Digimap Pakuwon Mall Solo",
+            "M233 Digimap Unimas District Sidoarjo",
+            "M234 Digimap Citra Grand Cibubur",
+            "M235 Digimap Lippo Plaza Kramat Jati",
+            "M236 Digimap Palu Grand Mall",
+            "M237 Digimap Solo Square",
+            "M238 Digimap Pondok Indah Mall 2",
+            "M239 Digimap Icon Mall Bali",
+            "M240 Digimap Pasific Mall Tegal",
+            "M241 Digimap Revo Mall",
+            "M243 Digimap Aeon Mall Delta Mas",
+            "M244 Digimap Java Mall Semarang",
+            "M245 Digimap Living World Kota Wisata",
+            "M246 Digimap Malang Town Square",
+            "M247 Digimap Lippo Plaza Jambi",
+            "M248 Digimap Suncity Mall Sidoarjo",
+            "M249 Digimap Lippo Plaza Palangkaraya",
+            "M250 Digimap Lippo Plaza Batu",
+            "M251 Digimap The Kings Shopping Centre",
+            "M252 Digimap Binjai Mall",
+            "M253 Digimap Plaza Surabaya",
+            "M254 Digimap basko city mall",
+            "M255 Digimap Antasari Place",
+            "M256 Digimap Lippo Plaza Lubuklinggau",
+            "M257 Digimap City Plaza Jatinegara",
+            "M258 Digimap Lippo Plaza Manado",
+            "M259 Digimap Jatinangor Town Square",
+            "M260 Digimap Kudus Extention Mall",
+            "M261 Digimap PIK Elang Laut",
+            "M262 Digimap Suzuya Merdeka Square Siantar",
+            "M263 Digimap Citimall Sampit",
+            "M264 Digimap Plaza Semanggi",
+            "M265 Digimap IRH Soekarno MERR",
+            "M266 Digimap HIVE Harapan Indah",
+            "M267 Digimap Mall Cijantung",
+            "M268 Digimap Diana Mall Timika",
+            "M269 Digimap Tenth Avenue",
+            "M270 Digimap Citymall Lahat",
+            "M271 Digimap Mall Indramayu",
+            "M272 Digimap Kota Baru Parahyangan",
+            "M273 Digimap Metro Lampung",
+            "M274 Digimap Ciputat",
+            "M275 Digimap Citimall Baturaja",
+            "M276 Digimap Shila At Sawangan",
+            "M277 Digimap Citimall Tuban",
+            "M278 Digimap Ass Brebes Mall",
+            "M279 Digimap Ciumbuleuit Street",
+            "M281 Digimap Ngaliyan Semarang",
+            "M282 Digimap Citimall Pangkalan Bun",
+            "M283 Digimap Basuki Rahmat Tulungagung",
+            "M284 Digimap BSD City Loka",
+            "M285 Digimap Blitar Square",
+            "M286 Digimap Citimall Prabumulih",
+            "M287 Digimap Grand Tarakan",
+            "M288 Digimap Mojopahit Street Mojokerto",
+            "M289 Digimap Maleo Town Square",
+            "M290 Digimap Mandau City Mall",
+            "M292 Digimap Graha Raya - Fortune Folks",
+            "M293 Digimap Salatiga",
+            "M294 Digimap Bojonegoro Street",
+            "M295 Digimap Juanda Tasikmalaya",
+            "M297 Digimap Ponorogo City Center"
         ];
 
         const i18n = {
@@ -1765,7 +1777,6 @@
             }
         }
 
-        // FUNGSI PERBAIKAN: Menampilkan Komparasi & Growth Total Per LOB (Mac, iPhone, iPad, Watch)
         function renderMoMStoreTable() {
             const tbody = document.getElementById('mom-store-table-body');
             if (!tbody) return;
@@ -1905,7 +1916,7 @@
                 const sortedSales = Object.values(salesMap).sort((a, b) => b.total - a.total).slice(0, 10);
 
                 if (sortedSales.length === 0) {
-                    salesBody.innerHTML = '<tr><td colspan="6" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
+                    salesBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
                 } else {
                     sortedSales.forEach((s, idx) => {
                         const tr = document.createElement('tr');
@@ -1916,11 +1927,6 @@
                             <td class="p-2 opacity-80">${s.store}</td>
                             <td class="p-2 font-semibold text-indigo-400">${s.lob}</td>
                             <td class="p-2 text-center font-bold text-emerald-400">${s.total}</td>
-                            <td class="p-2 text-center">
-                                <button onclick="openSubmitModal('${s.name.replace(/'/g, "\\'")}', '${s.store.replace(/'/g, "\\'")}')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-bold">
-                                    + Submit
-                                </button>
-                            </td>
                         `;
                         salesBody.appendChild(tr);
                     });
@@ -2279,7 +2285,7 @@
             }
 
             if (lateChampionSummaryList.length === 0) {
-                summaryBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Tidak ada keterlambatan Champion.</td></tr>';
+                summaryBody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Tidak ada keterlambatan Champion.</td></tr>';
             } else {
                 lateChampionSummaryList.forEach((c, idx) => {
                     const tr = document.createElement('tr');
@@ -2289,11 +2295,6 @@
                         <td class="p-2.5 font-bold">${c.name}</td>
                         <td class="p-2.5 opacity-80">${c.store}</td>
                         <td class="p-2.5 text-center font-bold text-purple-400">${c.count} Kali</td>
-                        <td class="p-2.5 text-center">
-                            <button onclick="openSubmitModal('${c.name.replace(/'/g, "\\'")}', '${c.store.replace(/'/g, "\\'")}')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-bold">
-                                + Submit
-                            </button>
-                        </td>
                     `;
                     summaryBody.appendChild(tr);
                 });
@@ -2554,45 +2555,6 @@
                     }
                 });
             }
-        }
-
-        function openSubmitModal(name, store) {
-            document.getElementById('modal-champion-name').value = name;
-            document.getElementById('modal-champion-store').value = store;
-            document.getElementById('modal-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('modal-submit-champion').classList.remove('hidden');
-        }
-
-        function closeSubmitModal() {
-            document.getElementById('modal-submit-champion').classList.add('hidden');
-        }
-
-        function handleChampionSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('modal-champion-name').value;
-            const store = document.getElementById('modal-champion-store').value;
-            const lob = document.getElementById('modal-lob').value;
-            const shift = document.getElementById('modal-shift').value;
-            const qty = parseInt(document.getElementById('modal-qty').value, 10);
-            const date = document.getElementById('modal-date').value;
-
-            const now = new Date();
-            const tsString = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-
-            const newEntry = {
-                'Timestamp': tsString,
-                'Nama Champion/ SA': name,
-                'Store': store,
-                'Champion LOB': lob,
-                'Shift': shift,
-                'Total Qty': qty,
-                'Tanggal_Transaksi': date
-            };
-
-            rawCSVData.push(newEntry);
-            applyFilters();
-            closeSubmitModal();
-            alert(`Berhasil menambahkan data transaksi untuk Champion ${name}!`);
         }
 
         function downloadCSV(filename, headers, rows) {
