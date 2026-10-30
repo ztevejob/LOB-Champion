@@ -932,7 +932,6 @@
         };
 
         const MASTER_STORES = [
-            "M116 Digimap Beachwalk Bali",
             "M118 Digimap Pondok Indah Mall 3",
             "M119 Digimap Centrepoint Mall Medan",
             "M120 Digimap Sun Plaza Medan",
@@ -943,12 +942,13 @@
             "M125 Digimap Supermall Karawaci",
             "M126 Digimap Ciputra World Surabaya",
             "M127 Digimap Lotte Shopping Avenue",
-            "M128 Digimap Emporium Mall",
+            "M128 Digimap Emporium Mall Pluit",
             "M129 Digimap Mall Puri Indah",
-            "M130 Digimap Sunset Road",
+            "M130 Digimap Sunset Road Bali",
             "M131 Digimap Grand Indonesia",
             "M132 Digimap Plaza Senayan",
             "M133 Digimap Trans Studio Mall Bandung",
+            "M134 Digimap Beachwalk Bali",
             "M201 Digimap Trans Studio Mall Cibubur",
             "M203 Digimap AEON Mall BSD",
             "M205 Digimap Paskal 23 Bandung",
@@ -960,6 +960,7 @@
             "M217 Digimap Blok M Plaza",
             "M218 Digimap Plaza Balikpapan",
             "M219 Digimap Basko Padang",
+            "M21F Digimap Ujung Berung Town Square",
             "M220 Digimap Malioboro Mall",
             "M221 Digimap A Yani Pontianak",
             "M222 Digimap Palembang Indah Mall",
@@ -980,7 +981,7 @@
             "M237 Digimap Solo Square",
             "M238 Digimap Pondok Indah Mall 2",
             "M239 Digimap Icon Mall Bali",
-            "M240 Digimap Pasific Mall Tegal",
+            "M240 Digimap Pacific Mall Tegal",
             "M241 Digimap Revo Mall",
             "M243 Digimap Aeon Mall Delta Mas",
             "M244 Digimap Java Mall Semarang",
@@ -993,7 +994,7 @@
             "M251 Digimap The Kings Shopping Centre",
             "M252 Digimap Binjai Mall",
             "M253 Digimap Plaza Surabaya",
-            "M254 Digimap basko city mall",
+            "M254 Digimap Basko city Mall",
             "M255 Digimap Antasari Place",
             "M256 Digimap Lippo Plaza Lubuklinggau",
             "M257 Digimap City Plaza Jatinegara",
@@ -1004,33 +1005,33 @@
             "M262 Digimap Suzuya Merdeka Square Siantar",
             "M263 Digimap Citimall Sampit",
             "M264 Digimap Plaza Semanggi",
-            "M265 Digimap IRH Soekarno MERR",
+            "M265 Digimap Merr Street",
             "M266 Digimap HIVE Harapan Indah",
             "M267 Digimap Mall Cijantung",
             "M268 Digimap Diana Mall Timika",
             "M269 Digimap Tenth Avenue",
-            "M270 Digimap Citymall Lahat",
+            "M270 Digimap Citimall Lahat",
             "M271 Digimap Mall Indramayu",
             "M272 Digimap Kota Baru Parahyangan",
             "M273 Digimap Metro Lampung",
-            "M274 Digimap Ciputat",
+            "M274 Digimap Street Ciputat Raya",
             "M275 Digimap Citimall Baturaja",
             "M276 Digimap Shila At Sawangan",
             "M277 Digimap Citimall Tuban",
-            "M278 Digimap Ass Brebes Mall",
-            "M279 Digimap Ciumbuleuit Street",
-            "M281 Digimap Ngaliyan Semarang",
-            "M282 Digimap Citimall Pangkalan Bun",
+            "M278 Digimap A.S.S Brebes",
+            "M279 Digimap Ciumbuleuit",
+            "M281 Digimap Ngaliyan Street",
+            "M282 Digimap Citimall Pangkalan bun",
             "M283 Digimap Basuki Rahmat Tulungagung",
-            "M284 Digimap BSD City Loka",
+            "M284 Digimap BSD Loka",
             "M285 Digimap Blitar Square",
             "M286 Digimap Citimall Prabumulih",
             "M287 Digimap Grand Tarakan",
             "M288 Digimap Mojopahit Street Mojokerto",
             "M289 Digimap Maleo Town Square",
             "M290 Digimap Mandau City Mall",
-            "M292 Digimap Graha Raya - Fortune Folks",
-            "M293 Digimap Salatiga",
+            "M292 Digimap Graha Raya",
+            "M293 Digimap Jend Sudirman Salatiga",
             "M294 Digimap Bojonegoro Street",
             "M295 Digimap Juanda Tasikmalaya",
             "M297 Digimap Ponorogo City Center"
@@ -1297,7 +1298,7 @@
             let found = MASTER_STORES.find(ms => ms.toLowerCase() === cleaned);
             if (found) return found;
 
-            const codeMatch = cleaned.match(/m\d{3}/i);
+            const codeMatch = cleaned.match(/m\d{3}[a-z]?/i);
             if (codeMatch) {
                 const code = codeMatch[0].toLowerCase();
                 found = MASTER_STORES.find(ms => ms.toLowerCase().includes(code));
@@ -1306,7 +1307,7 @@
 
             found = MASTER_STORES.find(ms => {
                 const msClean = ms.toLowerCase();
-                return msClean.includes(cleaned) || cleaned.includes(msClean.replace(/^m\d+\s+digimap\s+/, ''));
+                return msClean.includes(cleaned) || cleaned.includes(msClean.replace(/^m\d+[a-z]?\s+digimap\s+/, ''));
             });
 
             return found || null;
