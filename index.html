@@ -194,78 +194,64 @@
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     </style>
 </head>
-<body class="flex flex-col lg:flex-row min-h-screen p-2 md:p-4 pb-20 lg:pb-4 gap-4">
+<body class="flex flex-col min-h-screen p-2 md:p-4 pb-20 lg:pb-4 gap-4">
 
-    <!-- Sidebar Desktop -->
-    <aside id="sidebar" class="hidden lg:flex w-64 glass-sidebar p-4 flex-col justify-between shrink-0 z-20">
-        <div>
-            <div class="flex items-center justify-between pb-4 border-b border-gray-500/20">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-indigo-600 rounded-lg text-white">
-                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-base leading-tight">LOB Champion</h1>
-                        <p class="text-xs text-indigo-500 font-semibold" data-i18n="subTitle">Analytics Dashboard</p>
-                    </div>
+    <!-- Top Navigation Bar (Pengganti Sidebar Kiri) -->
+    <header class="glass-panel p-3 flex flex-col md:flex-row items-center justify-between gap-3 z-20">
+        <div class="flex items-center justify-between w-full md:w-auto gap-3">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600 rounded-lg text-white">
+                    <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base leading-tight">LOB Champion</h1>
+                    <p class="text-xs text-indigo-500 font-semibold" data-i18n="subTitle">Analytics Dashboard</p>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 gap-2 my-4">
-                <div class="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span data-i18n="autoSync">Auto Sync</span>
-                    </div>
-                    <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
-                </div>
-
-                <button onclick="resetFilters()" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold hover:bg-rose-500/30 transition">
+            <div class="flex items-center gap-2 md:hidden">
+                <button onclick="resetFilters()" class="p-2 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                    <span data-i18n="resetFilter">Reset Filter</span>
                 </button>
-            </div>
-
-            <nav class="flex flex-col gap-1.5" id="sidebar-nav">
-                <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span data-i18n="navOverview">Overview</span>
-                </button>
-                <button onclick="showSection('mom-perf')" id="btn-mom-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="calendar-range" class="w-4 h-4 shrink-0"></i> <span data-i18n="navMom">MoM Perf.</span>
-                </button>
-                <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> <span data-i18n="navWow">WoW Perf.</span>
-                </button>
-                <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> <span data-i18n="navCompliance">Kedisiplinan</span>
-                </button>
-                <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span data-i18n="navRaw">Log Transaksi</span>
-                </button>
-                <button onclick="showSection('settings')" id="btn-settings" class="nav-item flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
-                    <i data-lucide="settings" class="w-4 h-4 shrink-0"></i> <span data-i18n="navSettings">Pengaturan</span>
-                </button>
-            </nav>
-        </div>
-    </aside>
-
-    <!-- Header Mobile Top Controls -->
-    <div class="lg:hidden flex items-center justify-between p-2 glass-panel mb-2">
-        <div class="flex items-center gap-2">
-            <div class="p-1.5 bg-indigo-600 rounded-lg text-white">
-                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-            </div>
-            <div>
-                <h1 class="font-bold text-sm leading-tight">LOB Champion</h1>
-                <span class="text-[9px] text-indigo-400 font-semibold block" id="last-update-mobile">Syncing...</span>
             </div>
         </div>
-        <div class="flex items-center gap-1.5">
-            <button onclick="resetFilters()" class="p-2 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold">
+
+        <!-- Nav Buttons (Desktop Top) -->
+        <nav class="hidden lg:flex items-center gap-1.5 flex-wrap" id="sidebar-nav">
+            <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span data-i18n="navOverview">Overview</span>
+            </button>
+            <button onclick="showSection('mom-perf')" id="btn-mom-perf" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="calendar-range" class="w-4 h-4 shrink-0"></i> <span data-i18n="navMom">MoM Perf.</span>
+            </button>
+            <button onclick="showSection('wow-perf')" id="btn-wow-perf" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> <span data-i18n="navWow">WoW Perf.</span>
+            </button>
+            <button onclick="showSection('compliance')" id="btn-compliance" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="calendar-check" class="w-4 h-4 shrink-0"></i> <span data-i18n="navCompliance">Kedisiplinan</span>
+            </button>
+            <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span data-i18n="navRaw">Log Transaksi</span>
+            </button>
+            <button onclick="showSection('settings')" id="btn-settings" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="settings" class="w-4 h-4 shrink-0"></i> <span data-i18n="navSettings">Pengaturan</span>
+            </button>
+        </nav>
+
+        <div class="hidden lg:flex items-center gap-3">
+            <div class="flex flex-col items-end justify-center px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span data-i18n="autoSync">Auto Sync</span>
+                </div>
+                <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
+            </div>
+
+            <button onclick="resetFilters()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold hover:bg-rose-500/30 transition" title="Reset Filter">
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <span data-i18n="resetFilter">Reset</span>
             </button>
         </div>
-    </div>
+    </header>
 
     <!-- Mobile Bottom Dock -->
     <div class="mobile-dock lg:hidden">
@@ -427,14 +413,14 @@
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="smartphone" class="w-4 h-4 text-indigo-500"></i> <span data-i18n="chartLOBTitle">Total Penjualan per Kategori LOB</span>
                         </h3>
-                        <div class="h-64 relative"><canvas id="chartLOB"></canvas></div>
+                        <div class="h-64 relative flex items-center justify-center"><canvas id="chartLOB"></canvas></div>
                     </div>
                     
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
                             <i data-lucide="calculator" class="w-4 h-4 text-purple-500"></i> <span data-i18n="chartAvgTitle">Average / Hari / LOB</span>
                         </h3>
-                        <div class="h-64 relative"><canvas id="chartAvgPerDay"></canvas></div>
+                        <div class="h-64 relative flex items-center justify-center"><canvas id="chartAvgPerDay"></canvas></div>
                     </div>
                 </div>
 
@@ -1041,7 +1027,7 @@
             id: {
                 subTitle: "Analytics Dashboard",
                 autoSync: "Auto Sync",
-                resetFilter: "Reset Filter",
+                resetFilter: "Reset",
                 navOverview: "Overview",
                 navMom: "MoM Perf.",
                 navWow: "WoW Perf.",
@@ -1111,7 +1097,7 @@
             en: {
                 subTitle: "Analytics Dashboard",
                 autoSync: "Auto Sync",
-                resetFilter: "Reset Filter",
+                resetFilter: "Reset",
                 navOverview: "Overview",
                 navMom: "MoM Perf.",
                 navWow: "WoW Perf.",
@@ -2465,32 +2451,30 @@
                 });
 
                 chartInstances.lob = new Chart(ctxLOB, {
-                    type: 'bar',
+                    type: 'doughnut',
                     data: {
                         labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [{
                             label: 'Total Sales',
                             data: [lobTotals.Mac, lobTotals.iPhone, lobTotals.iPad, lobTotals.Watch],
                             backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
-                            borderRadius: 8
+                            borderWidth: 2,
+                            borderColor: isLight ? '#ffffff' : '#0f172a'
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: textColor, font: { weight: 'bold', size: 11 }, boxWidth: 12 } 
+                            },
                             datalabels: {
-                                anchor: 'center',
-                                align: 'center',
                                 color: '#ffffff',
-                                font: { weight: 'bold', size: 12 },
-                                formatter: Math.round
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (val) => val > 0 ? val : ''
                             }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
                         }
                     }
                 });
@@ -2526,32 +2510,30 @@
                 ];
 
                 chartInstances.avgPerDay = new Chart(ctxAvg, {
-                    type: 'bar',
+                    type: 'doughnut',
                     data: {
                         labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [{
                             label: 'Average / Hari',
                             data: avgData,
                             backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
-                            borderRadius: 8
+                            borderWidth: 2,
+                            borderColor: isLight ? '#ffffff' : '#0f172a'
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: textColor, font: { weight: 'bold', size: 11 }, boxWidth: 12 } 
+                            },
                             datalabels: {
-                                anchor: 'center',
-                                align: 'center',
                                 color: '#ffffff',
-                                font: { weight: 'bold', size: 12 },
-                                formatter: (val) => val
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (val) => parseFloat(val) > 0 ? val : ''
                             }
-                        },
-                        scales: {
-                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
-                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
                         }
                     }
                 });
