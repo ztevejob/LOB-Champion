@@ -2712,11 +2712,9 @@
         }
 
         function downloadCSV(filename, headers, rows) {
-            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "
-";
+            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
             rows.forEach(row => {
-                csvContent += row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",") + "
-";
+                csvContent += row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",") + "\n";
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2875,16 +2873,11 @@
                 alert("Semua toko sudah submit!");
                 return;
             }
-            let text = "*REMINDER TOKO BELUM SUBMIT LAPORAN*
-
-Mohon ingatkan Championnya Store berikut segera melakukan submit laporan transaksi harian:
-";
+            let text = "*REMINDER TOKO BELUM SUBMIT LAPORAN*\n\nMohon ingatkan Championnya Store berikut segera melakukan submit laporan transaksi harian:\n";
             unsubmittedStoresList.forEach((s, i) => {
-                text += `${i + 1}. ${s.store} (Belum submit ${s.totalDays} hari: ${s.missingDates.join(', ')})
-`;
+                text += `${i + 1}. ${s.store} (Belum submit ${s.totalDays} hari: ${s.missingDates.join(', ')})\n`;
             });
-            text += "
-Terima kasih atas kerjasamanya!";
+            text += "\nTerima kasih atas kerjasamanya!";
             navigator.clipboard.writeText(text);
             alert("Draft WA Toko Belum Submit berhasil disalin ke clipboard!");
         }
@@ -2894,13 +2887,9 @@ Terima kasih atas kerjasamanya!";
                 alert("Tidak ada data keterlambatan toko.");
                 return;
             }
-            let text = "*REKAP KETERLAMBATAN SUBMIT PER TOKO*
-
-Berikut daftar toko yang mengalami keterlambatan submit:
-";
+            let text = "*REKAP KETERLAMBATAN SUBMIT PER TOKO*\n\nBerikut daftar toko yang mengalami keterlambatan submit:\n";
             lateStoresSummaryList.forEach((s, i) => {
-                text += `${i + 1}. ${s.store} - ${s.count} Kali Terlambat
-`;
+                text += `${i + 1}. ${s.store} - ${s.count} Kali Terlambat\n`;
             });
             navigator.clipboard.writeText(text);
             alert("Draft WA berhasil disalin ke clipboard!");
@@ -2911,13 +2900,9 @@ Berikut daftar toko yang mengalami keterlambatan submit:
                 alert("Tidak ada data keterlambatan champion.");
                 return;
             }
-            let text = "*REKAP KETERLAMBATAN SUBMIT PER CHAMPION*
-
-Berikut rekap keterlambatan Champion:
-";
+            let text = "*REKAP KETERLAMBATAN SUBMIT PER CHAMPION*\n\nBerikut rekap keterlambatan Champion:\n";
             lateChampionSummaryList.forEach((c, i) => {
-                text += `${i + 1}. ${c.name} (${c.store}) - ${c.count} Kali Terlambat
-`;
+                text += `${i + 1}. ${c.name} (${c.store}) - ${c.count} Kali Terlambat\n`;
             });
             navigator.clipboard.writeText(text);
             alert("Draft WA Rekap Champion berhasil disalin ke clipboard!");
