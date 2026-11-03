@@ -215,6 +215,7 @@
             </div>
         </div>
 
+        <!-- Nav Buttons (Desktop Top) -->
         <nav class="hidden lg:flex items-center gap-1.5 flex-wrap" id="sidebar-nav">
             <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span data-i18n="navOverview">Overview</span>
@@ -230,6 +231,9 @@
             </button>
             <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                 <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span data-i18n="navRaw">Log Transaksi</span>
+            </button>
+            <button onclick="showSection('trend-bulanan')" id="btn-trend-bulanan" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> <span data-i18n="navTrend">Trend Bulanan</span>
             </button>
             <button onclick="showSection('settings')" id="btn-settings" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                 <i data-lucide="settings" class="w-4 h-4 shrink-0"></i> <span data-i18n="navSettings">Pengaturan</span>
@@ -274,6 +278,10 @@
             <i data-lucide="database" class="w-4 h-4"></i>
             <span data-i18n="navRaw">Log Trans.</span>
         </button>
+        <button onclick="showSection('trend-bulanan')" id="dock-trend-bulanan" class="dock-item">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <span data-i18n="navTrend">Trend</span>
+        </button>
     </div>
 
     <main class="flex-1 flex flex-col gap-4 overflow-hidden w-full">
@@ -306,7 +314,9 @@
                     </div>
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold" data-i18n="filterStore">Filter Store</label>
-                        <input type="text" id="filter-store" oninput="applyFilters()" placeholder="Cari store (kosong = all)..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold placeholder:text-gray-400">
+                        <input type="text" id="filter-store" list="store-suggestions" oninput="applyFilters()" placeholder="Semua Store..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold text-xs">
+                        <datalist id="store-suggestions">
+                        </datalist>
                     </div>
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold" data-i18n="filterLob">Filter LOB</label>
@@ -818,11 +828,14 @@
             <!-- Section 5: Log Transaksi Masuk -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Masuk (Semua Toko)</h3>
-                        <div class="flex items-center gap-2">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                        <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Detail (Store, Nama, Tanggal Transaksi, Jenis LOB, Pcs)</h3>
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                            <div class="relative w-48 sm:w-60">
+                                <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store (Kosong = All Store)..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            </div>
                             <div class="relative">
-                                <button onclick="toggleDropdown('export-raw-data')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                <button onclick="toggleDropdown('export-raw-data')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
                                     <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
                                 </button>
                                 <div id="export-raw-data" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
@@ -831,19 +844,18 @@
                                     <button onclick="exportRawData('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
                                 </div>
                             </div>
-                            <span class="text-[10px] px-2.5 py-1 bg-emerald-500/20 rounded-full font-bold neon-green-text" data-i18n="realtimeBadge">Real-time Data</span>
                         </div>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[700px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
                                 <tr>
-                                    <th class="p-2 text-center w-12 sticky-header-bg">No.</th>
-                                    <th class="p-2 sticky-header-bg" data-i18n="thStoreName">Store</th>
-                                    <th class="p-2 sticky-header-bg" data-i18n="thName">Nama</th>
-                                    <th class="p-2 sticky-header-bg" data-i18n="thTxDate">Tanggal Transaksi</th>
-                                    <th class="p-2 sticky-header-bg" data-i18n="thJenisLob">Jenis LOB</th>
-                                    <th class="p-2 text-center sticky-header-bg" data-i18n="thPcs">Pcs</th>
+                                    <th class="p-2.5 text-center w-12 sticky-header-bg">No.</th>
+                                    <th class="p-2.5 sticky-header-bg">Store</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama</th>
+                                    <th class="p-2.5 sticky-header-bg">Tanggal Transaksi</th>
+                                    <th class="p-2.5 sticky-header-bg">Jenis LOB</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Pcs</th>
                                 </tr>
                             </thead>
                             <tbody id="raw-data-body" class="divide-y divide-gray-500/10"></tbody>
@@ -852,7 +864,49 @@
                 </div>
             </div>
 
-            <!-- Section 6: Pengaturan -->
+            <!-- Section 6: Trend Bulanan -->
+            <div id="sec-trend-bulanan" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4 space-y-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-500/25">
+                        <div>
+                            <h3 class="font-bold text-sm md:text-base flex items-center gap-2" data-i18n="trendBulananTitle">Trend Performa Bulanan per LOB</h3>
+                            <p class="text-xs opacity-80" data-i18n="trendBulananDesc">Rekap historis unit terjual tiap bulan berdasarkan Store, Akun Sales, dan Coach.</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <div class="flex bg-slate-900/60 p-1 rounded-lg border border-gray-500/20 text-xs font-bold gap-1" id="trend-lob-tabs">
+                                <button onclick="switchTrendLob('all')" id="btn-trend-all" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition">Semua LOB</button>
+                                <button onclick="switchTrendLob('mac')" id="btn-trend-mac" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-amber-400">Mac</button>
+                                <button onclick="switchTrendLob('iphone')" id="btn-trend-iphone" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-rose-400">iPhone</button>
+                                <button onclick="switchTrendLob('ipad')" id="btn-trend-ipad" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-emerald-400">iPad</button>
+                                <button onclick="switchTrendLob('watch')" id="btn-trend-watch" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-blue-400">Watch</button>
+                            </div>
+                            <div class="relative">
+                                <button onclick="toggleDropdown('export-trend-data')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Excel
+                                </button>
+                                <div id="export-trend-data" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                    <button onclick="exportTrendData('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                    <button onclick="exportTrendData('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                    <button onclick="exportTrendData('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto max-h-[550px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[850px]" id="trend-bulanan-table">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold" id="trend-table-head">
+                                <!-- Dynamic Months Header -->
+                            </thead>
+                            <tbody id="trend-table-body" class="divide-y divide-gray-500/10">
+                                <!-- Dynamic Body -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 7: Pengaturan -->
             <div id="sec-settings" class="content-section hidden space-y-4">
                 <div class="glass-panel p-6 max-w-2xl mx-auto space-y-6">
                     <div class="flex items-center gap-3 pb-4 border-b border-gray-500/20">
@@ -1029,6 +1083,7 @@
                 navWow: "WoW Perf.",
                 navCompliance: "Kedisiplinan",
                 navRaw: "Log Transaksi",
+                navTrend: "Trend Bulanan",
                 navSettings: "Pengaturan",
                 filterMonth: "Filter Month",
                 filterStore: "Filter Store",
@@ -1080,10 +1135,9 @@
                 lateChampionsListDesc: "Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.",
                 btnCopyWaRekap: "Copy WA Rekap",
                 thChampionName: "Nama Champion",
-                rawLogTitle: "Log Transaksi Masuk",
-                thTxDate: "Tanggal Transaksi",
-                thJenisLob: "Jenis LOB",
-                thPcs: "Pcs",
+                rawLogTitle: "Log Transaksi Masuk (Semua Toko)",
+                trendBulananTitle: "Trend Performa Bulanan per LOB",
+                trendBulananDesc: "Rekap historis unit terjual tiap bulan berdasarkan Store, Akun Sales, dan Coach.",
                 realtimeBadge: "Real-time Data",
                 settingsTitle: "Pengaturan Dashboard",
                 settingsSubtitle: "Kustomisasi preferensi tampilan dan bahasa",
@@ -1102,6 +1156,7 @@
                 navWow: "WoW Perf.",
                 navCompliance: "Compliance",
                 navRaw: "Transaction Log",
+                navTrend: "Monthly Trend",
                 navSettings: "Settings",
                 filterMonth: "Filter Month",
                 filterStore: "Filter Store",
@@ -1153,10 +1208,9 @@
                 lateChampionsListDesc: "Accumulated late submission frequency per Champion in the filtered period.",
                 btnCopyWaRekap: "Copy Summary WA",
                 thChampionName: "Champion Name",
-                rawLogTitle: "Transaction Log",
-                thTxDate: "Transaction Date",
-                thJenisLob: "LOB Type",
-                thPcs: "Pcs",
+                rawLogTitle: "Incoming Transaction Log (All Stores)",
+                trendBulananTitle: "Monthly Performance Trend by LOB",
+                trendBulananDesc: "Historical recap of monthly units sold by Store, Sales Account, and Coach.",
                 realtimeBadge: "Real-time Data",
                 settingsTitle: "Dashboard Settings",
                 settingsSubtitle: "Customize appearance and language preferences",
@@ -1199,6 +1253,7 @@
                 'wow-perf': i18n[lang].navWow,
                 'compliance': i18n[lang].navCompliance,
                 'raw-data': i18n[lang].navRaw,
+                'trend-bulanan': i18n[lang].navTrend,
                 'settings': i18n[lang].navSettings
             };
             const currentSec = document.querySelector('.content-section:not(.hidden)')?.id.replace('sec-', '') || 'overview';
@@ -1408,10 +1463,10 @@
 
             const globalKpi = document.getElementById('global-kpi-container');
             if (globalKpi) {
-                if (sectionId === 'settings') {
-                    globalKpi.classList.add('hidden');
-                } else {
+                if (sectionId === 'overview') {
                     globalKpi.classList.remove('hidden');
+                } else {
+                    globalKpi.classList.add('hidden');
                 }
             }
 
@@ -1421,6 +1476,7 @@
                 'wow-perf': i18n[currentLang].navWow,
                 'compliance': i18n[currentLang].navCompliance,
                 'raw-data': i18n[currentLang].navRaw,
+                'trend-bulanan': i18n[currentLang].navTrend,
                 'settings': i18n[currentLang].navSettings
             };
             document.getElementById('page-title').innerText = titles[sectionId] || 'Dashboard';
@@ -1444,7 +1500,8 @@
 
         function resetFilters() {
             document.getElementById('filter-month').value = '10';
-            document.getElementById('filter-store').value = '';
+            const storeInput = document.getElementById('filter-store');
+            if (storeInput) storeInput.value = '';
             document.getElementById('filter-lob').value = 'ALL';
             document.getElementById('filter-shift').value = 'ALL';
             applyFilters();
@@ -1482,22 +1539,33 @@
         }
 
         function populateDropdownFilters(data) {
+            const storeDatalist = document.getElementById('store-suggestions');
             const lobSelect = document.getElementById('filter-lob');
             const shiftSelect = document.getElementById('filter-shift');
 
             const currentLOB = lobSelect?.value || 'ALL';
             const currentShift = shiftSelect?.value || 'ALL';
 
+            const stores = new Set(MASTER_STORES);
             const lobs = new Set();
             const shifts = new Set();
 
             data.forEach(item => {
+                const store = extractStore(item);
                 const lob = extractLOB(item);
                 const shift = extractShift(item);
 
+                if (store && store !== '-') stores.add(store);
                 if (lob && lob !== '-') lobs.add(lob);
                 if (shift && shift !== '-') shifts.add(shift);
             });
+
+            if (storeDatalist) {
+                storeDatalist.innerHTML = '';
+                Array.from(stores).sort().forEach(store => {
+                    storeDatalist.innerHTML += `<option value="${store}">`;
+                });
+            }
 
             if (lobSelect) {
                 lobSelect.innerHTML = `<option value="ALL">${i18n[currentLang].optAllLobs}</option>`;
@@ -1524,7 +1592,8 @@
 
         function applyFilters() {
             const monthVal = document.getElementById('filter-month')?.value || '10';
-            const storeVal = (document.getElementById('filter-store')?.value || '').trim().toLowerCase();
+            const storeInput = document.getElementById('filter-store');
+            const storeVal = storeInput ? storeInput.value.toLowerCase().trim() : 'all';
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
@@ -1545,8 +1614,7 @@
                     }
                 }
 
-                // Jika kolom search store kosong (storeVal === ''), berarti ALL STORE
-                const matchStore = (storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
+                const matchStore = (storeVal === 'all' || storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
                 const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
                 const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
 
@@ -1562,6 +1630,7 @@
             renderWoWStoreTable(filteredData);
             renderLateChampionsTable(rawCSVData);
             renderRawDataTable(filteredData);
+            renderTrendBulananTable();
             renderCharts(filteredData);
         }
 
@@ -1632,7 +1701,8 @@
         }
 
         function renderMoMPerformance() {
-            const storeVal = (document.getElementById('filter-store')?.value || '').trim().toLowerCase();
+            const storeInput = document.getElementById('filter-store');
+            const storeVal = storeInput ? storeInput.value.toLowerCase().trim() : 'all';
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
@@ -1648,7 +1718,7 @@
                 const rowShift = extractShift(item);
                 const rowDateStr = extractDate(item);
 
-                const matchStore = (storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
+                const matchStore = (storeVal === 'all' || storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
                 const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
                 const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
 
@@ -1965,27 +2035,36 @@
             if (!rawBody) return;
             rawBody.innerHTML = '';
 
-            if (data.length === 0) {
+            const searchInput = document.getElementById('raw-store-search');
+            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            const filteredRows = data.filter(item => {
+                const store = extractStore(item).toLowerCase();
+                if (!searchVal) return true;
+                return store.includes(searchVal);
+            });
+
+            if (filteredRows.length === 0) {
                 rawBody.innerHTML = '<tr><td colspan="6" class="p-3 text-center opacity-80 text-xs">Data log transaksi tidak ditemukan.</td></tr>';
                 return;
             }
 
-            data.forEach((row, idx) => {
-                const store = extractStore(row);
-                const name = extractName(row);
-                const dateStr = extractDate(row);
-                const lob = extractLOB(row);
-                const qty = extractQuantity(row);
+            filteredRows.forEach((item, idx) => {
+                const store = extractStore(item);
+                const name = extractName(item);
+                const dateTrx = extractDate(item);
+                const lob = extractLOB(item);
+                const qty = extractQuantity(item);
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
                 tr.innerHTML = `
-                    <td class="p-2 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
-                    <td class="p-2 font-bold">${store}</td>
-                    <td class="p-2">${name}</td>
-                    <td class="p-2 text-center font-mono">${dateStr || '-'}</td>
-                    <td class="p-2 font-semibold text-indigo-400">${lob}</td>
-                    <td class="p-2 text-center font-mono font-bold text-emerald-400">${qty}</td>
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                    <td class="p-2.5 font-bold">${store}</td>
+                    <td class="p-2.5">${name}</td>
+                    <td class="p-2.5 font-mono">${dateTrx}</td>
+                    <td class="p-2.5 font-semibold text-indigo-400">${lob}</td>
+                    <td class="p-2.5 text-center font-mono font-bold text-emerald-400">${qty}</td>
                 `;
                 rawBody.appendChild(tr);
             });
@@ -2335,7 +2414,6 @@
             tbody.innerHTML = '';
 
             const now = new Date();
-            
             const startDate = new Date(2026, 9, 1);
             const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
 
@@ -2515,6 +2593,128 @@
             }
         }
 
+        let currentTrendLob = 'all';
+
+        function switchTrendLob(lob) {
+            currentTrendLob = lob;
+            ['all', 'mac', 'iphone', 'ipad', 'watch'].forEach(l => {
+                const btn = document.getElementById(`btn-trend-${l}`);
+                if (btn) {
+                    if (l === lob) {
+                        btn.className = 'px-3 py-1.5 rounded bg-indigo-600 text-white transition font-bold';
+                    } else {
+                        btn.className = 'px-3 py-1.5 rounded hover:bg-white/10 transition text-slate-300 font-semibold';
+                    }
+                }
+            });
+            renderTrendBulananTable();
+        }
+
+        function renderTrendBulananTable() {
+            const thead = document.getElementById('trend-table-head');
+            const tbody = document.getElementById('trend-table-body');
+            if (!thead || !tbody) return;
+
+            const monthNames = {
+                '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+                '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
+                '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
+            };
+
+            const activeMonthsSet = new Set();
+            filteredData.forEach(item => {
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+                if (parsed && parsed.getFullYear() === 2026) {
+                    const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
+                    activeMonthsSet.add(mKey);
+                }
+            });
+
+            if (activeMonthsSet.size === 0) {
+                activeMonthsSet.add('08');
+                activeMonthsSet.add('09');
+                activeMonthsSet.add('10');
+            }
+
+            const sortedMonths = Array.from(activeMonthsSet).sort();
+
+            let headHTML = `<tr>
+                <th class="p-2.5 text-center w-12 sticky-header-bg">No.</th>
+                <th class="p-2.5 sticky-header-bg">Store</th>
+                <th class="p-2.5 sticky-header-bg">Nama Akun Sales</th>
+                <th class="p-2.5 sticky-header-bg">Coach</th>`;
+            
+            sortedMonths.forEach(m => {
+                headHTML += `<th class="p-2.5 text-center sticky-header-bg">${monthNames[m] || m}</th>`;
+            });
+            headHTML += `<th class="p-2.5 text-center sticky-header-bg">Total Unit</th></tr>`;
+            thead.innerHTML = headHTML;
+
+            const aggregationMap = {};
+
+            filteredData.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                if (currentTrendLob !== 'all' && !lob.includes(currentTrendLob)) {
+                    return;
+                }
+
+                const store = extractStore(item);
+                const name = extractName(item);
+                const qty = extractQuantity(item);
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+
+                if (store && store !== '-' && name && name !== '-') {
+                    const key = `${store}___${name}`;
+                    if (!aggregationMap[key]) {
+                        aggregationMap[key] = {
+                            store,
+                            name,
+                            coach: '-',
+                            months: {},
+                            total: 0
+                        };
+                    }
+
+                    if (parsed && parsed.getFullYear() === 2026) {
+                        const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
+                        aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
+                        aggregationMap[key].total += qty;
+                    }
+                }
+            });
+
+            const rowsData = Object.values(aggregationMap).sort((a, b) => b.total - a.total);
+
+            tbody.innerHTML = '';
+            if (rowsData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${4 + sortedMonths.length + 1}" class="p-4 text-center opacity-80 text-xs">Tidak ada data trend bulanan untuk LOB ini.</td></tr>`;
+                return;
+            }
+
+            rowsData.forEach((row, idx) => {
+                let tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                
+                let html = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                    <td class="p-2.5 font-bold">${row.store}</td>
+                    <td class="p-2.5">${row.name}</td>
+                    <td class="p-2.5 opacity-80">${row.coach}</td>
+                `;
+
+                sortedMonths.forEach(m => {
+                    const val = row.months[m] || 0;
+                    html += `<td class="p-2.5 text-center font-mono">${val > 0 ? `<b class="text-indigo-400">${val}</b>` : '<span class="opacity-40">0</span>'}</td>`;
+                });
+
+                html += `<td class="p-2.5 text-center font-mono font-bold text-emerald-400">${row.total}</td>`;
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+        }
+
         function downloadCSV(filename, headers, rows) {
             let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
             rows.forEach(row => {
@@ -2549,6 +2749,64 @@
                 styles: { fontSize: 8 }
             });
             doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
+        }
+
+        function exportTrendData(type) {
+            const monthNames = {
+                '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+                '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
+                '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
+            };
+            const activeMonthsSet = new Set();
+            filteredData.forEach(item => {
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+                if (parsed && parsed.getFullYear() === 2026) {
+                    activeMonthsSet.add(String(parsed.getMonth() + 1).padStart(2, '0'));
+                }
+            });
+            if (activeMonthsSet.size === 0) { activeMonthsSet.add('08'); activeMonthsSet.add('09'); activeMonthsSet.add('10'); }
+            const sortedMonths = Array.from(activeMonthsSet).sort();
+
+            const aggregationMap = {};
+            filteredData.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                if (currentTrendLob !== 'all' && !lob.includes(currentTrendLob)) return;
+
+                const store = extractStore(item);
+                const name = extractName(item);
+                const qty = extractQuantity(item);
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+
+                if (store && store !== '-' && name && name !== '-') {
+                    const key = `${store}___${name}`;
+                    if (!aggregationMap[key]) {
+                        aggregationMap[key] = { store, name, coach: '-', months: {}, total: 0 };
+                    }
+                    if (parsed && parsed.getFullYear() === 2026) {
+                        const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
+                        aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
+                        aggregationMap[key].total += qty;
+                    }
+                }
+            });
+
+            const rowsData = Object.values(aggregationMap).sort((a, b) => b.total - a.total);
+            const headers = ["No", "Store", "Nama Akun Sales", "Coach", ...sortedMonths.map(m => monthNames[m] || m), "Total Unit"];
+            const rows = rowsData.map((r, i) => [
+                i + 1,
+                r.store,
+                r.name,
+                r.coach,
+                ...sortedMonths.map(m => r.months[m] || 0),
+                r.total
+            ]);
+
+            const filename = `trend_bulanan_${currentTrendLob}`;
+            if (type === 'csv') downloadCSV(`${filename}.csv`, headers, rows);
+            else if (type === 'excel') downloadExcel(`${filename}.xlsx`, headers, rows);
+            else if (type === 'pdf') downloadPDF(`Trend Bulanan (${currentTrendLob.toUpperCase()})`, headers, rows);
         }
 
         function exportMomStores(type) {
@@ -2591,19 +2849,28 @@
         }
 
         function exportRawData(type) {
+            const searchInput = document.getElementById('raw-store-search');
+            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            const exportRows = filteredData.filter(item => {
+                const store = extractStore(item).toLowerCase();
+                if (!searchVal) return true;
+                return store.includes(searchVal);
+            });
+
             const headers = ["No", "Store", "Nama", "Tanggal Transaksi", "Jenis LOB", "Pcs"];
-            const rows = filteredData.map((item, i) => [
+            const rows = exportRows.map((item, i) => [
                 i + 1,
                 extractStore(item),
                 extractName(item),
-                extractDate(item) || '-',
+                extractDate(item),
                 extractLOB(item),
                 extractQuantity(item)
             ]);
 
-            if (type === 'csv') downloadCSV("log_transaksi_masuk.csv", headers, rows);
-            else if (type === 'excel') downloadExcel("log_transaksi_masuk.xlsx", headers, rows);
-            else if (type === 'pdf') downloadPDF("Log Transaksi Masuk", headers, rows);
+            if (type === 'csv') downloadCSV("log_transaksi_detail.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("log_transaksi_detail.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Log Transaksi Detail", headers, rows);
         }
 
         function copyUnsubmittedWaDraft() {
