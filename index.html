@@ -639,4 +639,2275 @@
 
                         <div class="mt-3 pt-3 border-t border-gray-500/20 bg-indigo-500/10 p-2.5 rounded-lg border border-indigo-500/20" id="wow-total-growth-box">
                             <div class="flex items-center justify-between text-xs">
-                                <span class="font-bold" data-
+                                <span class="font-bold" data-i18n="totalUnitGlobal">Total Unit Global</span>
+                                <span class="font-bold text-emerald-500" id="wow-total-growth-val">0 Unit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="store" class="w-4 h-4 text-purple-500"></i> <span data-i18n="wowStoreDetailTitle">Detail Komparasi per Store (This Week vs Last Week)</span>
+                        </h3>
+                        <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total Store</span>
+                    </div>
+                    <div class="overflow-x-auto max-h-[500px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[650px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                    <th class="p-2.5 sticky-header-bg" data-i18n="thStoreName">Nama Store</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Mac (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPhone (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">iPad (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Watch (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg" data-i18n="thGrowthTotal">Growth Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wow-store-table-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Kedisiplinan -->
+            <div id="sec-compliance" class="content-section hidden space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-rose-500">
+                        <span class="text-[11px] opacity-80 font-bold uppercase" data-i18n="summaryUnsubmitted">Toko Belum Submit (s.d. Kemarin)</span>
+                        <span class="text-xl font-extrabold text-rose-500" id="summary-unsubmitted-count">0 Store</span>
+                    </div>
+                    <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-amber-500">
+                        <span class="text-[11px] opacity-80 font-bold uppercase" data-i18n="summaryLateEvents">Total Kejadian Terlambat Submit</span>
+                        <span class="text-xl font-extrabold text-amber-500" id="summary-late-events-count">0 Kejadian</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4 border-l-4 border-rose-500">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
+                            <h3 class="font-extrabold text-sm uppercase tracking-wide flex items-center gap-2 neon-red-title">
+                                <span data-i18n="unsubmittedStoresTitle">LIST TOKO BELUM SUBMIT (SEPTEMBER S.D. KEMARIN)</span>
+                                <span id="unsubmitted-stores-count" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
+                            </h3>
+                        </div>
+                        <button onclick="copyUnsubmittedWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5 shadow">
+                            <i data-lucide="message-square" class="w-3.5 h-3.5"></i> <span data-i18n="btnDraftWa">Draft WA Follow-up</span>
+                        </button>
+                    </div>
+                    <p class="text-xs opacity-80 mb-3 font-medium" data-i18n="unsubmittedStoresDesc">Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 September hingga kemarin.</p>
+                    
+                    <div class="overflow-x-auto max-h-[350px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[500px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2 text-center w-12 sticky-header-bg">No</th>
+                                    <th class="p-2 sticky-header-bg" data-i18n="thStoreName">Nama Store</th>
+                                    <th class="p-2 sticky-header-bg" data-i18n="thUnsubmittedDates">Tanggal Belum Submit</th>
+                                    <th class="p-2 text-center w-28 sticky-header-bg" data-i18n="thTotalDays">Total Hari</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unsubmitted-stores-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="glass-panel p-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i> <span data-i18n="chartMostLateStoresTitle">Top Store Terbanyak Terlambat Submit</span>
+                        </h3>
+                        <div class="h-72 relative">
+                            <canvas id="chartMostLateStores"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-4">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-4 neon-title-purple">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-purple-500"></i> <span data-i18n="chartLateChampionsTitle">Chart Frekuensi Keterlambatan Per Champion</span>
+                        </h3>
+                        <div class="h-72 relative">
+                            <canvas id="chartLateChampions"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="glass-panel p-4 border-l-4 border-amber-500 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="clock-alert" class="w-5 h-5 text-amber-500"></i>
+                                    <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide flex items-center gap-2">
+                                        <span data-i18n="lateStoresListTitle">Daftar toko yang terlambat</span>
+                                        <span id="late-submit-total-badge" class="px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-extrabold border border-amber-500/30">0 Toko</span>
+                                    </h3>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <button onclick="toggleDropdown('export-late-stores')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                        </button>
+                                        <div id="export-late-stores" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                            <button onclick="exportLateStores('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                            <button onclick="exportLateStores('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                            <button onclick="exportLateStores('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                        </div>
+                                    </div>
+                                    <button onclick="copyLateChampionsWaDraft()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5"></i> <span data-i18n="btnCopyWa">Copy Draft WA</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-xs opacity-90 mb-3 font-medium" data-i18n="lateStoresListDesc">Rekap frekuensi keterlambatan submit berdasarkan lokasi toko.</p>
+                            
+                            <div class="overflow-x-auto max-h-[300px]">
+                                <table class="w-full text-xs text-left border-collapse min-w-[350px]">
+                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                        <tr>
+                                            <th class="p-2 text-center w-12 sticky-header-bg">No</th>
+                                            <th class="p-2 sticky-header-bg" data-i18n="thStoreName">Nama Toko</th>
+                                            <th class="p-2 text-center sticky-header-bg" data-i18n="thLateCount">Berapa Kali Terlambat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="late-champions-body" class="divide-y divide-gray-500/10"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-4 border-l-4 border-purple-500 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 mb-3 border-b border-gray-500/20 gap-2">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="user-x" class="w-5 h-5 text-purple-500"></i>
+                                    <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-2 neon-title-purple">
+                                        <span data-i18n="lateChampionsListTitle">Daftar Keterlambatan Per Champion</span>
+                                        <span id="late-summary-total-badge" class="px-2 py-0.5 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-extrabold border border-purple-500/30 neon-green-badge">0 Champion</span>
+                                    </h3>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <button onclick="toggleDropdown('export-late-champions')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                        </button>
+                                        <div id="export-late-champions" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                            <button onclick="exportLateChampions('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                            <button onclick="exportLateChampions('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                            <button onclick="exportLateChampions('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                        </div>
+                                    </div>
+                                    <button onclick="copyLateChampionSummaryWaDraft()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span data-i18n="btnCopyWaRekap">Copy WA Rekap</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-xs opacity-90 mb-3 font-medium" data-i18n="lateChampionsListDesc">Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.</p>
+
+                            <div class="overflow-x-auto max-h-[300px]">
+                                <table class="w-full text-xs text-left border-collapse min-w-[400px]">
+                                    <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 sticky-header-bg font-bold">
+                                        <tr>
+                                            <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
+                                            <th class="p-2.5 sticky-header-bg" data-i18n="thChampionName">Nama Champion</th>
+                                            <th class="p-2.5 sticky-header-bg" data-i18n="thStore">Toko</th>
+                                            <th class="p-2.5 text-center sticky-header-bg" data-i18n="thLateCount">Berapa Kali Terlambat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="late-champions-summary-body" class="divide-y divide-gray-500/10"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Log Transaksi Masuk -->
+            <div id="sec-raw-data" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                        <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Detail (Store, Nama, Tanggal Transaksi, Jenis LOB, Pcs)</h3>
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                            <div class="relative w-48 sm:w-60">
+                                <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store (Kosong = All Store)..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            </div>
+                            <div class="relative">
+                                <button onclick="toggleDropdown('export-raw-data')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                </button>
+                                <div id="export-raw-data" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                    <button onclick="exportRawData('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                    <button onclick="exportRawData('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                    <button onclick="exportRawData('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[500px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[700px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2.5 text-center w-12 sticky-header-bg">No.</th>
+                                    <th class="p-2.5 sticky-header-bg">Store</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama</th>
+                                    <th class="p-2.5 sticky-header-bg">Tanggal Transaksi</th>
+                                    <th class="p-2.5 sticky-header-bg">Jenis LOB</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Pcs</th>
+                                </tr>
+                            </thead>
+                            <tbody id="raw-data-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Trend Bulanan -->
+            <div id="sec-trend-bulanan" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4 space-y-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-500/25">
+                        <div>
+                            <h3 class="font-bold text-sm md:text-base flex items-center gap-2" data-i18n="trendBulananTitle">Trend Performa Bulanan per LOB</h3>
+                            <p class="text-xs opacity-80" data-i18n="trendBulananDesc">Rekap historis unit terjual tiap bulan berdasarkan Store dan Nama Sales untuk melihat trend kenaikan/penurunan.</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <div class="flex bg-slate-900/60 p-1 rounded-lg border border-gray-500/20 text-xs font-bold gap-1" id="trend-lob-tabs">
+                                <button onclick="switchTrendLob('all')" id="btn-trend-all" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition">Semua LOB</button>
+                                <button onclick="switchTrendLob('mac')" id="btn-trend-mac" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-amber-400">Mac</button>
+                                <button onclick="switchTrendLob('iphone')" id="btn-trend-iphone" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-rose-400">iPhone</button>
+                                <button onclick="switchTrendLob('ipad')" id="btn-trend-ipad" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-emerald-400">iPad</button>
+                                <button onclick="switchTrendLob('watch')" id="btn-trend-watch" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-blue-400">Watch</button>
+                            </div>
+                            <div class="relative">
+                                <button onclick="toggleDropdown('export-trend-data')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Excel
+                                </button>
+                                <div id="export-trend-data" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                    <button onclick="exportTrendData('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                    <button onclick="exportTrendData('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                    <button onclick="exportTrendData('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto max-h-[550px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[850px]" id="trend-bulanan-table">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold" id="trend-table-head">
+                                <!-- Dynamic Months Header -->
+                            </thead>
+                            <tbody id="trend-table-body" class="divide-y divide-gray-500/10">
+                                <!-- Dynamic Body -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 7: Pengaturan -->
+            <div id="sec-settings" class="content-section hidden space-y-4">
+                <div class="glass-panel p-6 max-w-2xl mx-auto space-y-6">
+                    <div class="flex items-center gap-3 pb-4 border-b border-gray-500/20">
+                        <div class="p-2.5 bg-indigo-600 rounded-lg text-white">
+                            <i data-lucide="settings" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base leading-tight" data-i18n="settingsTitle">Pengaturan Dashboard</h3>
+                            <p class="text-xs text-indigo-400 font-medium" data-i18n="settingsSubtitle">Kustomisasi preferensi tampilan dan bahasa</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+                            <i data-lucide="globe" class="w-4 h-4"></i> <span data-i18n="selectLanguage">Pilih Bahasa / Select Language</span>
+                        </label>
+                        <select id="setting-language" onchange="changeLanguage(this.value)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="id" selected>Bahasa Indonesia</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-black/5 dark:bg-white/5 border border-gray-500/10">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="moon" id="setting-theme-icon" class="w-5 h-5 text-indigo-400"></i>
+                            <div>
+                                <p class="text-xs font-bold" data-i18n="displayMode">Mode Tampilan</p>
+                                <p class="text-[10px] opacity-70" data-i18n="displayModeDesc">Alihkan antara Mode Gelap dan Mode Terang</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleTheme()" class="px-3 py-1.5 rounded-lg glass-card text-xs font-bold hover:bg-black/10 dark:hover:bg-white/10 transition border border-gray-500/20">
+                            <span id="theme-text" data-i18n="darkModeText">Mode Gelap</span>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-500/20">
+                        <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-center space-y-1">
+                            <p class="text-[10px] opacity-80 tracking-wide uppercase font-bold">Concept & Curation by</p>
+                            <p class="text-sm font-extrabold neon-green-text">Novi Riyanto</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        Chart.register(ChartDataLabels);
+        lucide.createIcons();
+
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
+
+        const LOB_COLORS = {
+            mac: '#f59e0b',
+            iphone: '#ef4444',
+            ipad: '#10b981',
+            watch: '#3b82f6'
+        };
+
+        const MASTER_STORES = [
+            "M118 Digimap Pondok Indah Mall 3",
+            "M119 Digimap Centrepoint Mall Medan",
+            "M120 Digimap Sun Plaza Medan",
+            "M121 Digimap Tunjungan Plaza 3 Surabaya",
+            "M122 Digimap Galaxy Mall Surabaya",
+            "M123 Digimap Mall Bali Galeria",
+            "M124 Digimap Pacific Place",
+            "M125 Digimap Supermall Karawaci",
+            "M126 Digimap Ciputra World Surabaya",
+            "M127 Digimap Lotte Shopping Avenue",
+            "M128 Digimap Emporium Mall Pluit",
+            "M129 Digimap Mall Puri Indah",
+            "M130 Digimap Sunset Road Bali",
+            "M131 Digimap Grand Indonesia",
+            "M132 Digimap Plaza Senayan",
+            "M133 Digimap Trans Studio Mall Bandung",
+            "M134 Digimap Beachwalk Bali",
+            "M201 Digimap Trans Studio Mall Cibubur",
+            "M203 Digimap AEON Mall BSD",
+            "M205 Digimap Paskal 23 Bandung",
+            "M206 Digimap Pakuwon Mall Surabaya",
+            "M212 Digimap Sunter Mall",
+            "M214 Digimap AEON Mall Sentul",
+            "M215 Digimap Mall Taman Anggrek",
+            "M216 Digimap Tentrem Mall Semarang",
+            "M217 Digimap Blok M Plaza",
+            "M218 Digimap Plaza Balikpapan",
+            "M219 Digimap Basko Padang",
+            "M21F Digimap Ujung Berung Town Square",
+            "M220 Digimap Malioboro Mall",
+            "M221 Digimap A Yani Pontianak",
+            "M222 Digimap Palembang Indah Mall",
+            "M223 Digimap Roxy Square Jember",
+            "M224 Digimap WTC Jambi",
+            "M225 Digimap Citimall Dumai",
+            "M226 Digimap Ambon City Center",
+            "M227 Digimap AEON Tanjung Barat",
+            "M228 Digimap Citimall Cianjur 2",
+            "M229 Digimap Trans Icon Surabaya",
+            "M230 Digimap The Park Kendari",
+            "M231 Digimap Gress Mall Gresik",
+            "M232 Digimap Pakuwon Mall Solo",
+            "M233 Digimap Unimas District Sidoarjo",
+            "M234 Digimap Citra Grand Cibubur",
+            "M235 Digimap Lippo Plaza Kramat Jati",
+            "M236 Digimap Palu Grand Mall",
+            "M237 Digimap Solo Square",
+            "M238 Digimap Pondok Indah Mall 2",
+            "M239 Digimap Icon Mall Bali",
+            "M240 Digimap Pacific Mall Tegal",
+            "M241 Digimap Revo Mall",
+            "M243 Digimap Aeon Mall Delta Mas",
+            "M244 Digimap Java Mall Semarang",
+            "M245 Digimap Living World Kota Wisata",
+            "M246 Digimap Malang Town Square",
+            "M247 Digimap Lippo Plaza Jambi",
+            "M248 Digimap Suncity Mall Sidoarjo",
+            "M249 Digimap Lippo Plaza Palangkaraya",
+            "M250 Digimap Lippo Plaza Batu",
+            "M251 Digimap The Kings Shopping Centre",
+            "M252 Digimap Binjai Mall",
+            "M253 Digimap Plaza Surabaya",
+            "M254 Digimap Basko city Mall",
+            "M255 Digimap Antasari Place",
+            "M256 Digimap Lippo Plaza Lubuklinggau",
+            "M257 Digimap City Plaza Jatinegara",
+            "M258 Digimap Lippo Plaza Manado",
+            "M259 Digimap Jatinangor Town Square",
+            "M260 Digimap Kudus Extention Mall",
+            "M261 Digimap PIK Elang Laut",
+            "M262 Digimap Suzuya Merdeka Square Siantar",
+            "M263 Digimap Citimall Sampit",
+            "M264 Digimap Plaza Semanggi",
+            "M265 Digimap Merr Street",
+            "M266 Digimap HIVE Harapan Indah",
+            "M267 Digimap Mall Cijantung",
+            "M268 Digimap Diana Mall Timika",
+            "M269 Digimap Tenth Avenue",
+            "M270 Digimap Citimall Lahat",
+            "M271 Digimap Mall Indramayu",
+            "M272 Digimap Kota Baru Parahyangan",
+            "M273 Digimap Metro Lampung",
+            "M274 Digimap Street Ciputat Raya",
+            "M275 Digimap Citimall Baturaja",
+            "M276 Digimap Shila At Sawangan",
+            "M277 Digimap Citimall Tuban",
+            "M278 Digimap A.S.S Brebes",
+            "M279 Digimap Ciumbuleuit",
+            "M281 Digimap Ngaliyan Street",
+            "M282 Digimap Citimall Pangkalan bun",
+            "M283 Digimap Basuki Rahmat Tulungagung",
+            "M284 Digimap BSD Loka",
+            "M285 Digimap Blitar Square",
+            "M286 Digimap Citimall Prabumulih",
+            "M287 Digimap Grand Tarakan",
+            "M288 Digimap Mojopahit Street Mojokerto",
+            "M289 Digimap Maleo Town Square",
+            "M290 Digimap Mandau City Mall",
+            "M292 Digimap Graha Raya",
+            "M293 Digimap Jend Sudirman Salatiga",
+            "M294 Digimap Bojonegoro Street",
+            "M295 Digimap Juanda Tasikmalaya",
+            "M297 Digimap Ponorogo City Center"
+        ];
+
+        const i18n = {
+            id: {
+                subTitle: "Analytics Dashboard",
+                autoSync: "Auto Sync",
+                resetFilter: "Reset",
+                navOverview: "Overview",
+                navMom: "MoM Perf.",
+                navWow: "WoW Perf.",
+                navCompliance: "Kedisiplinan",
+                navRaw: "Log Transaksi",
+                navTrend: "Trend Bulanan",
+                navSettings: "Pengaturan",
+                filterMonth: "Filter Month",
+                filterStore: "Filter Store",
+                filterLob: "Filter LOB",
+                filterShift: "Filter Shift",
+                optAllMonths: "Semua Bulan",
+                optAllStores: "Semua Store",
+                optAllLobs: "Semua LOB",
+                optAllShifts: "Semua Shift",
+                kpiTotalUnit: "Total Unit / LOB",
+                kpiAvgDay: "Average / Hari / LOB",
+                chartLOBTitle: "Total Penjualan per Kategori LOB",
+                chartAvgTitle: "Average / Hari / LOB",
+                top10SalesTitle: "Top 10 Champion Sales",
+                top10StoreTitle: "Top 10 Store Performance",
+                allLob: "Semua LOB",
+                detailLob: "Detail per LOB",
+                thName: "Nama",
+                thStore: "Store",
+                thSalesLob: "Sales LOB",
+                thTotalUnit: "Total Unit",
+                thStoreName: "Nama Store",
+                thTotal: "Total",
+                momGlobalTitle: "Komparasi Global: Bulan Ini vs Bulan Sebelumnya (Per LOB)",
+                momSummaryTitle: "Summary MoM",
+                momBadge: "MoM Analytics",
+                momStoreDetailTitle: "Detail Komparasi MoM per Store",
+                wowGlobalTitle: "Komparasi Global: Week Ini vs Week Sebelumnya (Per LOB)",
+                liveWowChart: "Live WoW Chart",
+                wowSummaryTitle: "Summary TW vs LW",
+                perLobData: "Per LOB Data",
+                totalUnitGlobal: "Total Unit Global",
+                wowStoreDetailTitle: "Detail Komparasi per Store (This Week vs Last Week)",
+                thGrowthTotal: "Growth Total",
+                summaryUnsubmitted: "Toko Belum Submit (s.d. Kemarin)",
+                summaryLateEvents: "Total Kejadian Terlambat Submit",
+                unsubmittedStoresTitle: "LIST TOKO BELUM SUBMIT (SEPTEMBER S.D. KEMARIN)",
+                unsubmittedStoresDesc: "Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 September hingga kemarin.",
+                btnDraftWa: "Draft WA Follow-up",
+                thUnsubmittedDates: "Tanggal Belum Submit",
+                thTotalDays: "Total Hari",
+                chartMostLateStoresTitle: "Top Store Terbanyak Terlambat Submit",
+                chartLateChampionsTitle: "Chart Frekuensi Keterlambatan Per Champion",
+                lateStoresListTitle: "Daftar toko yang terlambat",
+                lateStoresListDesc: "Rekap frekuensi keterlambatan submit berdasarkan lokasi toko.",
+                btnCopyWa: "Copy Draft WA",
+                thLateCount: "Berapa Kali Terlambat",
+                lateChampionsListTitle: "Daftar Keterlambatan Per Champion",
+                lateChampionsListDesc: "Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.",
+                btnCopyWaRekap: "Copy WA Rekap",
+                thChampionName: "Nama Champion",
+                rawLogTitle: "Log Transaksi Masuk (Semua Toko)",
+                trendBulananTitle: "Trend Performa Bulanan per LOB",
+                trendBulananDesc: "Rekap historis unit terjual tiap bulan berdasarkan Store dan Nama Sales untuk melihat trend kenaikan/penurunan.",
+                realtimeBadge: "Real-time Data",
+                settingsTitle: "Pengaturan Dashboard",
+                settingsSubtitle: "Kustomisasi preferensi tampilan dan bahasa",
+                selectLanguage: "Pilih Bahasa / Select Language",
+                displayMode: "Mode Tampilan",
+                displayModeDesc: "Alihkan antara Mode Gelap dan Mode Terang",
+                darkModeText: "Mode Gelap",
+                lightModeText: "Mode Terang"
+            },
+            en: {
+                subTitle: "Analytics Dashboard",
+                autoSync: "Auto Sync",
+                resetFilter: "Reset",
+                navOverview: "Overview",
+                navMom: "MoM Perf.",
+                navWow: "WoW Perf.",
+                navCompliance: "Compliance",
+                navRaw: "Transaction Log",
+                navTrend: "Monthly Trend",
+                navSettings: "Settings",
+                filterMonth: "Filter Month",
+                filterStore: "Filter Store",
+                filterLob: "Filter LOB",
+                filterShift: "Filter Shift",
+                optAllMonths: "All Months",
+                optAllStores: "All Stores",
+                optAllLobs: "All LOBs",
+                optAllShifts: "All Shifts",
+                kpiTotalUnit: "Total Units / LOB",
+                kpiAvgDay: "Average / Day / LOB",
+                chartLOBTitle: "Total Sales by LOB Category",
+                chartAvgTitle: "Average / Day / LOB",
+                top10SalesTitle: "Top 10 Champion Sales",
+                top10StoreTitle: "Top 10 Store Performance",
+                allLob: "All LOB",
+                detailLob: "Detail per LOB",
+                thName: "Name",
+                thStore: "Store",
+                thSalesLob: "Sales LOB",
+                thTotalUnit: "Total Units",
+                thStoreName: "Store Name",
+                thTotal: "Total",
+                momGlobalTitle: "Global Comparison: Current Month vs Last Month (Per LOB)",
+                momSummaryTitle: "MoM Summary",
+                momBadge: "MoM Analytics",
+                momStoreDetailTitle: "MoM Store Comparison Detail",
+                wowGlobalTitle: "Global Comparison: This Week vs Last Week (Per LOB)",
+                liveWowChart: "Live WoW Chart",
+                wowSummaryTitle: "TW vs LW Summary",
+                perLobData: "Per LOB Data",
+                totalUnitGlobal: "Total Global Units",
+                wowStoreDetailTitle: "Store Comparison Detail (This Week vs Last Week)",
+                thGrowthTotal: "Total Growth",
+                summaryUnsubmitted: "Unsubmitted Stores (Up to Yesterday)",
+                summaryLateEvents: "Total Late Submission Events",
+                unsubmittedStoresTitle: "UNSUBMITTED STORES LIST (SEPTEMBER TO YESTERDAY)",
+                unsubmittedStoresDesc: "Accumulative list of stores that have not filled out daily transaction reports from September 1st to yesterday.",
+                btnDraftWa: "Draft WA Follow-up",
+                thUnsubmittedDates: "Unsubmitted Dates",
+                thTotalDays: "Total Days",
+                chartMostLateStoresTitle: "Top Stores with Most Late Submissions",
+                chartLateChampionsTitle: "Late Submission Frequency per Champion",
+                lateStoresListTitle: "List of Late Stores",
+                lateStoresListDesc: "Late submission frequency summary by store location.",
+                btnCopyWa: "Copy WA Draft",
+                thLateCount: "Late Submissions Count",
+                lateChampionsListTitle: "Late Submissions per Champion",
+                lateChampionsListDesc: "Accumulated late submission frequency per Champion in the filtered period.",
+                btnCopyWaRekap: "Copy Summary WA",
+                thChampionName: "Champion Name",
+                rawLogTitle: "Incoming Transaction Log (All Stores)",
+                trendBulananTitle: "Monthly Performance Trend by LOB",
+                trendBulananDesc: "Historical recap of monthly units sold by Store and Sales to track performance trends.",
+                realtimeBadge: "Real-time Data",
+                settingsTitle: "Dashboard Settings",
+                settingsSubtitle: "Customize appearance and language preferences",
+                selectLanguage: "Select Language",
+                displayMode: "Display Mode",
+                displayModeDesc: "Switch between Dark Mode and Light Mode",
+                darkModeText: "Dark Mode",
+                lightModeText: "Light Mode"
+            }
+        };
+
+        let currentLang = 'id';
+        let rawCSVData = [];
+        let filteredData = [];
+        let chartInstances = {};
+        let lateStoresSummaryList = [];
+        let lateChampionSummaryList = [];
+        let unsubmittedStoresList = [];
+        let momStoresDataList = [];
+
+        function changeLanguage(lang) {
+            if (!i18n[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            const themeText = document.getElementById('theme-text');
+            if (themeText) {
+                const isLight = document.body.classList.contains('light-mode');
+                themeText.innerText = isLight ? i18n[currentLang].lightModeText : i18n[currentLang].darkModeText;
+            }
+
+            const titles = {
+                'overview': i18n[lang].navOverview,
+                'mom-perf': i18n[lang].navMom,
+                'wow-perf': i18n[lang].navWow,
+                'compliance': i18n[lang].navCompliance,
+                'raw-data': i18n[lang].navRaw,
+                'trend-bulanan': i18n[lang].navTrend,
+                'settings': i18n[lang].navSettings
+            };
+            const currentSec = document.querySelector('.content-section:not(.hidden)')?.id.replace('sec-', '') || 'overview';
+            document.getElementById('page-title').innerText = titles[currentSec] || i18n[lang].navOverview;
+            
+            applyFilters();
+        }
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('button') && !event.target.closest('button')) {
+                const dropdowns = document.getElementsByClassName("z-50");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    let openDropdown = dropdowns[i];
+                    if (!openDropdown.classList.contains('hidden')) {
+                        openDropdown.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        function parseQuantity(val) {
+            if (val === undefined || val === null) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            let str = String(val).trim();
+            if (str === '') return 0;
+            str = str.replace(/[^0-9.-]/g, '');
+            const parsed = parseInt(str, 10);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function parseCustomDate(dateStr) {
+            if (!dateStr) return null;
+            let str = String(dateStr).trim();
+            if (!str) return null;
+            
+            let timePart = "";
+            if (str.includes(' ')) {
+                const parts = str.split(/\s+/);
+                str = parts[0];
+                timePart = parts[1] || "";
+            }
+
+            let year, month, day;
+            if (str.includes('/') || str.includes('-')) {
+                const parts = str.split(/[\/\-]/);
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) {
+                        year = parseInt(parts[0], 10);
+                        month = parseInt(parts[1], 10) - 1;
+                        day = parseInt(parts[2], 10);
+                    } else {
+                        year = parseInt(parts[2], 10);
+                        if (year < 100) year += 2000;
+                        month = parseInt(parts[1], 10) - 1;
+                        day = parseInt(parts[0], 10);
+                    }
+                }
+            }
+
+            let hours = 0, minutes = 0, seconds = 0;
+            if (timePart && timePart.includes(':')) {
+                const t = timePart.split(':');
+                hours = parseInt(t[0], 10) || 0;
+                minutes = parseInt(t[1], 10) || 0;
+                seconds = parseInt(t[2], 10) || 0;
+            }
+
+            if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                return new Date(year, month, day, hours, minutes, seconds);
+            }
+
+            const standardDate = new Date(dateStr);
+            return isNaN(standardDate.getTime()) ? null : standardDate;
+        }
+
+        function findMasterStore(rawStoreName) {
+            if (!rawStoreName || rawStoreName === '-') return null;
+            const cleaned = String(rawStoreName).trim().toLowerCase();
+            
+            let found = MASTER_STORES.find(ms => ms.toLowerCase() === cleaned);
+            if (found) return found;
+
+            const codeMatch = cleaned.match(/m\d{3}[a-z]?/i);
+            if (codeMatch) {
+                const code = codeMatch[0].toLowerCase();
+                found = MASTER_STORES.find(ms => ms.toLowerCase().includes(code));
+                if (found) return found;
+            }
+
+            found = MASTER_STORES.find(ms => {
+                const msClean = ms.toLowerCase();
+                return msClean.includes(cleaned) || cleaned.includes(msClean.replace(/^m\d+[a-z]?\s+digimap\s+/, ''));
+            });
+
+            return found || null;
+        }
+
+        function extractLOB(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'champion lob' || cleanKey === 'lob' || cleanKey.includes('kategori') || cleanKey.includes('produk')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Champion LOB'] || item.LOB || '-';
+        }
+
+        function extractName(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if ((cleanKey.includes('nama') || cleanKey.includes('champion') || cleanKey.includes('sa')) && !cleanKey.includes('toko') && !cleanKey.includes('store') && !cleanKey.includes('email')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Nama Champion/ SA'] || item['Nama Champion'] || item.Nama || '-';
+        }
+
+        function extractStore(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'store' || cleanKey.includes('lokasi') || cleanKey.includes('toko')) {
+                    const val = item[k];
+                    if (val !== undefined && val !== null && String(val).trim() !== '') {
+                        return String(val).trim();
+                    }
+                }
+            }
+            return item.Store ? String(item.Store).trim() : '-';
+        }
+
+        function extractQuantity(item) {
+            if (!item) return 0;
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'total qty' || cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah')) {
+                    return parseQuantity(item[k]);
+                }
+            }
+            return parseQuantity(item['Total Qty'] || item.Qty || item.Quantity || 0);
+        }
+
+        function extractShift(item) {
+            if (!item) return '-';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'shift' || cleanKey.includes('shift kerja')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item.Shift || '-';
+        }
+
+        function extractDate(item) {
+            if (!item) return '';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey === 'tanggal_transaksi' || cleanKey.includes('tanggal transaksi') || cleanKey === 'tanggal') {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item['Tanggal_Transaksi'] || item['Tanggal Transaksi'] || item.Tanggal || '';
+        }
+
+        function extractTimestamp(item) {
+            if (!item) return '';
+            const keys = Object.keys(item);
+            for (let k of keys) {
+                const cleanKey = k.trim().toLowerCase();
+                if (cleanKey.includes('timestamp') || cleanKey.includes('waktu') || cleanKey.includes('created')) {
+                    const val = item[k];
+                    if (val && String(val).trim() !== '') return String(val).trim();
+                }
+            }
+            return item.Timestamp || item['Timestamp'] || '';
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+            document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(`sec-${sectionId}`).classList.remove('hidden');
+            
+            const desktopBtn = document.getElementById(`btn-${sectionId}`);
+            if (desktopBtn) desktopBtn.classList.add('nav-active');
+
+            const mobileDockBtn = document.getElementById(`dock-${sectionId}`);
+            if (mobileDockBtn) mobileDockBtn.classList.add('active');
+
+            const globalKpi = document.getElementById('global-kpi-container');
+            if (globalKpi) {
+                if (sectionId === 'overview') {
+                    globalKpi.classList.remove('hidden');
+                } else {
+                    globalKpi.classList.add('hidden');
+                }
+            }
+
+            const titles = {
+                'overview': i18n[currentLang].navOverview,
+                'mom-perf': i18n[currentLang].navMom,
+                'wow-perf': i18n[currentLang].navWow,
+                'compliance': i18n[currentLang].navCompliance,
+                'raw-data': i18n[currentLang].navRaw,
+                'trend-bulanan': i18n[currentLang].navTrend,
+                'settings': i18n[currentLang].navSettings
+            };
+            document.getElementById('page-title').innerText = titles[sectionId] || 'Dashboard';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            
+            const settingIcon = document.getElementById('setting-theme-icon');
+            if (settingIcon) settingIcon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+
+            const themeText = document.getElementById('theme-text');
+            if (themeText) {
+                themeText.innerText = isLight ? i18n[currentLang].lightModeText : i18n[currentLang].darkModeText;
+            }
+
+            lucide.createIcons();
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-month').value = '10';
+            const storeInput = document.getElementById('filter-store');
+            if (storeInput) storeInput.value = '';
+            document.getElementById('filter-lob').value = 'ALL';
+            document.getElementById('filter-shift').value = 'ALL';
+            applyFilters();
+        }
+
+        function updateFormattedTimestamp() {
+            const now = new Date();
+            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+            const dateStr = now.toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US', dateOptions);
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
+            const displayStr = `${dateStr}, ${timeStr} WIB`;
+            
+            document.getElementById('last-update').innerText = displayStr;
+            const mobileSync = document.getElementById('last-update-mobile');
+            if (mobileSync) mobileSync.innerText = displayStr;
+        }
+
+        function fetchLiveData() {
+            const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
+
+            Papa.parse(cacheBusterUrl, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    rawCSVData = results.data;
+                    populateDropdownFilters(rawCSVData);
+                    applyFilters();
+                    updateFormattedTimestamp();
+                },
+                error: function(err) {
+                    console.error('Error auto-sync CSV:', err);
+                }
+            });
+        }
+
+        function populateDropdownFilters(data) {
+            const storeDatalist = document.getElementById('store-suggestions');
+            const lobSelect = document.getElementById('filter-lob');
+            const shiftSelect = document.getElementById('filter-shift');
+
+            const currentLOB = lobSelect?.value || 'ALL';
+            const currentShift = shiftSelect?.value || 'ALL';
+
+            const stores = new Set(MASTER_STORES);
+            const lobs = new Set();
+            const shifts = new Set();
+
+            data.forEach(item => {
+                const store = extractStore(item);
+                const lob = extractLOB(item);
+                const shift = extractShift(item);
+
+                if (store && store !== '-') stores.add(store);
+                if (lob && lob !== '-') lobs.add(lob);
+                if (shift && shift !== '-') shifts.add(shift);
+            });
+
+            if (storeDatalist) {
+                storeDatalist.innerHTML = '';
+                Array.from(stores).sort().forEach(store => {
+                    storeDatalist.innerHTML += `<option value="${store}">`;
+                });
+            }
+
+            if (lobSelect) {
+                lobSelect.innerHTML = `<option value="ALL">${i18n[currentLang].optAllLobs}</option>`;
+                Array.from(lobs).sort().forEach(lob => {
+                    lobSelect.innerHTML += `<option value="${lob}" ${lob === currentLOB ? 'selected' : ''}>${lob}</option>`;
+                });
+            }
+
+            if (shiftSelect) {
+                shiftSelect.innerHTML = `<option value="ALL">${i18n[currentLang].optAllShifts}</option>`;
+                Array.from(shifts).sort().forEach(shift => {
+                    shiftSelect.innerHTML += `<option value="${shift}" ${shift === currentShift ? 'selected' : ''}>${shift}</option>`;
+                });
+            }
+        }
+
+        function getWeekNumber(d) {
+            const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            const dayNum = date.getUTCDay() || 7;
+            date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+            return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+        }
+
+        function applyFilters() {
+            const monthVal = document.getElementById('filter-month')?.value || '10';
+            const storeInput = document.getElementById('filter-store');
+            const storeVal = storeInput ? storeInput.value.toLowerCase().trim() : 'all';
+            const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
+            const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
+
+            filteredData = rawCSVData.filter(row => {
+                const rowStore = extractStore(row).toLowerCase();
+                const rowLOB = extractLOB(row);
+                const rowShift = extractShift(row);
+                const rowDateStr = extractDate(row);
+
+                let matchMonth = true;
+                if (monthVal !== 'ALL' && rowDateStr) {
+                    const parsedDate = parseCustomDate(rowDateStr);
+                    if (parsedDate) {
+                        const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                        matchMonth = (m === monthVal && parsedDate.getFullYear() === 2026);
+                    } else {
+                        matchMonth = false;
+                    }
+                }
+
+                const matchStore = (storeVal === 'all' || storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
+                const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
+                const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
+
+                return matchMonth && matchStore && matchLOB && matchShift;
+            });
+
+            updateMetricsAndCharts(filteredData);
+            renderTop10Tables(filteredData);
+            renderUnsubmittedStoresTable(rawCSVData);
+            renderMoMPerformance();
+            renderMoMStoreTable();
+            renderWoWPerformance(filteredData);
+            renderWoWStoreTable(filteredData);
+            renderLateChampionsTable(rawCSVData);
+            renderRawDataTable(filteredData);
+            renderTrendBulananTable();
+            renderCharts(filteredData);
+        }
+
+        function updateMetricsAndCharts(data) {
+            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
+            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
+
+            const monthVal = document.getElementById('filter-month')?.value || '10';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
+            const year = 2026;
+
+            const now = new Date();
+            let maxDay = now.getDate() - 1;
+
+            if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
+                maxDay = new Date(year, selectedMonthIdx + 1, 0).getDate();
+            }
+
+            if (maxDay < 1) maxDay = 1;
+
+            data.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                const qty = extractQuantity(item);
+                const rawDateStr = extractDate(item);
+
+                let isWithinRange = false;
+                if (rawDateStr) {
+                    const parsedDate = parseCustomDate(rawDateStr);
+                    if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
+                        const dayNum = parsedDate.getDate();
+                        if (dayNum >= 1 && dayNum <= maxDay) {
+                            isWithinRange = true;
+                        }
+                    }
+                }
+
+                if (lob.includes('mac')) { 
+                    totalMac += qty; 
+                    if (qty > 0 && isWithinRange) trxMac++; 
+                } else if (lob.includes('iphone')) { 
+                    totalIphone += qty; 
+                    if (qty > 0 && isWithinRange) trxIphone++; 
+                } else if (lob.includes('ipad')) { 
+                    totalIpad += qty; 
+                    if (qty > 0 && isWithinRange) trxIpad++; 
+                } else if (lob.includes('watch')) { 
+                    totalWatch += qty; 
+                    if (qty > 0 && isWithinRange) trxWatch++; 
+                }
+            });
+
+            document.getElementById('kpi-total-mac').innerText = totalMac;
+            document.getElementById('kpi-total-iphone').innerText = totalIphone;
+            document.getElementById('kpi-total-ipad').innerText = totalIpad;
+            document.getElementById('kpi-total-watch').innerText = totalWatch;
+
+            const completedDays = maxDay;
+
+            document.getElementById('kpi-avg-mac').innerText = (totalMac / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-iphone').innerText = (totalIphone / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-ipad').innerText = (totalIpad / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-watch').innerText = (totalWatch / completedDays).toFixed(1);
+
+            document.getElementById('kpi-trx-mac').innerText = trxMac;
+            document.getElementById('kpi-trx-iphone').innerText = trxIphone;
+            document.getElementById('kpi-trx-ipad').innerText = trxIpad;
+            document.getElementById('kpi-trx-watch').innerText = trxWatch;
+        }
+
+        function renderMoMPerformance() {
+            const storeInput = document.getElementById('filter-store');
+            const storeVal = storeInput ? storeInput.value.toLowerCase().trim() : 'all';
+            const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
+            const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
+
+            const currentMonthIdx = 9; // Oktober
+            const lastMonthIdx = 8;    // September
+
+            let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+
+            rawCSVData.forEach(item => {
+                const rowStore = extractStore(item).toLowerCase();
+                const rowLOB = extractLOB(item);
+                const rowShift = extractShift(item);
+                const rowDateStr = extractDate(item);
+
+                const matchStore = (storeVal === 'all' || storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
+                const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
+                const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
+
+                if (matchStore && matchLOB && matchShift && rowDateStr) {
+                    const parsedDate = parseCustomDate(rowDateStr);
+                    if (parsedDate && parsedDate.getFullYear() === 2026) {
+                        const m = parsedDate.getMonth();
+                        const qty = extractQuantity(item);
+                        const lob = rowLOB.toLowerCase();
+
+                        let targetObj = null;
+                        if (m === currentMonthIdx) targetObj = cmData;
+                        else if (m === lastMonthIdx) targetObj = lmData;
+
+                        if (targetObj) {
+                            if (lob.includes('mac')) targetObj.mac += qty;
+                            else if (lob.includes('iphone')) targetObj.iphone += qty;
+                            else if (lob.includes('ipad')) targetObj.ipad += qty;
+                            else if (lob.includes('watch')) targetObj.watch += qty;
+                        }
+                    }
+                }
+            });
+
+            const lobs = ['mac', 'iphone', 'ipad', 'watch'];
+            let totalLM = 0, totalCM = 0;
+
+            lobs.forEach(lob => {
+                const lmVal = lmData[lob];
+                const cmVal = cmData[lob];
+                totalLM += lmVal;
+                totalCM += cmVal;
+
+                let pctChange = 0;
+                if (lmVal > 0) {
+                    pctChange = (((cmVal - lmVal) / lmVal) * 100).toFixed(1);
+                } else if (cmVal > 0) {
+                    pctChange = 100;
+                }
+
+                const colorClass = pctChange >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = pctChange >= 0 ? '+' : '';
+
+                const container = document.getElementById(`mom-sum-${lob}`);
+                if (container) {
+                    container.innerHTML = `
+                        <span class="font-mono text-slate-400">LM: ${lmVal}</span> <span class="mx-1">→</span> <span class="font-bold">CM: ${cmVal}</span>
+                        <span class="block text-[10px] font-bold ${colorClass}">${sign}${pctChange}%</span>
+                    `;
+                }
+            });
+
+            const totalGrowthVal = document.getElementById('mom-total-growth-val');
+            if (totalGrowthVal) {
+                let totalPct = totalLM > 0 ? (((totalCM - totalLM) / totalLM) * 100).toFixed(1) : (totalCM > 0 ? 100 : 0);
+                const sign = totalPct >= 0 ? '+' : '';
+                totalGrowthVal.innerText = `${totalCM} Unit (${sign}${totalPct}%)`;
+            }
+
+            if (chartInstances.momGlobal) chartInstances.momGlobal.destroy();
+            const ctxMoM = document.getElementById('chartMoMGlobal')?.getContext('2d');
+            if (ctxMoM) {
+                const isLight = document.body.classList.contains('light-mode');
+                const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+                chartInstances.momGlobal = new Chart(ctxMoM, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            {
+                                label: 'Bulan Lalu (Sept)',
+                                data: [lmData.mac, lmData.iphone, lmData.ipad, lmData.watch],
+                                backgroundColor: '#64748b',
+                                borderRadius: 4
+                            },
+                            {
+                                label: 'Bulan Ini (Okt)',
+                                data: [cmData.mac, cmData.iphone, cmData.ipad, cmData.watch],
+                                backgroundColor: '#06b6d4',
+                                borderRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderMoMStoreTable() {
+            const tbody = document.getElementById('mom-store-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const currentMonthIdx = 9; // Oktober
+            const lastMonthIdx = 8;    // September
+
+            const storeMap = {};
+            MASTER_STORES.forEach(s => {
+                storeMap[s] = {
+                    mac: { lm: 0, cm: 0 },
+                    iphone: { lm: 0, cm: 0 },
+                    ipad: { lm: 0, cm: 0 },
+                    watch: { lm: 0, cm: 0 }
+                };
+            });
+
+            rawCSVData.forEach(item => {
+                const matchedStore = findMasterStore(extractStore(item));
+                
+                if (matchedStore) {
+                    const parsedDate = parseCustomDate(extractDate(item));
+                    if (parsedDate && parsedDate.getFullYear() === 2026) {
+                        const m = parsedDate.getMonth();
+                        const lob = extractLOB(item).toLowerCase();
+                        const qty = extractQuantity(item);
+                        
+                        let monthKey = null;
+                        if (m === currentMonthIdx) monthKey = 'cm';
+                        else if (m === lastMonthIdx) monthKey = 'lm';
+
+                        if (monthKey) {
+                            if (lob.includes('mac')) storeMap[matchedStore].mac[monthKey] += qty;
+                            else if (lob.includes('iphone')) storeMap[matchedStore].iphone[monthKey] += qty;
+                            else if (lob.includes('ipad')) storeMap[matchedStore].ipad[monthKey] += qty;
+                            else if (lob.includes('watch')) storeMap[matchedStore].watch[monthKey] += qty;
+                        }
+                    }
+                }
+            });
+
+            momStoresDataList = [];
+            let index = 1;
+
+            const calcLobGrowth = (lm, cm) => {
+                const diff = cm - lm;
+                let pct = 0;
+                if (lm > 0) pct = (((cm - lm) / lm) * 100).toFixed(0);
+                else if (cm > 0) pct = 100;
+                const sign = pct >= 0 ? '+' : '';
+                return {
+                    str: `${sign}${pct}%`,
+                    diffStr: `${sign}${diff}`,
+                    isPositive: pct >= 0
+                };
+            };
+
+            Object.keys(storeMap).forEach(store => {
+                const s = storeMap[store];
+                const totalLM = s.mac.lm + s.iphone.lm + s.ipad.lm + s.watch.lm;
+                const totalCM = s.mac.cm + s.iphone.cm + s.ipad.cm + s.watch.cm;
+
+                const macGrw = calcLobGrowth(s.mac.lm, s.mac.cm);
+                const iphoneGrw = calcLobGrowth(s.iphone.lm, s.iphone.cm);
+                const ipadGrw = calcLobGrowth(s.ipad.lm, s.ipad.cm);
+                const watchGrw = calcLobGrowth(s.watch.lm, s.watch.cm);
+
+                let totalGrowthPct = 0;
+                if (totalLM > 0) {
+                    totalGrowthPct = (((totalCM - totalLM) / totalLM) * 100).toFixed(1);
+                } else if (totalCM > 0) {
+                    totalGrowthPct = 100;
+                }
+
+                const totalColorClass = totalGrowthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const totalSign = totalGrowthPct >= 0 ? '+' : '';
+
+                momStoresDataList.push({
+                    store,
+                    macLM: s.mac.lm, macCM: s.mac.cm, macGrw: macGrw.str,
+                    iphoneLM: s.iphone.lm, iphoneCM: s.iphone.cm, iphoneGrw: iphoneGrw.str,
+                    ipadLM: s.ipad.lm, ipadCM: s.ipad.cm, ipadGrw: ipadGrw.str,
+                    watchLM: s.watch.lm, watchCM: s.watch.cm, watchGrw: watchGrw.str,
+                    totalLM, totalCM, totalGrowthPct: `${totalSign}${totalGrowthPct}%`
+                });
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index++}</td>
+                    <td class="p-2.5 font-bold">${store}</td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.mac.lm} / <b>${s.mac.cm}</b> 
+                        <span class="block text-[10px] font-bold ${macGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${macGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.iphone.lm} / <b>${s.iphone.cm}</b> 
+                        <span class="block text-[10px] font-bold ${iphoneGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${iphoneGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.ipad.lm} / <b>${s.ipad.cm}</b> 
+                        <span class="block text-[10px] font-bold ${ipadGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${ipadGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.watch.lm} / <b>${s.watch.cm}</b> 
+                        <span class="block text-[10px] font-bold ${watchGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${watchGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-bold ${totalColorClass}">${totalCM} (${totalSign}${totalGrowthPct}%)</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const badge = document.getElementById('mom-store-total-badge');
+            if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
+        }
+
+        function renderTop10Tables(data) {
+            const salesBody = document.getElementById('top10-sales-body');
+            if (salesBody) {
+                salesBody.innerHTML = '';
+                const salesMap = {};
+                data.forEach(item => {
+                    const name = extractName(item);
+                    const store = extractStore(item);
+                    const lob = extractLOB(item);
+                    const qty = extractQuantity(item);
+                    if (name && name !== '-') {
+                        const key = `${name}___${store}`;
+                        if (!salesMap[key]) {
+                            salesMap[key] = { name, store, lob, total: 0 };
+                        }
+                        salesMap[key].total += qty;
+                    }
+                });
+
+                const sortedSales = Object.values(salesMap).sort((a, b) => b.total - a.total).slice(0, 10);
+
+                if (sortedSales.length === 0) {
+                    salesBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
+                } else {
+                    sortedSales.forEach((s, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                        tr.innerHTML = `
+                            <td class="p-2 font-mono font-bold text-center">${idx + 1}</td>
+                            <td class="p-2 font-bold">${s.name}</td>
+                            <td class="p-2 opacity-80">${s.store}</td>
+                            <td class="p-2 font-semibold text-indigo-400">${s.lob}</td>
+                            <td class="p-2 text-center font-bold text-emerald-400">${s.total}</td>
+                        `;
+                        salesBody.appendChild(tr);
+                    });
+                }
+            }
+
+            const storeBody = document.getElementById('top10-stores-body');
+            if (storeBody) {
+                storeBody.innerHTML = '';
+                const storePerfMap = {};
+
+                data.forEach(item => {
+                    const store = extractStore(item);
+                    const lob = extractLOB(item).toLowerCase();
+                    const qty = extractQuantity(item);
+
+                    if (store && store !== '-') {
+                        if (!storePerfMap[store]) {
+                            storePerfMap[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                        }
+                        if (lob.includes('mac')) storePerfMap[store].mac += qty;
+                        else if (lob.includes('iphone')) storePerfMap[store].iphone += qty;
+                        else if (lob.includes('ipad')) storePerfMap[store].ipad += qty;
+                        else if (lob.includes('watch')) storePerfMap[store].watch += qty;
+
+                        storePerfMap[store].total += qty;
+                    }
+                });
+
+                const sortedStores = Object.entries(storePerfMap)
+                    .map(([store, perf]) => ({ store, ...perf }))
+                    .sort((a, b) => b.total - a.total)
+                    .slice(0, 10);
+
+                if (sortedStores.length === 0) {
+                    storeBody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
+                } else {
+                    sortedStores.forEach((s, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                        tr.innerHTML = `
+                            <td class="p-2 font-mono font-bold text-center">${idx + 1}</td>
+                            <td class="p-2 font-bold">${s.store}</td>
+                            <td class="p-2 text-center font-mono text-amber-500">${s.mac}</td>
+                            <td class="p-2 text-center font-mono text-rose-500">${s.iphone}</td>
+                            <td class="p-2 text-center font-mono text-emerald-500">${s.ipad}</td>
+                            <td class="p-2 text-center font-mono text-blue-500">${s.watch}</td>
+                            <td class="p-2 text-center font-bold text-indigo-400">${s.total}</td>
+                        `;
+                        storeBody.appendChild(tr);
+                    });
+                }
+            }
+        }
+
+        function renderRawDataTable(data) {
+            const rawBody = document.getElementById('raw-data-body');
+            if (!rawBody) return;
+            rawBody.innerHTML = '';
+
+            const searchInput = document.getElementById('raw-store-search');
+            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            const filteredRows = data.filter(item => {
+                const store = extractStore(item).toLowerCase();
+                if (!searchVal) return true;
+                return store.includes(searchVal);
+            });
+
+            if (filteredRows.length === 0) {
+                rawBody.innerHTML = '<tr><td colspan="6" class="p-3 text-center opacity-80 text-xs">Data log transaksi tidak ditemukan.</td></tr>';
+                return;
+            }
+
+            filteredRows.forEach((item, idx) => {
+                const store = extractStore(item);
+                const name = extractName(item);
+                const dateTrx = extractDate(item);
+                const lob = extractLOB(item);
+                const qty = extractQuantity(item);
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                    <td class="p-2.5 font-bold">${store}</td>
+                    <td class="p-2.5">${name}</td>
+                    <td class="p-2.5 font-mono">${dateTrx}</td>
+                    <td class="p-2.5 font-semibold text-indigo-400">${lob}</td>
+                    <td class="p-2.5 text-center font-mono font-bold text-emerald-400">${qty}</td>
+                `;
+                rawBody.appendChild(tr);
+            });
+        }
+
+        function renderWoWPerformance(data) {
+            const now = new Date();
+            const currentWeek = getWeekNumber(now);
+            const lastWeek = currentWeek - 1;
+
+            let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+
+            data.forEach(item => {
+                const dateStr = extractDate(item);
+                const parsedDate = parseCustomDate(dateStr);
+                if (parsedDate) {
+                    const itemWeek = getWeekNumber(parsedDate);
+                    const lob = extractLOB(item).toLowerCase();
+                    const qty = extractQuantity(item);
+
+                    let targetObj = null;
+                    if (itemWeek === currentWeek) targetObj = twData;
+                    else if (itemWeek === lastWeek) targetObj = lwData;
+
+                    if (targetObj) {
+                        if (lob.includes('mac')) targetObj.mac += qty;
+                        else if (lob.includes('iphone')) targetObj.iphone += qty;
+                        else if (lob.includes('ipad')) targetObj.ipad += qty;
+                        else if (lob.includes('watch')) targetObj.watch += qty;
+                    }
+                }
+            });
+
+            const lobs = ['mac', 'iphone', 'ipad', 'watch'];
+            let totalLW = 0, totalTW = 0;
+
+            lobs.forEach(lob => {
+                const lwVal = lwData[lob];
+                const twVal = twData[lob];
+                totalLW += lwVal;
+                totalTW += twVal;
+
+                let pctChange = 0;
+                if (lwVal > 0) {
+                    pctChange = (((twVal - lwVal) / lwVal) * 100).toFixed(1);
+                } else if (twVal > 0) {
+                    pctChange = 100;
+                }
+
+                const colorClass = pctChange >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = pctChange >= 0 ? '+' : '';
+
+                const container = document.getElementById(`wow-sum-${lob}`);
+                if (container) {
+                    container.innerHTML = `
+                        <span class="font-mono text-slate-400">LW: ${lwVal}</span> <span class="mx-1">→</span> <span class="font-bold">TW: ${twVal}</span>
+                        <span class="block text-[10px] font-bold ${colorClass}">${sign}${pctChange}%</span>
+                    `;
+                }
+            });
+
+            const totalGrowthVal = document.getElementById('wow-total-growth-val');
+            if (totalGrowthVal) {
+                let totalPct = totalLW > 0 ? (((totalTW - totalLW) / totalLW) * 100).toFixed(1) : (totalTW > 0 ? 100 : 0);
+                const sign = totalPct >= 0 ? '+' : '';
+                totalGrowthVal.innerText = `${totalTW} Unit (${sign}${totalPct}%)`;
+            }
+
+            if (chartInstances.wowGlobal) chartInstances.wowGlobal.destroy();
+            const ctxWoW = document.getElementById('chartWoWGlobal')?.getContext('2d');
+            if (ctxWoW) {
+                const isLight = document.body.classList.contains('light-mode');
+                const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+                chartInstances.wowGlobal = new Chart(ctxWoW, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [
+                            {
+                                label: 'Last Week (LW)',
+                                data: [lwData.mac, lwData.iphone, lwData.ipad, lwData.watch],
+                                backgroundColor: '#64748b',
+                                borderRadius: 4
+                            },
+                            {
+                                label: 'This Week (TW)',
+                                data: [twData.mac, twData.iphone, twData.ipad, twData.watch],
+                                backgroundColor: '#6366f1',
+                                borderRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: textColor, font: { weight: 'bold' } } },
+                            datalabels: {
+                                anchor: 'center',
+                                align: 'center',
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: Math.round
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { weight: 'bold' } } },
+                            y: { ticks: { color: textColor, font: { weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderWoWStoreTable(data) {
+            const tbody = document.getElementById('wow-store-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const now = new Date();
+            const currentWeek = getWeekNumber(now);
+            const lastWeek = currentWeek - 1;
+
+            const storeMap = {};
+            MASTER_STORES.forEach(s => {
+                storeMap[s] = {
+                    mac: { lw: 0, tw: 0 },
+                    iphone: { lw: 0, tw: 0 },
+                    ipad: { lw: 0, tw: 0 },
+                    watch: { lw: 0, tw: 0 }
+                };
+            });
+
+            data.forEach(item => {
+                const matchedStore = findMasterStore(extractStore(item));
+                
+                if (matchedStore) {
+                    const parsedDate = parseCustomDate(extractDate(item));
+                    if (parsedDate) {
+                        const itemWeek = getWeekNumber(parsedDate);
+                        const lob = extractLOB(item).toLowerCase();
+                        const qty = extractQuantity(item);
+                        
+                        let weekKey = null;
+                        if (itemWeek === currentWeek) weekKey = 'tw';
+                        else if (itemWeek === lastWeek) weekKey = 'lw';
+
+                        if (weekKey) {
+                            if (lob.includes('mac')) storeMap[matchedStore].mac[weekKey] += qty;
+                            else if (lob.includes('iphone')) storeMap[matchedStore].iphone[weekKey] += qty;
+                            else if (lob.includes('ipad')) storeMap[matchedStore].ipad[weekKey] += qty;
+                            else if (lob.includes('watch')) storeMap[matchedStore].watch[weekKey] += qty;
+                        }
+                    }
+                }
+            });
+
+            let index = 1;
+            Object.keys(storeMap).forEach(store => {
+                const s = storeMap[store];
+                const totalLW = s.mac.lw + s.iphone.lw + s.ipad.lw + s.watch.lw;
+                const totalTW = s.mac.tw + s.iphone.tw + s.ipad.tw + s.watch.tw;
+
+                let growthPct = 0;
+                if (totalLW > 0) {
+                    growthPct = (((totalTW - totalLW) / totalLW) * 100).toFixed(1);
+                } else if (totalTW > 0) {
+                    growthPct = 100;
+                }
+
+                const colorClass = growthPct >= 0 ? 'text-emerald-500' : 'text-rose-500';
+                const sign = growthPct >= 0 ? '+' : '';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${index++}</td>
+                    <td class="p-2.5 font-bold">${store}</td>
+                    <td class="p-2.5 text-center font-mono">${s.mac.lw} / <b>${s.mac.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.iphone.lw} / <b>${s.iphone.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.ipad.lw} / <b>${s.ipad.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.watch.lw} / <b>${s.watch.tw}</b></td>
+                    <td class="p-2.5 text-center font-bold ${colorClass}">${totalTW} (${sign}${growthPct}%)</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const badge = document.getElementById('wow-store-total-badge');
+            if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
+        }
+
+        function renderLateChampionsTable(allData) {
+            const storeBody = document.getElementById('late-champions-body');
+            const summaryBody = document.getElementById('late-champions-summary-body');
+
+            if (!storeBody || !summaryBody) return;
+
+            storeBody.innerHTML = '';
+            summaryBody.innerHTML = '';
+
+            const storeLateMap = {};
+            const championLateMap = {};
+            let totalLateEvents = 0;
+
+            allData.forEach(item => {
+                const tsStr = extractTimestamp(item);
+                const txDateStr = extractDate(item);
+                const name = extractName(item);
+                const rawStore = extractStore(item);
+                const store = findMasterStore(rawStore) || rawStore;
+
+                if (tsStr && txDateStr) {
+                    const tsParsed = parseCustomDate(tsStr);
+                    const txParsed = parseCustomDate(txDateStr);
+
+                    if (tsParsed && txParsed) {
+                        const cutoff = new Date(txParsed.getFullYear(), txParsed.getMonth(), txParsed.getDate() + 1, 12, 0, 0);
+
+                        if (tsParsed > cutoff) {
+                            totalLateEvents++;
+                            if (store && store !== '-') {
+                                storeLateMap[store] = (storeLateMap[store] || 0) + 1;
+                            }
+                            if (name && name !== '-') {
+                                const key = `${name}___${store}`;
+                                if (!championLateMap[key]) {
+                                    championLateMap[key] = { name, store, count: 0 };
+                                }
+                                championLateMap[key].count++;
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('summary-late-events-count').innerText = `${totalLateEvents} Kejadian`;
+
+            lateStoresSummaryList = Object.entries(storeLateMap).map(([store, count]) => ({ store, count })).sort((a,b) => b.count - a.count);
+            lateChampionSummaryList = Object.values(championLateMap).sort((a,b) => b.count - a.count);
+
+            document.getElementById('late-submit-total-badge').innerText = `${lateStoresSummaryList.length} Toko`;
+            document.getElementById('late-summary-total-badge').innerText = `${lateChampionSummaryList.length} Champion`;
+
+            if (lateStoresSummaryList.length === 0) {
+                storeBody.innerHTML = '<tr><td colspan="3" class="p-3 text-center opacity-80 text-xs">Tidak ada keterlambatan.</td></tr>';
+            } else {
+                lateStoresSummaryList.forEach((s, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                    tr.innerHTML = `
+                        <td class="p-2 font-mono text-center opacity-80 font-bold">${idx + 1}</td>
+                        <td class="p-2 font-bold">${s.store}</td>
+                        <td class="p-2 text-center font-bold text-amber-500">${s.count} Kali</td>
+                    `;
+                    storeBody.appendChild(tr);
+                });
+            }
+
+            if (lateChampionSummaryList.length === 0) {
+                summaryBody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Tidak ada keterlambatan Champion.</td></tr>';
+            } else {
+                lateChampionSummaryList.forEach((c, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-mono text-center opacity-80 font-bold">${idx + 1}</td>
+                        <td class="p-2.5 font-bold">${c.name}</td>
+                        <td class="p-2.5 opacity-80">${c.store}</td>
+                        <td class="p-2.5 text-center font-bold text-purple-400">${c.count} Kali</td>
+                    `;
+                    summaryBody.appendChild(tr);
+                });
+            }
+
+            renderComplianceCharts(lateStoresSummaryList.slice(0, 10), lateChampionSummaryList.slice(0, 10));
+        }
+
+        function renderComplianceCharts(topStores, topChampions) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            if (chartInstances.mostLateStores) chartInstances.mostLateStores.destroy();
+            const ctxStore = document.getElementById('chartMostLateStores')?.getContext('2d');
+            if (ctxStore) {
+                chartInstances.mostLateStores = new Chart(ctxStore, {
+                    type: 'bar',
+                    data: {
+                        labels: topStores.map(s => s.store.length > 20 ? s.store.substring(0, 18) + '...' : s.store),
+                        datasets: [{
+                            label: 'Jumlah Terlambat',
+                            data: topStores.map(s => s.count),
+                            backgroundColor: '#ef4444',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { color: '#fff', font: { weight: 'bold' } }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor } },
+                            y: { ticks: { color: textColor, font: { size: 10 } } }
+                        }
+                    }
+                });
+            }
+
+            if (chartInstances.lateChampions) chartInstances.lateChampions.destroy();
+            const ctxChamp = document.getElementById('chartLateChampions')?.getContext('2d');
+            if (ctxChamp) {
+                chartInstances.lateChampions = new Chart(ctxChamp, {
+                    type: 'bar',
+                    data: {
+                        labels: topChampions.map(c => c.name),
+                        datasets: [{
+                            label: 'Jumlah Terlambat',
+                            data: topChampions.map(c => c.count),
+                            backgroundColor: '#a855f7',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { color: '#fff', font: { weight: 'bold' } }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 10 } } },
+                            y: { ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderUnsubmittedStoresTable(allData) {
+            const tbody = document.getElementById('unsubmitted-stores-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const now = new Date();
+            const startDate = new Date(2026, 9, 1);
+            const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+
+            if (endDate < startDate) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Belum ada evaluasi periode.</td></tr>';
+                return;
+            }
+
+            const submittedDatesByStore = {};
+            MASTER_STORES.forEach(s => submittedDatesByStore[s] = new Set());
+
+            allData.forEach(item => {
+                const rawStore = extractStore(item);
+                const dateStr = extractDate(item);
+                if (rawStore && dateStr) {
+                    const matchedStore = findMasterStore(rawStore);
+                    if (matchedStore) {
+                        const parsed = parseCustomDate(dateStr);
+                        if (parsed) {
+                            const dateKey = `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`;
+                            submittedDatesByStore[matchedStore].add(dateKey);
+                        }
+                    }
+                }
+            });
+
+            unsubmittedStoresList = [];
+
+            MASTER_STORES.forEach(store => {
+                const missingDates = [];
+                let curr = new Date(startDate);
+
+                while (curr <= endDate) {
+                    const dateKey = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
+                    if (!submittedDatesByStore[store].has(dateKey)) {
+                        const dayFormatted = `${curr.getDate()} ${curr.toLocaleString('id-ID', { month: 'short' })}`;
+                        missingDates.push(dayFormatted);
+                    }
+                    curr.setDate(curr.getDate() + 1);
+                }
+
+                if (missingDates.length > 0) {
+                    unsubmittedStoresList.push({
+                        store,
+                        missingDates,
+                        totalDays: missingDates.length
+                    });
+                }
+            });
+
+            unsubmittedStoresList.sort((a, b) => b.totalDays - a.totalDays);
+
+            document.getElementById('summary-unsubmitted-count').innerText = `${unsubmittedStoresList.length} Store`;
+            document.getElementById('unsubmitted-stores-count').innerText = `${unsubmittedStoresList.length} Toko`;
+
+            if (unsubmittedStoresList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Semua toko sudah submit lengkap!</td></tr>';
+            } else {
+                unsubmittedStoresList.forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                    tr.innerHTML = `
+                        <td class="p-2 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                        <td class="p-2 font-bold">${item.store}</td>
+                        <td class="p-2 font-mono text-rose-400">Tgl: ${item.missingDates.join(', ')}</td>
+                        <td class="p-2 text-center font-bold text-rose-500">${item.totalDays} Hari</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function renderCharts(data) {
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#0f172a' : '#f8fafc';
+
+            if (chartInstances.lob) chartInstances.lob.destroy();
+            const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
+            if (ctxLOB) {
+                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 };
+                data.forEach(item => {
+                    const lob = extractLOB(item).toLowerCase();
+                    const qty = extractQuantity(item);
+                    if (lob.includes('mac')) lobTotals.Mac += qty;
+                    else if (lob.includes('iphone')) lobTotals.iPhone += qty;
+                    else if (lob.includes('ipad')) lobTotals.iPad += qty;
+                    else if (lob.includes('watch')) lobTotals.Watch += qty;
+                });
+
+                chartInstances.lob = new Chart(ctxLOB, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [{
+                            label: 'Total Sales',
+                            data: [lobTotals.Mac, lobTotals.iPhone, lobTotals.iPad, lobTotals.Watch],
+                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
+                            borderWidth: 2,
+                            borderColor: isLight ? '#ffffff' : '#0f172a'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: textColor, font: { weight: 'bold', size: 11 }, boxWidth: 12 } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (val) => val > 0 ? val : ''
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (chartInstances.avgPerDay) chartInstances.avgPerDay.destroy();
+            const ctxAvg = document.getElementById('chartAvgPerDay')?.getContext('2d');
+            if (ctxAvg) {
+                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 };
+                data.forEach(item => {
+                    const lob = extractLOB(item).toLowerCase();
+                    const qty = extractQuantity(item);
+                    if (lob.includes('mac')) lobTotals.Mac += qty;
+                    else if (lob.includes('iphone')) lobTotals.iPhone += qty;
+                    else if (lob.includes('ipad')) lobTotals.iPad += qty;
+                    else if (lob.includes('watch')) lobTotals.Watch += qty;
+                });
+
+                const monthVal = document.getElementById('filter-month')?.value || '10';
+                const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
+                const now = new Date();
+                let maxDay = now.getDate() - 1;
+                if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
+                    maxDay = new Date(2026, selectedMonthIdx + 1, 0).getDate();
+                }
+                if (maxDay < 1) maxDay = 1;
+
+                const avgData = [
+                    (lobTotals.Mac / maxDay).toFixed(1),
+                    (lobTotals.iPhone / maxDay).toFixed(1),
+                    (lobTotals.iPad / maxDay).toFixed(1),
+                    (lobTotals.Watch / maxDay).toFixed(1)
+                ];
+
+                chartInstances.avgPerDay = new Chart(ctxAvg, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        datasets: [{
+                            label: 'Average / Hari',
+                            data: avgData,
+                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
+                            borderWidth: 2,
+                            borderColor: isLight ? '#ffffff' : '#0f172a'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: textColor, font: { weight: 'bold', size: 11 }, boxWidth: 12 } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (val) => parseFloat(val) > 0 ? val : ''
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let currentTrendLob = 'all';
+
+        function switchTrendLob(lob) {
+            currentTrendLob = lob;
+            ['all', 'mac', 'iphone', 'ipad', 'watch'].forEach(l => {
+                const btn = document.getElementById(`btn-trend-${l}`);
+                if (btn) {
+                    if (l === lob) {
+                        btn.className = 'px-3 py-1.5 rounded bg-indigo-600 text-white transition font-bold';
+                    } else {
+                        btn.className = 'px-3 py-1.5 rounded hover:bg-white/10 transition text-slate-300 font-semibold';
+                    }
+                }
+            });
+            renderTrendBulananTable();
+        }
+
+        function renderTrendBulananTable() {
+            const thead = document.getElementById('trend-table-head');
+            const tbody = document.getElementById('trend-table-body');
+            if (!thead || !tbody) return;
+
+            const monthNames = {
+                '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember',
+                '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+                '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus'
+            };
+
+            const fixedMonthKeys = ['09', '10', '11', '12', '01', '02', '03', '04', '05', '06', '07', '08'];
+            const activeMonthsSet = new Set(['09', '10', '11']); // Default menampilkan min September, Oktober, November
+
+            filteredData.forEach(item => {
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+                if (parsed && parsed.getFullYear() === 2026) {
+                    const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
+                    activeMonthsSet.add(mKey);
+                }
+            });
+
+            // Urutkan sesuai urutan bulan mulai dari September (09) ke depan
+            const sortedMonths = fixedMonthKeys.filter(m => activeMonthsSet.has(m));
+
+            let headHTML = `<tr>
+                <th class="p-2.5 text-center w-12 sticky-header-bg">No.</th>
+                <th class="p-2.5 sticky-header-bg">Store</th>
+                <th class="p-2.5 sticky-header-bg">Nama Sales</th>`;
+            
+            sortedMonths.forEach(m => {
+                headHTML += `<th class="p-2.5 text-center sticky-header-bg">${monthNames[m] || m}</th>`;
+            });
+            headHTML += `</tr>`;
+            thead.innerHTML = headHTML;
+
+            const aggregationMap = {};
+
+            filteredData.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                if (currentTrendLob !== 'all' && !lob.includes(currentTrendLob)) {
+                    return;
+                }
+
+                const store = extractStore(item);
+                const name = extractName(item);
+                const qty = extractQuantity(item);
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+
+                if (store && store !== '-' && name && name !== '-') {
+                    const key = `${store}___${name}`;
+                    if (!aggregationMap[key]) {
+                        aggregationMap[key] = {
+                            store,
+                            name,
+                            months: {},
+                            sumTotal: 0
+                        };
+                    }
+
+                    if (parsed && parsed.getFullYear() === 2026) {
+                        const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
+                        aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
+                        aggregationMap[key].sumTotal += qty;
+                    }
+                }
+            });
+
+            const rowsData = Object.values(aggregationMap).sort((a, b) => b.sumTotal - a.sumTotal);
+
+            tbody.innerHTML = '';
+            if (rowsData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${3 + sortedMonths.length}" class="p-4 text-center opacity-80 text-xs">Tidak ada data trend bulanan untuk LOB ini.</td></tr>`;
+                return;
+            }
+
+            rowsData.forEach((row, idx) => {
+                let tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                
+                let html = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                    <td class="p-2.5 font-bold">${row.store}</td>
+                    <td class="p-2.5">${row.name}</td>
+                `;
+
+                sortedMonths.forEach(m => {
+                    const val = row.months[m] || 0;
+                    html += `<td class="p-2.5 text-center font-mono">${val > 0 ? `<b class="text-indigo-400">${val}</b>` : '<span class="opacity-40">0</span>'}</td>`;
+                });
+
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function downloadCSV(filename, headers, rows) {
+            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+            rows.forEach(row => {
+                csvContent += row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",") + "\n";
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadExcel(filename, headers, rows) {
+            const data = [headers, ...rows];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+            XLSX.writeFile(wb, filename);
+        }
+
+        function downloadPDF(title, headers, rows) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape');
+            doc.text(title, 14, 15);
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 20,
+                theme: 'striped',
+                styles: { fontSize: 8 }
+            });
+            doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
+        }
+
+        function exportTrendData(type) {
+            const monthNames = {
+                '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember',
+                '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+                '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus'
+            };
+            const fixedMonthKeys = ['09', '10', '11', '12', '01', '02', '03', '04', '05', '06', '07', '08'];
+            const activeMonthsSet = new Set(['09', '10', '11']);
+            filteredData.forEach(item => {
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+                if (parsed && parsed.getFullYear() === 2026) {
+                    activeMonthsSet.add(String(parsed.getMonth() + 1).padStart(2, '0'));
+                }
+            });
+            const sortedMonths = fixedMonthKeys.filter(m => activeMonthsSet.has(m));
+
+            const aggregationMap = {};
+            filteredData.forEach(item => {
+                const lob = extractLOB(item).toLowerCase();
+                if (currentTrendLob !== 'all' && !lob.includes(currentTrendLob)) return;
+
+                const store = extractStore(item);
+                const name = extractName(item);
+                const qty = extractQuantity(item);
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+
+                if (store && store !== '-' && name && name !== '-') {
+                    const key = `${store}___${name}`;
+                    if (!aggregationMap[key]) {
+                        aggregationMap[key] = { store, name, months: {}, sumTotal: 0 };
+                    }
+                    if (parsed && parsed.getFullYear() === 2026) {
+                        const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
+                        aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
+                        aggregationMap[key].sumTotal += qty;
+                    }
+                }
+            });
+
+            const rowsData = Object.values(aggregationMap).sort((a, b) => b.sumTotal - a.sumTotal);
+            const headers = ["No", "Store", "Nama Sales", ...sortedMonths.map(m => monthNames[m] || m)];
+            const rows = rowsData.map((r, i) => [
+                i + 1,
+                r.store,
+                r.name,
+                ...sortedMonths.map(m => r.months[m] || 0)
+            ]);
+
+            const filename = `trend_bulanan_${currentTrendLob}`;
+            if (type === 'csv') downloadCSV(`${filename}.csv`, headers, rows);
+            else if (type === 'excel') downloadExcel(`${filename}.xlsx`, headers, rows);
+            else if (type === 'pdf') downloadPDF(`Trend Bulanan (${currentTrendLob.toUpperCase()})`, headers, rows);
+        }
+
+        function exportMomStores(type) {
+            const headers = [
+                "No", "Nama Store", 
+                "Mac (LM / CM / Grw)", 
+                "iPhone (LM / CM / Grw)", 
+                "iPad (LM / CM / Grw)", 
+                "Watch (LM / CM / Grw)", 
+                "Growth Total"
+            ];
+            const rows = momStoresDataList.map((s, i) => [
+                i + 1,
+                s.store,
+                `${s.macLM} / ${s.macCM} (${s.macGrw})`,
+                `${s.iphoneLM} / ${s.iphoneCM} (${s.iphoneGrw})`,
+                `${s.ipadLM} / ${s.ipadCM} (${s.ipadGrw})`,
+                `${s.watchLM} / ${s.watchCM} (${s.watchGrw})`,
+                `${s.totalCM} (${s.totalGrowthPct})`
+            ]);
+            if (type === 'csv') downloadCSV("detail_komparasi_mom_per_store.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("detail_komparasi_mom_per_store.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Detail Komparasi MoM per Store", headers, rows);
+        }
+
+        function exportLateStores(type) {
+            const headers = ["No", "Nama Toko", "Berapa Kali Terlambat"];
+            const rows = lateStoresSummaryList.map((s, i) => [i + 1, s.store, s.count]);
+            if (type === 'csv') downloadCSV("daftar_toko_terlambat.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("daftar_toko_terlambat.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Daftar Toko Terlambat", headers, rows);
+        }
+
+        function exportLateChampions(type) {
+            const headers = ["No", "Nama Champion", "Toko", "Berapa Kali Terlambat"];
+            const rows = lateChampionSummaryList.map((c, i) => [i + 1, c.name, c.store, c.count]);
+            if (type === 'csv') downloadCSV("keterlambatan_per_champion.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("keterlambatan_per_champion.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Daftar Keterlambatan Per Champion", headers, rows);
+        }
+
+        function exportRawData(type) {
+            const searchInput = document.getElementById('raw-store-search');
+            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            const exportRows = filteredData.filter(item => {
+                const store = extractStore(item).toLowerCase();
+                if (!searchVal) return true;
+                return store.includes(searchVal);
+            });
+
+            const headers = ["No", "Store", "Nama", "Tanggal Transaksi", "Jenis LOB", "Pcs"];
+            const rows = exportRows.map((item, i) => [
+                i + 1,
+                extractStore(item),
+                extractName(item),
+                extractDate(item),
+                extractLOB(item),
+                extractQuantity(item)
+            ]);
+
+            if (type === 'csv') downloadCSV("log_transaksi_detail.csv", headers, rows);
+            else if (type === 'excel') downloadExcel("log_transaksi_detail.xlsx", headers, rows);
+            else if (type === 'pdf') downloadPDF("Log Transaksi Detail", headers, rows);
+        }
+
+        function copyUnsubmittedWaDraft() {
+            if (unsubmittedStoresList.length === 0) {
+                alert("Semua toko sudah submit!");
+                return;
+            }
+            let text = "*REMINDER TOKO BELUM SUBMIT LAPORAN*\n\nMohon ingatkan Championnya Store berikut segera melakukan submit laporan transaksi harian:\n";
+            unsubmittedStoresList.forEach((s, i) => {
+                text += `${i + 1}. ${s.store} (Belum submit ${s.totalDays} hari: ${s.missingDates.join(', ')})\n`;
+            });
+            text += "\nTerima kasih atas kerjasamanya!";
+            navigator.clipboard.writeText(text);
+            alert("Draft WA Toko Belum Submit berhasil disalin ke clipboard!");
+        }
+
+        function copyLateChampionsWaDraft() {
+            if (lateStoresSummaryList.length === 0) {
+                alert("Tidak ada data keterlambatan toko.");
+                return;
+            }
+            let text = "*REKAP KETERLAMBATAN SUBMIT PER TOKO*\n\nBerikut daftar toko yang mengalami keterlambatan submit:\n";
+            lateStoresSummaryList.forEach((s, i) => {
+                text += `${i + 1}. ${s.store} - ${s.count} Kali Terlambat\n`;
+            });
+            navigator.clipboard.writeText(text);
+            alert("Draft WA berhasil disalin ke clipboard!");
+        }
+
+        function copyLateChampionSummaryWaDraft() {
+            if (lateChampionSummaryList.length === 0) {
+                alert("Tidak ada data keterlambatan champion.");
+                return;
+            }
+            let text = "*REKAP KETERLAMBATAN SUBMIT PER CHAMPION*\n\nBerikut rekap keterlambatan Champion:\n";
+            lateChampionSummaryList.forEach((c, i) => {
+                text += `${i + 1}. ${c.name} (${c.store}) - ${c.count} Kali Terlambat\n`;
+            });
+            navigator.clipboard.writeText(text);
+            alert("Draft WA Rekap Champion berhasil disalin ke clipboard!");
+        }
+
+        window.onload = function() {
+            fetchLiveData();
+            setInterval(fetchLiveData, 300000);
+        };
+    </script>
+</body>
+</html>
