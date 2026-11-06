@@ -232,6 +232,9 @@
             <button onclick="showSection('raw-data')" id="btn-raw-data" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                 <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span data-i18n="navRaw">Log Transaksi</span>
             </button>
+            <button onclick="showSection('sales-lob')" id="btn-sales-lob" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="users" class="w-4 h-4 shrink-0"></i> <span data-i18n="navSalesLob">Direktori LOB</span>
+            </button>
             <button onclick="showSection('trend-bulanan')" id="btn-trend-bulanan" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                 <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i> <span data-i18n="navTrend">Trend Bulanan</span>
             </button>
@@ -277,6 +280,10 @@
         <button onclick="showSection('raw-data')" id="dock-raw-data" class="dock-item">
             <i data-lucide="database" class="w-4 h-4"></i>
             <span data-i18n="navRaw">Log Trans.</span>
+        </button>
+        <button onclick="showSection('sales-lob')" id="dock-sales-lob" class="dock-item">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span data-i18n="navSalesLob">LOB</span>
         </button>
         <button onclick="showSection('trend-bulanan')" id="dock-trend-bulanan" class="dock-item">
             <i data-lucide="trending-up" class="w-4 h-4"></i>
@@ -864,6 +871,48 @@
                 </div>
             </div>
 
+            <!-- Section Baru: All Sales LOB Directory -->
+            <div id="sec-sales-lob" class="content-section hidden space-y-4">
+                <div class="glass-panel p-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h3 class="font-bold text-sm md:text-base flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-indigo-500"></i> Direktori All Sales LOB Champion
+                            </h3>
+                            <p class="text-xs opacity-80">Daftar lengkap store, nama staff, dan LOB yang dipegang berdasarkan data masuk.</p>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                            <div class="relative w-48 sm:w-60">
+                                <input type="text" id="sales-lob-search" oninput="renderAllSalesLobTable()" placeholder="Cari Store / Staff..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            </div>
+                            <div class="relative">
+                                <button onclick="toggleDropdown('export-sales-lob')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+                                </button>
+                                <div id="export-sales-lob" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
+                                    <button onclick="exportSalesLob('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                    <button onclick="exportSalesLob('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
+                                    <button onclick="exportSalesLob('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[550px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[700px]">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2.5 text-center w-12 sticky-header-bg">No</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama Store</th>
+                                    <th class="p-2.5 sticky-header-bg">Nama Staff</th>
+                                    <th class="p-2.5 sticky-header-bg">Pegang LOB Apa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-sales-lob-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- Section 6: Trend Bulanan -->
             <div id="sec-trend-bulanan" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4 space-y-4">
@@ -896,10 +945,8 @@
                     <div class="overflow-x-auto max-h-[550px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[850px]" id="trend-bulanan-table">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold" id="trend-table-head">
-                                <!-- Dynamic Months Header -->
                             </thead>
                             <tbody id="trend-table-body" class="divide-y divide-gray-500/10">
-                                <!-- Dynamic Body -->
                             </tbody>
                         </table>
                     </div>
@@ -968,108 +1015,40 @@
         };
 
         const MASTER_STORES = [
-            "M118 Digimap Pondok Indah Mall 3",
-            "M119 Digimap Centrepoint Mall Medan",
-            "M120 Digimap Sun Plaza Medan",
-            "M121 Digimap Tunjungan Plaza 3 Surabaya",
-            "M122 Digimap Galaxy Mall Surabaya",
-            "M123 Digimap Mall Bali Galeria",
-            "M124 Digimap Pacific Place",
-            "M125 Digimap Supermall Karawaci",
-            "M126 Digimap Ciputra World Surabaya",
-            "M127 Digimap Lotte Shopping Avenue",
-            "M128 Digimap Emporium Mall Pluit",
-            "M129 Digimap Mall Puri Indah",
-            "M130 Digimap Sunset Road Bali",
-            "M131 Digimap Grand Indonesia",
-            "M132 Digimap Plaza Senayan",
-            "M133 Digimap Trans Studio Mall Bandung",
-            "M134 Digimap Beachwalk Bali",
-            "M201 Digimap Trans Studio Mall Cibubur",
-            "M203 Digimap AEON Mall BSD",
-            "M205 Digimap Paskal 23 Bandung",
-            "M206 Digimap Pakuwon Mall Surabaya",
-            "M212 Digimap Sunter Mall",
-            "M214 Digimap AEON Mall Sentul",
-            "M215 Digimap Mall Taman Anggrek",
-            "M216 Digimap Tentrem Mall Semarang",
-            "M217 Digimap Blok M Plaza",
-            "M218 Digimap Plaza Balikpapan",
-            "M219 Digimap Basko Padang",
-            "M21F Digimap Ujung Berung Town Square",
-            "M220 Digimap Malioboro Mall",
-            "M221 Digimap A Yani Pontianak",
-            "M222 Digimap Palembang Indah Mall",
-            "M223 Digimap Roxy Square Jember",
-            "M224 Digimap WTC Jambi",
-            "M225 Digimap Citimall Dumai",
-            "M226 Digimap Ambon City Center",
-            "M227 Digimap AEON Tanjung Barat",
-            "M228 Digimap Citimall Cianjur 2",
-            "M229 Digimap Trans Icon Surabaya",
-            "M230 Digimap The Park Kendari",
-            "M231 Digimap Gress Mall Gresik",
-            "M232 Digimap Pakuwon Mall Solo",
-            "M233 Digimap Unimas District Sidoarjo",
-            "M234 Digimap Citra Grand Cibubur",
-            "M235 Digimap Lippo Plaza Kramat Jati",
-            "M236 Digimap Palu Grand Mall",
-            "M237 Digimap Solo Square",
-            "M238 Digimap Pondok Indah Mall 2",
-            "M239 Digimap Icon Mall Bali",
-            "M240 Digimap Pacific Mall Tegal",
-            "M241 Digimap Revo Mall",
-            "M243 Digimap Aeon Mall Delta Mas",
-            "M244 Digimap Java Mall Semarang",
-            "M245 Digimap Living World Kota Wisata",
-            "M246 Digimap Malang Town Square",
-            "M247 Digimap Lippo Plaza Jambi",
-            "M248 Digimap Suncity Mall Sidoarjo",
-            "M249 Digimap Lippo Plaza Palangkaraya",
-            "M250 Digimap Lippo Plaza Batu",
-            "M251 Digimap The Kings Shopping Centre",
-            "M252 Digimap Binjai Mall",
-            "M253 Digimap Plaza Surabaya",
-            "M254 Digimap Basko city Mall",
-            "M255 Digimap Antasari Place",
-            "M256 Digimap Lippo Plaza Lubuklinggau",
-            "M257 Digimap City Plaza Jatinegara",
-            "M258 Digimap Lippo Plaza Manado",
-            "M259 Digimap Jatinangor Town Square",
-            "M260 Digimap Kudus Extention Mall",
-            "M261 Digimap PIK Elang Laut",
-            "M262 Digimap Suzuya Merdeka Square Siantar",
-            "M263 Digimap Citimall Sampit",
-            "M264 Digimap Plaza Semanggi",
-            "M265 Digimap Merr Street",
-            "M266 Digimap HIVE Harapan Indah",
-            "M267 Digimap Mall Cijantung",
-            "M268 Digimap Diana Mall Timika",
-            "M269 Digimap Tenth Avenue",
-            "M270 Digimap Citimall Lahat",
-            "M271 Digimap Mall Indramayu",
-            "M272 Digimap Kota Baru Parahyangan",
-            "M273 Digimap Metro Lampung",
-            "M274 Digimap Street Ciputat Raya",
-            "M275 Digimap Citimall Baturaja",
-            "M276 Digimap Shila At Sawangan",
-            "M277 Digimap Citimall Tuban",
-            "M278 Digimap A.S.S Brebes",
-            "M279 Digimap Ciumbuleuit",
-            "M281 Digimap Ngaliyan Street",
-            "M282 Digimap Citimall Pangkalan bun",
-            "M283 Digimap Basuki Rahmat Tulungagung",
-            "M284 Digimap BSD Loka",
-            "M285 Digimap Blitar Square",
-            "M286 Digimap Citimall Prabumulih",
-            "M287 Digimap Grand Tarakan",
-            "M288 Digimap Mojopahit Street Mojokerto",
-            "M289 Digimap Maleo Town Square",
-            "M290 Digimap Mandau City Mall",
-            "M292 Digimap Graha Raya",
-            "M293 Digimap Jend Sudirman Salatiga",
-            "M294 Digimap Bojonegoro Street",
-            "M295 Digimap Juanda Tasikmalaya",
+            "M118 Digimap Pondok Indah Mall 3", "M119 Digimap Centrepoint Mall Medan", "M120 Digimap Sun Plaza Medan",
+            "M121 Digimap Tunjungan Plaza 3 Surabaya", "M122 Digimap Galaxy Mall Surabaya", "M123 Digimap Mall Bali Galeria",
+            "M124 Digimap Pacific Place", "M125 Digimap Supermall Karawaci", "M126 Digimap Ciputra World Surabaya",
+            "M127 Digimap Lotte Shopping Avenue", "M128 Digimap Emporium Mall Pluit", "M129 Digimap Mall Puri Indah",
+            "M130 Digimap Sunset Road Bali", "M131 Digimap Grand Indonesia", "M132 Digimap Plaza Senayan",
+            "M133 Digimap Trans Studio Mall Bandung", "M134 Digimap Beachwalk Bali", "M201 Digimap Trans Studio Mall Cibubur",
+            "M203 Digimap AEON Mall BSD", "M205 Digimap Paskal 23 Bandung", "M206 Digimap Pakuwon Mall Surabaya",
+            "M212 Digimap Sunter Mall", "M214 Digimap AEON Mall Sentul", "M215 Digimap Mall Taman Anggrek",
+            "M216 Digimap Tentrem Mall Semarang", "M217 Digimap Blok M Plaza", "M218 Digimap Plaza Balikpapan",
+            "M219 Digimap Basko Padang", "M21F Digimap Ujung Berung Town Square", "M220 Digimap Malioboro Mall",
+            "M221 Digimap A Yani Pontianak", "M222 Digimap Palembang Indah Mall", "M223 Digimap Roxy Square Jember",
+            "M224 Digimap WTC Jambi", "M225 Digimap Citimall Dumai", "M226 Digimap Ambon City Center",
+            "M227 Digimap AEON Tanjung Barat", "M228 Digimap Citimall Cianjur 2", "M229 Digimap Trans Icon Surabaya",
+            "M230 Digimap The Park Kendari", "M231 Digimap Gress Mall Gresik", "M232 Digimap Pakuwon Mall Solo",
+            "M233 Digimap Unimas District Sidoarjo", "M234 Digimap Citra Grand Cibubur", "M235 Digimap Lippo Plaza Kramat Jati",
+            "M236 Digimap Palu Grand Mall", "M237 Digimap Solo Square", "M238 Digimap Pondok Indah Mall 2",
+            "M239 Digimap Icon Mall Bali", "M240 Digimap Pacific Mall Tegal", "M241 Digimap Revo Mall",
+            "M243 Digimap Aeon Mall Delta Mas", "M244 Digimap Java Mall Semarang", "M245 Digimap Living World Kota Wisata",
+            "M246 Digimap Malang Town Square", "M247 Digimap Lippo Plaza Jambi", "M248 Digimap Suncity Mall Sidoarjo",
+            "M249 Digimap Lippo Plaza Palangkaraya", "M250 Digimap Lippo Plaza Batu", "M251 Digimap The Kings Shopping Centre",
+            "M252 Digimap Binjai Mall", "M253 Digimap Plaza Surabaya", "M254 Digimap Basko city Mall",
+            "M255 Digimap Antasari Place", "M256 Digimap Lippo Plaza Lubuklinggau", "M257 Digimap City Plaza Jatinegara",
+            "M258 Digimap Lippo Plaza Manado", "M259 Digimap Jatinangor Town Square", "M260 Digimap Kudus Extention Mall",
+            "M261 Digimap PIK Elang Laut", "M262 Digimap Suzuya Merdeka Square Siantar", "M263 Digimap Citimall Sampit",
+            "M264 Digimap Plaza Semanggi", "M265 Digimap Merr Street", "M266 Digimap HIVE Harapan Indah",
+            "M267 Digimap Mall Cijantung", "M268 Digimap Diana Mall Timika", "M269 Digimap Tenth Avenue",
+            "M270 Digimap Citimall Lahat", "M271 Digimap Mall Indramayu", "M272 Digimap Kota Baru Parahyangan",
+            "M273 Digimap Metro Lampung", "M274 Digimap Street Ciputat Raya", "M275 Digimap Citimall Baturaja",
+            "M276 Digimap Shila At Sawangan", "M277 Digimap Citimall Tuban", "M278 Digimap A.S.S Brebes",
+            "M279 Digimap Ciumbuleuit", "M281 Digimap Ngaliyan Street", "M282 Digimap Citimall Pangkalan bun",
+            "M283 Digimap Basuki Rahmat Tulungagung", "M284 Digimap BSD Loka", "M285 Digimap Blitar Square",
+            "M286 Digimap Citimall Prabumulih", "M287 Digimap Grand Tarakan", "M288 Digimap Mojopahit Street Mojokerto",
+            "M289 Digimap Maleo Town Square", "M290 Digimap Mandau City Mall", "M292 Digimap Graha Raya",
+            "M293 Digimap Jend Sudirman Salatiga", "M294 Digimap Bojonegoro Street", "M295 Digimap Juanda Tasikmalaya",
             "M297 Digimap Ponorogo City Center"
         ];
 
@@ -1083,6 +1062,7 @@
                 navWow: "WoW Perf.",
                 navCompliance: "Kedisiplinan",
                 navRaw: "Log Transaksi",
+                navSalesLob: "Direktori LOB",
                 navTrend: "Trend Bulanan",
                 navSettings: "Pengaturan",
                 filterMonth: "Filter Month",
@@ -1156,6 +1136,7 @@
                 navWow: "WoW Perf.",
                 navCompliance: "Compliance",
                 navRaw: "Transaction Log",
+                navSalesLob: "LOB Directory",
                 navTrend: "Monthly Trend",
                 navSettings: "Settings",
                 filterMonth: "Filter Month",
@@ -1230,6 +1211,7 @@
         let lateChampionSummaryList = [];
         let unsubmittedStoresList = [];
         let momStoresDataList = [];
+        let allSalesLobList = [];
 
         function changeLanguage(lang) {
             if (!i18n[lang]) return;
@@ -1253,6 +1235,7 @@
                 'wow-perf': i18n[lang].navWow,
                 'compliance': i18n[lang].navCompliance,
                 'raw-data': i18n[lang].navRaw,
+                'sales-lob': i18n[lang].navSalesLob,
                 'trend-bulanan': i18n[lang].navTrend,
                 'settings': i18n[lang].navSettings
             };
@@ -1476,6 +1459,7 @@
                 'wow-perf': i18n[currentLang].navWow,
                 'compliance': i18n[currentLang].navCompliance,
                 'raw-data': i18n[currentLang].navRaw,
+                'sales-lob': i18n[currentLang].navSalesLob,
                 'trend-bulanan': i18n[currentLang].navTrend,
                 'settings': i18n[currentLang].navSettings
             };
@@ -1630,6 +1614,7 @@
             renderWoWStoreTable(filteredData);
             renderLateChampionsTable(rawCSVData);
             renderRawDataTable(filteredData);
+            renderAllSalesLobTable();
             renderTrendBulananTable();
             renderCharts(filteredData);
         }
@@ -1706,8 +1691,8 @@
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
-            const currentMonthIdx = 9; // Oktober
-            const lastMonthIdx = 8;    // September
+            const currentMonthIdx = 9;
+            const lastMonthIdx = 8;
 
             let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
             let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
@@ -1830,8 +1815,8 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const currentMonthIdx = 9; // Oktober
-            const lastMonthIdx = 8;    // September
+            const currentMonthIdx = 9;
+            const lastMonthIdx = 8;
 
             const storeMap = {};
             MASTER_STORES.forEach(s => {
@@ -2067,6 +2052,60 @@
                     <td class="p-2.5 text-center font-mono font-bold text-emerald-400">${qty}</td>
                 `;
                 rawBody.appendChild(tr);
+            });
+        }
+
+        function renderAllSalesLobTable() {
+            const tbody = document.getElementById('all-sales-lob-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const searchInput = document.getElementById('sales-lob-search');
+            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            const mappingMap = {};
+            rawCSVData.forEach(item => {
+                const store = extractStore(item);
+                const name = extractName(item);
+                const lob = extractLOB(item);
+
+                if (store && store !== '-' && name && name !== '-') {
+                    const key = `${store}___${name}`;
+                    if (!mappingMap[key]) {
+                        mappingMap[key] = { store, name, lobs: new Set() };
+                    }
+                    if (lob && lob !== '-') {
+                        mappingMap[key].lobs.add(lob);
+                    }
+                }
+            });
+
+            allSalesLobList = Object.values(mappingMap).map(item => ({
+                store: item.store,
+                name: item.name,
+                lob: Array.from(item.lobs).join(', ')
+            })).sort((a, b) => a.store.localeCompare(b.store));
+
+            const filteredRows = allSalesLobList.filter(row => {
+                if (!searchVal) return true;
+                return row.store.toLowerCase().includes(searchVal) || row.name.toLowerCase().includes(searchVal) || row.lob.toLowerCase().includes(searchVal);
+            });
+
+            if (filteredRows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center opacity-80 text-xs">Tidak ada data sales LOB yang cocok.</td></tr>';
+                return;
+            }
+
+            filteredRows.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                    <td class="p-2.5 font-bold">${row.store}</td>
+                    <td class="p-2.5">${row.name}</td>
+                    <td class="p-2.5 font-semibold text-indigo-400">${row.lob || '-'}</td>
+                `;
+                tbody.appendChild(tr);
             });
         }
 
@@ -2622,7 +2661,7 @@
             };
 
             const fixedMonthKeys = ['09', '10', '11', '12', '01', '02', '03', '04', '05', '06', '07', '08'];
-            const activeMonthsSet = new Set(['09', '10', '11']); // Default menampilkan min September, Oktober, November
+            const activeMonthsSet = new Set(['09', '10', '11']);
 
             filteredData.forEach(item => {
                 const dateStr = extractDate(item);
@@ -2633,7 +2672,6 @@
                 }
             });
 
-            // Urutkan sesuai urutan bulan mulai dari September (09) ke depan
             const sortedMonths = fixedMonthKeys.filter(m => activeMonthsSet.has(m));
 
             let headHTML = `<tr>
@@ -2742,6 +2780,15 @@
                 styles: { fontSize: 8 }
             });
             doc.save(`${title.toLowerCase().replace(/\s+/g, '_')}.pdf`);
+        }
+
+        function exportSalesLob(type) {
+            const headers = ["No", "Nama Store", "Nama Staff", "Pegang LOB Apa"];
+            const rows = allSalesLobList.map((r, i) => [i + 1, r.store, r.name, r.lob]);
+            const filename = "direktori_all_sales_lob";
+            if (type === 'csv') downloadCSV(`${filename}.csv`, headers, rows);
+            else if (type === 'excel') downloadExcel(`${filename}.xlsx`, headers, rows);
+            else if (type === 'pdf') downloadPDF("Direktori All Sales LOB", headers, rows);
         }
 
         function exportTrendData(type) {
