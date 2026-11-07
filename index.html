@@ -166,18 +166,6 @@
             background: var(--header-bg);
             position: relative;
         }
-        .iphone-notch {
-            width: 150px;
-            height: 25px;
-            background: #1e293b;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            z-index: 50;
-        }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
@@ -204,7 +192,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-2 lg:hidden">
-                <button onclick="resetFilters()" class="p-2 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold">
+                <button onclick="resetFilters()" class="p-2 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold" title="Reset Filter">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -241,7 +229,7 @@
         </nav>
 
         <div class="hidden lg:flex items-center gap-3">
-            <!-- Tombol Refresh (Berjejer sebelah kiri Auto Sync) -->
+            <!-- Tombol Refresh -->
             <button type="button" id="btnRefresh" onclick="refreshData()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow" title="Refresh Data">
                 🔄 Refresh
             </button>
@@ -252,8 +240,8 @@
 
             <div class="flex flex-col items-end justify-center px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
                 <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span data-i18n="autoSync">Auto Sync</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span data-i18n="manualSyncStatus">Manual Sync</span>
                 </div>
                 <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
             </div>
@@ -267,17 +255,10 @@
 
     <main class="flex-1 flex flex-col gap-4 overflow-hidden w-full">
 
-        <!-- Global Header Controls -->
+        <!-- Global Header Controls (Only on Overview) -->
         <div id="global-kpi-container" class="space-y-4">
             <header class="glass-panel p-3 md:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
                 <div class="flex flex-col gap-2">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <!-- Menu Pilihan Desktop dan iPhone -->
-                        <select id="deviceSelector" onchange="toggleDeviceMode(this.value)" class="bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                            <option value="desktop" selected>Desktop</option>
-                            <option value="iphone">iPhone (Mobile App)</option>
-                        </select>
-                    </div>
                     <h2 class="text-base md:text-xl font-bold mt-1" id="page-title" data-i18n="navOverview">Overview</h2>
                 </div>
 
@@ -321,8 +302,8 @@
                 </div>
             </header>
 
-            <!-- KPI Grid -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+            <!-- KPI Grid (Only on Overview) -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4" id="overview-kpi-summary-cards">
                 <div class="glass-card p-3 md:p-4 flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
                         <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400" data-i18n="kpiTotalUnit">Total Unit / LOB</p>
@@ -461,7 +442,7 @@
                 </button>
             </div>
 
-            <!-- Section Form Submit Laporan & Kalender Tergabung -->
+            <!-- Section Form Submit Laporan & Kalender Tergabung (Clean & Compact) -->
             <div id="sec-form-submit" class="content-section hidden space-y-4">
                 <div class="glass-panel p-6 max-w-3xl mx-auto space-y-5 border-l-4 border-indigo-500">
                     <div class="flex items-center gap-3 pb-3 border-b border-gray-500/20">
@@ -598,7 +579,7 @@
                 </div>
             </div>
 
-            <!-- Section 1: Overview (Dilengkapi Tombol Export Excel & Summary Tabel) -->
+            <!-- Section 1: Overview -->
             <div id="sec-overview" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4 flex flex-col gap-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2 border-b border-gray-500/20">
@@ -621,7 +602,6 @@
                                 </tr>
                             </thead>
                             <tbody id="overview-summary-body" class="divide-y divide-gray-500/10">
-                                <!-- Terisi dinamis via JS -->
                             </tbody>
                         </table>
                     </div>
@@ -1412,7 +1392,7 @@
         const i18n = {
             id: {
                 subTitle: "Analytics Dashboard",
-                autoSync: "Auto Sync",
+                manualSyncStatus: "Manual Sync",
                 resetFilter: "Reset",
                 navOverview: "Overview",
                 navFormSubmit: "Form Submit",
@@ -1501,7 +1481,7 @@
             },
             en: {
                 subTitle: "Analytics Dashboard",
-                autoSync: "Auto Sync",
+                manualSyncStatus: "Manual Sync",
                 resetFilter: "Reset",
                 navOverview: "Overview",
                 navFormSubmit: "Form Submit",
@@ -1602,24 +1582,27 @@
         let isIphoneMode = false;
 
         function refreshData() {
-            console.log("Memperbarui data dari server...");
+            console.log("Memperbarui data dari server secara manual...");
             fetchLiveData();
             fetchMasterKaryawan();
         }
 
         function syncData() {
-            console.log("Melakukan sinkronisasi data...");
+            console.log("Melakukan sinkronisasi data manual...");
             fetchLiveData();
             fetchMasterKaryawan();
-            alert("Sinkronisasi data berhasil dijalankan!");
+            alert("Sinkronisasi data berhasil dijalankan secara manual!");
         }
 
-        function toggleDeviceMode(mode) {
+        function detectDeviceAndApplyMode() {
             const viewport = document.getElementById('main-content-viewport');
             const homeMenu = document.getElementById('iphone-home-menu');
             const backBtn = document.getElementById('header-back-btn');
+            
+            // Check if mobile device using userAgent or screen width
+            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
-            if (mode === 'iphone') {
+            if (isMobileDevice) {
                 isIphoneMode = true;
                 viewport.classList.add('iphone-frame');
                 if (homeMenu) homeMenu.classList.remove('hidden');
@@ -1894,6 +1877,16 @@
                 if (backBtn) backBtn.classList.remove('hidden');
             }
 
+            // Toggle visibility of global header controls and summary KPI container (only visible on 'overview')
+            const globalKpiContainer = document.getElementById('global-kpi-container');
+            if (globalKpiContainer) {
+                if (sectionId === 'overview') {
+                    globalKpiContainer.classList.remove('hidden');
+                } else {
+                    globalKpiContainer.classList.add('hidden');
+                }
+            }
+
             const titles = {
                 'overview': i18n[currentLang].navOverview,
                 'form-submit': i18n[currentLang].navFormSubmit,
@@ -1958,7 +1951,7 @@
                     updateFormattedTimestamp();
                 },
                 error: function(err) {
-                    console.error('Error auto-sync CSV:', err);
+                    console.error('Error fetching CSV:', err);
                 }
             });
         }
@@ -3800,7 +3793,7 @@
         window.onload = function() {
             fetchLiveData();
             fetchMasterKaryawan();
-            setInterval(fetchLiveData, 300000);
+            detectDeviceAndApplyMode();
             showSection('overview');
         };
     </script>
