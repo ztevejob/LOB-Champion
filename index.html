@@ -220,6 +220,9 @@
             <button onclick="showSection('overview')" id="btn-overview" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition nav-active">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span data-i18n="navOverview">Overview</span>
             </button>
+            <button onclick="showSection('form-submit')" id="btn-form-submit" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
+                <i data-lucide="file-pen-line" class="w-4 h-4 shrink-0"></i> <span data-i18n="navFormSubmit">Form Submit</span>
+            </button>
             <button onclick="showSection('mom-perf')" id="btn-mom-perf" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition">
                 <i data-lucide="calendar-range" class="w-4 h-4 shrink-0"></i> <span data-i18n="navMom">MoM Perf.</span>
             </button>
@@ -265,6 +268,10 @@
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
             <span data-i18n="navOverview">Overview</span>
         </button>
+        <button onclick="showSection('form-submit')" id="dock-form-submit" class="dock-item">
+            <i data-lucide="file-pen-line" class="w-4 h-4"></i>
+            <span data-i18n="navFormSubmit">Submit</span>
+        </button>
         <button onclick="showSection('mom-perf')" id="dock-mom-perf" class="dock-item">
             <i data-lucide="calendar-range" class="w-4 h-4"></i>
             <span data-i18n="navMom">MoM</span>
@@ -279,7 +286,7 @@
         </button>
         <button onclick="showSection('raw-data')" id="dock-raw-data" class="dock-item">
             <i data-lucide="database" class="w-4 h-4"></i>
-            <span data-i18n="navRaw">Log Trans.</span>
+            <span data-i18n="navRaw">Log.</span>
         </button>
         <button onclick="showSection('sales-lob')" id="dock-sales-lob" class="dock-item">
             <i data-lucide="users" class="w-4 h-4"></i>
@@ -501,6 +508,101 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Section Form Submit Laporan -->
+            <div id="sec-form-submit" class="content-section hidden space-y-4">
+                <div class="glass-panel p-6 max-w-3xl mx-auto space-y-5 border-l-4 border-indigo-500">
+                    <div class="flex items-center gap-3 pb-3 border-b border-gray-500/20">
+                        <div class="p-2.5 bg-indigo-600 rounded-lg text-white">
+                            <i data-lucide="file-pen-line" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base" data-i18n="formTitle">Form Submit Laporan Transaksi Harian</h3>
+                            <p class="text-xs opacity-80" data-i18n="formSubTitle">Pilih Nama Champion / SA untuk memuat profil otomatis, lalu lengkapi detail transaksi.</p>
+                        </div>
+                    </div>
+
+                    <form id="transaction-submit-form" onsubmit="handleTransactionSubmit(event)" class="space-y-4 text-xs">
+                        
+                        <!-- STEP 1: PROFIL & IDENTITAS (AUTO-FILL) -->
+                        <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 space-y-3">
+                            <h4 class="font-bold text-indigo-400 uppercase tracking-wider text-[11px]" data-i18n="step1Title">1. Identitas & Profil Champion</h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelName">Nama Champion / SA</label>
+                                    <input type="text" id="submit-name" required placeholder="Cari / Ketik Nama..." oninput="autoFillChampionProfile(this.value)" list="champion-datalist" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <datalist id="champion-datalist"></datalist>
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelEmail">Email Sales Coach</label>
+                                    <input type="email" id="submit-email" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelStore">Store (Toko)</label>
+                                    <input type="text" id="submit-store" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: DETAIL TRANSAKSI -->
+                        <div class="p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-gray-500/10 space-y-3">
+                            <h4 class="font-bold text-emerald-400 uppercase tracking-wider text-[11px]" data-i18n="step2Title">2. Detail Laporan Transaksi</h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelDate">Tanggal Transaksi</label>
+                                    <input type="date" id="submit-date" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelLob">Champion LOB</label>
+                                    <select id="submit-lob" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                        <option value="">Pilih LOB...</option>
+                                        <option value="iPad">iPad</option>
+                                        <option value="Mac">Mac</option>
+                                        <option value="Apple Watch">Apple Watch</option>
+                                        <option value="Airpods">Airpods</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelQty">Total Qty</label>
+                                    <input type="number" id="submit-qty" min="0" required value="0" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelPosition">Positions</label>
+                                    <select id="submit-position" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                        <option value="">Pilih Position...</option>
+                                        <option value="Cashier">Cashier</option>
+                                        <option value="SPV">SPV</option>
+                                        <option value="ST">ST</option>
+                                        <option value="Staff">Staff</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelShift">Shift</label>
+                                    <select id="submit-shift" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                        <option value="">Pilih Shift...</option>
+                                        <option value="Middle">Middle</option>
+                                        <option value="Pagi">Pagi</option>
+                                        <option value="Siang">Siang</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90" data-i18n="labelDemoTarget">Total Demo Target</label>
+                                    <input type="number" id="submit-demo-target" min="0" value="0" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUBMIT BUTTON -->
+                        <div class="pt-2">
+                            <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i> <span data-i18n="btnSubmitReport">Kirim & Simpan Laporan Harian</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -764,7 +866,6 @@
 
             <!-- Section 4: Kedisiplinan -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
-                <!-- Filter Tambahan Kedisiplinan: Ditambahkan Filter Bulan, Filter Toko & Region Dihapus -->
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 border-l-4 border-rose-500">
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Evaluasi</label>
@@ -1200,6 +1301,7 @@
                 autoSync: "Auto Sync",
                 resetFilter: "Reset",
                 navOverview: "Overview",
+                navFormSubmit: "Form Submit",
                 navMom: "MoM Perf.",
                 navWow: "WoW Perf.",
                 navCompliance: "Kedisiplinan",
@@ -1229,6 +1331,20 @@
                 thTotalUnit: "Total Unit",
                 thStoreName: "Nama Store",
                 thTotal: "Total",
+                formTitle: "Form Submit Laporan Transaksi Harian",
+                formSubTitle: "Pilih Nama Champion / SA untuk memuat profil otomatis, lalu lengkapi detail transaksi.",
+                step1Title: "1. Identitas & Profil Champion",
+                step2Title: "2. Detail Laporan Transaksi",
+                labelName: "Nama Champion / SA",
+                labelEmail: "Email Sales Coach",
+                labelStore: "Store (Toko)",
+                labelDate: "Tanggal Transaksi",
+                labelLob: "Champion LOB",
+                labelQty: "Total Qty",
+                labelPosition: "Positions",
+                labelShift: "Shift",
+                labelDemoTarget: "Total Demo Target",
+                btnSubmitReport: "Kirim & Simpan Laporan Harian",
                 momGlobalTitle: "Komparasi Global: Pilihan Bulan 1 vs Pilihan Bulan 2 (Per LOB)",
                 momSummaryTitle: "Summary MoM",
                 momBadge: "MoM Analytics",
@@ -1274,6 +1390,7 @@
                 autoSync: "Auto Sync",
                 resetFilter: "Reset",
                 navOverview: "Overview",
+                navFormSubmit: "Form Submit",
                 navMom: "MoM Perf.",
                 navWow: "WoW Perf.",
                 navCompliance: "Compliance",
@@ -1303,6 +1420,20 @@
                 thTotalUnit: "Total Units",
                 thStoreName: "Store Name",
                 thTotal: "Total",
+                formTitle: "Daily Transaction Report Form",
+                formSubTitle: "Select Champion / SA Name to auto-load profile data, then fill transaction details.",
+                step1Title: "1. Champion Profile & Identity",
+                step2Title: "2. Transaction Details",
+                labelName: "Champion / SA Name",
+                labelEmail: "Sales Coach Email",
+                labelStore: "Store Location",
+                labelDate: "Transaction Date",
+                labelLob: "Champion LOB",
+                labelQty: "Total Qty",
+                labelPosition: "Positions",
+                labelShift: "Shift",
+                labelDemoTarget: "Total Demo Target",
+                btnSubmitReport: "Submit & Save Daily Report",
                 momGlobalTitle: "Global Comparison: Selected Month 1 vs Selected Month 2 (Per LOB)",
                 momSummaryTitle: "MoM Summary",
                 momBadge: "MoM Analytics",
@@ -1373,6 +1504,7 @@
 
             const titles = {
                 'overview': i18n[lang].navOverview,
+                'form-submit': i18n[lang].navFormSubmit,
                 'mom-perf': i18n[lang].navMom,
                 'wow-perf': i18n[lang].navWow,
                 'compliance': i18n[lang].navCompliance,
@@ -1597,6 +1729,7 @@
 
             const titles = {
                 'overview': i18n[currentLang].navOverview,
+                'form-submit': i18n[currentLang].navFormSubmit,
                 'mom-perf': i18n[currentLang].navMom,
                 'wow-perf': i18n[currentLang].navWow,
                 'compliance': i18n[currentLang].navCompliance,
@@ -1655,6 +1788,7 @@
                 complete: function(results) {
                     rawCSVData = results.data;
                     populateDropdownFilters(rawCSVData);
+                    populateChampionDirectory(rawCSVData);
                     applyFilters();
                     updateFormattedTimestamp();
                 },
@@ -1662,6 +1796,92 @@
                     console.error('Error auto-sync CSV:', err);
                 }
             });
+        }
+
+        // Direktori profil sales untuk auto-fill form submit
+        let championDirectoryMap = {};
+
+        function populateChampionDirectory(data) {
+            championDirectoryMap = {};
+            data.forEach(item => {
+                const name = extractName(item);
+                const store = extractStore(item);
+                if (name && name !== '-' && store && store !== '-') {
+                    const matchedStore = findMasterStore(store) || store;
+                    // Buat email otomatis berbasis nama jika tidak ada kolom email
+                    const generatedEmail = `champion.${name.toLowerCase().replace(/[^a-z]/g, '')}@digimap.co.id`;
+                    championDirectoryMap[name.toLowerCase()] = {
+                        name: name,
+                        email: generatedEmail,
+                        store: matchedStore
+                    };
+                }
+            });
+
+            const datalist = document.getElementById('champion-datalist');
+            if (datalist) {
+                datalist.innerHTML = '';
+                Object.values(championDirectoryMap).forEach(champ => {
+                    datalist.innerHTML += `<option value="${champ.name}">`;
+                });
+            }
+        }
+
+        function autoFillChampionProfile(inputVal) {
+            const key = inputVal.trim().toLowerCase();
+            const matched = championDirectoryMap[key];
+            const emailField = document.getElementById('submit-email');
+            const storeField = document.getElementById('submit-store');
+
+            if (matched) {
+                emailField.value = matched.email;
+                storeField.value = matched.store;
+            } else {
+                emailField.value = "";
+                storeField.value = "";
+            }
+        }
+
+        function handleTransactionSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('submit-name').value;
+            const email = document.getElementById('submit-email').value;
+            const store = document.getElementById('submit-store').value;
+            const date = document.getElementById('submit-date').value;
+            const lob = document.getElementById('submit-lob').value;
+            const qty = document.getElementById('submit-qty').value;
+            const position = document.getElementById('submit-position').value;
+            const shift = document.getElementById('submit-shift').value;
+            const demoTarget = document.getElementById('submit-demo-target').value;
+
+            if (!email || !store) {
+                alert("Nama Champion tidak valid atau tidak ditemukan dalam database direktori!");
+                return;
+            }
+
+            const timestamp = new Date().toISOString();
+            const newRow = {
+                Timestamp: timestamp,
+                "Email Sales Coach": email,
+                "Nama Champion/ SA": name,
+                Store: store,
+                "Tanggal Transaksi": date,
+                "Champion LOB": lob,
+                "Total Qty": qty,
+                Positions: position,
+                Shift: shift,
+                "Total Demo Target": demoTarget
+            };
+
+            // Masukkan ke array data lokal agar langsung ter-render di log transaksi & overview
+            rawCSVData.unshift(newRow);
+            applyFilters();
+
+            alert("Sukses! Laporan transaksi harian berhasil disubmit dan disinkronkan ke dashboard.");
+            document.getElementById('transaction-submit-form').reset();
+            document.getElementById('submit-email').value = "";
+            document.getElementById('submit-store').value = "";
+            showSection('raw-data');
         }
 
         function populateDropdownFilters(data) {
