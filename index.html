@@ -155,6 +155,7 @@
             background-color: var(--header-bg) !important;
         }
 
+        /* Modern iPhone-optimized Mobile Dock */
         .mobile-dock {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -163,7 +164,7 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
-            padding: 8px 12px;
+            padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)) 6px;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -176,12 +177,17 @@
             align-items: center;
             justify-content: center;
             color: var(--text-sub);
-            font-size: 9px;
+            font-size: 8.5px;
             font-weight: 600;
             gap: 2px;
-            padding: 4px 6px;
+            padding: 4px 3px;
             border-radius: 8px;
             transition: all 0.2s ease;
+            flex: 1;
+            max-width: 50px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .dock-item.active {
@@ -194,7 +200,7 @@
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen p-2 md:p-4 pb-20 lg:pb-4 gap-4">
+<body class="flex flex-col min-h-screen p-2 md:p-4 pb-24 lg:pb-4 gap-4">
 
     <!-- Top Navigation Bar -->
     <header class="glass-panel p-3 flex flex-col md:flex-row items-center justify-between gap-3 z-20">
@@ -262,39 +268,43 @@
         </div>
     </header>
 
-    <!-- Mobile Bottom Dock -->
+    <!-- Mobile Bottom Dock (iPhone Optimized - Full Icons & Compact Text) -->
     <div class="mobile-dock lg:hidden">
         <button onclick="showSection('overview')" id="dock-overview" class="dock-item active">
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-            <span data-i18n="navOverview">Overview</span>
+            <span>Overview</span>
         </button>
         <button onclick="showSection('form-submit')" id="dock-form-submit" class="dock-item">
             <i data-lucide="file-pen-line" class="w-4 h-4"></i>
-            <span data-i18n="navFormSubmit">Submit</span>
+            <span>Submit</span>
         </button>
         <button onclick="showSection('mom-perf')" id="dock-mom-perf" class="dock-item">
             <i data-lucide="calendar-range" class="w-4 h-4"></i>
-            <span data-i18n="navMom">MoM</span>
+            <span>MoM</span>
         </button>
         <button onclick="showSection('wow-perf')" id="dock-wow-perf" class="dock-item">
             <i data-lucide="trending-up" class="w-4 h-4"></i>
-            <span data-i18n="navWow">WoW</span>
+            <span>WoW</span>
         </button>
         <button onclick="showSection('compliance')" id="dock-compliance" class="dock-item">
             <i data-lucide="calendar-check" class="w-4 h-4"></i>
-            <span data-i18n="navCompliance">Kedisiplinan</span>
+            <span>Disiplin</span>
         </button>
         <button onclick="showSection('raw-data')" id="dock-raw-data" class="dock-item">
             <i data-lucide="database" class="w-4 h-4"></i>
-            <span data-i18n="navRaw">Log.</span>
+            <span>Log</span>
         </button>
         <button onclick="showSection('sales-lob')" id="dock-sales-lob" class="dock-item">
             <i data-lucide="users" class="w-4 h-4"></i>
-            <span data-i18n="navSalesLob">LOB</span>
+            <span>LOB</span>
         </button>
         <button onclick="showSection('trend-bulanan')" id="dock-trend-bulanan" class="dock-item">
-            <i data-lucide="trending-up" class="w-4 h-4"></i>
-            <span data-i18n="navTrend">Trend</span>
+            <i data-lucide="line-chart" class="w-4 h-4"></i>
+            <span>Trend</span>
+        </button>
+        <button onclick="showSection('settings')" id="dock-settings" class="dock-item">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            <span>Set</span>
         </button>
     </div>
 
@@ -598,7 +608,7 @@
 
                         <!-- SUBMIT BUTTON -->
                         <div class="pt-2">
-                            <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                            <button type="submit" id="btn-submit-action" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2">
                                 <i data-lucide="send" class="w-4 h-4"></i> <span data-i18n="btnSubmitReport">Kirim & Simpan Laporan Harian</span>
                             </button>
                         </div>
@@ -1151,7 +1161,7 @@
                 </div>
             </div>
 
-            <!-- Section 6: Trend Bulanan -->
+            <!-- Section 6: Trend Bulanan (Enhanced with Month Filter) -->
             <div id="sec-trend-bulanan" class="content-section hidden space-y-4">
                 <div class="glass-panel p-4 space-y-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-500/25">
@@ -1159,14 +1169,25 @@
                             <h3 class="font-bold text-sm md:text-base flex items-center gap-2" data-i18n="trendBulananTitle">Trend Performa Bulanan per LOB</h3>
                             <p class="text-xs opacity-80" data-i18n="trendBulananDesc">Rekap historis unit terjual tiap bulan berdasarkan Store dan Nama Sales untuk melihat trend kenaikan/penurunan.</p>
                         </div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <div class="flex bg-slate-900/60 p-1 rounded-lg border border-gray-500/20 text-xs font-bold gap-1 overflow-x-auto max-w-full" id="trend-lob-tabs">
-                                <button onclick="switchTrendLob('all')" id="btn-trend-all" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition">Semua</button>
-                                <button onclick="switchTrendLob('mac')" id="btn-trend-mac" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-amber-400">Mac</button>
-                                <button onclick="switchTrendLob('iphone')" id="btn-trend-iphone" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-rose-400">iPhone</button>
-                                <button onclick="switchTrendLob('ipad')" id="btn-trend-ipad" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-emerald-400">iPad</button>
-                                <button onclick="switchTrendLob('watch')" id="btn-trend-watch" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-blue-400">Watch</button>
-                                <button onclick="switchTrendLob('airpods')" id="btn-trend-airpods" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-cyan-400">AirPods</button>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <!-- Monthly Filter for Trend Bulanan -->
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs font-bold opacity-90">Filter Bulan:</label>
+                                <select id="trend-month-filter" onchange="renderTrendBulananTable()" class="bg-slate-900/60 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="ALL">Semua Bulan</option>
+                                    <option value="01">Januari</option>
+                                    <option value="02">Februari</option>
+                                    <option value="03">Maret</option>
+                                    <option value="04">April</option>
+                                    <option value="05">Mei</option>
+                                    <option value="06">Juni</option>
+                                    <option value="07">Juli</option>
+                                    <option value="08">Agustus</option>
+                                    <option value="09">September</option>
+                                    <option value="10" selected>Oktober</option>
+                                    <option value="11">November</option>
+                                    <option value="12">Desember</option>
+                                </select>
                             </div>
                             <div class="relative">
                                 <button onclick="toggleDropdown('export-trend-data')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
@@ -1179,6 +1200,16 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- LOB Tabs -->
+                    <div class="flex bg-slate-900/60 p-1 rounded-lg border border-gray-500/20 text-xs font-bold gap-1 overflow-x-auto max-w-full" id="trend-lob-tabs">
+                        <button onclick="switchTrendLob('all')" id="btn-trend-all" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition">Semua</button>
+                        <button onclick="switchTrendLob('mac')" id="btn-trend-mac" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-amber-400">Mac</button>
+                        <button onclick="switchTrendLob('iphone')" id="btn-trend-iphone" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-rose-400">iPhone</button>
+                        <button onclick="switchTrendLob('ipad')" id="btn-trend-ipad" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-emerald-400">iPad</button>
+                        <button onclick="switchTrendLob('watch')" id="btn-trend-watch" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-blue-400">Watch</button>
+                        <button onclick="switchTrendLob('airpods')" id="btn-trend-airpods" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-cyan-400">AirPods</button>
                     </div>
 
                     <div class="overflow-x-auto max-h-[550px]">
@@ -1245,6 +1276,7 @@
         lucide.createIcons();
 
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
+        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw4zYhJuF2X-kGfXye3hEORyyf1qC7aSaGUnPiyKkD3wXRqpTXCFm1YAmYrpgMR6Nm3/exec';
 
         const LOB_COLORS = {
             mac: '#f59e0b',
@@ -1789,6 +1821,7 @@
                     rawCSVData = results.data;
                     populateDropdownFilters(rawCSVData);
                     populateChampionDirectory(rawCSVData);
+                    setDefaultSubmitDate();
                     applyFilters();
                     updateFormattedTimestamp();
                 },
@@ -1798,7 +1831,17 @@
             });
         }
 
-        // Direktori profil sales untuk auto-fill form submit
+        function setDefaultSubmitDate() {
+            const dateInput = document.getElementById('submit-date');
+            if (dateInput && !dateInput.value) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const dd = String(today.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        }
+
         let championDirectoryMap = {};
 
         function populateChampionDirectory(data) {
@@ -1808,7 +1851,6 @@
                 const store = extractStore(item);
                 if (name && name !== '-' && store && store !== '-') {
                     const matchedStore = findMasterStore(store) || store;
-                    // Buat email otomatis berbasis nama jika tidak ada kolom email
                     const generatedEmail = `champion.${name.toLowerCase().replace(/[^a-z]/g, '')}@digimap.co.id`;
                     championDirectoryMap[name.toLowerCase()] = {
                         name: name,
@@ -1847,7 +1889,7 @@
             const name = document.getElementById('submit-name').value;
             const email = document.getElementById('submit-email').value;
             const store = document.getElementById('submit-store').value;
-            const date = document.getElementById('submit-date').value;
+            const date = document.getElementById('submit-date').value; // format YYYY-MM-DD
             const lob = document.getElementById('submit-lob').value;
             const qty = document.getElementById('submit-qty').value;
             const position = document.getElementById('submit-position').value;
@@ -1859,29 +1901,68 @@
                 return;
             }
 
-            const timestamp = new Date().toISOString();
-            const newRow = {
-                Timestamp: timestamp,
-                "Email Sales Coach": email,
-                "Nama Champion/ SA": name,
-                Store: store,
-                "Tanggal Transaksi": date,
-                "Champion LOB": lob,
-                "Total Qty": qty,
-                Positions: position,
-                Shift: shift,
-                "Total Demo Target": demoTarget
+            const submitBtn = document.getElementById('btn-submit-action');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Mengirim ke Google Sheets...`;
+                lucide.createIcons();
+            }
+
+            const payload = {
+                timestamp: new Date().toISOString(),
+                email: email,
+                name: name,
+                store: store,
+                date: date,
+                lob: lob,
+                qty: qty,
+                position: position,
+                shift: shift,
+                demoTarget: demoTarget
             };
 
-            // Masukkan ke array data lokal agar langsung ter-render di log transaksi & overview
-            rawCSVData.unshift(newRow);
-            applyFilters();
+            // Kirim ke Google Apps Script endpoint via fetch (no-cors atau standard cors sesuai konfigurasi GAS)
+            fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                const timestamp = new Date().toISOString();
+                const newRow = {
+                    Timestamp: timestamp,
+                    "Email Sales Coach": email,
+                    "Nama Champion/ SA": name,
+                    Store: store,
+                    "Tanggal Transaksi": date,
+                    "Champion LOB": lob,
+                    "Total Qty": qty,
+                    Positions: position,
+                    Shift: shift,
+                    "Total Demo Target": demoTarget
+                };
 
-            alert("Sukses! Laporan transaksi harian berhasil disubmit dan disinkronkan ke dashboard.");
-            document.getElementById('transaction-submit-form').reset();
-            document.getElementById('submit-email').value = "";
-            document.getElementById('submit-store').value = "";
-            showSection('raw-data');
+                rawCSVData.unshift(newRow);
+                applyFilters();
+
+                alert("Sukses! Laporan transaksi harian berhasil disubmit dan disinkronkan ke database server.");
+                document.getElementById('transaction-submit-form').reset();
+                document.getElementById('submit-email').value = "";
+                document.getElementById('submit-store').value = "";
+                setDefaultSubmitDate();
+                showSection('raw-data');
+            }).catch(err => {
+                console.error("GAS Submit error:", err);
+                alert("Terjadi kendala jaringan saat mengirim ke server GAS, namun data telah disimpan secara lokal.");
+            }).finally(() => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> <span>Kirim & Simpan Laporan Harian</span>`;
+                    lucide.createIcons();
+                }
+            });
         }
 
         function populateDropdownFilters(data) {
@@ -3151,6 +3232,8 @@
             const tbody = document.getElementById('trend-table-body');
             if (!thead || !tbody) return;
 
+            const trendMonthFilter = document.getElementById('trend-month-filter')?.value || 'ALL';
+
             const monthNames = {
                 '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember',
                 '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
@@ -3158,18 +3241,11 @@
             };
 
             const fixedMonthKeys = ['09', '10', '11', '12', '01', '02', '03', '04', '05', '06', '07', '08'];
-            const activeMonthsSet = new Set(['09', '10', '11']);
+            let sortedMonths = fixedMonthKeys;
 
-            filteredData.forEach(item => {
-                const dateStr = extractDate(item);
-                const parsed = parseCustomDate(dateStr);
-                if (parsed && parsed.getFullYear() === 2026) {
-                    const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
-                    activeMonthsSet.add(mKey);
-                }
-            });
-
-            const sortedMonths = fixedMonthKeys.filter(m => activeMonthsSet.has(m));
+            if (trendMonthFilter !== 'ALL') {
+                sortedMonths = [trendMonthFilter];
+            }
 
             let headHTML = `<tr>
                 <th class="p-2.5 text-center w-12 sticky-header-bg">No.</th>
@@ -3209,8 +3285,11 @@
 
                     if (parsed && parsed.getFullYear() === 2026) {
                         const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
-                        aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
-                        aggregationMap[key].sumTotal += qty;
+                        
+                        if (trendMonthFilter === 'ALL' || trendMonthFilter === mKey) {
+                            aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
+                            aggregationMap[key].sumTotal += qty;
+                        }
                     }
                 }
             });
@@ -3219,7 +3298,7 @@
 
             tbody.innerHTML = '';
             if (rowsData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${3 + sortedMonths.length}" class="p-4 text-center opacity-80 text-xs">Tidak ada data trend bulanan untuk LOB ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${3 + sortedMonths.length}" class="p-4 text-center opacity-80 text-xs">Tidak ada data trend bulanan untuk filter ini.</td></tr>`;
                 return;
             }
 
@@ -3289,21 +3368,17 @@
         }
 
         function exportTrendData(type) {
+            const trendMonthFilter = document.getElementById('trend-month-filter')?.value || 'ALL';
             const monthNames = {
                 '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember',
                 '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
                 '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus'
             };
             const fixedMonthKeys = ['09', '10', '11', '12', '01', '02', '03', '04', '05', '06', '07', '08'];
-            const activeMonthsSet = new Set(['09', '10', '11']);
-            filteredData.forEach(item => {
-                const dateStr = extractDate(item);
-                const parsed = parseCustomDate(dateStr);
-                if (parsed && parsed.getFullYear() === 2026) {
-                    activeMonthsSet.add(String(parsed.getMonth() + 1).padStart(2, '0'));
-                }
-            });
-            const sortedMonths = fixedMonthKeys.filter(m => activeMonthsSet.has(m));
+            let sortedMonths = fixedMonthKeys;
+            if (trendMonthFilter !== 'ALL') {
+                sortedMonths = [trendMonthFilter];
+            }
 
             const aggregationMap = {};
             filteredData.forEach(item => {
@@ -3323,8 +3398,10 @@
                     }
                     if (parsed && parsed.getFullYear() === 2026) {
                         const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
-                        aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
-                        aggregationMap[key].sumTotal += qty;
+                        if (trendMonthFilter === 'ALL' || trendMonthFilter === mKey) {
+                            aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
+                            aggregationMap[key].sumTotal += qty;
+                        }
                     }
                 }
             });
