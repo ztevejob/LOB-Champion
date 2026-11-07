@@ -347,7 +347,7 @@
                         <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400" data-i18n="kpiTotalUnit">Total Unit / LOB</p>
                         <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-500"></i>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
                         <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10">
                             <span class="opacity-80 block text-[10px] font-bold">Mac</span>
                             <span class="text-base font-bold text-amber-500 dark:text-amber-400" id="kpi-total-mac">0</span>
@@ -364,6 +364,10 @@
                             <span class="opacity-80 block text-[10px] font-bold">Watch</span>
                             <span class="text-base font-bold text-blue-500 dark:text-blue-400" id="kpi-total-watch">0</span>
                         </div>
+                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 col-span-2 sm:col-span-1">
+                            <span class="opacity-80 block text-[10px] font-bold">AirPods</span>
+                            <span class="text-base font-bold text-cyan-500 dark:text-cyan-400" id="kpi-total-airpods">0</span>
+                        </div>
                     </div>
                 </div>
 
@@ -372,45 +376,55 @@
                         <p class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400" data-i18n="kpiAvgDay">Average / Hari / LOB</p>
                         <i data-lucide="calculator" class="w-4 h-4 text-purple-500"></i>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex flex-col justify-between">
                             <div>
                                 <span class="opacity-80 block text-[10px] font-bold">Mac</span>
-                                <span class="text-base font-bold text-amber-500 dark:text-amber-400" id="kpi-avg-mac">0.0</span>
+                                <span class="text-sm font-bold text-amber-500 dark:text-amber-400" id="kpi-avg-mac">0.0</span>
                             </div>
-                            <div class="text-right border-l border-gray-500/20 pl-2">
-                                <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
-                                <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-mac">0</span>
+                            <div class="border-t border-gray-500/20 pt-1 mt-1 text-[10px] flex justify-between">
+                                <span class="opacity-70">Trx:</span>
+                                <span class="font-extrabold neon-green-text" id="kpi-trx-mac">0</span>
                             </div>
                         </div>
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex flex-col justify-between">
                             <div>
                                 <span class="opacity-80 block text-[10px] font-bold">iPhone</span>
-                                <span class="text-base font-bold text-rose-500 dark:text-rose-400" id="kpi-avg-iphone">0.0</span>
+                                <span class="text-sm font-bold text-rose-500 dark:text-rose-400" id="kpi-avg-iphone">0.0</span>
                             </div>
-                            <div class="text-right border-l border-gray-500/20 pl-2">
-                                <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
-                                <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-iphone">0</span>
+                            <div class="border-t border-gray-500/20 pt-1 mt-1 text-[10px] flex justify-between">
+                                <span class="opacity-70">Trx:</span>
+                                <span class="font-extrabold neon-green-text" id="kpi-trx-iphone">0</span>
                             </div>
                         </div>
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex flex-col justify-between">
                             <div>
                                 <span class="opacity-80 block text-[10px] font-bold">iPad</span>
-                                <span class="text-base font-bold text-emerald-500 dark:text-emerald-400" id="kpi-avg-ipad">0.0</span>
+                                <span class="text-sm font-bold text-emerald-500 dark:text-emerald-400" id="kpi-avg-ipad">0.0</span>
                             </div>
-                            <div class="text-right border-l border-gray-500/20 pl-2">
-                                <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
-                                <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-ipad">0</span>
+                            <div class="border-t border-gray-500/20 pt-1 mt-1 text-[10px] flex justify-between">
+                                <span class="opacity-70">Trx:</span>
+                                <span class="font-extrabold neon-green-text" id="kpi-trx-ipad">0</span>
                             </div>
                         </div>
-                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex flex-col justify-between">
                             <div>
                                 <span class="opacity-80 block text-[10px] font-bold">Watch</span>
-                                <span class="text-base font-bold text-blue-500 dark:text-blue-400" id="kpi-avg-watch">0.0</span>
+                                <span class="text-sm font-bold text-blue-500 dark:text-blue-400" id="kpi-avg-watch">0.0</span>
                             </div>
-                            <div class="text-right border-l border-gray-500/20 pl-2">
-                                <span class="opacity-70 block text-[9px] font-semibold">Trx</span>
-                                <span class="text-xs font-extrabold neon-green-text" id="kpi-trx-watch">0</span>
+                            <div class="border-t border-gray-500/20 pt-1 mt-1 text-[10px] flex justify-between">
+                                <span class="opacity-70">Trx:</span>
+                                <span class="font-extrabold neon-green-text" id="kpi-trx-watch">0</span>
+                            </div>
+                        </div>
+                        <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex flex-col justify-between col-span-2 sm:col-span-1">
+                            <div>
+                                <span class="opacity-80 block text-[10px] font-bold">AirPods</span>
+                                <span class="text-sm font-bold text-cyan-500 dark:text-cyan-400" id="kpi-avg-airpods">0.0</span>
+                            </div>
+                            <div class="border-t border-gray-500/20 pt-1 mt-1 text-[10px] flex justify-between">
+                                <span class="opacity-70">Trx:</span>
+                                <span class="font-extrabold neon-green-text" id="kpi-trx-airpods">0</span>
                             </div>
                         </div>
                     </div>
@@ -479,6 +493,7 @@
                                         <th class="p-2 text-center sticky-header-bg">iPhone</th>
                                         <th class="p-2 text-center sticky-header-bg">iPad</th>
                                         <th class="p-2 text-center sticky-header-bg">Watch</th>
+                                        <th class="p-2 text-center sticky-header-bg">AirPods</th>
                                         <th class="p-2 text-center sticky-header-bg" data-i18n="thTotal">Total</th>
                                     </tr>
                                 </thead>
@@ -489,9 +504,8 @@
                 </div>
             </div>
 
-            <!-- Section 2: Performa MoM (Dengan Dua Filter Bulan Fleksibel) -->
+            <!-- Section 2: Performa MoM -->
             <div id="sec-mom-perf" class="content-section hidden space-y-4">
-                <!-- Tambahan Filter MoM Custom Dua Bulan -->
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 border-l-4 border-cyan-500">
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold text-cyan-600 dark:text-cyan-400">Pilih Bulan Utama (Current Month / CM)</label>
@@ -578,6 +592,13 @@
                                         <span class="block text-[10px] font-bold text-slate-400">0%</span>
                                     </div>
                                 </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-cyan-500 dark:text-cyan-400">AirPods</span>
+                                    <div class="text-right" id="mom-sum-airpods">
+                                        <span class="font-mono text-slate-400">LM: 0</span> <span class="mx-1">→</span> <span class="font-bold">CM: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -610,7 +631,7 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[850px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[950px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
                                 <tr>
                                     <th class="p-2.5 w-10 text-center sticky-header-bg">No.</th>
@@ -619,6 +640,7 @@
                                     <th class="p-2.5 text-center sticky-header-bg">iPhone (LM / CM / Grw)</th>
                                     <th class="p-2.5 text-center sticky-header-bg">iPad (LM / CM / Grw)</th>
                                     <th class="p-2.5 text-center sticky-header-bg">Watch (LM / CM / Grw)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">AirPods (LM / CM / Grw)</th>
                                     <th class="p-2.5 text-center sticky-header-bg" data-i18n="thGrowthTotal">Growth Total</th>
                                 </tr>
                             </thead>
@@ -628,9 +650,8 @@
                 </div>
             </div>
 
-            <!-- Section 3: Performa WoW (Dengan Filter Week Selector) -->
+            <!-- Section 3: Performa WoW -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
-                <!-- Tambahan Filter Minggu / Week Selector -->
                 <div class="glass-panel p-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-l-4 border-indigo-500">
                     <div class="flex items-center gap-2">
                         <i data-lucide="filter" class="w-4 h-4 text-indigo-500"></i>
@@ -695,6 +716,13 @@
                                         <span class="block text-[10px] font-bold text-slate-400">0%</span>
                                     </div>
                                 </div>
+                                <div class="bg-black/5 dark:bg-white/5 p-2 rounded border border-gray-500/10 flex items-center justify-between">
+                                    <span class="font-bold text-cyan-500 dark:text-cyan-400">AirPods</span>
+                                    <div class="text-right" id="wow-sum-airpods">
+                                        <span class="font-mono text-slate-400">LW: 0</span> <span class="mx-1">→</span> <span class="font-bold">TW: 0</span>
+                                        <span class="block text-[10px] font-bold text-slate-400">0%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -715,7 +743,7 @@
                         <span class="text-xs px-2.5 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full border border-indigo-500/30 neon-store-badge" id="wow-store-total-badge">Total Store</span>
                     </div>
                     <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[650px]">
+                        <table class="w-full text-xs text-left border-collapse min-w-[750px]">
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
                                 <tr>
                                     <th class="p-2.5 w-12 text-center sticky-header-bg">No.</th>
@@ -724,6 +752,7 @@
                                     <th class="p-2.5 text-center sticky-header-bg">iPhone (LW / TW)</th>
                                     <th class="p-2.5 text-center sticky-header-bg">iPad (LW / TW)</th>
                                     <th class="p-2.5 text-center sticky-header-bg">Watch (LW / TW)</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">AirPods (LW / TW)</th>
                                     <th class="p-2.5 text-center sticky-header-bg" data-i18n="thGrowthTotal">Growth Total</th>
                                 </tr>
                             </thead>
@@ -733,25 +762,26 @@
                 </div>
             </div>
 
-            <!-- Section 4: Kedisiplinan (Dengan Filter Status Kepatuhan & PIC Area) -->
+            <!-- Section 4: Kedisiplinan -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
-                <!-- Filter Tambahan Kedisiplinan -->
+                <!-- Filter Tambahan Kedisiplinan: Ditambahkan Filter Bulan, Filter Toko & Region Dihapus -->
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 border-l-4 border-rose-500">
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Evaluasi</label>
+                        <select id="compliance-month-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
+                            <option value="09">September 2026</option>
+                            <option value="10" selected>Oktober 2026</option>
+                            <option value="11">November 2026</option>
+                            <option value="12">Desember 2026</option>
+                            <option value="ALL">Semua Bulan (Aktif)</option>
+                        </select>
+                    </div>
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Status Kepatuhan</label>
                         <select id="compliance-status-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
                             <option value="ALL">Semua Toko</option>
                             <option value="unsubmitted">Hanya Toko Belum Submit</option>
                             <option value="late">Hanya Toko Terlambat Submit</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Regional / PIC Area</label>
-                        <select id="compliance-region-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
-                            <option value="ALL">Semua Region / Area</option>
-                            <option value="bali">Region Bali (Suhartono)</option>
-                            <option value="kalimantan">Region Kalimantan (Riyan Susanto)</option>
-                            <option value="surabaya">Region Surabaya & Sekitarnya</option>
                         </select>
                     </div>
                 </div>
@@ -772,7 +802,7 @@
                         <div class="flex items-center gap-2">
                             <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
                             <h3 class="font-extrabold text-sm uppercase tracking-wide flex items-center gap-2 neon-red-title">
-                                <span data-i18n="unsubmittedStoresTitle">LIST TOKO BELUM SUBMIT (SEPTEMBER S.D. KEMARIN)</span>
+                                <span data-i18n="unsubmittedStoresTitle">LIST TOKO BELUM SUBMIT (PERIODE BULAN TERPILIH)</span>
                                 <span id="unsubmitted-stores-count" class="px-2 py-0.5 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-[10px] font-extrabold border border-rose-500/30">0 Toko</span>
                             </h3>
                         </div>
@@ -780,7 +810,7 @@
                             <i data-lucide="message-square" class="w-3.5 h-3.5"></i> <span data-i18n="btnDraftWa">Draft WA Follow-up</span>
                         </button>
                     </div>
-                    <p class="text-xs opacity-80 mb-3 font-medium" data-i18n="unsubmittedStoresDesc">Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 September hingga kemarin.</p>
+                    <p class="text-xs opacity-80 mb-3 font-medium" data-i18n="unsubmittedStoresDesc">Daftar akumulatif toko yang belum mengisi laporan transaksi harian pada bulan terpilih.</p>
                     
                     <div class="overflow-x-auto max-h-[350px]">
                         <table class="w-full text-xs text-left border-collapse min-w-[500px]">
@@ -907,9 +937,8 @@
                 </div>
             </div>
 
-            <!-- Section 5: Log Transaksi Masuk (Dengan Date Range Picker & Search Sales) -->
+            <!-- Section 5: Log Transaksi Masuk -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
-                <!-- Tambahan Filter Tanggal & Sales Log -->
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Dari Tanggal</label>
@@ -962,9 +991,8 @@
                 </div>
             </div>
 
-            <!-- Section Baru: All Sales LOB Directory (Dengan Filter LOB Utama) -->
+            <!-- Section: All Sales LOB Directory -->
             <div id="sec-sales-lob" class="content-section hidden space-y-4">
-                <!-- Tambahan Filter LOB Utama -->
                 <div class="glass-panel p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div class="flex items-center gap-2">
                         <i data-lucide="filter" class="w-4 h-4 text-indigo-500"></i>
@@ -977,6 +1005,7 @@
                             <option value="iphone">iPhone</option>
                             <option value="ipad">iPad</option>
                             <option value="watch">Watch</option>
+                            <option value="airpods">AirPods</option>
                         </select>
                     </div>
                 </div>
@@ -1030,12 +1059,13 @@
                             <p class="text-xs opacity-80" data-i18n="trendBulananDesc">Rekap historis unit terjual tiap bulan berdasarkan Store dan Nama Sales untuk melihat trend kenaikan/penurunan.</p>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <div class="flex bg-slate-900/60 p-1 rounded-lg border border-gray-500/20 text-xs font-bold gap-1" id="trend-lob-tabs">
-                                <button onclick="switchTrendLob('all')" id="btn-trend-all" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition">Semua LOB</button>
+                            <div class="flex bg-slate-900/60 p-1 rounded-lg border border-gray-500/20 text-xs font-bold gap-1 overflow-x-auto max-w-full" id="trend-lob-tabs">
+                                <button onclick="switchTrendLob('all')" id="btn-trend-all" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition">Semua</button>
                                 <button onclick="switchTrendLob('mac')" id="btn-trend-mac" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-amber-400">Mac</button>
                                 <button onclick="switchTrendLob('iphone')" id="btn-trend-iphone" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-rose-400">iPhone</button>
                                 <button onclick="switchTrendLob('ipad')" id="btn-trend-ipad" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-emerald-400">iPad</button>
                                 <button onclick="switchTrendLob('watch')" id="btn-trend-watch" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-blue-400">Watch</button>
+                                <button onclick="switchTrendLob('airpods')" id="btn-trend-airpods" class="px-3 py-1.5 rounded hover:bg-white/10 transition text-cyan-400">AirPods</button>
                             </div>
                             <div class="relative">
                                 <button onclick="toggleDropdown('export-trend-data')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
@@ -1119,7 +1149,8 @@
             mac: '#f59e0b',
             iphone: '#ef4444',
             ipad: '#10b981',
-            watch: '#3b82f6'
+            watch: '#3b82f6',
+            airpods: '#06b6d4'
         };
 
         const MASTER_STORES = [
@@ -1211,8 +1242,8 @@
                 thGrowthTotal: "Growth Total",
                 summaryUnsubmitted: "Toko Belum Submit (s.d. Kemarin)",
                 summaryLateEvents: "Total Kejadian Terlambat Submit",
-                unsubmittedStoresTitle: "LIST TOKO BELUM SUBMIT (SEPTEMBER S.D. KEMARIN)",
-                unsubmittedStoresDesc: "Daftar akumulatif toko yang belum mengisi laporan transaksi harian sejak tanggal 1 September hingga kemarin.",
+                unsubmittedStoresTitle: "LIST TOKO BELUM SUBMIT (PERIODE BULAN TERPILIH)",
+                unsubmittedStoresDesc: "Daftar akumulatif toko yang belum mengisi laporan transaksi harian pada bulan terpilih.",
                 btnDraftWa: "Draft WA Follow-up",
                 thUnsubmittedDates: "Tanggal Belum Submit",
                 thTotalDays: "Total Hari",
@@ -1285,8 +1316,8 @@
                 thGrowthTotal: "Total Growth",
                 summaryUnsubmitted: "Unsubmitted Stores (Up to Yesterday)",
                 summaryLateEvents: "Total Late Submission Events",
-                unsubmittedStoresTitle: "UNSUBMITTED STORES LIST (SEPTEMBER TO YESTERDAY)",
-                unsubmittedStoresDesc: "Accumulative list of stores that have not filled out daily transaction reports from September 1st to yesterday.",
+                unsubmittedStoresTitle: "UNSUBMITTED STORES LIST (SELECTED MONTH)",
+                unsubmittedStoresDesc: "Accumulative list of stores that have not filled out daily transaction reports in the selected month.",
                 btnDraftWa: "Draft WA Follow-up",
                 thUnsubmittedDates: "Unsubmitted Dates",
                 thTotalDays: "Total Days",
@@ -1731,8 +1762,8 @@
         }
 
         function updateMetricsAndCharts(data) {
-            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0;
-            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0;
+            let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0, totalAirpods = 0;
+            let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0, trxAirpods = 0;
 
             const monthVal = document.getElementById('filter-month')?.value || '10';
             const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
@@ -1775,6 +1806,9 @@
                 } else if (lob.includes('watch')) { 
                     totalWatch += qty; 
                     if (qty > 0 && isWithinRange) trxWatch++; 
+                } else if (lob.includes('airpods') || lob.includes('airpod')) {
+                    totalAirpods += qty;
+                    if (qty > 0 && isWithinRange) trxAirpods++;
                 }
             });
 
@@ -1782,6 +1816,7 @@
             document.getElementById('kpi-total-iphone').innerText = totalIphone;
             document.getElementById('kpi-total-ipad').innerText = totalIpad;
             document.getElementById('kpi-total-watch').innerText = totalWatch;
+            document.getElementById('kpi-total-airpods').innerText = totalAirpods;
 
             const completedDays = maxDay;
 
@@ -1789,11 +1824,13 @@
             document.getElementById('kpi-avg-iphone').innerText = (totalIphone / completedDays).toFixed(1);
             document.getElementById('kpi-avg-ipad').innerText = (totalIpad / completedDays).toFixed(1);
             document.getElementById('kpi-avg-watch').innerText = (totalWatch / completedDays).toFixed(1);
+            document.getElementById('kpi-avg-airpods').innerText = (totalAirpods / completedDays).toFixed(1);
 
             document.getElementById('kpi-trx-mac').innerText = trxMac;
             document.getElementById('kpi-trx-iphone').innerText = trxIphone;
             document.getElementById('kpi-trx-ipad').innerText = trxIpad;
             document.getElementById('kpi-trx-watch').innerText = trxWatch;
+            document.getElementById('kpi-trx-airpods').innerText = trxAirpods;
         }
 
         function applyMoMFilters() {
@@ -1813,8 +1850,8 @@
             const month1Idx = parseInt(m1Val, 10) - 1;
             const month2Idx = parseInt(m2Val, 10) - 1;
 
-            let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
-            let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
+            let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
 
             rawCSVData.forEach(item => {
                 const rowStore = extractStore(item).toLowerCase();
@@ -1842,12 +1879,13 @@
                             else if (lob.includes('iphone')) targetObj.iphone += qty;
                             else if (lob.includes('ipad')) targetObj.ipad += qty;
                             else if (lob.includes('watch')) targetObj.watch += qty;
+                            else if (lob.includes('airpods') || lob.includes('airpod')) targetObj.airpods += qty;
                         }
                     }
                 }
             });
 
-            const lobs = ['mac', 'iphone', 'ipad', 'watch'];
+            const lobs = ['mac', 'iphone', 'ipad', 'watch', 'airpods'];
             let totalLM = 0, totalCM = 0;
 
             lobs.forEach(lob => {
@@ -1891,17 +1929,17 @@
                 chartInstances.momGlobal = new Chart(ctxMoM, {
                     type: 'bar',
                     data: {
-                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch', 'AirPods'],
                         datasets: [
                             {
                                 label: `Bulan Pembanding (${m2Val})`,
-                                data: [lmData.mac, lmData.iphone, lmData.ipad, lmData.watch],
+                                data: [lmData.mac, lmData.iphone, lmData.ipad, lmData.watch, lmData.airpods],
                                 backgroundColor: '#64748b',
                                 borderRadius: 4
                             },
                             {
                                 label: `Bulan Utama (${m1Val})`,
-                                data: [cmData.mac, cmData.iphone, cmData.ipad, cmData.watch],
+                                data: [cmData.mac, cmData.iphone, cmData.ipad, cmData.watch, cmData.airpods],
                                 backgroundColor: '#06b6d4',
                                 borderRadius: 4
                             }
@@ -1946,7 +1984,8 @@
                     mac: { lm: 0, cm: 0 },
                     iphone: { lm: 0, cm: 0 },
                     ipad: { lm: 0, cm: 0 },
-                    watch: { lm: 0, cm: 0 }
+                    watch: { lm: 0, cm: 0 },
+                    airpods: { lm: 0, cm: 0 }
                 };
             });
 
@@ -1969,6 +2008,7 @@
                             else if (lob.includes('iphone')) storeMap[matchedStore].iphone[monthKey] += qty;
                             else if (lob.includes('ipad')) storeMap[matchedStore].ipad[monthKey] += qty;
                             else if (lob.includes('watch')) storeMap[matchedStore].watch[monthKey] += qty;
+                            else if (lob.includes('airpods') || lob.includes('airpod')) storeMap[matchedStore].airpods[monthKey] += qty;
                         }
                     }
                 }
@@ -1992,13 +2032,14 @@
 
             Object.keys(storeMap).forEach(store => {
                 const s = storeMap[store];
-                const totalLM = s.mac.lm + s.iphone.lm + s.ipad.lm + s.watch.lm;
-                const totalCM = s.mac.cm + s.iphone.cm + s.ipad.cm + s.watch.cm;
+                const totalLM = s.mac.lm + s.iphone.lm + s.ipad.lm + s.watch.lm + s.airpods.lm;
+                const totalCM = s.mac.cm + s.iphone.cm + s.ipad.cm + s.watch.cm + s.airpods.cm;
 
                 const macGrw = calcLobGrowth(s.mac.lm, s.mac.cm);
                 const iphoneGrw = calcLobGrowth(s.iphone.lm, s.iphone.cm);
                 const ipadGrw = calcLobGrowth(s.ipad.lm, s.ipad.cm);
                 const watchGrw = calcLobGrowth(s.watch.lm, s.watch.cm);
+                const airpodsGrw = calcLobGrowth(s.airpods.lm, s.airpods.cm);
 
                 let totalGrowthPct = 0;
                 if (totalLM > 0) {
@@ -2016,6 +2057,7 @@
                     iphoneLM: s.iphone.lm, iphoneCM: s.iphone.cm, iphoneGrw: iphoneGrw.str,
                     ipadLM: s.ipad.lm, ipadCM: s.ipad.cm, ipadGrw: ipadGrw.str,
                     watchLM: s.watch.lm, watchCM: s.watch.cm, watchGrw: watchGrw.str,
+                    airpodsLM: s.airpods.lm, airpodsCM: s.airpods.cm, airpodsGrw: airpodsGrw.str,
                     totalLM, totalCM, totalGrowthPct: `${totalSign}${totalGrowthPct}%`
                 });
 
@@ -2039,6 +2081,10 @@
                     <td class="p-2.5 text-center font-mono">
                         ${s.watch.lm} / <b>${s.watch.cm}</b> 
                         <span class="block text-[10px] font-bold ${watchGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${watchGrw.str})</span>
+                    </td>
+                    <td class="p-2.5 text-center font-mono">
+                        ${s.airpods.lm} / <b>${s.airpods.cm}</b> 
+                        <span class="block text-[10px] font-bold ${airpodsGrw.isPositive ? 'text-emerald-500' : 'text-rose-500'}">(${airpodsGrw.str})</span>
                     </td>
                     <td class="p-2.5 text-center font-bold ${totalColorClass}">${totalCM} (${totalSign}${totalGrowthPct}%)</td>
                 `;
@@ -2100,12 +2146,13 @@
 
                     if (store && store !== '-') {
                         if (!storePerfMap[store]) {
-                            storePerfMap[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, total: 0 };
+                            storePerfMap[store] = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0, total: 0 };
                         }
                         if (lob.includes('mac')) storePerfMap[store].mac += qty;
                         else if (lob.includes('iphone')) storePerfMap[store].iphone += qty;
                         else if (lob.includes('ipad')) storePerfMap[store].ipad += qty;
                         else if (lob.includes('watch')) storePerfMap[store].watch += qty;
+                        else if (lob.includes('airpods') || lob.includes('airpod')) storePerfMap[store].airpods += qty;
 
                         storePerfMap[store].total += qty;
                     }
@@ -2117,7 +2164,7 @@
                     .slice(0, 10);
 
                 if (sortedStores.length === 0) {
-                    storeBody.innerHTML = '<tr><td colspan="7" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
+                    storeBody.innerHTML = '<tr><td colspan="8" class="p-3 text-center opacity-80 text-xs">Data tidak tersedia</td></tr>';
                 } else {
                     sortedStores.forEach((s, idx) => {
                         const tr = document.createElement('tr');
@@ -2129,6 +2176,7 @@
                             <td class="p-2 text-center font-mono text-rose-500">${s.iphone}</td>
                             <td class="p-2 text-center font-mono text-emerald-500">${s.ipad}</td>
                             <td class="p-2 text-center font-mono text-blue-500">${s.watch}</td>
+                            <td class="p-2 text-center font-mono text-cyan-500">${s.airpods}</td>
                             <td class="p-2 text-center font-bold text-indigo-400">${s.total}</td>
                         `;
                         storeBody.appendChild(tr);
@@ -2278,8 +2326,8 @@
                 currentWeek = 2; lastWeek = 1;
             }
 
-            let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
-            let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
+            let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
+            let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
 
             data.forEach(item => {
                 const dateStr = extractDate(item);
@@ -2298,11 +2346,12 @@
                         else if (lob.includes('iphone')) targetObj.iphone += qty;
                         else if (lob.includes('ipad')) targetObj.ipad += qty;
                         else if (lob.includes('watch')) targetObj.watch += qty;
+                        else if (lob.includes('airpods') || lob.includes('airpod')) targetObj.airpods += qty;
                     }
                 }
             });
 
-            const lobs = ['mac', 'iphone', 'ipad', 'watch'];
+            const lobs = ['mac', 'iphone', 'ipad', 'watch', 'airpods'];
             let totalLW = 0, totalTW = 0;
 
             lobs.forEach(lob => {
@@ -2346,17 +2395,17 @@
                 chartInstances.wowGlobal = new Chart(ctxWoW, {
                     type: 'bar',
                     data: {
-                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch', 'AirPods'],
                         datasets: [
                             {
                                 label: `Last Week (W-${lastWeek})`,
-                                data: [lwData.mac, lwData.iphone, lwData.ipad, lwData.watch],
+                                data: [lwData.mac, lwData.iphone, lwData.ipad, lwData.watch, lwData.airpods],
                                 backgroundColor: '#64748b',
                                 borderRadius: 4
                             },
                             {
                                 label: `This Week (W-${currentWeek})`,
-                                data: [twData.mac, twData.iphone, twData.ipad, twData.watch],
+                                data: [twData.mac, twData.iphone, twData.ipad, twData.watch, twData.airpods],
                                 backgroundColor: '#6366f1',
                                 borderRadius: 4
                             }
@@ -2408,7 +2457,8 @@
                     mac: { lw: 0, tw: 0 },
                     iphone: { lw: 0, tw: 0 },
                     ipad: { lw: 0, tw: 0 },
-                    watch: { lw: 0, tw: 0 }
+                    watch: { lw: 0, tw: 0 },
+                    airpods: { lw: 0, tw: 0 }
                 };
             });
 
@@ -2431,6 +2481,7 @@
                             else if (lob.includes('iphone')) storeMap[matchedStore].iphone[weekKey] += qty;
                             else if (lob.includes('ipad')) storeMap[matchedStore].ipad[weekKey] += qty;
                             else if (lob.includes('watch')) storeMap[matchedStore].watch[weekKey] += qty;
+                            else if (lob.includes('airpods') || lob.includes('airpod')) storeMap[matchedStore].airpods[weekKey] += qty;
                         }
                     }
                 }
@@ -2439,8 +2490,8 @@
             let index = 1;
             Object.keys(storeMap).forEach(store => {
                 const s = storeMap[store];
-                const totalLW = s.mac.lw + s.iphone.lw + s.ipad.lw + s.watch.lw;
-                const totalTW = s.mac.tw + s.iphone.tw + s.ipad.tw + s.watch.tw;
+                const totalLW = s.mac.lw + s.iphone.lw + s.ipad.lw + s.watch.lw + s.airpods.lw;
+                const totalTW = s.mac.tw + s.iphone.tw + s.ipad.tw + s.watch.tw + s.airpods.tw;
 
                 let growthPct = 0;
                 if (totalLW > 0) {
@@ -2461,6 +2512,7 @@
                     <td class="p-2.5 text-center font-mono">${s.iphone.lw} / <b>${s.iphone.tw}</b></td>
                     <td class="p-2.5 text-center font-mono">${s.ipad.lw} / <b>${s.ipad.tw}</b></td>
                     <td class="p-2.5 text-center font-mono">${s.watch.lw} / <b>${s.watch.tw}</b></td>
+                    <td class="p-2.5 text-center font-mono">${s.airpods.lw} / <b>${s.airpods.tw}</b></td>
                     <td class="p-2.5 text-center font-bold ${colorClass}">${totalTW} (${sign}${growthPct}%)</td>
                 `;
                 tbody.appendChild(tr);
@@ -2485,7 +2537,7 @@
             summaryBody.innerHTML = '';
 
             const statusFilter = document.getElementById('compliance-status-filter')?.value || 'ALL';
-            const regionFilter = document.getElementById('compliance-region-filter')?.value || 'ALL';
+            const complianceMonth = document.getElementById('compliance-month-filter')?.value || '10';
 
             const storeLateMap = {};
             const championLateMap = {};
@@ -2498,12 +2550,18 @@
                 const rawStore = extractStore(item);
                 const store = findMasterStore(rawStore) || rawStore;
 
-                let matchRegion = true;
-                if (regionFilter === 'bali') matchRegion = BALI_STORES.includes(store);
-                else if (regionFilter === 'kalimantan') matchRegion = KALIMANTAN_STORES.includes(store);
-                else if (regionFilter === 'surabaya') matchRegion = !BALI_STORES.includes(store) && !KALIMANTAN_STORES.includes(store);
+                let matchMonth = true;
+                if (complianceMonth !== 'ALL' && txDateStr) {
+                    const parsedTx = parseCustomDate(txDateStr);
+                    if (parsedTx) {
+                        const m = String(parsedTx.getMonth() + 1).padStart(2, '0');
+                        matchMonth = (m === complianceMonth && parsedTx.getFullYear() === 2026);
+                    } else {
+                        matchMonth = false;
+                    }
+                }
 
-                if (matchRegion && tsStr && txDateStr) {
+                if (matchMonth && tsStr && txDateStr) {
                     const tsParsed = parseCustomDate(tsStr);
                     const txParsed = parseCustomDate(txDateStr);
 
@@ -2644,7 +2702,7 @@
             tbody.innerHTML = '';
 
             const statusFilter = document.getElementById('compliance-status-filter')?.value || 'ALL';
-            const regionFilter = document.getElementById('compliance-region-filter')?.value || 'ALL';
+            const complianceMonth = document.getElementById('compliance-month-filter')?.value || '10';
 
             if (statusFilter === 'late') {
                 document.getElementById('summary-unsubmitted-count').innerText = `0 Store`;
@@ -2653,9 +2711,24 @@
                 return;
             }
 
+            const monthMapDays = {
+                '09': { start: new Date(2026, 8, 1), end: new Date(2026, 8, 30) },
+                '10': { start: new Date(2026, 9, 1), end: new Date(2026, 9, 31) },
+                '11': { start: new Date(2026, 10, 1), end: new Date(2026, 10, 30) },
+                '12': { start: new Date(2026, 11, 1), end: new Date(2026, 11, 31) }
+            };
+
+            let startDate, endDate;
             const now = new Date();
-            const startDate = new Date(2026, 9, 1);
-            const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+
+            if (complianceMonth !== 'ALL' && monthMapDays[complianceMonth]) {
+                startDate = monthMapDays[complianceMonth].start;
+                const targetEnd = monthMapDays[complianceMonth].end;
+                endDate = targetEnd > now ? new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1) : targetEnd;
+            } else {
+                startDate = new Date(2026, 8, 1);
+                endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+            }
 
             if (endDate < startDate) {
                 tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Belum ada evaluasi periode.</td></tr>';
@@ -2683,31 +2756,24 @@
             unsubmittedStoresList = [];
 
             MASTER_STORES.forEach(store => {
-                let matchRegion = true;
-                if (regionFilter === 'bali') matchRegion = BALI_STORES.includes(store);
-                else if (regionFilter === 'kalimantan') matchRegion = KALIMANTAN_STORES.includes(store);
-                else if (regionFilter === 'surabaya') matchRegion = !BALI_STORES.includes(store) && !KALIMANTAN_STORES.includes(store);
+                const missingDates = [];
+                let curr = new Date(startDate);
 
-                if (matchRegion) {
-                    const missingDates = [];
-                    let curr = new Date(startDate);
-
-                    while (curr <= endDate) {
-                        const dateKey = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
-                        if (!submittedDatesByStore[store].has(dateKey)) {
-                            const dayFormatted = `${curr.getDate()} ${curr.toLocaleString('id-ID', { month: 'short' })}`;
-                            missingDates.push(dayFormatted);
-                        }
-                        curr.setDate(curr.getDate() + 1);
+                while (curr <= endDate) {
+                    const dateKey = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
+                    if (!submittedDatesByStore[store].has(dateKey)) {
+                        const dayFormatted = `${curr.getDate()} ${curr.toLocaleString('id-ID', { month: 'short' })}`;
+                        missingDates.push(dayFormatted);
                     }
+                    curr.setDate(curr.getDate() + 1);
+                }
 
-                    if (missingDates.length > 0) {
-                        unsubmittedStoresList.push({
-                            store,
-                            missingDates,
-                            totalDays: missingDates.length
-                        });
-                    }
+                if (missingDates.length > 0) {
+                    unsubmittedStoresList.push({
+                        store,
+                        missingDates,
+                        totalDays: missingDates.length
+                    });
                 }
             });
 
@@ -2740,7 +2806,7 @@
             if (chartInstances.lob) chartInstances.lob.destroy();
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
-                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 };
+                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0, AirPods: 0 };
                 data.forEach(item => {
                     const lob = extractLOB(item).toLowerCase();
                     const qty = extractQuantity(item);
@@ -2748,16 +2814,17 @@
                     else if (lob.includes('iphone')) lobTotals.iPhone += qty;
                     else if (lob.includes('ipad')) lobTotals.iPad += qty;
                     else if (lob.includes('watch')) lobTotals.Watch += qty;
+                    else if (lob.includes('airpods') || lob.includes('airpod')) lobTotals.AirPods += qty;
                 });
 
                 chartInstances.lob = new Chart(ctxLOB, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch', 'AirPods'],
                         datasets: [{
                             label: 'Total Sales',
-                            data: [lobTotals.Mac, lobTotals.iPhone, lobTotals.iPad, lobTotals.Watch],
-                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
+                            data: [lobTotals.Mac, lobTotals.iPhone, lobTotals.iPad, lobTotals.Watch, lobTotals.AirPods],
+                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch, LOB_COLORS.airpods],
                             borderWidth: 2,
                             borderColor: isLight ? '#ffffff' : '#0f172a'
                         }]
@@ -2783,7 +2850,7 @@
             if (chartInstances.avgPerDay) chartInstances.avgPerDay.destroy();
             const ctxAvg = document.getElementById('chartAvgPerDay')?.getContext('2d');
             if (ctxAvg) {
-                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0 };
+                let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0, AirPods: 0 };
                 data.forEach(item => {
                     const lob = extractLOB(item).toLowerCase();
                     const qty = extractQuantity(item);
@@ -2791,6 +2858,7 @@
                     else if (lob.includes('iphone')) lobTotals.iPhone += qty;
                     else if (lob.includes('ipad')) lobTotals.iPad += qty;
                     else if (lob.includes('watch')) lobTotals.Watch += qty;
+                    else if (lob.includes('airpods') || lob.includes('airpod')) lobTotals.AirPods += qty;
                 });
 
                 const monthVal = document.getElementById('filter-month')?.value || '10';
@@ -2806,17 +2874,18 @@
                     (lobTotals.Mac / maxDay).toFixed(1),
                     (lobTotals.iPhone / maxDay).toFixed(1),
                     (lobTotals.iPad / maxDay).toFixed(1),
-                    (lobTotals.Watch / maxDay).toFixed(1)
+                    (lobTotals.Watch / maxDay).toFixed(1),
+                    (lobTotals.AirPods / maxDay).toFixed(1)
                 ];
 
                 chartInstances.avgPerDay = new Chart(ctxAvg, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
+                        labels: ['Mac', 'iPhone', 'iPad', 'Watch', 'AirPods'],
                         datasets: [{
                             label: 'Average / Hari',
                             data: avgData,
-                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch],
+                            backgroundColor: [LOB_COLORS.mac, LOB_COLORS.iphone, LOB_COLORS.ipad, LOB_COLORS.watch, LOB_COLORS.airpods],
                             borderWidth: 2,
                             borderColor: isLight ? '#ffffff' : '#0f172a'
                         }]
@@ -2844,7 +2913,7 @@
 
         function switchTrendLob(lob) {
             currentTrendLob = lob;
-            ['all', 'mac', 'iphone', 'ipad', 'watch'].forEach(l => {
+            ['all', 'mac', 'iphone', 'ipad', 'watch', 'airpods'].forEach(l => {
                 const btn = document.getElementById(`btn-trend-${l}`);
                 if (btn) {
                     if (l === lob) {
@@ -3062,6 +3131,7 @@
                 "iPhone (LM / CM / Grw)", 
                 "iPad (LM / CM / Grw)", 
                 "Watch (LM / CM / Grw)", 
+                "AirPods (LM / CM / Grw)", 
                 "Growth Total"
             ];
             const rows = momStoresDataList.map((s, i) => [
@@ -3071,6 +3141,7 @@
                 `${s.iphoneLM} / ${s.iphoneCM} (${s.iphoneGrw})`,
                 `${s.ipadLM} / ${s.ipadCM} (${s.ipadGrw})`,
                 `${s.watchLM} / ${s.watchCM} (${s.watchGrw})`,
+                `${s.airpodsLM} / ${s.airpodsCM} (${s.airpodsGrw})`,
                 `${s.totalCM} (${s.totalGrowthPct})`
             ]);
             if (type === 'csv') downloadCSV("detail_komparasi_mom_per_store.csv", headers, rows);
