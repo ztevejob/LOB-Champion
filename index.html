@@ -69,12 +69,6 @@
             color: #f8fafc !important;
         }
 
-        body:not(.light-mode) #last-update,
-        body:not(.light-mode) .neon-date-target {
-            color: #39ff14 !important;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
-        }
-
         .neon-green-text {
             color: #39ff14 !important;
             text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
@@ -155,18 +149,6 @@
             background-color: var(--header-bg) !important;
         }
 
-        /* iPhone Frame / Mode Simulator */
-        .iphone-frame {
-            max-width: 414px;
-            margin: 0 auto;
-            border: 12px solid #1e293b;
-            border-radius: 40px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            background: var(--header-bg);
-            position: relative;
-        }
-
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
@@ -237,14 +219,6 @@
             <button type="button" id="btnSync" onclick="syncData()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow" title="Sync Data">
                 ☁️ Sync
             </button>
-
-            <div class="flex flex-col items-end justify-center px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-                <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span data-i18n="manualSyncStatus">Manual Sync</span>
-                </div>
-                <span class="text-[10px] font-normal opacity-90 text-indigo-700 dark:text-indigo-300 neon-date-target" id="last-update">Memuat...</span>
-            </div>
 
             <button onclick="resetFilters()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold hover:bg-rose-500/30 transition" title="Reset Filter">
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
@@ -396,7 +370,7 @@
 
         <div class="flex-1 overflow-y-auto pr-1 space-y-4" id="main-content-viewport">
 
-            <!-- iPhone App Menu Grid (Tampil khusus di mode iPhone sebelum masuk menu) -->
+            <!-- Mobile App Menu Grid (Tampil khusus di mode Mobile sebelum masuk menu) -->
             <div id="iphone-home-menu" class="hidden glass-panel p-6 space-y-6 text-center">
                 <div class="space-y-1">
                     <h3 class="font-extrabold text-lg text-indigo-400">LOB Champion Mobile</h3>
@@ -1392,7 +1366,6 @@
         const i18n = {
             id: {
                 subTitle: "Analytics Dashboard",
-                manualSyncStatus: "Manual Sync",
                 resetFilter: "Reset",
                 navOverview: "Overview",
                 navFormSubmit: "Form Submit",
@@ -1481,7 +1454,6 @@
             },
             en: {
                 subTitle: "Analytics Dashboard",
-                manualSyncStatus: "Manual Sync",
                 resetFilter: "Reset",
                 navOverview: "Overview",
                 navFormSubmit: "Form Submit",
@@ -1579,7 +1551,7 @@
         let unsubmittedStoresList = [];
         let momStoresDataList = [];
         let allSalesLobList = [];
-        let isIphoneMode = false;
+        let isMobileMode = false;
 
         function refreshData() {
             console.log("Memperbarui data dari server secara manual...");
@@ -1595,22 +1567,19 @@
         }
 
         function detectDeviceAndApplyMode() {
-            const viewport = document.getElementById('main-content-viewport');
             const homeMenu = document.getElementById('iphone-home-menu');
             const backBtn = document.getElementById('header-back-btn');
             
-            // Check if mobile device using userAgent or screen width
+            // Auto-detect mobile device using userAgent or screen width
             const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
             if (isMobileDevice) {
-                isIphoneMode = true;
-                viewport.classList.add('iphone-frame');
+                isMobileMode = true;
                 if (homeMenu) homeMenu.classList.remove('hidden');
                 document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
-                if (backBtn) backBtn.classList.remove('hidden');
+                if (backBtn) backBtn.classList.add('hidden');
             } else {
-                isIphoneMode = false;
-                viewport.classList.remove('iphone-frame');
+                isMobileMode = false;
                 if (homeMenu) homeMenu.classList.add('hidden');
                 if (backBtn) backBtn.classList.add('hidden');
                 showSection('overview');
@@ -1618,7 +1587,7 @@
         }
 
         function goBackToMenu() {
-            if (isIphoneMode) {
+            if (isMobileMode) {
                 document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
                 const homeMenu = document.getElementById('iphone-home-menu');
                 if (homeMenu) homeMenu.classList.remove('hidden');
@@ -1872,7 +1841,7 @@
             const desktopBtn = document.getElementById(`btn-${sectionId}`);
             if (desktopBtn) desktopBtn.classList.add('nav-active');
 
-            if (isIphoneMode) {
+            if (isMobileMode) {
                 const backBtn = document.getElementById('header-back-btn');
                 if (backBtn) backBtn.classList.remove('hidden');
             }
@@ -1926,16 +1895,6 @@
             applyFilters();
         }
 
-        function updateFormattedTimestamp() {
-            const now = new Date();
-            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
-            const dateStr = now.toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US', dateOptions);
-            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
-            const displayStr = `${dateStr}, ${timeStr} WIB`;
-            
-            document.getElementById('last-update').innerText = displayStr;
-        }
-
         function fetchLiveData() {
             const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
 
@@ -1948,7 +1907,6 @@
                     populateDropdownFilters(rawCSVData);
                     setDefaultSubmitDate();
                     applyFilters();
-                    updateFormattedTimestamp();
                 },
                 error: function(err) {
                     console.error('Error fetching CSV:', err);
@@ -3794,7 +3752,6 @@
             fetchLiveData();
             fetchMasterKaryawan();
             detectDeviceAndApplyMode();
-            showSection('overview');
         };
     </script>
 </body>
