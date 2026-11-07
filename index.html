@@ -51,7 +51,7 @@
             color: #0f172a !important;
         }
 
-        .light-mode select {
+        .light-mode select, .light-mode input {
             background-color: #ffffff !important;
             color: #0f172a !important;
             border-color: #94a3b8 !important;
@@ -489,13 +489,51 @@
                 </div>
             </div>
 
-            <!-- Section 2: Performa MoM -->
+            <!-- Section 2: Performa MoM (Dengan Dua Filter Bulan Fleksibel) -->
             <div id="sec-mom-perf" class="content-section hidden space-y-4">
+                <!-- Tambahan Filter MoM Custom Dua Bulan -->
+                <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 border-l-4 border-cyan-500">
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold text-cyan-600 dark:text-cyan-400">Pilih Bulan Utama (Current Month / CM)</label>
+                        <select id="mom-month-1" onchange="applyMoMFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-semibold text-xs">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10" selected>Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold text-cyan-600 dark:text-cyan-400">Pilih Bulan Pembanding (Last Month / LM)</label>
+                        <select id="mom-month-2" onchange="applyMoMFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-semibold text-xs">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09" selected>September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-sm flex items-center gap-2">
-                                <i data-lucide="calendar-range" class="w-4 h-4 text-cyan-500"></i> <span data-i18n="momGlobalTitle">Komparasi Global: Bulan Ini vs Bulan Sebelumnya (Per LOB)</span>
+                                <i data-lucide="calendar-range" class="w-4 h-4 text-cyan-500"></i> <span data-i18n="momGlobalTitle">Komparasi Global: Bulan Pilihan 1 vs Bulan Pilihan 2 (Per LOB)</span>
                             </h3>
                             <span class="text-[10px] px-2 py-0.5 bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold rounded border border-cyan-500/30" data-i18n="momBadge">MoM Analytics</span>
                         </div>
@@ -590,8 +628,24 @@
                 </div>
             </div>
 
-            <!-- Section 3: Performa WoW -->
+            <!-- Section 3: Performa WoW (Dengan Filter Week Selector) -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
+                <!-- Tambahan Filter Minggu / Week Selector -->
+                <div class="glass-panel p-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-l-4 border-indigo-500">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="filter" class="w-4 h-4 text-indigo-500"></i>
+                        <span class="text-xs font-bold">Pilih Minggu Pembanding (WoW):</span>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <select id="wow-week-selector" onchange="applyWoWFilters()" class="bg-slate-900/50 border border-gray-500/20 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="auto" selected>Otomatis (Minggu Berjalan vs Sebelumnya)</option>
+                            <option value="w4_w3">Minggu ke-4 vs Minggu ke-3</option>
+                            <option value="w3_w2">Minggu ke-3 vs Minggu ke-2</option>
+                            <option value="w2_w1">Minggu ke-2 vs Minggu ke-1</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div class="glass-panel p-4 lg:col-span-2 flex flex-col justify-between">
                         <div class="flex items-center justify-between mb-4">
@@ -679,8 +733,29 @@
                 </div>
             </div>
 
-            <!-- Section 4: Kedisiplinan -->
+            <!-- Section 4: Kedisiplinan (Dengan Filter Status Kepatuhan & PIC Area) -->
             <div id="sec-compliance" class="content-section hidden space-y-4">
+                <!-- Filter Tambahan Kedisiplinan -->
+                <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 border-l-4 border-rose-500">
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Status Kepatuhan</label>
+                        <select id="compliance-status-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
+                            <option value="ALL">Semua Toko</option>
+                            <option value="unsubmitted">Hanya Toko Belum Submit</option>
+                            <option value="late">Hanya Toko Terlambat Submit</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Regional / PIC Area</label>
+                        <select id="compliance-region-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
+                            <option value="ALL">Semua Region / Area</option>
+                            <option value="bali">Region Bali (Suhartono)</option>
+                            <option value="kalimantan">Region Kalimantan (Riyan Susanto)</option>
+                            <option value="surabaya">Region Surabaya & Sekitarnya</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-rose-500">
                         <span class="text-[11px] opacity-80 font-bold uppercase" data-i18n="summaryUnsubmitted">Toko Belum Submit (s.d. Kemarin)</span>
@@ -832,14 +907,30 @@
                 </div>
             </div>
 
-            <!-- Section 5: Log Transaksi Masuk -->
+            <!-- Section 5: Log Transaksi Masuk (Dengan Date Range Picker & Search Sales) -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
+                <!-- Tambahan Filter Tanggal & Sales Log -->
+                <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Dari Tanggal</label>
+                        <input type="date" id="raw-date-from" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Sampai Tanggal</label>
+                        <input type="date" id="raw-date-to" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Cari Nama Sales</label>
+                        <input type="text" id="raw-sales-search" oninput="renderRawDataTable(filteredData)" placeholder="Nama Sales..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                </div>
+
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                         <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Detail (Store, Nama, Tanggal Transaksi, Jenis LOB, Pcs)</h3>
                         <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                             <div class="relative w-48 sm:w-60">
-                                <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store (Kosong = All Store)..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             </div>
                             <div class="relative">
                                 <button onclick="toggleDropdown('export-raw-data')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
@@ -871,8 +962,25 @@
                 </div>
             </div>
 
-            <!-- Section Baru: All Sales LOB Directory -->
+            <!-- Section Baru: All Sales LOB Directory (Dengan Filter LOB Utama) -->
             <div id="sec-sales-lob" class="content-section hidden space-y-4">
+                <!-- Tambahan Filter LOB Utama -->
+                <div class="glass-panel p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="filter" class="w-4 h-4 text-indigo-500"></i>
+                        <span class="text-xs font-bold">Filter Berdasarkan LOB Utama:</span>
+                    </div>
+                    <div class="w-full sm:w-64">
+                        <select id="sales-lob-main-filter" onchange="renderAllSalesLobTable()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="ALL">Semua LOB</option>
+                            <option value="mac">Mac</option>
+                            <option value="iphone">iPhone</option>
+                            <option value="ipad">iPad</option>
+                            <option value="watch">Watch</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                         <div>
@@ -1052,6 +1160,9 @@
             "M297 Digimap Ponorogo City Center"
         ];
 
+        const BALI_STORES = ["M123 Digimap Mall Bali Galeria", "M130 Digimap Sunset Road Bali", "M134 Digimap Beachwalk Bali", "M239 Digimap Icon Mall Bali"];
+        const KALIMANTAN_STORES = ["M218 Digimap Plaza Balikpapan", "M221 Digimap A Yani Pontianak", "M249 Digimap Lippo Plaza Palangkaraya", "M263 Digimap Citimall Sampit", "M282 Digimap Citimall Pangkalan bun", "M287 Digimap Grand Tarakan", "M290 Digimap Mandau City Mall"];
+
         const i18n = {
             id: {
                 subTitle: "Analytics Dashboard",
@@ -1087,7 +1198,7 @@
                 thTotalUnit: "Total Unit",
                 thStoreName: "Nama Store",
                 thTotal: "Total",
-                momGlobalTitle: "Komparasi Global: Bulan Ini vs Bulan Sebelumnya (Per LOB)",
+                momGlobalTitle: "Komparasi Global: Pilihan Bulan 1 vs Pilihan Bulan 2 (Per LOB)",
                 momSummaryTitle: "Summary MoM",
                 momBadge: "MoM Analytics",
                 momStoreDetailTitle: "Detail Komparasi MoM per Store",
@@ -1161,7 +1272,7 @@
                 thTotalUnit: "Total Units",
                 thStoreName: "Store Name",
                 thTotal: "Total",
-                momGlobalTitle: "Global Comparison: Current Month vs Last Month (Per LOB)",
+                momGlobalTitle: "Global Comparison: Selected Month 1 vs Selected Month 2 (Per LOB)",
                 momSummaryTitle: "MoM Summary",
                 momBadge: "MoM Analytics",
                 momStoreDetailTitle: "MoM Store Comparison Detail",
@@ -1685,14 +1796,22 @@
             document.getElementById('kpi-trx-watch').innerText = trxWatch;
         }
 
+        function applyMoMFilters() {
+            renderMoMPerformance();
+            renderMoMStoreTable();
+        }
+
         function renderMoMPerformance() {
             const storeInput = document.getElementById('filter-store');
             const storeVal = storeInput ? storeInput.value.toLowerCase().trim() : 'all';
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
-            const currentMonthIdx = 9;
-            const lastMonthIdx = 8;
+            const m1Val = document.getElementById('mom-month-1')?.value || '10';
+            const m2Val = document.getElementById('mom-month-2')?.value || '09';
+
+            const month1Idx = parseInt(m1Val, 10) - 1;
+            const month2Idx = parseInt(m2Val, 10) - 1;
 
             let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
             let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
@@ -1715,8 +1834,8 @@
                         const lob = rowLOB.toLowerCase();
 
                         let targetObj = null;
-                        if (m === currentMonthIdx) targetObj = cmData;
-                        else if (m === lastMonthIdx) targetObj = lmData;
+                        if (m === month1Idx) targetObj = cmData;
+                        else if (m === month2Idx) targetObj = lmData;
 
                         if (targetObj) {
                             if (lob.includes('mac')) targetObj.mac += qty;
@@ -1775,13 +1894,13 @@
                         labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [
                             {
-                                label: 'Bulan Lalu (Sept)',
+                                label: `Bulan Pembanding (${m2Val})`,
                                 data: [lmData.mac, lmData.iphone, lmData.ipad, lmData.watch],
                                 backgroundColor: '#64748b',
                                 borderRadius: 4
                             },
                             {
-                                label: 'Bulan Ini (Okt)',
+                                label: `Bulan Utama (${m1Val})`,
                                 data: [cmData.mac, cmData.iphone, cmData.ipad, cmData.watch],
                                 backgroundColor: '#06b6d4',
                                 borderRadius: 4
@@ -1815,8 +1934,11 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const currentMonthIdx = 9;
-            const lastMonthIdx = 8;
+            const m1Val = document.getElementById('mom-month-1')?.value || '10';
+            const m2Val = document.getElementById('mom-month-2')?.value || '09';
+
+            const currentMonthIdx = parseInt(m1Val, 10) - 1;
+            const lastMonthIdx = parseInt(m2Val, 10) - 1;
 
             const storeMap = {};
             MASTER_STORES.forEach(s => {
@@ -2022,11 +2144,34 @@
 
             const searchInput = document.getElementById('raw-store-search');
             const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const salesSearchInput = document.getElementById('raw-sales-search');
+            const salesVal = salesSearchInput ? salesSearchInput.value.toLowerCase().trim() : '';
+            const dateFromInput = document.getElementById('raw-date-from')?.value;
+            const dateToInput = document.getElementById('raw-date-to')?.value;
 
             const filteredRows = data.filter(item => {
                 const store = extractStore(item).toLowerCase();
-                if (!searchVal) return true;
-                return store.includes(searchVal);
+                const name = extractName(item).toLowerCase();
+                const dateStr = extractDate(item);
+                const parsedDate = parseCustomDate(dateStr);
+
+                let matchStore = !searchVal || store.includes(searchVal);
+                let matchSales = !salesVal || name.includes(salesVal);
+                let matchDate = true;
+
+                if (parsedDate) {
+                    if (dateFromInput) {
+                        const dFrom = new Date(dateFromInput);
+                        if (parsedDate < dFrom) matchDate = false;
+                    }
+                    if (dateToInput) {
+                        const dTo = new Date(dateToInput);
+                        dTo.setHours(23, 59, 59);
+                        if (parsedDate > dTo) matchDate = false;
+                    }
+                }
+
+                return matchStore && matchSales && matchDate;
             });
 
             if (filteredRows.length === 0) {
@@ -2062,6 +2207,7 @@
 
             const searchInput = document.getElementById('sales-lob-search');
             const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const mainFilter = document.getElementById('sales-lob-main-filter')?.value || 'ALL';
 
             const mappingMap = {};
             rawCSVData.forEach(item => {
@@ -2087,8 +2233,12 @@
             })).sort((a, b) => a.store.localeCompare(b.store));
 
             const filteredRows = allSalesLobList.filter(row => {
-                if (!searchVal) return true;
-                return row.store.toLowerCase().includes(searchVal) || row.name.toLowerCase().includes(searchVal) || row.lob.toLowerCase().includes(searchVal);
+                const matchSearch = !searchVal || row.store.toLowerCase().includes(searchVal) || row.name.toLowerCase().includes(searchVal) || row.lob.toLowerCase().includes(searchVal);
+                let matchMainLob = true;
+                if (mainFilter !== 'ALL') {
+                    matchMainLob = row.lob.toLowerCase().includes(mainFilter);
+                }
+                return matchSearch && matchMainLob;
             });
 
             if (filteredRows.length === 0) {
@@ -2109,10 +2259,24 @@
             });
         }
 
+        function applyWoWFilters() {
+            renderWoWPerformance(filteredData);
+            renderWoWStoreTable(filteredData);
+        }
+
         function renderWoWPerformance(data) {
             const now = new Date();
-            const currentWeek = getWeekNumber(now);
-            const lastWeek = currentWeek - 1;
+            let currentWeek = getWeekNumber(now);
+            let lastWeek = currentWeek - 1;
+
+            const weekSelector = document.getElementById('wow-week-selector')?.value;
+            if (weekSelector === 'w4_w3') {
+                currentWeek = 4; lastWeek = 3;
+            } else if (weekSelector === 'w3_w2') {
+                currentWeek = 3; lastWeek = 2;
+            } else if (weekSelector === 'w2_w1') {
+                currentWeek = 2; lastWeek = 1;
+            }
 
             let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
             let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0 };
@@ -2185,13 +2349,13 @@
                         labels: ['Mac', 'iPhone', 'iPad', 'Watch'],
                         datasets: [
                             {
-                                label: 'Last Week (LW)',
+                                label: `Last Week (W-${lastWeek})`,
                                 data: [lwData.mac, lwData.iphone, lwData.ipad, lwData.watch],
                                 backgroundColor: '#64748b',
                                 borderRadius: 4
                             },
                             {
-                                label: 'This Week (TW)',
+                                label: `This Week (W-${currentWeek})`,
                                 data: [twData.mac, twData.iphone, twData.ipad, twData.watch],
                                 backgroundColor: '#6366f1',
                                 borderRadius: 4
@@ -2226,8 +2390,17 @@
             tbody.innerHTML = '';
 
             const now = new Date();
-            const currentWeek = getWeekNumber(now);
-            const lastWeek = currentWeek - 1;
+            let currentWeek = getWeekNumber(now);
+            let lastWeek = currentWeek - 1;
+
+            const weekSelector = document.getElementById('wow-week-selector')?.value;
+            if (weekSelector === 'w4_w3') {
+                currentWeek = 4; lastWeek = 3;
+            } else if (weekSelector === 'w3_w2') {
+                currentWeek = 3; lastWeek = 2;
+            } else if (weekSelector === 'w2_w1') {
+                currentWeek = 2; lastWeek = 1;
+            }
 
             const storeMap = {};
             MASTER_STORES.forEach(s => {
@@ -2297,6 +2470,11 @@
             if (badge) badge.innerText = `Total ${MASTER_STORES.length} Store`;
         }
 
+        function renderComplianceFilters() {
+            renderLateChampionsTable(rawCSVData);
+            renderUnsubmittedStoresTable(rawCSVData);
+        }
+
         function renderLateChampionsTable(allData) {
             const storeBody = document.getElementById('late-champions-body');
             const summaryBody = document.getElementById('late-champions-summary-body');
@@ -2305,6 +2483,9 @@
 
             storeBody.innerHTML = '';
             summaryBody.innerHTML = '';
+
+            const statusFilter = document.getElementById('compliance-status-filter')?.value || 'ALL';
+            const regionFilter = document.getElementById('compliance-region-filter')?.value || 'ALL';
 
             const storeLateMap = {};
             const championLateMap = {};
@@ -2317,7 +2498,12 @@
                 const rawStore = extractStore(item);
                 const store = findMasterStore(rawStore) || rawStore;
 
-                if (tsStr && txDateStr) {
+                let matchRegion = true;
+                if (regionFilter === 'bali') matchRegion = BALI_STORES.includes(store);
+                else if (regionFilter === 'kalimantan') matchRegion = KALIMANTAN_STORES.includes(store);
+                else if (regionFilter === 'surabaya') matchRegion = !BALI_STORES.includes(store) && !KALIMANTAN_STORES.includes(store);
+
+                if (matchRegion && tsStr && txDateStr) {
                     const tsParsed = parseCustomDate(tsStr);
                     const txParsed = parseCustomDate(txDateStr);
 
@@ -2345,6 +2531,11 @@
 
             lateStoresSummaryList = Object.entries(storeLateMap).map(([store, count]) => ({ store, count })).sort((a,b) => b.count - a.count);
             lateChampionSummaryList = Object.values(championLateMap).sort((a,b) => b.count - a.count);
+
+            if (statusFilter === 'unsubmitted') {
+                lateStoresSummaryList = [];
+                lateChampionSummaryList = [];
+            }
 
             document.getElementById('late-submit-total-badge').innerText = `${lateStoresSummaryList.length} Toko`;
             document.getElementById('late-summary-total-badge').innerText = `${lateChampionSummaryList.length} Champion`;
@@ -2452,6 +2643,16 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
+            const statusFilter = document.getElementById('compliance-status-filter')?.value || 'ALL';
+            const regionFilter = document.getElementById('compliance-region-filter')?.value || 'ALL';
+
+            if (statusFilter === 'late') {
+                document.getElementById('summary-unsubmitted-count').innerText = `0 Store`;
+                document.getElementById('unsubmitted-stores-count').innerText = `0 Toko`;
+                tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center opacity-80 text-xs">Difilter ke status Terlambat.</td></tr>';
+                return;
+            }
+
             const now = new Date();
             const startDate = new Date(2026, 9, 1);
             const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
@@ -2482,24 +2683,31 @@
             unsubmittedStoresList = [];
 
             MASTER_STORES.forEach(store => {
-                const missingDates = [];
-                let curr = new Date(startDate);
+                let matchRegion = true;
+                if (regionFilter === 'bali') matchRegion = BALI_STORES.includes(store);
+                else if (regionFilter === 'kalimantan') matchRegion = KALIMANTAN_STORES.includes(store);
+                else if (regionFilter === 'surabaya') matchRegion = !BALI_STORES.includes(store) && !KALIMANTAN_STORES.includes(store);
 
-                while (curr <= endDate) {
-                    const dateKey = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
-                    if (!submittedDatesByStore[store].has(dateKey)) {
-                        const dayFormatted = `${curr.getDate()} ${curr.toLocaleString('id-ID', { month: 'short' })}`;
-                        missingDates.push(dayFormatted);
+                if (matchRegion) {
+                    const missingDates = [];
+                    let curr = new Date(startDate);
+
+                    while (curr <= endDate) {
+                        const dateKey = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
+                        if (!submittedDatesByStore[store].has(dateKey)) {
+                            const dayFormatted = `${curr.getDate()} ${curr.toLocaleString('id-ID', { month: 'short' })}`;
+                            missingDates.push(dayFormatted);
+                        }
+                        curr.setDate(curr.getDate() + 1);
                     }
-                    curr.setDate(curr.getDate() + 1);
-                }
 
-                if (missingDates.length > 0) {
-                    unsubmittedStoresList.push({
-                        store,
-                        missingDates,
-                        totalDays: missingDates.length
-                    });
+                    if (missingDates.length > 0) {
+                        unsubmittedStoresList.push({
+                            store,
+                            missingDates,
+                            totalDays: missingDates.length
+                        });
+                    }
                 }
             });
 
