@@ -763,7 +763,7 @@
                 </div>
             </div>
 
-            <!-- Section 3: Performa WoW (Daftar Filter Bulan Ditambahkan & Filter Mingguan Manual Dihapus) -->
+            <!-- Section 3: Performa WoW -->
             <div id="sec-wow-perf" class="content-section hidden space-y-4">
                 <div class="glass-panel p-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-l-4 border-indigo-500">
                     <div class="flex items-center gap-2">
@@ -935,13 +935,11 @@
                 <div class="glass-panel p-4 border-l-4 border-emerald-500">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-4 pb-2 border-b border-gray-500/20">
                         <div>
-                            <!-- Judul Dinamis Mengikuti Filter Bulan -->
                             <h3 class="font-bold text-sm md:text-base flex items-center gap-2 text-emerald-400" id="compliance-log-title">
                                 <i data-lucide="file-check-2" class="w-5 h-5"></i> Tabel Log Submit Harian Champion
                             </h3>
                         </div>
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
-                            <!-- Input Box Filter Pencarian Toko -->
                             <div class="relative w-full sm:w-60">
                                 <input type="text" id="compliance-store-search" oninput="renderComplianceLogTable(rawCSVData)" placeholder="Cari Toko / Email..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500">
                             </div>
@@ -979,7 +977,7 @@
 
             </div>
 
-            <!-- Section 5: Direktori LOB -->
+            <!-- Section 5: Direktori LOB (Updated Headers: No. Toko, Email, LOB Apa) -->
             <div id="sec-sales-lob" class="content-section hidden space-y-4">
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -1011,11 +1009,11 @@
                             <h3 class="font-bold text-sm md:text-base flex items-center gap-2">
                                 <i data-lucide="users" class="w-4 h-4 text-indigo-500"></i> Direktori All Sales LOB Champion
                             </h3>
-                            <p class="text-xs opacity-80">Daftar lengkap store, nama staff, dan LOB yang dipegang berdasarkan data masuk.</p>
+                            <p class="text-xs opacity-80">Daftar lengkap store, email, dan LOB yang dipegang berdasarkan data masuk.</p>
                         </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                             <div class="relative w-48 sm:w-60">
-                                <input type="text" id="sales-lob-search" oninput="renderAllSalesLobTable()" placeholder="Cari Store / Staff..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <input type="text" id="sales-lob-search" oninput="renderAllSalesLobTable()" placeholder="Cari Toko / Email..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             </div>
                             <div class="relative">
                                 <button onclick="toggleDropdown('export-sales-lob')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
@@ -1034,9 +1032,9 @@
                             <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
                                 <tr>
                                     <th class="p-2.5 text-center w-12 sticky-header-bg">No</th>
-                                    <th class="p-2.5 sticky-header-bg">Nama Store</th>
-                                    <th class="p-2.5 sticky-header-bg">Nama Staff</th>
-                                    <th class="p-2.5 sticky-header-bg">Pegang LOB Apa</th>
+                                    <th class="p-2.5 sticky-header-bg">Toko</th>
+                                    <th class="p-2.5 sticky-header-bg">Email</th>
+                                    <th class="p-2.5 sticky-header-bg">LOB Apa</th>
                                 </tr>
                             </thead>
                             <tbody id="all-sales-lob-body" class="divide-y divide-gray-500/10"></tbody>
@@ -1156,7 +1154,6 @@
             airpods: '#06b6d4'
         };
 
-        // Master Toko Terbaru (104 Toko Digimap)
         const MASTER_STORES = [
             "M118 Digimap Pondok Indah Mall 3", "M119 Digimap Centrepoint Mall Medan", "M120 Digimap Sun Plaza Medan",
             "M121 Digimap Tunjungan Plaza 3 Surabaya", "M122 Digimap Galaxy Mall Surabaya", "M123 Digimap Mall Bali Galeria",
@@ -1578,7 +1575,6 @@
                 .catch(error => console.error('Error fetching master:', error));
         }
 
-        // Perbaikan: Ambil otomatis Champion LOB dari data master karyawan
         function onChampionSelect(namaInput) {
             if (!window.masterKaryawanData) return;
             
@@ -1587,7 +1583,7 @@
                 document.getElementById('emailChampion').value = matched.email || '';
                 document.getElementById('storeChampion').value = matched.store || '';
                 
-                // Ambil nilai LOB profil dari kolom master (lob / LOB / Champion LOB)
+                // Automatically populate Champion LOB from master column after matching email vs data submit
                 const lobInput = document.getElementById('lobChampion');
                 if (lobInput) {
                     lobInput.value = matched.lob || matched.LOB || matched['Champion LOB'] || matched.lob_submit || '-';
@@ -1800,14 +1796,6 @@
                     shiftSelect.innerHTML += `<option value="${shift}" ${shift === currentShift ? 'selected' : ''}>${shift}</option>`;
                 });
             }
-        }
-
-        function getWeekNumber(d) {
-            const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-            const dayNum = date.getUTCDay() || 7;
-            date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-            const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-            return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
         }
 
         function applyFilters() {
@@ -2349,9 +2337,6 @@
             }
         }
 
-        // ==========================================
-        // MENU KEDISIPLINAN TERUPDATE
-        // ==========================================
         function renderComplianceLogTable(allData) {
             const thead = document.getElementById('compliance-log-thead');
             const tbody = document.getElementById('compliance-log-tbody');
@@ -2370,7 +2355,6 @@
                 'ALL': 'Semua Bulan'
             };
 
-            // Perbaikan: Judul Tabel Bersih & Mengikuti Filter Bulan
             if (titleEl) {
                 titleEl.innerHTML = `<i data-lucide="file-check-2" class="w-5 h-5"></i> Tabel Log Submit Harian Champion (Periode ${monthNames[selectedMonth] || selectedMonth})`;
                 lucide.createIcons();
@@ -2438,7 +2422,6 @@
 
             let rowsData = Object.values(submitMap).sort((a, b) => a.store.localeCompare(b.store));
 
-            // Perbaikan: Filter Pencarian Toko pada Tabel Kedisiplinan
             const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
             if (searchVal) {
                 rowsData = rowsData.filter(r => r.store.toLowerCase().includes(searchVal) || r.email.toLowerCase().includes(searchVal));
@@ -2468,7 +2451,6 @@
                     const isTodayCol = (selectedMonth !== 'ALL' && selectedMonth === todayMonthStr && year === todayYear && d === todayDateNum);
                     const bgToday = isTodayCol ? 'border border-amber-400/50' : '';
 
-                    // Perbaikan: Cell Kosong Ditandai Latar Belakang Warna Merah Soft
                     if (row.days[d]) {
                         html += `<td class="p-1.5 text-center font-bold text-emerald-400 text-xs bg-emerald-500/10 ${bgToday}">✓</td>`;
                         exportDayStatus.push('✓');
@@ -2493,7 +2475,6 @@
             });
         }
 
-        // Feature Baru: Chart Keterlambatan Setiap Bulan
         function renderMonthlyLateChart(allData) {
             const ctxMonthly = document.getElementById('chartMonthlyLate')?.getContext('2d');
             if (!ctxMonthly) return;
@@ -2584,6 +2565,7 @@
             else if (type === 'pdf') downloadPDF(`Log Submit Kedisiplinan Bulan ${selectedMonth}`, headers, complianceLogExportData);
         }
 
+        // Updated Direktori LOB Render Function with headers: No, Toko (Store), Email, LOB Apa
         function renderAllSalesLobTable() {
             const tbody = document.getElementById('all-sales-lob-body');
             if (!tbody) return;
@@ -2597,7 +2579,7 @@
             const mappingMap = {};
             rawCSVData.forEach(item => {
                 const store = extractStore(item);
-                const name = extractName(item);
+                const email = extractEmail(item);
                 const lob = extractLOB(item);
                 const dateStr = extractDate(item);
                 const parsed = parseCustomDate(dateStr);
@@ -2608,10 +2590,10 @@
                     if (m !== monthFilter || parsed.getFullYear() !== 2026) matchMonth = false;
                 }
 
-                if (matchMonth && store && store !== '-' && name && name !== '-') {
-                    const key = `${store}___${name}`;
+                if (matchMonth && store && store !== '-' && email && email !== '-') {
+                    const key = `${store}___${email}`;
                     if (!mappingMap[key]) {
-                        mappingMap[key] = { store, name, lobs: new Set() };
+                        mappingMap[key] = { store, email, lobs: new Set() };
                     }
                     if (lob && lob !== '-') {
                         mappingMap[key].lobs.add(lob);
@@ -2621,12 +2603,12 @@
 
             allSalesLobList = Object.values(mappingMap).map(item => ({
                 store: item.store,
-                name: item.name,
+                email: item.email,
                 lob: Array.from(item.lobs).join(', ')
             })).sort((a, b) => a.store.localeCompare(b.store));
 
             const filteredRows = allSalesLobList.filter(row => {
-                const matchSearch = !searchVal || row.store.toLowerCase().includes(searchVal) || row.name.toLowerCase().includes(searchVal) || row.lob.toLowerCase().includes(searchVal);
+                const matchSearch = !searchVal || row.store.toLowerCase().includes(searchVal) || row.email.toLowerCase().includes(searchVal) || row.lob.toLowerCase().includes(searchVal);
                 let matchMainLob = true;
                 if (mainFilter !== 'ALL') {
                     matchMainLob = row.lob.toLowerCase().includes(mainFilter);
@@ -2645,14 +2627,13 @@
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
                     <td class="p-2.5 font-bold">${row.store}</td>
-                    <td class="p-2.5">${row.name}</td>
+                    <td class="p-2.5 font-mono opacity-90">${row.email}</td>
                     <td class="p-2.5 font-semibold text-indigo-400">${row.lob || '-'}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // Perbaikan Performa WoW: Tambah Filter Bulan & Otomatisasi Perbandingan Minggu dalam Bulan Terpilih
         function applyWoWFilters() {
             renderWoWPerformance(rawCSVData);
             renderWoWStoreTable(rawCSVData);
@@ -2666,7 +2647,6 @@
             let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
             let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
 
-            // Membagi minggu ke-1/2 vs minggu ke-3/4 dalam bulan yang dipilih
             data.forEach(item => {
                 const dateStr = extractDate(item);
                 const parsedDate = parseCustomDate(dateStr);
@@ -2676,8 +2656,8 @@
                     const qty = extractQuantity(item);
 
                     let targetObj = null;
-                    if (day > 15) targetObj = twData; // Week kedua / akhir bulan
-                    else targetObj = lwData;         // Week pertama / awal bulan
+                    if (day > 15) targetObj = twData;
+                    else targetObj = lwData;
 
                     if (targetObj) {
                         if (lob.includes('mac')) targetObj.mac += qty;
@@ -3202,8 +3182,8 @@
         }
 
         function exportSalesLob(type) {
-            const headers = ["No", "Nama Store", "Nama Staff", "Pegang LOB Apa"];
-            const rows = allSalesLobList.map((r, i) => [i + 1, r.store, r.name, r.lob]);
+            const headers = ["No", "Toko", "Email", "LOB Apa"];
+            const rows = allSalesLobList.map((r, i) => [i + 1, r.store, r.email, r.lob]);
             const filename = "direktori_all_sales_lob";
             if (type === 'csv') downloadCSV(`${filename}.csv`, headers, rows);
             else if (type === 'excel') downloadExcel(`${filename}.xlsx`, headers, rows);
