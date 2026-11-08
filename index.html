@@ -1094,6 +1094,7 @@
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Log Matrix</label>
                         <select id="matrix-month-filter" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="ALL">Semua Bulan</option>
                             <option value="01">Januari 2026</option>
                             <option value="02">Februari 2026</option>
                             <option value="03">Maret 2026</option>
@@ -1653,7 +1654,6 @@
                 'trend-bulanan': i18n[lang].navTrend,
                 'settings': i18n[lang].navSettings
             };
-            const currentSec = document.querySelector('.content-section:not(.hidden)')?.id.replace('sec-', '') || 'overview';
             document.getElementById('page-title').innerText = titles[currentSec] || i18n[lang].navOverview;
             
             applyFilters();
@@ -2729,7 +2729,7 @@
 
         // ==========================================
         // RENDER MONTHLY MATRIX LOG (LOG TRANSAKSI)
-        // Match berdasar email master & submit harian
+        // Fixed: Added support for "ALL" months option
         // ==========================================
         function renderRawDataTable(data) {
             const thead = document.getElementById('matrix-table-head');
@@ -2739,8 +2739,13 @@
             const selectedMonth = document.getElementById('matrix-month-filter')?.value || '11';
             const searchVal = document.getElementById('raw-store-search')?.value.toLowerCase().trim() || '';
             const year = 2026;
-            const monthIdx = parseInt(selectedMonth, 10) - 1;
-            const totalDays = new Date(year, monthIdx + 1, 0).getDate();
+            
+            let totalDays = 31;
+            let monthIdx = 0;
+            if (selectedMonth !== 'ALL') {
+                monthIdx = parseInt(selectedMonth, 10) - 1;
+                totalDays = new Date(year, monthIdx + 1, 0).getDate();
+            }
 
             // 1. Build Header: No, Store, Nama Sales, Jenis LOB, Tanggal 1 s.d. Total
             let headHTML = `<tr>
@@ -2749,8 +2754,12 @@
                 <th class="p-2 sticky-header-bg">Nama Sales</th>
                 <th class="p-2 sticky-header-bg">Jenis LOB</th>`;
             
-            for (let d = 1; d <= totalDays; d++) {
-                headHTML += `<th class="p-2 text-center sticky-header-bg font-mono">${d}</th>`;
+            if (selectedMonth === 'ALL') {
+                headHTML += `<th class="p-2 text-center sticky-header-bg font-mono">Bulan Terpilih</th>`;
+            } else {
+                for (let d = 1; d <= totalDays; d++) {
+                    headHTML += `<th class="p-2 text-center sticky-header-bg font-mono">${d}</th>`;
+                }
             }
             headHTML += `<th class="p-2 text-center sticky-header-bg">Total</th></tr>`;
             thead.innerHTML = headHTML;
@@ -2775,27 +2784,30 @@
                 const dateStr = extractDate(item);
                 const parsed = parseCustomDate(dateStr);
 
-                if (parsed && parsed.getFullYear() === year && String(parsed.getMonth() + 1).padStart(2, '0') === selectedMonth) {
-                    const masterMatch = masterEmailMap[email];
-                    const store = masterMatch ? masterMatch.store : extractStore(item);
-                    const nama = masterMatch ? masterMatch.nama : extractName(item);
-                    const lob = extractLOB(item);
-                    const qty = extractQuantity(item);
-                    const dayNum = parsed.getDate();
+                if (parsed && parsed.getFullYear() === year) {
+                    const rowMonthStr = String(parsed.getMonth() + 1).padStart(2, '0');
+                    if (selectedMonth === 'ALL' || rowMonthStr === selectedMonth) {
+                        const masterMatch = masterEmailMap[email];
+                        const store = masterMatch ? masterMatch.store : extractStore(item);
+                        const nama = masterMatch ? masterMatch.nama : extractName(item);
+                        const lob = extractLOB(item);
+                        const qty = extractQuantity(item);
+                        const dayNum = parsed.getDate();
 
-                    if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
-                        const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
-                        if (!matrixMap[key]) {
-                            matrixMap[key] = {
-                                store: store,
-                                nama: nama,
-                                lob: lob,
-                                days: {},
-                                total: 0
-                            };
+                        if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
+                            const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
+                            if (!matrixMap[key]) {
+                                matrixMap[key] = {
+                                    store: store,
+                                    nama: nama,
+                                    lob: lob,
+                                    days: {},
+                                    total: 0
+                                };
+                            }
+                            matrixMap[key].days[dayNum] = (matrixMap[key].days[dayNum] || 0) + qty;
+                            matrixMap[key].total += qty;
                         }
-                        matrixMap[key].days[dayNum] = (matrixMap[key].days[dayNum] || 0) + qty;
-                        matrixMap[key].total += qty;
                     }
                 }
             });
@@ -2808,7 +2820,7 @@
 
             tbody.innerHTML = '';
             if (matrixRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${5 + totalDays}" class="p-4 text-center opacity-80 text-xs">Tidak ada data log transaksi match berdasar email pada bulan ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${(selectedMonth === 'ALL' ? 5 : 5 + totalDays)}" class="p-4 text-center opacity-80 text-xs">Tidak ada data log transaksi match berdasar email pada bulan ini.</td></tr>`;
                 return;
             }
 
@@ -2823,9 +2835,13 @@
                     <td class="p-2 font-semibold text-indigo-400">${row.lob}</td>
                 `;
 
-                for (let d = 1; d <= totalDays; d++) {
-                    const q = row.days[d] || 0;
-                    html += `<td class="p-2 text-center font-mono">${q > 0 ? `<b class="text-emerald-400">${q}</b>` : '<span class="opacity-30">0</span>'}</td>`;
+                if (selectedMonth === 'ALL') {
+                    html += `<td class="p-2 text-center font-mono font-bold text-cyan-400">Gabungan Semua Bulan</td>`;
+                } else {
+                    for (let d = 1; d <= totalDays; d++) {
+                        const q = row.days[d] || 0;
+                        html += `<td class="p-2 text-center font-mono">${q > 0 ? `<b class="text-emerald-400">${q}</b>` : '<span class="opacity-30">0</span>'}</td>`;
+                    }
                 }
 
                 html += `<td class="p-2 text-center font-mono font-bold text-indigo-400">${row.total}</td>`;
@@ -3740,11 +3756,20 @@
         function exportRawData(type) {
             const selectedMonth = document.getElementById('matrix-month-filter')?.value || '11';
             const year = 2026;
-            const monthIdx = parseInt(selectedMonth, 10) - 1;
-            const totalDays = new Date(year, monthIdx + 1, 0).getDate();
+            
+            let totalDays = 31;
+            let monthIdx = 0;
+            if (selectedMonth !== 'ALL') {
+                monthIdx = parseInt(selectedMonth, 10) - 1;
+                totalDays = new Date(year, monthIdx + 1, 0).getDate();
+            }
 
             let headers = ["No", "Store", "Nama Sales", "Jenis LOB"];
-            for (let d = 1; d <= totalDays; d++) headers.push(`Tgl ${d}`);
+            if (selectedMonth === 'ALL') {
+                headers.push("Bulan Terpilih");
+            } else {
+                for (let d = 1; d <= totalDays; d++) headers.push(`Tgl ${d}`);
+            }
             headers.push("Total");
 
             const masterList = window.masterKaryawanData || [];
@@ -3759,21 +3784,24 @@
                 const dateStr = extractDate(item);
                 const parsed = parseCustomDate(dateStr);
 
-                if (parsed && parsed.getFullYear() === year && String(parsed.getMonth() + 1).padStart(2, '0') === selectedMonth) {
-                    const masterMatch = masterEmailMap[email];
-                    const store = masterMatch ? masterMatch.store : extractStore(item);
-                    const nama = masterMatch ? masterMatch.nama : extractName(item);
-                    const lob = extractLOB(item);
-                    const qty = extractQuantity(item);
-                    const dayNum = parsed.getDate();
+                if (parsed && parsed.getFullYear() === year) {
+                    const rowMonthStr = String(parsed.getMonth() + 1).padStart(2, '0');
+                    if (selectedMonth === 'ALL' || rowMonthStr === selectedMonth) {
+                        const masterMatch = masterEmailMap[email];
+                        const store = masterMatch ? masterMatch.store : extractStore(item);
+                        const nama = masterMatch ? masterMatch.nama : extractName(item);
+                        const lob = extractLOB(item);
+                        const qty = extractQuantity(item);
+                        const dayNum = parsed.getDate();
 
-                    if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
-                        const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
-                        if (!matrixMap[key]) {
-                            matrixMap[key] = { store, nama, lob, days: {}, total: 0 };
+                        if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
+                            const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
+                            if (!matrixMap[key]) {
+                                matrixMap[key] = { store, nama, lob, days: {}, total: 0 };
+                            }
+                            matrixMap[key].days[dayNum] = (matrixMap[key].days[dayNum] || 0) + qty;
+                            matrixMap[key].total += qty;
                         }
-                        matrixMap[key].days[dayNum] = (matrixMap[key].days[dayNum] || 0) + qty;
-                        matrixMap[key].total += qty;
                     }
                 }
             });
@@ -3781,8 +3809,12 @@
             const matrixRows = Object.values(matrixMap).sort((a, b) => a.store.localeCompare(b.store));
             const rows = matrixRows.map((r, i) => {
                 let rowArr = [i + 1, r.store, r.nama, r.lob];
-                for (let d = 1; d <= totalDays; d++) {
-                    rowArr.push(r.days[d] || 0);
+                if (selectedMonth === 'ALL') {
+                    rowArr.push("Gabungan Semua Bulan");
+                } else {
+                    for (let d = 1; d <= totalDays; d++) {
+                        rowArr.push(r.days[d] || 0);
+                    }
                 }
                 rowArr.push(r.total);
                 return rowArr;
