@@ -70,7 +70,7 @@
 
         .neon-green-text {
             color: #39ff14 !important;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.8), 0 0 20px rgba(57, 255, 20, 0.4);
         }
         .light-mode .neon-green-text {
             color: #059669 !important;
@@ -246,8 +246,8 @@
                             <option value="07">Juli</option>
                             <option value="08">Agustus</option>
                             <option value="09">September</option>
-                            <option value="10" selected>Oktober</option>
-                            <option value="11">November</option>
+                            <option value="10">Oktober</option>
+                            <option value="11" selected>November</option>
                             <option value="12">Desember</option>
                         </select>
                     </div>
@@ -668,8 +668,8 @@
                             <option value="07">Juli</option>
                             <option value="08">Agustus</option>
                             <option value="09">September</option>
-                            <option value="10" selected>Oktober</option>
-                            <option value="11">November</option>
+                            <option value="10">Oktober</option>
+                            <option value="11" selected>November</option>
                             <option value="12">Desember</option>
                         </select>
                     </div>
@@ -684,8 +684,8 @@
                             <option value="06">Juni</option>
                             <option value="07">Juli</option>
                             <option value="08">Agustus</option>
-                            <option value="09" selected>September</option>
-                            <option value="10">Oktober</option>
+                            <option value="09">September</option>
+                            <option value="10" selected>Oktober</option>
                             <option value="11">November</option>
                             <option value="12">Desember</option>
                         </select>
@@ -790,8 +790,8 @@
                             <option value="07">Juli</option>
                             <option value="08">Agustus</option>
                             <option value="09">September</option>
-                            <option value="10" selected>Oktober</option>
-                            <option value="11">November</option>
+                            <option value="10">Oktober</option>
+                            <option value="11" selected>November</option>
                             <option value="12">Desember</option>
                         </select>
                     </div>
@@ -884,8 +884,8 @@
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Evaluasi</label>
                         <select id="compliance-month-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
                             <option value="09">September 2026</option>
-                            <option value="10" selected>Oktober 2026</option>
-                            <option value="11">November 2026</option>
+                            <option value="10">Oktober 2026</option>
+                            <option value="11" selected>November 2026</option>
                             <option value="12">Desember 2026</option>
                             <option value="ALL">Semua Bulan (Aktif)</option>
                         </select>
@@ -945,7 +945,7 @@
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-4 pb-2 border-b border-gray-500/20">
                         <div>
                             <h3 class="font-bold text-sm md:text-base flex items-center gap-2 text-emerald-400" id="compliance-log-title">
-                                <i data-lucide="file-check-2" class="w-5 h-5"></i> Tabel Log Submit Harian Champion (Periode Oktober)
+                                <i data-lucide="file-check-2" class="w-5 h-5"></i> Tabel Log Submit Harian Champion (Periode November)
                             </h3>
                         </div>
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
@@ -994,8 +994,8 @@
                         <select id="sales-lob-month-filter" onchange="renderAllSalesLobTable()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             <option value="ALL">Semua Bulan (Aktif)</option>
                             <option value="09">September 2026</option>
-                            <option value="10" selected>Oktober 2026</option>
-                            <option value="11">November 2026</option>
+                            <option value="10">Oktober 2026</option>
+                            <option value="11" selected>November 2026</option>
                             <option value="12">Desember 2026</option>
                         </select>
                     </div>
@@ -1074,8 +1074,8 @@
                                     <option value="07">Juli</option>
                                     <option value="08">Agustus</option>
                                     <option value="09">September</option>
-                                    <option value="10" selected>Oktober</option>
-                                    <option value="11">November</option>
+                                    <option value="10">Oktober</option>
+                                    <option value="11" selected>November</option>
                                     <option value="12">Desember</option>
                                 </select>
                             </div>
@@ -1256,7 +1256,7 @@
                 const globalKpiContainer = document.getElementById('global-kpi-container');
                 if (globalKpiContainer) globalKpiContainer.classList.add('hidden');
                 if (backBtn) backBtn.classList.add('hidden');
-                if (mobileActionBar) mobileActionBar.classList.add('hidden'); // Hide on home menu grid
+                if (mobileActionBar) mobileActionBar.classList.add('hidden');
                 document.getElementById('page-title').innerText = "LOB Champion Mobile";
             } else {
                 isMobileMode = false;
@@ -1498,7 +1498,6 @@
                 const backBtn = document.getElementById('header-back-btn');
                 if (backBtn) backBtn.classList.remove('hidden');
                 
-                // Show sticky bottom action bar for Refresh & Sync when inside any sub-menu on mobile
                 const mobileActionBar = document.getElementById('mobile-sticky-action-bar');
                 if (mobileActionBar) mobileActionBar.classList.remove('hidden');
             }
@@ -1542,7 +1541,7 @@
         }
 
         function resetFilters() {
-            document.getElementById('filter-month').value = '10';
+            document.getElementById('filter-month').value = '11';
             const storeInput = document.getElementById('filter-store');
             if (storeInput) storeInput.value = '';
             document.getElementById('filter-lob').value = 'ALL';
@@ -1816,7 +1815,7 @@
         }
 
         function applyFilters() {
-            const monthVal = document.getElementById('filter-month')?.value || '10';
+            const monthVal = document.getElementById('filter-month')?.value || '11';
             const storeInput = document.getElementById('filter-store');
             const storeVal = storeInput ? storeInput.value.toLowerCase().trim() : 'all';
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
@@ -1865,8 +1864,8 @@
             let totalMac = 0, totalIphone = 0, totalIpad = 0, totalWatch = 0, totalAirpods = 0;
             let trxMac = 0, trxIphone = 0, trxIpad = 0, trxWatch = 0, trxAirpods = 0;
 
-            const monthVal = document.getElementById('filter-month')?.value || '10';
-            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
+            const monthVal = document.getElementById('filter-month')?.value || '11';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 10;
             const year = 2026;
 
             const now = new Date();
@@ -1951,8 +1950,8 @@
 
             const totalOverall = Object.values(lobTotals).reduce((a, b) => a + b, 0);
 
-            const monthVal = document.getElementById('filter-month')?.value || '10';
-            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
+            const monthVal = document.getElementById('filter-month')?.value || '11';
+            const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 10;
             const now = new Date();
             let maxDay = now.getDate() - 1;
             if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
@@ -2014,8 +2013,8 @@
             const lobVal = document.getElementById('filter-lob')?.value || 'ALL';
             const shiftVal = document.getElementById('filter-shift')?.value || 'ALL';
 
-            const m1Val = document.getElementById('mom-month-1')?.value || '10';
-            const m2Val = document.getElementById('mom-month-2')?.value || '09';
+            const m1Val = document.getElementById('mom-month-1')?.value || '11';
+            const m2Val = document.getElementById('mom-month-2')?.value || '10';
 
             const month1Idx = parseInt(m1Val, 10) - 1;
             const month2Idx = parseInt(m2Val, 10) - 1;
@@ -2142,8 +2141,8 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const m1Val = document.getElementById('mom-month-1')?.value || '10';
-            const m2Val = document.getElementById('mom-month-2')?.value || '09';
+            const m1Val = document.getElementById('mom-month-1')?.value || '11';
+            const m2Val = document.getElementById('mom-month-2')?.value || '10';
 
             const currentMonthIdx = parseInt(m1Val, 10) - 1;
             const lastMonthIdx = parseInt(m2Val, 10) - 1;
@@ -2362,7 +2361,7 @@
             
             if (!thead || !tbody) return;
 
-            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '10';
+            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '11';
             const year = 2026;
 
             const monthNames = {
@@ -2468,12 +2467,13 @@
                     const isTodayCol = (selectedMonth !== 'ALL' && selectedMonth === todayMonthStr && year === todayYear && d === todayDateNum);
                     const bgToday = isTodayCol ? 'border border-amber-400/50' : '';
 
+                    // Perbaikan: Centang kasih warna neon saja
                     if (row.days[d]) {
-                        html += `<td class="p-1.5 text-center font-extrabold text-emerald-400 text-sm bg-emerald-500/20 border border-emerald-500/30 ${bgToday}" style="text-shadow: 0 0 4px rgba(16, 185, 129, 0.4);">✓</td>`;
+                        html += `<td class="p-1.5 text-center font-extrabold neon-green-text text-sm ${bgToday}">✓</td>`;
                         exportDayStatus.push('✓');
                     } else {
-                        html += `<td class="p-1.5 text-center font-extrabold text-rose-400 text-sm bg-rose-500/25 border border-rose-500/35 ${bgToday}" style="text-shadow: 0 0 4px rgba(239, 68, 68, 0.4);">✕</td>`;
-                        exportDayStatus.push('✕');
+                        html += `<td class="p-1.5 text-center font-bold text-rose-400/50 text-xs ${bgToday}">-</td>`;
+                        exportDayStatus.push('-');
                     }
                 }
 
@@ -2561,7 +2561,7 @@
         }
 
         function exportComplianceLog(type) {
-            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '10';
+            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '11';
             const year = 2026;
             
             let totalDays = 31;
@@ -2656,7 +2656,7 @@
         }
 
         function renderWoWPerformance(data) {
-            const selectedMonth = document.getElementById('wow-month-filter')?.value || '10';
+            const selectedMonth = document.getElementById('wow-month-filter')?.value || '11';
             const selectedMonthIdx = parseInt(selectedMonth, 10) - 1;
             const year = 2026;
 
@@ -2772,7 +2772,7 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const selectedMonth = document.getElementById('wow-month-filter')?.value || '10';
+            const selectedMonth = document.getElementById('wow-month-filter')?.value || '11';
             const selectedMonthIdx = parseInt(selectedMonth, 10) - 1;
             const year = 2026;
 
@@ -2854,7 +2854,7 @@
             tbody.innerHTML = '';
 
             const statusFilter = document.getElementById('compliance-status-filter')?.value || 'ALL';
-            const complianceMonth = document.getElementById('compliance-month-filter')?.value || '10';
+            const complianceMonth = document.getElementById('compliance-month-filter')?.value || '11';
 
             if (statusFilter === 'late') {
                 document.getElementById('summary-unsubmitted-count').innerText = `0 Store`;
@@ -3012,8 +3012,8 @@
                     else if (lob.includes('airpods') || lob.includes('airpod')) lobTotals.AirPods += qty;
                 });
 
-                const monthVal = document.getElementById('filter-month')?.value || '10';
-                const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 9;
+                const monthVal = document.getElementById('filter-month')?.value || '11';
+                const selectedMonthIdx = monthVal !== 'ALL' ? parseInt(monthVal, 10) - 1 : 10;
                 const now = new Date();
                 let maxDay = now.getDate() - 1;
                 if (monthVal !== 'ALL' && selectedMonthIdx !== now.getMonth()) {
