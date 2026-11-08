@@ -137,20 +137,14 @@
 </head>
 <body class="flex flex-col min-h-screen p-2 md:p-4 pb-28 lg:pb-4 gap-4">
 
-    <!-- Prominent Fetch Progress Bar & Toast (Bottom-Right Visibility) -->
-    <div id="fetch-progress-container" class="fixed bottom-20 right-4 z-[200] hidden w-64 glass-panel p-3 shadow-2xl border border-indigo-500/50 bg-slate-900/95">
+    <!-- Clean Percentage Progress Bar (Bottom-Right Visibility, No Spinners) -->
+    <div id="fetch-progress-container" class="fixed bottom-4 right-4 z-[200] hidden w-64 glass-panel p-3 shadow-2xl border border-indigo-500/50 bg-slate-900/95">
         <div class="flex items-center justify-between mb-1.5 text-xs font-bold text-cyan-300">
-            <span id="fetch-status-text">Memuat data...</span>
-            <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-cyan-400"></i>
+            <span id="fetch-status-text">Memuat data... (0%)</span>
         </div>
         <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
             <div id="fetch-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 w-0 transition-all duration-300 shadow-[0_0_10px_rgba(57,255,20,0.8)]"></div>
         </div>
-    </div>
-
-    <div id="fetch-status-toast" class="fixed bottom-4 right-4 z-[190] hidden glass-panel px-4 py-2 flex items-center gap-2 text-xs font-bold shadow-lg border border-indigo-500/30 bg-slate-900/90 text-indigo-300">
-        <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-cyan-400"></i>
-        <span id="fetch-status-toast-text">Menarik data dari GAS...</span>
     </div>
 
     <!-- Mobile Sticky Floating Action Bar -->
@@ -163,9 +157,9 @@
         </button>
     </div>
 
-    <!-- MANDATORY README / TERMS MODAL DIALOG -->
-    <div id="submit-readme-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="glass-panel p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4 border-2 border-indigo-500 shadow-2xl bg-slate-900/95 pointer-events-auto">
+    <!-- MANDATORY README / TERMS MODAL DIALOG (Safe Event Propagation) -->
+    <div id="submit-readme-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4" onclick="closeReadmeModal()">
+        <div class="glass-panel p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4 border-2 border-indigo-500 shadow-2xl bg-slate-900/95 pointer-events-auto" onclick="event.stopPropagation()">
             <div class="flex items-center justify-between pb-3 border-b border-gray-500/20">
                 <div class="flex items-center gap-2 text-indigo-400">
                     <i data-lucide="shield-alert" class="w-6 h-6"></i>
@@ -218,9 +212,9 @@
             </div>
 
             <div class="pt-3 border-t border-gray-500/20 space-y-3">
-                <label class="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 cursor-pointer hover:bg-emerald-500/20 transition pointer-events-auto">
-                    <input type="checkbox" id="readme-agreement-checkbox" onchange="toggleReadmeSubmitBtn()" onclick="toggleReadmeSubmitBtn()" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
-                    <span class="text-xs font-bold text-emerald-300 pointer-events-auto">Saya telah membaca, memahami, dan menyetujui seluruh ketentuan & panduan pelaporan di atas.</span>
+                <label class="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 cursor-pointer hover:bg-emerald-500/20 transition" onclick="event.stopPropagation()">
+                    <input type="checkbox" id="readme-agreement-checkbox" onchange="toggleReadmeSubmitBtn()" onclick="event.stopPropagation()" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                    <span class="text-xs font-bold text-emerald-300">Saya telah membaca, memahami, dan menyetujui seluruh ketentuan & panduan pelaporan di atas.</span>
                 </label>
 
                 <div class="flex items-center justify-end gap-2">
@@ -517,9 +511,9 @@
                 </button>
             </div>
 
-            <!-- Section Form Submit -->
+            <!-- Section Form Submit (Border-less inside cards, 50/50 wide desktop layout) -->
             <div id="sec-form-submit" class="content-section hidden space-y-4">
-                <div class="glass-panel p-6 max-w-5xl mx-auto space-y-5 border-l-4 border-indigo-500">
+                <div class="glass-panel p-6 max-w-6xl mx-auto space-y-6">
                     <div class="flex items-center gap-3 pb-3 border-b border-gray-500/20">
                         <div class="p-2.5 bg-indigo-600 rounded-lg text-white">
                             <i data-lucide="file-pen-line" class="w-5 h-5"></i>
@@ -530,49 +524,49 @@
                         </div>
                     </div>
 
-                    <form id="transaction-submit-form" onsubmit="openReadmeModal(event)" class="space-y-4 text-xs">
+                    <form id="transaction-submit-form" onsubmit="openReadmeModal(event)" class="space-y-6 text-xs">
                         
-                        <!-- IDENTITAS & KALENDER BERSEBELAHAN DI DESKTOP -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <!-- Identitas & Profil -->
-                            <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 space-y-4 flex flex-col justify-between">
+                        <!-- IDENTITAS & KALENDER BERSEBELAHAN 50/50 DI DESKTOP, LEBIH LUAS -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                            <!-- Identitas & Profil (Borderless) -->
+                            <div class="p-5 rounded-xl bg-slate-900/40 space-y-4 flex flex-col justify-between">
                                 <div class="space-y-4">
                                     <h4 class="font-bold text-indigo-400 uppercase tracking-wider text-[11px]">1. Identitas & Profil Champion</h4>
                                     
                                     <div class="space-y-3">
                                         <div>
                                             <label class="block font-bold mb-1 opacity-95">Nama Champion / SA</label>
-                                            <input type="text" id="submit-name" required placeholder="Cari / Ketik Nama..." list="listKaryawan" oninput="onChampionSelect(this.value)" onchange="onChampionSelect(this.value)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                            <input type="text" id="submit-name" required placeholder="Cari / Ketik Nama..." list="listKaryawan" oninput="onChampionSelect(this.value)" onchange="onChampionSelect(this.value)" class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                             <datalist id="listKaryawan"></datalist>
                                         </div>
                                         <div>
                                             <label class="block font-bold mb-1 opacity-95">Email Sales Coach</label>
-                                            <input type="email" id="emailChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
+                                            <input type="email" id="emailChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/20 border border-gray-500/10 rounded-lg p-2.5 font-semibold text-xs opacity-90 cursor-not-allowed">
                                         </div>
                                         <div>
                                             <label class="block font-bold mb-1 opacity-95">Store (Toko)</label>
-                                            <input type="text" id="storeChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
+                                            <input type="text" id="storeChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/20 border border-gray-500/10 rounded-lg p-2.5 font-semibold text-xs opacity-90 cursor-not-allowed">
                                         </div>
                                         <div>
                                             <label class="block font-bold mb-1 opacity-95 text-indigo-300">Champion LOB (Master Data)</label>
-                                            <input type="text" id="lobChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold text-emerald-400 cursor-not-allowed">
+                                            <input type="text" id="lobChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/20 border border-gray-500/10 rounded-lg p-2.5 font-semibold text-xs text-emerald-400 cursor-not-allowed">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-[10px] opacity-70 italic pt-2 border-t border-indigo-500/10">
+                                <div class="text-[10px] opacity-70 italic pt-3 border-t border-gray-500/10">
                                     *Profil otomatis mencocokkan email dan LOB master karyawan.
                                 </div>
                             </div>
 
-                            <!-- Kalender Aktivitas Bulanan -->
-                            <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-3 flex flex-col justify-between">
+                            <!-- Kalender Aktivitas Bulanan (Lebar & Borderless) -->
+                            <div class="p-5 rounded-xl bg-slate-900/40 space-y-4 flex flex-col justify-between">
                                 <div class="space-y-3">
                                     <div class="flex items-center justify-between gap-2">
                                         <div class="flex items-center gap-2">
                                             <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
                                             <span class="font-bold text-xs text-emerald-400 uppercase tracking-wider">Kalender Aktivitas Submit</span>
                                         </div>
-                                        <select id="cal-filter-month" onchange="renderStaffCalendar()" class="bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                        <select id="cal-filter-month" onchange="renderStaffCalendar()" class="bg-slate-900/60 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500">
                                             <option value="01">Jan 2026</option>
                                             <option value="02">Feb 2026</option>
                                             <option value="03">Mar 2026</option>
@@ -588,7 +582,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] flex items-center justify-between">
+                                    <div class="p-2.5 rounded-lg bg-emerald-500/10 text-[11px] flex items-center justify-between">
                                         <div>
                                             <span class="opacity-80">Staff:</span> 
                                             <b class="text-emerald-400 ml-1" id="cal-active-staff-name">(Pilih Nama)</b>
@@ -599,30 +593,30 @@
                                         </div>
                                     </div>
 
-                                    <div class="bg-black/30 p-3 rounded-xl border border-emerald-500/20 space-y-1.5">
-                                        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-emerald-300 pb-1 border-b border-gray-500/20">
+                                    <div class="bg-black/30 p-3.5 rounded-xl space-y-2">
+                                        <div class="grid grid-cols-7 gap-1.5 text-center text-[10px] font-bold text-emerald-300 pb-1.5 border-b border-gray-500/20">
                                             <div>Sen</div><div>Sel</div><div>Rbu</div><div>Kam</div><div>Jum</div><div>Sab</div><div>Min</div>
                                         </div>
-                                        <div class="grid grid-cols-7 gap-1" id="staff-calendar-grid">
-                                            <div class="col-span-7 p-6 text-center text-xs opacity-70">Pilih Nama Champion di samping untuk memuat kalender.</div>
+                                        <div class="grid grid-cols-7 gap-1.5" id="staff-calendar-grid">
+                                            <div class="col-span-7 p-10 text-center text-xs opacity-70">Pilih Nama Champion di samping untuk memuat kalender.</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 2. DETAIL LAPORAN TRANSAKSI -->
-                        <div class="p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-gray-500/10 space-y-3">
+                        <!-- 2. DETAIL LAPORAN TRANSAKSI (Borderless) -->
+                        <div class="p-5 rounded-xl bg-slate-900/40 space-y-4">
                             <h4 class="font-bold text-emerald-400 uppercase tracking-wider text-[11px]">2. Detail Laporan Transaksi</h4>
                             
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Tanggal Transaksi</label>
-                                    <input type="date" id="submit-date" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <input type="date" id="submit-date" required class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                 </div>
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Champion LOB (Transaksi)</label>
-                                    <select id="submit-lob" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <select id="submit-lob" required class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                         <option value="">Pilih LOB...</option>
                                         <option value="iPad">iPad</option>
                                         <option value="Mac">Mac</option>
@@ -632,11 +626,11 @@
                                 </div>
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Total Qty</label>
-                                    <input type="number" id="submit-qty" min="0" required value="0" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <input type="number" id="submit-qty" min="0" required value="0" class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                 </div>
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Positions</label>
-                                    <select id="submit-position" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <select id="submit-position" required class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                         <option value="">Pilih Position...</option>
                                         <option value="Cashier">Cashier</option>
                                         <option value="SPV">SPV</option>
@@ -646,7 +640,7 @@
                                 </div>
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Shift</label>
-                                    <select id="submit-shift" required class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <select id="submit-shift" required class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                         <option value="">Pilih Shift...</option>
                                         <option value="Middle">Middle</option>
                                         <option value="Pagi">Pagi</option>
@@ -655,14 +649,14 @@
                                 </div>
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Total Demo Target</label>
-                                    <input type="number" id="submit-demo-target" min="0" value="0" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                    <input type="number" id="submit-demo-target" min="0" value="0" class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
                                 </div>
                             </div>
                         </div>
 
                         <!-- SUBMIT BUTTON -->
                         <div class="pt-2">
-                            <button type="submit" id="btn-submit-action" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                            <button type="submit" id="btn-submit-action" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2">
                                 <i data-lucide="send" class="w-4 h-4"></i> <span>Kirim & Simpan Laporan Harian</span>
                             </button>
                         </div>
@@ -1332,19 +1326,15 @@
         function updateProgress(percent, text) {
             const progressBar = document.getElementById('fetch-progress-bar');
             const container = document.getElementById('fetch-progress-container');
-            const toast = document.getElementById('fetch-status-toast');
-            const statusText = document.getElementById('fetch-status-toast-text');
+            const statusText = document.getElementById('fetch-status-text');
 
             if (container) container.classList.remove('hidden');
-            if (toast) toast.classList.remove('hidden');
-            
             if (progressBar) progressBar.style.width = percent + '%';
-            if (statusText) statusText.innerText = text;
+            if (statusText) statusText.innerText = `${text} (${percent}%)`;
 
             if (percent >= 100) {
                 setTimeout(() => {
                     if (container) container.classList.add('hidden');
-                    if (toast) toast.classList.add('hidden');
                     if (progressBar) progressBar.style.width = '0%';
                 }, 800);
             }
@@ -1669,20 +1659,19 @@
 
         function fetchLiveData() {
             const url = GAS_WEB_APP_URL + "?action=getDataTransaksi&t=" + new Date().getTime();
-            updateProgress(30, "Menghubungkan ke Server GAS...");
+            updateProgress(25, "Memuat data...");
 
             fetch(url)
                 .then(response => {
-                    updateProgress(70, "Memproses Data Transaksi...");
+                    updateProgress(75, "Memuat data...");
                     return response.json();
                 })
                 .then(data => {
-                    updateProgress(90, "Menyusun Tampilan Dashboard...");
+                    updateProgress(100, "Memuat data...");
                     rawCSVData = data;
                     populateDropdownFilters(rawCSVData);
                     setDefaultSubmitDate();
                     applyFilters();
-                    updateProgress(100, "Sinkronisasi Selesai!");
                 })
                 .catch(err => {
                     console.error('Error fetching data from GAS:', err);
@@ -1752,7 +1741,7 @@
 
             if (!activeEmailInput) {
                 staffNameDisplay.innerText = "(Pilih Nama)";
-                calendarGrid.innerHTML = '<div class="col-span-7 p-6 text-center text-xs opacity-70">Pilih Nama Champion di samping untuk memuat kalender.</div>';
+                calendarGrid.innerHTML = '<div class="col-span-7 p-10 text-center text-xs opacity-70">Pilih Nama Champion di samping untuk memuat kalender.</div>';
                 return;
             }
 
@@ -1791,16 +1780,16 @@
 
             calendarGrid.innerHTML = '';
             for (let i = 0; i < firstDayIndex; i++) {
-                calendarGrid.innerHTML += `<div class="h-14 rounded-lg bg-black/10 opacity-25"></div>`;
+                calendarGrid.innerHTML += `<div class="h-16 rounded-lg bg-black/10 opacity-25"></div>`;
             }
 
             for (let day = 1; day <= totalDaysInMonth; day++) {
                 const isSubmitted = submittedDatesMap[day] && submittedDatesMap[day].length > 0;
-                const bgClass = isSubmitted ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-300 font-bold shadow-sm' : 'bg-black/30 border-gray-500/25 opacity-60';
+                const bgClass = isSubmitted ? 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-bold shadow-sm' : 'bg-black/20 opacity-60';
                 const badgeHTML = isSubmitted ? `<span class="block text-[9px] px-1 bg-emerald-500 text-slate-950 font-extrabold rounded mt-0.5">Submitted</span>` : `<span class="block text-[9px] opacity-60 mt-0.5">Belum</span>`;
 
                 calendarGrid.innerHTML += `
-                    <div class="h-16 p-1 rounded-lg border ${bgClass} flex flex-col justify-between items-center text-xs transition hover:scale-105 cursor-pointer" title="Tanggal ${day}">
+                    <div class="h-16 p-1.5 rounded-lg ${bgClass} flex flex-col justify-between items-center text-xs transition hover:scale-105 cursor-pointer" title="Tanggal ${day}">
                         <span class="font-mono text-xs font-extrabold">${day}</span>
                         ${badgeHTML}
                     </div>
@@ -1878,8 +1867,7 @@
             const submitBtn = document.getElementById('btn-submit-action');
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Mengirim ke Google Sheets...`;
-                lucide.createIcons();
+                submitBtn.innerHTML = `Mengirim ke Google Sheets...`;
             }
 
             fetch(GAS_WEB_APP_URL, {
@@ -3462,3 +3450,4 @@
     </script>
 </body>
 </html>
+
