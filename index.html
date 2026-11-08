@@ -1118,8 +1118,8 @@
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                         <div>
-                            <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Matrix Bulanan (Store & Nama dari Master, LOB & Transaksi dari Submit)</h3>
-                            <p class="text-xs opacity-80">Pencocokan data berdasarkan Email Champion. Menampilkan rekap harian ke samping selama 1 bulan penuh.</p>
+                            <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Matrix Bulanan (Store, Nama, LOB & Transaksi Langsung dari Submit)</h3>
+                            <p class="text-xs opacity-80">Menampilkan rekap harian ke samping selama 1 bulan penuh langsung dari data submit.</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="relative">
@@ -2729,7 +2729,7 @@
 
         // ==========================================
         // RENDER MONTHLY MATRIX LOG (LOG TRANSAKSI)
-        // Fixed: Added support for "ALL" months option
+        // Store & Nama langsung dari data Submit
         // ==========================================
         function renderRawDataTable(data) {
             const thead = document.getElementById('matrix-table-head');
@@ -2764,38 +2764,24 @@
             headHTML += `<th class="p-2 text-center sticky-header-bg">Total</th></tr>`;
             thead.innerHTML = headHTML;
 
-            // 2. Ambil master karyawan jika ada (untuk validasi & match email)
-            const masterList = window.masterKaryawanData || [];
-            const masterEmailMap = {};
-            masterList.forEach(m => {
-                if (m.email) {
-                    masterEmailMap[m.email.toLowerCase().trim()] = {
-                        store: m.store,
-                        nama: m.nama
-                    };
-                }
-            });
-
-            // 3. Agregasi data submit berdasarkan Email + LOB + Tanggal
+            // 2. Agregasi data submit langsung dari data parameter yang masuk
             const matrixMap = {};
 
             data.forEach(item => {
-                const email = extractEmail(item);
                 const dateStr = extractDate(item);
                 const parsed = parseCustomDate(dateStr);
 
                 if (parsed && parsed.getFullYear() === year) {
                     const rowMonthStr = String(parsed.getMonth() + 1).padStart(2, '0');
                     if (selectedMonth === 'ALL' || rowMonthStr === selectedMonth) {
-                        const masterMatch = masterEmailMap[email];
-                        const store = masterMatch ? masterMatch.store : extractStore(item);
-                        const nama = masterMatch ? masterMatch.nama : extractName(item);
+                        const store = extractStore(item);
+                        const nama = extractName(item);
                         const lob = extractLOB(item);
                         const qty = extractQuantity(item);
                         const dayNum = parsed.getDate();
 
-                        if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
-                            const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
+                        if (store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
+                            const key = `${store.toLowerCase()}___${nama.toLowerCase()}___${lob.toLowerCase()}`;
                             if (!matrixMap[key]) {
                                 matrixMap[key] = {
                                     store: store,
@@ -2820,7 +2806,7 @@
 
             tbody.innerHTML = '';
             if (matrixRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${(selectedMonth === 'ALL' ? 5 : 5 + totalDays)}" class="p-4 text-center opacity-80 text-xs">Tidak ada data log transaksi match berdasar email pada bulan ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${(selectedMonth === 'ALL' ? 5 : 5 + totalDays)}" class="p-4 text-center opacity-80 text-xs">Tidak ada data log transaksi pada bulan ini.</td></tr>`;
                 return;
             }
 
@@ -3772,30 +3758,22 @@
             }
             headers.push("Total");
 
-            const masterList = window.masterKaryawanData || [];
-            const masterEmailMap = {};
-            masterList.forEach(m => {
-                if (m.email) masterEmailMap[m.email.toLowerCase().trim()] = { store: m.store, nama: m.nama };
-            });
-
             const matrixMap = {};
             rawCSVData.forEach(item => {
-                const email = extractEmail(item);
                 const dateStr = extractDate(item);
                 const parsed = parseCustomDate(dateStr);
 
                 if (parsed && parsed.getFullYear() === year) {
                     const rowMonthStr = String(parsed.getMonth() + 1).padStart(2, '0');
                     if (selectedMonth === 'ALL' || rowMonthStr === selectedMonth) {
-                        const masterMatch = masterEmailMap[email];
-                        const store = masterMatch ? masterMatch.store : extractStore(item);
-                        const nama = masterMatch ? masterMatch.nama : extractName(item);
+                        const store = extractStore(item);
+                        const nama = extractName(item);
                         const lob = extractLOB(item);
                         const qty = extractQuantity(item);
                         const dayNum = parsed.getDate();
 
-                        if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
-                            const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
+                        if (store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
+                            const key = `${store.toLowerCase()}___${nama.toLowerCase()}___${lob.toLowerCase()}`;
                             if (!matrixMap[key]) {
                                 matrixMap[key] = { store, nama, lob, days: {}, total: 0 };
                             }
