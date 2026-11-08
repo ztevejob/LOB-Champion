@@ -211,11 +211,9 @@
         </nav>
 
         <div class="hidden lg:flex items-center gap-3">
-            <!-- Tombol Refresh -->
             <button type="button" id="btnRefresh" onclick="refreshData()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow" title="Refresh Data">
                 🔄 Refresh
             </button>
-            <!-- Tombol Sync -->
             <button type="button" id="btnSync" onclick="syncData()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow" title="Sync Data">
                 ☁️ Sync
             </button>
@@ -370,7 +368,7 @@
 
         <div class="flex-1 overflow-y-auto pr-1 space-y-4" id="main-content-viewport">
 
-            <!-- Mobile App Menu Grid (Tampil khusus di mode Mobile sebagai landing page) -->
+            <!-- Mobile App Menu Grid -->
             <div id="iphone-home-menu" class="hidden glass-panel p-6 space-y-6 text-center">
                 <div class="space-y-1">
                     <h3 class="font-extrabold text-lg text-indigo-400">LOB Champion Mobile</h3>
@@ -416,7 +414,7 @@
                 </button>
             </div>
 
-            <!-- Section Form Submit Laporan & Kalender Tergabung (Clean & Compact) -->
+            <!-- Section Form Submit Laporan & Kalender Tergabung -->
             <div id="sec-form-submit" class="content-section hidden space-y-4">
                 <div class="glass-panel p-6 max-w-3xl mx-auto space-y-5 border-l-4 border-indigo-500">
                     <div class="flex items-center gap-3 pb-3 border-b border-gray-500/20">
@@ -572,7 +570,7 @@
                                     <th class="p-2.5 sticky-header-bg">Kategori LOB</th>
                                     <th class="p-2.5 text-center sticky-header-bg">Total Transaksi (QTY)</th>
                                     <th class="p-2.5 text-center sticky-header-bg">Average / Hari</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">Persentase</th>
+                                    <th class="p-2.5 text-center sticky-header-bg" title="Proporsi kontribusi terhadap total keseluruhan unit (Sales Mix)">Kontribusi (%)</th>
                                 </tr>
                             </thead>
                             <tbody id="overview-summary-body" class="divide-y divide-gray-500/10">
@@ -1081,53 +1079,54 @@
                 </div>
             </div>
 
-            <!-- Section 5: Log Transaksi Masuk -->
+            <!-- Section 5: Log Transaksi Matrix Bulanan -->
             <div id="sec-raw-data" class="content-section hidden space-y-4">
-                <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Dari Tanggal</label>
-                        <input type="date" id="raw-date-from" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Log Matrix</label>
+                        <select id="matrix-month-filter" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="01">Januari 2026</option>
+                            <option value="02">Februari 2026</option>
+                            <option value="03">Maret 2026</option>
+                            <option value="04">April 2026</option>
+                            <option value="05">Mei 2026</option>
+                            <option value="06">Juni 2026</option>
+                            <option value="07">Juli 2026</option>
+                            <option value="08">Agustus 2026</option>
+                            <option value="09">September 2026</option>
+                            <option value="10">Oktober 2026</option>
+                            <option value="11" selected>November 2026</option>
+                            <option value="12">Desember 2026</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Sampai Tanggal</label>
-                        <input type="date" id="raw-date-to" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Cari Nama Sales</label>
-                        <input type="text" id="raw-sales-search" oninput="renderRawDataTable(filteredData)" placeholder="Nama Sales..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <label class="block opacity-90 mb-1 text-[10px] font-bold">Cari Store / Nama Sales</label>
+                        <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store atau Nama..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
                 </div>
 
                 <div class="glass-panel p-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-                        <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Detail (Store, Nama, Tanggal Transaksi, Jenis LOB, Pcs)</h3>
-                        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                            <div class="relative w-48 sm:w-60">
-                                <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                            </div>
+                        <div>
+                            <h3 class="font-bold text-sm" data-i18n="rawLogTitle">Log Transaksi Matrix Bulanan (Store & Nama dari Master, LOB & Transaksi dari Submit)</h3>
+                            <p class="text-xs opacity-80">Pencocokan data berdasarkan Email Champion. Menampilkan rekap harian ke samping selama 1 bulan penuh.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
                             <div class="relative">
                                 <button onclick="toggleDropdown('export-raw-data')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold transition flex items-center gap-1 shadow">
                                     <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
                                 </button>
                                 <div id="export-raw-data" class="hidden absolute right-0 mt-1 w-32 bg-slate-900 border border-gray-500/20 rounded shadow-lg z-50 overflow-hidden">
-                                    <button onclick="exportRawData('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
                                     <button onclick="exportRawData('excel')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">Excel</button>
+                                    <button onclick="exportRawData('csv')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">CSV</button>
                                     <button onclick="exportRawData('pdf')" class="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-indigo-600">PDF</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="overflow-x-auto max-h-[500px]">
-                        <table class="w-full text-xs text-left border-collapse min-w-[700px]">
-                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold">
-                                <tr>
-                                    <th class="p-2.5 text-center w-12 sticky-header-bg">No.</th>
-                                    <th class="p-2.5 sticky-header-bg">Store</th>
-                                    <th class="p-2.5 sticky-header-bg">Nama</th>
-                                    <th class="p-2.5 sticky-header-bg">Tanggal Transaksi</th>
-                                    <th class="p-2.5 sticky-header-bg">Jenis LOB</th>
-                                    <th class="p-2.5 text-center sticky-header-bg">Pcs</th>
-                                </tr>
+                    <div class="overflow-x-auto max-h-[550px]">
+                        <table class="w-full text-xs text-left border-collapse" id="matrix-log-table">
+                            <thead class="opacity-90 border-b border-gray-500/20 uppercase sticky top-0 z-10 sticky-header-bg font-bold" id="matrix-table-head">
                             </thead>
                             <tbody id="raw-data-body" class="divide-y divide-gray-500/10"></tbody>
                         </table>
@@ -1440,7 +1439,7 @@
                 lateChampionsListDesc: "Akumulasi jumlah frekuensi keterlambatan submit per Champion pada periode terfilter.",
                 btnCopyWaRekap: "Copy WA Rekap",
                 thChampionName: "Nama Champion",
-                rawLogTitle: "Log Transaksi Masuk (Semua Toko)",
+                rawLogTitle: "Log Transaksi Matrix Bulanan",
                 trendBulananTitle: "Trend Performa Bulanan per LOB",
                 trendBulananDesc: "Rekap historis unit terjual tiap bulan berdasarkan Store dan Nama Sales untuk melihat trend kenaikan/penurunan.",
                 realtimeBadge: "Real-time Data",
@@ -1528,7 +1527,7 @@
                 lateChampionsListDesc: "Accumulated late submission frequency per Champion in the filtered period.",
                 btnCopyWaRekap: "Copy Summary WA",
                 thChampionName: "Champion Name",
-                rawLogTitle: "Incoming Transaction Log (All Stores)",
+                rawLogTitle: "Monthly Matrix Transaction Log",
                 trendBulananTitle: "Monthly Performance Trend by LOB",
                 trendBulananDesc: "Historical recap of monthly units sold by Store and Sales to track performance trends.",
                 realtimeBadge: "Real-time Data",
@@ -1554,13 +1553,11 @@
         let isMobileMode = false;
 
         function refreshData() {
-            console.log("Memperbarui data dari server secara manual...");
             fetchLiveData();
             fetchMasterKaryawan();
         }
 
         function syncData() {
-            console.log("Melakukan sinkronisasi data manual...");
             fetchLiveData();
             fetchMasterKaryawan();
             alert("Sinkronisasi data berhasil dijalankan secara manual!");
@@ -1569,8 +1566,6 @@
         function detectDeviceAndApplyMode() {
             const homeMenu = document.getElementById('iphone-home-menu');
             const backBtn = document.getElementById('header-back-btn');
-            
-            // Auto-detect mobile device using userAgent or screen width
             const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
             if (isMobileDevice) {
@@ -1710,7 +1705,6 @@
         function findMasterStore(rawStoreName) {
             if (!rawStoreName || rawStoreName === '-') return null;
             const cleaned = String(rawStoreName).trim().toLowerCase();
-            
             let found = MASTER_STORES.find(ms => ms.toLowerCase() === cleaned);
             if (found) return found;
 
@@ -1851,7 +1845,6 @@
                 if (backBtn) backBtn.classList.remove('hidden');
             }
 
-            // Toggle visibility of global header controls and summary KPI container (only visible on 'overview')
             const globalKpiContainer = document.getElementById('global-kpi-container');
             if (globalKpiContainer) {
                 if (sectionId === 'overview') {
@@ -2011,7 +2004,6 @@
             const firstDayIndex = (new Date(year, monthIdx, 1).getDay() + 6) % 7;
 
             calendarGrid.innerHTML = '';
-
             for (let i = 0; i < firstDayIndex; i++) {
                 calendarGrid.innerHTML += `<div class="h-12 rounded-lg bg-black/10 opacity-20"></div>`;
             }
@@ -2070,9 +2062,7 @@
             fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             }).then(() => {
                 const timestamp = new Date().toISOString();
@@ -2331,7 +2321,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Total Row
             const totalTr = document.createElement('tr');
             totalTr.className = 'bg-black/10 dark:bg-white/10 font-bold';
             totalTr.innerHTML = `
@@ -2509,7 +2498,6 @@
 
             rawCSVData.forEach(item => {
                 const matchedStore = findMasterStore(extractStore(item));
-                
                 if (matchedStore) {
                     const parsedDate = parseCustomDate(extractDate(item));
                     if (parsedDate && parsedDate.getFullYear() === 2026) {
@@ -2703,66 +2691,113 @@
             }
         }
 
+        // ==========================================
+        // RENDER MONTHLY MATRIX LOG (LOG TRANSAKSI)
+        // Match berdasar email master & submit harian
+        // ==========================================
         function renderRawDataTable(data) {
-            const rawBody = document.getElementById('raw-data-body');
-            if (!rawBody) return;
-            rawBody.innerHTML = '';
+            const thead = document.getElementById('matrix-table-head');
+            const tbody = document.getElementById('raw-data-body');
+            if (!thead || !tbody) return;
 
-            const searchInput = document.getElementById('raw-store-search');
-            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
-            const salesSearchInput = document.getElementById('raw-sales-search');
-            const salesVal = salesSearchInput ? salesSearchInput.value.toLowerCase().trim() : '';
-            const dateFromInput = document.getElementById('raw-date-from')?.value;
-            const dateToInput = document.getElementById('raw-date-to')?.value;
+            const selectedMonth = document.getElementById('matrix-month-filter')?.value || '11';
+            const searchVal = document.getElementById('raw-store-search')?.value.toLowerCase().trim() || '';
+            const year = 2026;
+            const monthIdx = parseInt(selectedMonth, 10) - 1;
+            const totalDays = new Date(year, monthIdx + 1, 0).getDate();
 
-            const filteredRows = data.filter(item => {
-                const store = extractStore(item).toLowerCase();
-                const name = extractName(item).toLowerCase();
-                const dateStr = extractDate(item);
-                const parsedDate = parseCustomDate(dateStr);
+            // 1. Build Header: No, Store, Nama Sales, Jenis LOB, Tanggal 1 s.d. Total
+            let headHTML = `<tr>
+                <th class="p-2 text-center w-12 sticky-header-bg">No</th>
+                <th class="p-2 sticky-header-bg">Store</th>
+                <th class="p-2 sticky-header-bg">Nama Sales</th>
+                <th class="p-2 sticky-header-bg">Jenis LOB</th>`;
+            
+            for (let d = 1; d <= totalDays; d++) {
+                headHTML += `<th class="p-2 text-center sticky-header-bg font-mono">${d}</th>`;
+            }
+            headHTML += `<th class="p-2 text-center sticky-header-bg">Total</th></tr>`;
+            thead.innerHTML = headHTML;
 
-                let matchStore = !searchVal || store.includes(searchVal);
-                let matchSales = !salesVal || name.includes(salesVal);
-                let matchDate = true;
-
-                if (parsedDate) {
-                    if (dateFromInput) {
-                        const dFrom = new Date(dateFromInput);
-                        if (parsedDate < dFrom) matchDate = false;
-                    }
-                    if (dateToInput) {
-                        const dTo = new Date(dateToInput);
-                        dTo.setHours(23, 59, 59);
-                        if (parsedDate > dTo) matchDate = false;
-                    }
+            // 2. Ambil master karyawan jika ada (untuk validasi & match email)
+            const masterList = window.masterKaryawanData || [];
+            const masterEmailMap = {};
+            masterList.forEach(m => {
+                if (m.email) {
+                    masterEmailMap[m.email.toLowerCase().trim()] = {
+                        store: m.store,
+                        nama: m.nama
+                    };
                 }
-
-                return matchStore && matchSales && matchDate;
             });
 
-            if (filteredRows.length === 0) {
-                rawBody.innerHTML = '<tr><td colspan="6" class="p-3 text-center opacity-80 text-xs">Data log transaksi tidak ditemukan.</td></tr>';
+            // 3. Agregasi data submit berdasarkan Email + LOB + Tanggal
+            // Struktur: matrixMap[email_lob] = { email, store, nama, lob, days: {1: qty, 2: qty, ...}, total: sum }
+            const matrixMap = {};
+
+            data.forEach(item => {
+                const email = extractEmail(item);
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
+
+                if (parsed && parsed.getFullYear() === year && String(parsed.getMonth() + 1).padStart(2, '0') === selectedMonth) {
+                    // Match berdasar email master jika master tersedia, atau fallback ke submit
+                    const masterMatch = masterEmailMap[email];
+                    const store = masterMatch ? masterMatch.store : extractStore(item);
+                    const nama = masterMatch ? masterMatch.nama : extractName(item);
+                    const lob = extractLOB(item);
+                    const qty = extractQuantity(item);
+                    const dayNum = parsed.getDate();
+
+                    if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
+                        const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
+                        if (!matrixMap[key]) {
+                            matrixMap[key] = {
+                                store: store,
+                                nama: nama,
+                                lob: lob,
+                                days: {},
+                                total: 0
+                            };
+                        }
+                        matrixMap[key].days[dayNum] = (matrixMap[key].days[dayNum] || 0) + qty;
+                        matrixMap[key].total += qty;
+                    }
+                }
+            });
+
+            let matrixRows = Object.values(matrixMap).sort((a, b) => a.store.localeCompare(b.store));
+
+            // Filter pencarian store/nama
+            if (searchVal) {
+                matrixRows = matrixRows.filter(r => r.store.toLowerCase().includes(searchVal) || r.nama.toLowerCase().includes(searchVal));
+            }
+
+            tbody.innerHTML = '';
+            if (matrixRows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${5 + totalDays}" class="p-4 text-center opacity-80 text-xs">Tidak ada data log transaksi match berdasar email pada bulan ini.</td></tr>`;
                 return;
             }
 
-            filteredRows.forEach((item, idx) => {
-                const store = extractStore(item);
-                const name = extractName(item);
-                const dateTrx = extractDate(item);
-                const lob = extractLOB(item);
-                const qty = extractQuantity(item);
-
-                const tr = document.createElement('tr');
+            matrixRows.forEach((row, idx) => {
+                let tr = document.createElement('tr');
                 tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
-                tr.innerHTML = `
-                    <td class="p-2.5 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
-                    <td class="p-2.5 font-bold">${store}</td>
-                    <td class="p-2.5">${name}</td>
-                    <td class="p-2.5 font-mono">${dateTrx}</td>
-                    <td class="p-2.5 font-semibold text-indigo-400">${lob}</td>
-                    <td class="p-2.5 text-center font-mono font-bold text-emerald-400">${qty}</td>
+                
+                let html = `
+                    <td class="p-2 text-center font-mono opacity-80 font-bold">${idx + 1}</td>
+                    <td class="p-2 font-bold">${row.store}</td>
+                    <td class="p-2">${row.nama}</td>
+                    <td class="p-2 font-semibold text-indigo-400">${row.lob}</td>
                 `;
-                rawBody.appendChild(tr);
+
+                for (let d = 1; d <= totalDays; d++) {
+                    const q = row.days[d] || 0;
+                    html += `<td class="p-2 text-center font-mono">${q > 0 ? `<b class="text-emerald-400">${q}</b>` : '<span class="opacity-30">0</span>'}</td>`;
+                }
+
+                html += `<td class="p-2 text-center font-mono font-bold text-indigo-400">${row.total}</td>`;
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
             });
         }
 
@@ -2991,7 +3026,6 @@
 
             data.forEach(item => {
                 const matchedStore = findMasterStore(extractStore(item));
-                
                 if (matchedStore) {
                     const parsedDate = parseCustomDate(extractDate(item));
                     if (parsedDate) {
@@ -3059,7 +3093,6 @@
             const summaryBody = document.getElementById('late-champions-summary-body');
 
             if (!storeBody || !summaryBody) return;
-
             storeBody.innerHTML = '';
             summaryBody.innerHTML = '';
 
@@ -3281,7 +3314,6 @@
             });
 
             unsubmittedStoresList = [];
-
             MASTER_STORES.forEach(store => {
                 const missingDates = [];
                 let curr = new Date(startDate);
@@ -3459,7 +3491,6 @@
             if (!thead || !tbody) return;
 
             const trendMonthFilter = document.getElementById('trend-month-filter')?.value || 'ALL';
-
             const monthNames = {
                 '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember',
                 '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
@@ -3485,12 +3516,9 @@
             thead.innerHTML = headHTML;
 
             const aggregationMap = {};
-
             rawCSVData.forEach(item => {
                 const lob = extractLOB(item).toLowerCase();
-                if (currentTrendLob !== 'all' && !lob.includes(currentTrendLob)) {
-                    return;
-                }
+                if (currentTrendLob !== 'all' && !lob.includes(currentTrendLob)) return;
 
                 const store = extractStore(item);
                 const name = extractName(item);
@@ -3501,17 +3529,10 @@
                 if (store && store !== '-' && name && name !== '-') {
                     const key = `${store}___${name}`;
                     if (!aggregationMap[key]) {
-                        aggregationMap[key] = {
-                            store,
-                            name,
-                            months: {},
-                            sumTotal: 0
-                        };
+                        aggregationMap[key] = { store, name, months: {}, sumTotal: 0 };
                     }
-
                     if (parsed && parsed.getFullYear() === 2026) {
                         const mKey = String(parsed.getMonth() + 1).padStart(2, '0');
-                        
                         if (trendMonthFilter === 'ALL' || trendMonthFilter === mKey) {
                             aggregationMap[key].months[mKey] = (aggregationMap[key].months[mKey] || 0) + qty;
                             aggregationMap[key].sumTotal += qty;
@@ -3602,9 +3623,7 @@
             };
             const fixedMonthKeys = ['09', '10', '11', '12', '01', '02', '03', '04', '05', '06', '07', '08'];
             let sortedMonths = fixedMonthKeys;
-            if (trendMonthFilter !== 'ALL') {
-                sortedMonths = [trendMonthFilter];
-            }
+            if (trendMonthFilter !== 'ALL') sortedMonths = [trendMonthFilter];
 
             const aggregationMap = {};
             rawCSVData.forEach(item => {
@@ -3635,9 +3654,7 @@
             const rowsData = Object.values(aggregationMap).sort((a, b) => b.sumTotal - a.sumTotal);
             const headers = ["No", "Store", "Nama Sales", ...sortedMonths.map(m => monthNames[m] || m)];
             const rows = rowsData.map((r, i) => [
-                i + 1,
-                r.store,
-                r.name,
+                i + 1, r.store, r.name,
                 ...sortedMonths.map(m => r.months[m] || 0)
             ]);
 
@@ -3658,8 +3675,7 @@
                 "Growth Total"
             ];
             const rows = momStoresDataList.map((s, i) => [
-                i + 1,
-                s.store,
+                i + 1, s.store,
                 `${s.macLM} / ${s.macCM} (${s.macGrw})`,
                 `${s.iphoneLM} / ${s.iphoneCM} (${s.iphoneGrw})`,
                 `${s.ipadLM} / ${s.ipadCM} (${s.ipadGrw})`,
@@ -3689,28 +3705,60 @@
         }
 
         function exportRawData(type) {
-            const searchInput = document.getElementById('raw-store-search');
-            const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedMonth = document.getElementById('matrix-month-filter')?.value || '11';
+            const year = 2026;
+            const monthIdx = parseInt(selectedMonth, 10) - 1;
+            const totalDays = new Date(year, monthIdx + 1, 0).getDate();
 
-            const exportRows = filteredData.filter(item => {
-                const store = extractStore(item).toLowerCase();
-                if (!searchVal) return true;
-                return store.includes(searchVal);
+            let headers = ["No", "Store", "Nama Sales", "Jenis LOB"];
+            for (let d = 1; d <= totalDays; d++) headers.push(`Tgl ${d}`);
+            headers.push("Total");
+
+            const masterList = window.masterKaryawanData || [];
+            const masterEmailMap = {};
+            masterList.forEach(m => {
+                if (m.email) masterEmailMap[m.email.toLowerCase().trim()] = { store: m.store, nama: m.nama };
             });
 
-            const headers = ["No", "Store", "Nama", "Tanggal Transaksi", "Jenis LOB", "Pcs"];
-            const rows = exportRows.map((item, i) => [
-                i + 1,
-                extractStore(item),
-                extractName(item),
-                extractDate(item),
-                extractLOB(item),
-                extractQuantity(item)
-            ]);
+            const matrixMap = {};
+            rawCSVData.forEach(item => {
+                const email = extractEmail(item);
+                const dateStr = extractDate(item);
+                const parsed = parseCustomDate(dateStr);
 
-            if (type === 'csv') downloadCSV("log_transaksi_detail.csv", headers, rows);
-            else if (type === 'excel') downloadExcel("log_transaksi_detail.xlsx", headers, rows);
-            else if (type === 'pdf') downloadPDF("Log Transaksi Detail", headers, rows);
+                if (parsed && parsed.getFullYear() === year && String(parsed.getMonth() + 1).padStart(2, '0') === selectedMonth) {
+                    const masterMatch = masterEmailMap[email];
+                    const store = masterMatch ? masterMatch.store : extractStore(item);
+                    const nama = masterMatch ? masterMatch.nama : extractName(item);
+                    const lob = extractLOB(item);
+                    const qty = extractQuantity(item);
+                    const dayNum = parsed.getDate();
+
+                    if (email && email !== '' && store && store !== '-' && nama && nama !== '-' && lob && lob !== '-') {
+                        const key = `${email.toLowerCase()}___${lob.toLowerCase()}`;
+                        if (!matrixMap[key]) {
+                            matrixMap[key] = { store, nama, lob, days: {}, total: 0 };
+                        }
+                        matrixMap[key].days[dayNum] = (matrixMap[key].days[dayNum] || 0) + qty;
+                        matrixMap[key].total += qty;
+                    }
+                }
+            });
+
+            const matrixRows = Object.values(matrixMap).sort((a, b) => a.store.localeCompare(b.store));
+            const rows = matrixRows.map((r, i) => {
+                let rowArr = [i + 1, r.store, r.nama, r.lob];
+                for (let d = 1; d <= totalDays; d++) {
+                    rowArr.push(r.days[d] || 0);
+                }
+                rowArr.push(r.total);
+                return rowArr;
+            });
+
+            const filename = `matrix_transaksi_bulan_${selectedMonth}`;
+            if (type === 'csv') downloadCSV(`${filename}.csv`, headers, rows);
+            else if (type === 'excel') downloadExcel(`${filename}.xlsx`, headers, rows);
+            else if (type === 'pdf') downloadPDF(`Matrix Log Transaksi Bulan ${selectedMonth}`, headers, rows);
         }
 
         function copyUnsubmittedWaDraft() {
