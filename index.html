@@ -1093,7 +1093,7 @@
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Log Matrix</label>
-                        <select id="matrix-month-filter" onchange="renderRawDataTable(filteredData)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <select id="matrix-month-filter" onchange="renderRawDataTable()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             <option value="ALL">Semua Bulan</option>
                             <option value="01">Januari 2026</option>
                             <option value="02">Februari 2026</option>
@@ -1111,7 +1111,7 @@
                     </div>
                     <div>
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Cari Store / Nama Sales</label>
-                        <input type="text" id="raw-store-search" oninput="renderRawDataTable(filteredData)" placeholder="Cari Store atau Nama..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" id="raw-store-search" oninput="renderRawDataTable()" placeholder="Cari Store atau Nama..." class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
                 </div>
 
@@ -2228,7 +2228,7 @@
             renderWoWPerformance(filteredData);
             renderWoWStoreTable(filteredData);
             renderLateChampionsTable(rawCSVData);
-            renderRawDataTable(filteredData);
+            renderRawDataTable();
             renderAllSalesLobTable();
             renderTrendBulananTable();
             renderCharts(filteredData);
@@ -2728,15 +2728,15 @@
         }
 
         // ==========================================
-        // RENDER MONTHLY MATRIX LOG (LOG TRANSAKSI)
-        // Store & Nama langsung dari data Submit
+        // RENDER MONTHLY MATRIX LOG (LOG TRANSAKSI) - STANDALONE
+        // Menggunakan rawCSVData secara langsung agar tidak terkunci filter bulan global
         // ==========================================
-        function renderRawDataTable(data) {
+        function renderRawDataTable() {
             const thead = document.getElementById('matrix-table-head');
             const tbody = document.getElementById('raw-data-body');
             if (!thead || !tbody) return;
 
-            const selectedMonth = document.getElementById('matrix-month-filter')?.value || '11';
+            const selectedMonth = document.getElementById('matrix-month-filter')?.value || 'ALL';
             const searchVal = document.getElementById('raw-store-search')?.value.toLowerCase().trim() || '';
             const year = 2026;
             
@@ -2747,7 +2747,7 @@
                 totalDays = new Date(year, monthIdx + 1, 0).getDate();
             }
 
-            // 1. Build Header: No, Store, Nama Sales, Jenis LOB, Tanggal 1 s.d. Total
+            // 1. Build Header
             let headHTML = `<tr>
                 <th class="p-2 text-center w-12 sticky-header-bg">No</th>
                 <th class="p-2 sticky-header-bg">Store</th>
@@ -2764,10 +2764,10 @@
             headHTML += `<th class="p-2 text-center sticky-header-bg">Total</th></tr>`;
             thead.innerHTML = headHTML;
 
-            // 2. Agregasi data submit langsung dari data parameter yang masuk
+            // 2. Agregasi data langsung dari rawCSVData secara utuh
             const matrixMap = {};
 
-            data.forEach(item => {
+            rawCSVData.forEach(item => {
                 const dateStr = extractDate(item);
                 const parsed = parseCustomDate(dateStr);
 
