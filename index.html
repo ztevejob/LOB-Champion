@@ -135,16 +135,26 @@
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen p-2 md:p-4 pb-24 lg:pb-4 gap-4">
+<body class="flex flex-col min-h-screen p-2 md:p-4 pb-28 lg:pb-4 gap-4">
 
     <!-- Global Progress Bar & Toast -->
     <div id="fetch-progress-container" class="fixed top-0 left-0 w-full z-50 pointer-events-none hidden">
         <div id="fetch-progress-bar" class="h-1 bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 w-0 transition-all duration-300 shadow-[0_0_10px_rgba(99,102,241,0.8)]"></div>
     </div>
 
-    <div id="fetch-status-toast" class="fixed bottom-4 right-4 z-50 hidden glass-panel px-4 py-2 flex items-center gap-2 text-xs font-bold shadow-lg border border-indigo-500/30 bg-slate-900/90 text-indigo-300">
+    <div id="fetch-status-toast" class="fixed bottom-20 right-4 z-50 hidden glass-panel px-4 py-2 flex items-center gap-2 text-xs font-bold shadow-lg border border-indigo-500/30 bg-slate-900/90 text-indigo-300">
         <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-cyan-400"></i>
         <span id="fetch-status-text">Menarik data dari GAS...</span>
+    </div>
+
+    <!-- Mobile Sticky Floating Action Bar (Refresh & Sync) -->
+    <div id="mobile-sticky-action-bar" class="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-gray-500/20 p-2.5 px-4 flex items-center justify-between gap-3 lg:hidden hidden shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+        <button type="button" onclick="refreshData()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow border border-slate-700">
+            🔄 Refresh Data
+        </button>
+        <button type="button" onclick="syncData()" class="flex-1 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow border border-cyan-500/50">
+            ☁️ Sync Data
+        </button>
     </div>
 
     <!-- Top Navigation Bar -->
@@ -1236,6 +1246,7 @@
         function detectDeviceAndApplyMode() {
             const homeMenu = document.getElementById('iphone-home-menu');
             const backBtn = document.getElementById('header-back-btn');
+            const mobileActionBar = document.getElementById('mobile-sticky-action-bar');
             const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
             if (isMobileDevice) {
@@ -1245,11 +1256,13 @@
                 const globalKpiContainer = document.getElementById('global-kpi-container');
                 if (globalKpiContainer) globalKpiContainer.classList.add('hidden');
                 if (backBtn) backBtn.classList.add('hidden');
+                if (mobileActionBar) mobileActionBar.classList.add('hidden'); // Hide on home menu grid
                 document.getElementById('page-title').innerText = "LOB Champion Mobile";
             } else {
                 isMobileMode = false;
                 if (homeMenu) homeMenu.classList.add('hidden');
                 if (backBtn) backBtn.classList.add('hidden');
+                if (mobileActionBar) mobileActionBar.classList.add('hidden');
                 showSection('overview');
             }
         }
@@ -1263,6 +1276,8 @@
                 if (homeMenu) homeMenu.classList.remove('hidden');
                 const backBtn = document.getElementById('header-back-btn');
                 if (backBtn) backBtn.classList.add('hidden');
+                const mobileActionBar = document.getElementById('mobile-sticky-action-bar');
+                if (mobileActionBar) mobileActionBar.classList.add('hidden');
                 document.getElementById('page-title').innerText = "LOB Champion Mobile";
             }
         }
@@ -1482,6 +1497,10 @@
             if (isMobileMode) {
                 const backBtn = document.getElementById('header-back-btn');
                 if (backBtn) backBtn.classList.remove('hidden');
+                
+                // Show sticky bottom action bar for Refresh & Sync when inside any sub-menu on mobile
+                const mobileActionBar = document.getElementById('mobile-sticky-action-bar');
+                if (mobileActionBar) mobileActionBar.classList.remove('hidden');
             }
 
             const globalKpiContainer = document.getElementById('global-kpi-container');
@@ -2335,7 +2354,6 @@
             }
         }
 
-        // Fixed Render Function with High-Contrast Checkmarks & Accurate Period Title
         function renderComplianceLogTable(allData) {
             const thead = document.getElementById('compliance-log-thead');
             const tbody = document.getElementById('compliance-log-tbody');
@@ -2450,7 +2468,6 @@
                     const isTodayCol = (selectedMonth !== 'ALL' && selectedMonth === todayMonthStr && year === todayYear && d === todayDateNum);
                     const bgToday = isTodayCol ? 'border border-amber-400/50' : '';
 
-                    // High-contrast styling ensuring checkmark & cross are clearly visible
                     if (row.days[d]) {
                         html += `<td class="p-1.5 text-center font-extrabold text-emerald-400 text-sm bg-emerald-500/20 border border-emerald-500/30 ${bgToday}" style="text-shadow: 0 0 4px rgba(16, 185, 129, 0.4);">✓</td>`;
                         exportDayStatus.push('✓');
