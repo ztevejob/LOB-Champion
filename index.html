@@ -497,7 +497,7 @@
 
             <!-- Section Form Submit -->
             <div id="sec-form-submit" class="content-section hidden space-y-4">
-                <div class="glass-panel p-6 max-w-4xl mx-auto space-y-5 border-l-4 border-indigo-500">
+                <div class="glass-panel p-6 max-w-5xl mx-auto space-y-5 border-l-4 border-indigo-500">
                     <div class="flex items-center gap-3 pb-3 border-b border-gray-500/20">
                         <div class="p-2.5 bg-indigo-600 rounded-lg text-white">
                             <i data-lucide="file-pen-line" class="w-5 h-5"></i>
@@ -510,71 +510,80 @@
 
                     <form id="transaction-submit-form" onsubmit="openReadmeModal(event)" class="space-y-4 text-xs">
                         
-                        <!-- 1. IDENTITAS & PROFIL CHAMPION -->
-                        <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 space-y-4">
-                            <h4 class="font-bold text-indigo-400 uppercase tracking-wider text-[11px]">1. Identitas & Profil Champion</h4>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                                <div>
-                                    <label class="block font-bold mb-1 opacity-90">Nama Champion / SA</label>
-                                    <input type="text" id="submit-name" required placeholder="Cari / Ketik Nama..." list="listKaryawan" oninput="onChampionSelect(this.value)" onchange="onChampionSelect(this.value)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
-                                    <datalist id="listKaryawan"></datalist>
+                        <!-- 1. IDENTITAS & PROFIL CHAMPION BERSEBELAHAN DENGAN KALENDER (DESKTOP SIDE-BY-SIDE) -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <!-- Identitas & Profil -->
+                            <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 space-y-4 flex flex-col justify-between">
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-indigo-400 uppercase tracking-wider text-[11px]">1. Identitas & Profil Champion</h4>
+                                    
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="block font-bold mb-1 opacity-95">Nama Champion / SA</label>
+                                            <input type="text" id="submit-name" required placeholder="Cari / Ketik Nama..." list="listKaryawan" oninput="onChampionSelect(this.value)" onchange="onChampionSelect(this.value)" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg p-2 font-semibold">
+                                            <datalist id="listKaryawan"></datalist>
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold mb-1 opacity-95">Email Sales Coach</label>
+                                            <input type="email" id="emailChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold mb-1 opacity-95">Store (Toko)</label>
+                                            <input type="text" id="storeChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold mb-1 opacity-95 text-indigo-300">Champion LOB (Master Data)</label>
+                                            <input type="text" id="lobChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold text-emerald-400 cursor-not-allowed">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block font-bold mb-1 opacity-90">Email Sales Coach</label>
-                                    <input type="email" id="emailChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
-                                </div>
-                                <div>
-                                    <label class="block font-bold mb-1 opacity-90">Store (Toko)</label>
-                                    <input type="text" id="storeChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold opacity-90 cursor-not-allowed">
-                                </div>
-                                <div>
-                                    <label class="block font-bold mb-1 opacity-90 text-indigo-300">Champion LOB (Master Data)</label>
-                                    <input type="text" id="lobChampion" readonly placeholder="Otomatis terisi..." class="w-full bg-slate-900/30 border border-gray-500/10 rounded-lg p-2 font-semibold text-emerald-400 cursor-not-allowed">
+                                <div class="text-[10px] opacity-70 italic pt-2 border-t border-indigo-500/10">
+                                    *Profil otomatis mencocokkan email dan LOB master karyawan.
                                 </div>
                             </div>
 
-                            <!-- SUB-BAGIAN: KALENDER INDIVIDU (DIOPTIMALKAN UNTUK DESKTOP) -->
-                            <div class="pt-3 border-t border-indigo-500/20 space-y-3">
-                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                                    <div class="flex items-center gap-2">
-                                        <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
-                                        <span class="font-bold text-xs text-emerald-400 uppercase tracking-wider">Kalender Aktivitas Submit Bulanan</span>
+                            <!-- Kalender Aktivitas Bulanan (Bersebelahan di Desktop) -->
+                            <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-3 flex flex-col justify-between">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
+                                            <span class="font-bold text-xs text-emerald-400 uppercase tracking-wider">Kalender Aktivitas Submit</span>
+                                        </div>
+                                        <select id="cal-filter-month" onchange="renderStaffCalendar()" class="bg-slate-900/50 border border-gray-500/20 rounded-lg px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                            <option value="01">Jan 2026</option>
+                                            <option value="02">Feb 2026</option>
+                                            <option value="03">Mar 2026</option>
+                                            <option value="04">Apr 2026</option>
+                                            <option value="05">Mei 2026</option>
+                                            <option value="06">Jun 2026</option>
+                                            <option value="07">Jul 2026</option>
+                                            <option value="08">Agu 2026</option>
+                                            <option value="09">Sep 2026</option>
+                                            <option value="10">Okt 2026</option>
+                                            <option value="11" selected>Nov 2026</option>
+                                            <option value="12">Des 2026</option>
+                                        </select>
                                     </div>
-                                    <select id="cal-filter-month" onchange="renderStaffCalendar()" class="bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                        <option value="01">Januari 2026</option>
-                                        <option value="02">Februari 2026</option>
-                                        <option value="03">Maret 2026</option>
-                                        <option value="04">April 2026</option>
-                                        <option value="05">Mei 2026</option>
-                                        <option value="06">Juni 2026</option>
-                                        <option value="07">Juli 2026</option>
-                                        <option value="08">Agustus 2026</option>
-                                        <option value="09">September 2026</option>
-                                        <option value="10">Oktober 2026</option>
-                                        <option value="11" selected>November 2026</option>
-                                        <option value="12">Desember 2026</option>
-                                    </select>
-                                </div>
 
-                                <div class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
-                                    <div>
-                                        <span class="opacity-80">Status Kalender:</span> 
-                                        <b class="text-emerald-400 ml-1" id="cal-active-staff-name">(Pilih Nama Champion di atas)</b>
+                                    <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] flex items-center justify-between">
+                                        <div>
+                                            <span class="opacity-80">Staff:</span> 
+                                            <b class="text-emerald-400 ml-1" id="cal-active-staff-name">(Pilih Nama)</b>
+                                        </div>
+                                        <div class="flex items-center gap-2 font-semibold">
+                                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Submitted</span>
+                                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500/50 inline-block"></span> Belum</span>
+                                        </div>
                                     </div>
-                                    <div class="flex items-center gap-3 font-semibold">
-                                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Submitted</span>
-                                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500/50 inline-block"></span> Belum</span>
-                                    </div>
-                                </div>
 
-                                <!-- Grid Kalender yang Diperbesar & Dioptimalkan untuk Desktop -->
-                                <div class="bg-black/30 p-4 rounded-xl border border-emerald-500/20 space-y-2">
-                                    <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-emerald-300 pb-2 border-b border-gray-500/20">
-                                        <div>Senin</div><div>Selasa</div><div>Rabu</div><div>Kamis</div><div>Jumat</div><div>Sabtu</div><div>Minggu</div>
-                                    </div>
-                                    <div class="grid grid-cols-7 gap-2" id="staff-calendar-grid">
-                                        <div class="col-span-7 p-6 text-center text-xs opacity-70">Silakan pilih Nama Champion di atas untuk menampilkan kalender aktivitas.</div>
+                                    <div class="bg-black/30 p-3 rounded-xl border border-emerald-500/20 space-y-1.5">
+                                        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-emerald-300 pb-1 border-b border-gray-500/20">
+                                            <div>Sen</div><div>Sel</div><div>Rbu</div><div>Kam</div><div>Jum</div><div>Sab</div><div>Min</div>
+                                        </div>
+                                        <div class="grid grid-cols-7 gap-1" id="staff-calendar-grid">
+                                            <div class="col-span-7 p-6 text-center text-xs opacity-70">Pilih Nama Champion di samping untuk memuat kalender.</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1706,7 +1715,6 @@
             }
         }
 
-        // Render Kalender Dioptimalkan untuk Tampilan Desktop
         function renderStaffCalendar() {
             const activeEmailInput = document.getElementById('emailChampion').value.trim().toLowerCase();
             const staffNameDisplay = document.getElementById('cal-active-staff-name');
@@ -1715,8 +1723,8 @@
             const activeName = document.getElementById('submit-name').value.trim();
 
             if (!activeEmailInput) {
-                staffNameDisplay.innerText = "(Pilih Nama Champion di atas terlebih dahulu)";
-                calendarGrid.innerHTML = '<div class="col-span-7 p-6 text-center text-xs opacity-70">Silakan pilih Nama Champion yang valid pada form di atas untuk menampilkan kalender aktivitas.</div>';
+                staffNameDisplay.innerText = "(Pilih Nama)";
+                calendarGrid.innerHTML = '<div class="col-span-7 p-6 text-center text-xs opacity-70">Pilih Nama Champion di samping untuk memuat kalender.</div>';
                 return;
             }
 
@@ -1755,17 +1763,17 @@
 
             calendarGrid.innerHTML = '';
             for (let i = 0; i < firstDayIndex; i++) {
-                calendarGrid.innerHTML += `<div class="h-16 rounded-xl bg-black/10 opacity-25"></div>`;
+                calendarGrid.innerHTML += `<div class="h-14 rounded-lg bg-black/10 opacity-25"></div>`;
             }
 
             for (let day = 1; day <= totalDaysInMonth; day++) {
                 const isSubmitted = submittedDatesMap[day] && submittedDatesMap[day].length > 0;
-                const bgClass = isSubmitted ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-300 font-bold shadow-md' : 'bg-black/30 border-gray-500/25 opacity-60';
-                const badgeHTML = isSubmitted ? `<span class="block text-[10px] px-1.5 py-0.5 bg-emerald-500 text-slate-950 font-extrabold rounded mt-1">Submitted</span>` : `<span class="block text-[10px] opacity-60 mt-1 font-semibold">Belum</span>`;
+                const bgClass = isSubmitted ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-300 font-bold shadow-sm' : 'bg-black/30 border-gray-500/25 opacity-60';
+                const badgeHTML = isSubmitted ? `<span class="block text-[9px] px-1 bg-emerald-500 text-slate-950 font-extrabold rounded mt-0.5">Submitted</span>` : `<span class="block text-[9px] opacity-60 mt-0.5">Belum</span>`;
 
                 calendarGrid.innerHTML += `
-                    <div class="h-20 p-2 rounded-xl border ${bgClass} flex flex-col justify-between items-center text-xs transition hover:scale-105 cursor-pointer" title="Tanggal ${day}">
-                        <span class="font-mono text-sm font-extrabold">${day}</span>
+                    <div class="h-16 p-1 rounded-lg border ${bgClass} flex flex-col justify-between items-center text-xs transition hover:scale-105 cursor-pointer" title="Tanggal ${day}">
+                        <span class="font-mono text-xs font-extrabold">${day}</span>
                         ${badgeHTML}
                     </div>
                 `;
@@ -3396,3 +3404,4 @@
     </script>
 </body>
 </html>
+
