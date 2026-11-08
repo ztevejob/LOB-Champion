@@ -1861,7 +1861,14 @@
         }
 
         function executeFinalTransactionSubmit() {
-            if (!pendingSubmitPayload) return;
+            if (!pendingSubmitPayload) {
+                alert("Data laporan tidak ditemukan. Silakan ulangi proses submit.");
+                return;
+            }
+
+            // Simpan salinan payload SEBELUM modal ditutup.
+            // closeReadmeModal() mengosongkan pendingSubmitPayload.
+            const payload = { ...pendingSubmitPayload };
             closeReadmeModal();
 
             const submitBtn = document.getElementById('btn-submit-action');
@@ -1874,25 +1881,26 @@
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pendingSubmitPayload)
+                body: JSON.stringify(payload)
             }).then(() => {
+                // Gunakan payload lokal, bukan pendingSubmitPayload yang sudah di-reset.
                 const newRow = {
-                    Timestamp: pendingSubmitPayload.timestamp,
-                    "Email Sales Coach": pendingSubmitPayload.email,
-                    "Nama Champion/ SA": pendingSubmitPayload.name,
-                    Store: pendingSubmitPayload.store,
-                    "Tanggal Transaksi": pendingSubmitPayload.date,
-                    "Champion LOB": pendingSubmitPayload.lob,
-                    "Total Qty": pendingSubmitPayload.qty,
-                    Positions: pendingSubmitPayload.position,
-                    Shift: pendingSubmitPayload.shift,
-                    "Total Demo Target": pendingSubmitPayload.demoTarget
+                    Timestamp: payload.timestamp,
+                    "Email Sales Coach": payload.email,
+                    "Nama Champion/ SA": payload.name,
+                    Store: payload.store,
+                    "Tanggal Transaksi": payload.date,
+                    "Champion LOB": payload.lob,
+                    "Total Qty": payload.qty,
+                    Positions: payload.position,
+                    Shift: payload.shift,
+                    "Total Demo Target": payload.demoTarget
                 };
 
                 rawCSVData.unshift(newRow);
                 applyFilters();
 
-                alert("✅ Laporan Berhasil Dikirim!\n\nData transaksi harian Anda telah tersimpan.");
+                alert("✅ Laporan berhasil dikirim.\\n\\nPastikan data sudah tercatat di Google Sheets.");
                 document.getElementById('transaction-submit-form').reset();
                 document.getElementById('emailChampion').value = "";
                 document.getElementById('storeChampion').value = "";
@@ -1902,7 +1910,7 @@
                 renderStaffCalendar();
             }).catch(err => {
                 console.error("GAS Submit error:", err);
-                alert("Terjadi kendala jaringan saat mengirim ke server GAS.");
+                alert("Pengiriman gagal. Periksa koneksi internet dan URL/deployment Google Apps Script, lalu coba lagi.");
             }).finally(() => {
                 if (submitBtn) {
                     submitBtn.disabled = false;
@@ -3450,3 +3458,4 @@
     </script>
 </body>
 </html>
+
