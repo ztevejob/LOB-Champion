@@ -355,14 +355,13 @@
 
         <div class="flex-1 overflow-y-auto pr-1 space-y-4" id="main-content-viewport">
 
-            <!-- Mobile App Menu Grid (Tampilan Handphone) -->
+            <!-- Mobile App Menu Grid -->
             <div id="iphone-home-menu" class="hidden glass-panel p-6 space-y-6 text-center">
                 <div class="space-y-1">
                     <h3 class="font-extrabold text-lg text-indigo-400">LOB Champion Mobile</h3>
                     <p class="text-xs opacity-80">Silakan pilih menu aplikasi di bawah ini:</p>
                 </div>
 
-                <!-- Tombol Pintas Refresh & Sync Khusus Tampilan Handphone -->
                 <div class="flex items-center justify-center gap-2 pt-1 pb-3 border-b border-gray-500/20">
                     <button type="button" onclick="refreshData()" class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
                         🔄 Refresh Data
@@ -875,8 +874,8 @@
                         <label class="block opacity-90 mb-1 text-[10px] font-bold">Filter Bulan Evaluasi</label>
                         <select id="compliance-month-filter" onchange="renderComplianceFilters()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-500 font-semibold text-xs">
                             <option value="09">September 2026</option>
-                            <option value="10">Oktober 2026</option>
-                            <option value="11" selected>November 2026</option>
+                            <option value="10" selected>Oktober 2026</option>
+                            <option value="11">November 2026</option>
                             <option value="12">Desember 2026</option>
                             <option value="ALL">Semua Bulan (Aktif)</option>
                         </select>
@@ -936,7 +935,7 @@
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-4 pb-2 border-b border-gray-500/20">
                         <div>
                             <h3 class="font-bold text-sm md:text-base flex items-center gap-2 text-emerald-400" id="compliance-log-title">
-                                <i data-lucide="file-check-2" class="w-5 h-5"></i> Tabel Log Submit Harian Champion
+                                <i data-lucide="file-check-2" class="w-5 h-5"></i> Tabel Log Submit Harian Champion (Periode Oktober)
                             </h3>
                         </div>
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
@@ -977,7 +976,7 @@
 
             </div>
 
-            <!-- Section 5: Direktori LOB (Updated Headers: No. Toko, Email, LOB Apa) -->
+            <!-- Section 5: Direktori LOB -->
             <div id="sec-sales-lob" class="content-section hidden space-y-4">
                 <div class="glass-panel p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -985,8 +984,8 @@
                         <select id="sales-lob-month-filter" onchange="renderAllSalesLobTable()" class="w-full bg-slate-900/50 border border-gray-500/20 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             <option value="ALL">Semua Bulan (Aktif)</option>
                             <option value="09">September 2026</option>
-                            <option value="10">Oktober 2026</option>
-                            <option value="11" selected>November 2026</option>
+                            <option value="10" selected>Oktober 2026</option>
+                            <option value="11">November 2026</option>
                             <option value="12">Desember 2026</option>
                         </select>
                     </div>
@@ -1583,7 +1582,6 @@
                 document.getElementById('emailChampion').value = matched.email || '';
                 document.getElementById('storeChampion').value = matched.store || '';
                 
-                // Automatically populate Champion LOB from master column after matching email vs data submit
                 const lobInput = document.getElementById('lobChampion');
                 if (lobInput) {
                     lobInput.value = matched.lob || matched.LOB || matched['Champion LOB'] || matched.lob_submit || '-';
@@ -2337,6 +2335,7 @@
             }
         }
 
+        // Fixed Render Function with High-Contrast Checkmarks & Accurate Period Title
         function renderComplianceLogTable(allData) {
             const thead = document.getElementById('compliance-log-thead');
             const tbody = document.getElementById('compliance-log-tbody');
@@ -2345,7 +2344,7 @@
             
             if (!thead || !tbody) return;
 
-            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '11';
+            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '10';
             const year = 2026;
 
             const monthNames = {
@@ -2451,11 +2450,12 @@
                     const isTodayCol = (selectedMonth !== 'ALL' && selectedMonth === todayMonthStr && year === todayYear && d === todayDateNum);
                     const bgToday = isTodayCol ? 'border border-amber-400/50' : '';
 
+                    // High-contrast styling ensuring checkmark & cross are clearly visible
                     if (row.days[d]) {
-                        html += `<td class="p-1.5 text-center font-bold text-emerald-400 text-xs bg-emerald-500/10 ${bgToday}">✓</td>`;
+                        html += `<td class="p-1.5 text-center font-extrabold text-emerald-400 text-sm bg-emerald-500/20 border border-emerald-500/30 ${bgToday}" style="text-shadow: 0 0 4px rgba(16, 185, 129, 0.4);">✓</td>`;
                         exportDayStatus.push('✓');
                     } else {
-                        html += `<td class="p-1.5 text-center font-bold text-rose-400 text-xs bg-rose-500/20 border border-rose-500/30 ${bgToday}">✕</td>`;
+                        html += `<td class="p-1.5 text-center font-extrabold text-rose-400 text-sm bg-rose-500/25 border border-rose-500/35 ${bgToday}" style="text-shadow: 0 0 4px rgba(239, 68, 68, 0.4);">✕</td>`;
                         exportDayStatus.push('✕');
                     }
                 }
@@ -2544,7 +2544,7 @@
         }
 
         function exportComplianceLog(type) {
-            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '11';
+            const selectedMonth = document.getElementById('compliance-month-filter')?.value || '10';
             const year = 2026;
             
             let totalDays = 31;
@@ -2565,7 +2565,6 @@
             else if (type === 'pdf') downloadPDF(`Log Submit Kedisiplinan Bulan ${selectedMonth}`, headers, complianceLogExportData);
         }
 
-        // Updated Direktori LOB Render Function with headers: No, Toko (Store), Email, LOB Apa
         function renderAllSalesLobTable() {
             const tbody = document.getElementById('all-sales-lob-body');
             if (!tbody) return;
@@ -2838,7 +2837,7 @@
             tbody.innerHTML = '';
 
             const statusFilter = document.getElementById('compliance-status-filter')?.value || 'ALL';
-            const complianceMonth = document.getElementById('compliance-month-filter')?.value || '11';
+            const complianceMonth = document.getElementById('compliance-month-filter')?.value || '10';
 
             if (statusFilter === 'late') {
                 document.getElementById('summary-unsubmitted-count').innerText = `0 Store`;
