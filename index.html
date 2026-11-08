@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -155,6 +154,16 @@
     </style>
 </head>
 <body class="flex flex-col min-h-screen p-2 md:p-4 pb-24 lg:pb-4 gap-4">
+
+    <!-- Global Fetch Progress Bar & Status Toast -->
+    <div id="fetch-progress-container" class="fixed top-0 left-0 w-full z-50 pointer-events-none hidden">
+        <div id="fetch-progress-bar" class="h-1 bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 w-0 transition-all duration-300 shadow-[0_0_10px_rgba(99,102,241,0.8)]"></div>
+    </div>
+
+    <div id="fetch-status-toast" class="fixed bottom-4 right-4 z-50 hidden glass-panel px-4 py-2 flex items-center gap-2 text-xs font-bold shadow-lg border border-indigo-500/30 bg-slate-900/90 text-indigo-300">
+        <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-cyan-400"></i>
+        <span id="fetch-status-text">Menarik data dari GAS...</span>
+    </div>
 
     <!-- Top Navigation Bar -->
     <header class="glass-panel p-3 flex flex-col md:flex-row items-center justify-between gap-3 z-20">
@@ -1312,7 +1321,6 @@
         Chart.register(ChartDataLabels);
         lucide.createIcons();
 
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPeCcjBbqki7bAnNtE2ymu8oROy5mq2KFJPwdS6cE_UGnbm9OhpcI1iMbgpfzgcfvhz4DCGsxycJZP/pub?output=csv';
         const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx_XEONdIaPRYfiCJRjvP5sD263IWti1FsyX8F4qTwbzkjiegiQy5Sc6YgR8QQkWrWC/exec';
         const MASTER_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx_XEONdIaPRYfiCJRjvP5sD263IWti1FsyX8F4qTwbzkjiegiQy5Sc6YgR8QQkWrWC/exec';
 
@@ -1551,6 +1559,27 @@
         let momStoresDataList = [];
         let allSalesLobList = [];
         let isMobileMode = false;
+
+        function updateProgress(percent, text) {
+            const progressBar = document.getElementById('fetch-progress-bar');
+            const container = document.getElementById('fetch-progress-container');
+            const toast = document.getElementById('fetch-status-toast');
+            const statusText = document.getElementById('fetch-status-text');
+
+            if (container) container.classList.remove('hidden');
+            if (toast) toast.classList.remove('hidden');
+            
+            if (progressBar) progressBar.style.width = percent + '%';
+            if (statusText) statusText.innerText = text;
+
+            if (percent >= 100) {
+                setTimeout(() => {
+                    if (container) container.classList.add('hidden');
+                    if (toast) toast.classList.add('hidden');
+                    if (progressBar) progressBar.style.width = '0%';
+                }, 500);
+            }
+        }
 
         function refreshData() {
             fetchLiveData();
@@ -1894,22 +1923,29 @@
         }
 
         function fetchLiveData() {
-            const cacheBusterUrl = `${CSV_URL}&t=${new Date().getTime()}`;
+            const url = GAS_WEB_APP_URL + "?action=getDataTransaksi&t=" + new Date().getTime();
+            
+            console.log("Mengambil data transaksi langsung dari Deploy GAS...");
+            updateProgress(30, "Menghubungkan ke Server GAS...");
 
-            Papa.parse(cacheBusterUrl, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    rawCSVData = results.data;
+            fetch(url)
+                .then(response => {
+                    updateProgress(70, "Memproses Data Transaksi...");
+                    return response.json();
+                })
+                .then(data => {
+                    updateProgress(90, "Menyusun Tampilan Dashboard...");
+                    rawCSVData = data;
                     populateDropdownFilters(rawCSVData);
                     setDefaultSubmitDate();
                     applyFilters();
-                },
-                error: function(err) {
-                    console.error('Error fetching CSV:', err);
-                }
-            });
+                    updateProgress(100, "Sinkronisasi Selesai!");
+                })
+                .catch(err => {
+                    console.error('Error fetching data from GAS:', err);
+                    updateProgress(100, "Gagal Mengambil Data!");
+                    alert("Gagal mengambil data transaksi terbaru dari server GAS. Silakan periksa koneksi atau URL Deploy.");
+                });
         }
 
         function fetchMasterKaryawan() {
@@ -2732,7 +2768,6 @@
             });
 
             // 3. Agregasi data submit berdasarkan Email + LOB + Tanggal
-            // Struktur: matrixMap[email_lob] = { email, store, nama, lob, days: {1: qty, 2: qty, ...}, total: sum }
             const matrixMap = {};
 
             data.forEach(item => {
@@ -2741,7 +2776,6 @@
                 const parsed = parseCustomDate(dateStr);
 
                 if (parsed && parsed.getFullYear() === year && String(parsed.getMonth() + 1).padStart(2, '0') === selectedMonth) {
-                    // Match berdasar email master jika master tersedia, atau fallback ke submit
                     const masterMatch = masterEmailMap[email];
                     const store = masterMatch ? masterMatch.store : extractStore(item);
                     const nama = masterMatch ? masterMatch.nama : extractName(item);
@@ -2768,7 +2802,6 @@
 
             let matrixRows = Object.values(matrixMap).sort((a, b) => a.store.localeCompare(b.store));
 
-            // Filter pencarian store/nama
             if (searchVal) {
                 matrixRows = matrixRows.filter(r => r.store.toLowerCase().includes(searchVal) || r.nama.toLowerCase().includes(searchVal));
             }
