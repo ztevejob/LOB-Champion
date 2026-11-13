@@ -694,6 +694,30 @@
                     </div>
                 </div>
 
+                <!-- SUMMARY TARGET DEMO & KONVERSI PENJUALAN -->
+                <div class="glass-panel p-4 space-y-3 border-l-4 border-amber-500">
+                    <div class="flex items-center justify-between pb-2 border-b border-gray-500/20">
+                        <h3 class="font-bold text-sm md:text-base flex items-center gap-2 text-amber-400">
+                            <i data-lucide="target" class="w-5 h-5"></i> Summary Target Demo & Konversi Penjualan per LOB
+                        </h3>
+                        <span class="text-[10px] px-2 py-0.5 bg-amber-500/20 text-amber-300 font-bold rounded border border-amber-500/30">Conversion Rate</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse" id="demoSummaryTable">
+                            <thead class="opacity-90 border-b border-gray-500/25 uppercase sticky-header-bg font-bold">
+                                <tr>
+                                    <th class="p-2.5 text-center w-12 sticky-header-bg">No</th>
+                                    <th class="p-2.5 sticky-header-bg">Kategori LOB</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Total Target Demo</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Total Qty Terjual</th>
+                                    <th class="p-2.5 text-center sticky-header-bg">Rasio Konversi (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overview-demo-summary-body" class="divide-y divide-gray-500/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="glass-panel p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-sm flex items-center gap-2 mb-4">
@@ -2004,6 +2028,7 @@
 
             updateMetricsAndCharts(filteredData);
             renderOverviewSummaryTable(filteredData);
+            renderDemoSummaryTable(filteredData);
             renderTop10Tables(filteredData);
             renderUnsubmittedStoresTable(rawCSVData);
             renderComplianceLogTable(rawCSVData);
@@ -2147,6 +2172,96 @@
                 <td class="p-2.5 text-center font-mono text-emerald-400">${totalOverall}</td>
                 <td class="p-2.5 text-center font-mono">${(totalOverall / maxDay).toFixed(1)}</td>
                 <td class="p-2.5 text-center font-mono">100%</td>
+            `;
+            tbody.appendChild(totalTr);
+        }
+
+        function renderDemoSummaryTable(data) {
+            const tbody = document.getElementById('overview-demo-summary-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const lobData = {
+                Mac: { demo: 0, qty: 0 },
+                iPhone: { demo: 0, qty: 0 },
+                iPad: { demo: 0, qty: 0 },
+                Watch: { demo: 0, qty: 0 },
+                AirPods: { demo: 0, qty: 0 }
+            };
+
+            (data || []).forEach(item => {
+                const lob = String(extractLOB(item) || '').toLowerCase();
+                const keys = Object.keys(item || {});
+
+                // Prioritaskan kolom Total Qty agar Qty Store tidak ikut terhitung sebagai penjualan pribadi.
+                let personalQty = 0;
+                const personalQtyKey = keys.find(k => k.trim().toLowerCase() === 'total qty');
+                if (personalQtyKey !== undefined) {
+                    personalQty = parseQuantity(item[personalQtyKey]);
+                } else {
+                    const fallbackQtyKey = keys.find(k => {
+                        const key = k.trim().toLowerCase();
+                        return (key === 'qty' || key === 'quantity' || key === 'total unit' || key === 'jumlah') && !key.includes('store');
+                    });
+                    if (fallbackQtyKey !== undefined) personalQty = parseQuantity(item[fallbackQtyKey]);
+                }
+
+                // Cari kolom target demo secara spesifik supaya kolom lain tidak menimpa nilainya.
+                const demoKey = keys.find(k => {
+                    const key = k.trim().toLowerCase();
+                    return key.includes('demo') && key.includes('target');
+                }) || keys.find(k => k.trim().toLowerCase() === 'total demo');
+                const demoTarget = demoKey !== undefined ? parseQuantity(item[demoKey]) : 0;
+
+                let target = null;
+                if (lob.includes('mac')) target = lobData.Mac;
+                else if (lob.includes('iphone')) target = lobData.iPhone;
+                else if (lob.includes('ipad')) target = lobData.iPad;
+                else if (lob.includes('watch')) target = lobData.Watch;
+                else if (lob.includes('airpods') || lob.includes('airpod')) target = lobData.AirPods;
+
+                if (target) {
+                    target.demo += demoTarget;
+                    target.qty += personalQty;
+                }
+            });
+
+            const lobs = [
+                { name: 'Mac', data: lobData.Mac, color: 'text-amber-500' },
+                { name: 'iPhone', data: lobData.iPhone, color: 'text-rose-500' },
+                { name: 'iPad', data: lobData.iPad, color: 'text-emerald-500' },
+                { name: 'Watch', data: lobData.Watch, color: 'text-blue-500' },
+                { name: 'AirPods', data: lobData.AirPods, color: 'text-cyan-500' }
+            ];
+
+            let grandTotalDemo = 0;
+            let grandTotalQty = 0;
+
+            lobs.forEach((lob, idx) => {
+                grandTotalDemo += lob.data.demo;
+                grandTotalQty += lob.data.qty;
+                const conversionRate = lob.data.demo > 0 ? ((lob.data.qty / lob.data.demo) * 100).toFixed(1) : '0.0';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-black/5 dark:hover:bg-white/5 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 text-center font-mono font-bold opacity-80">${idx + 1}</td>
+                    <td class="p-2.5 font-bold ${lob.color}">${lob.name}</td>
+                    <td class="p-2.5 text-center font-mono font-bold text-amber-400">${lob.data.demo}</td>
+                    <td class="p-2.5 text-center font-mono font-bold text-emerald-400">${lob.data.qty}</td>
+                    <td class="p-2.5 text-center font-mono font-bold text-indigo-400">${conversionRate}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const grandConversion = grandTotalDemo > 0 ? ((grandTotalQty / grandTotalDemo) * 100).toFixed(1) : '0.0';
+            const totalTr = document.createElement('tr');
+            totalTr.className = 'bg-black/10 dark:bg-white/10 font-bold';
+            totalTr.innerHTML = `
+                <td class="p-2.5 text-center" colspan="2">TOTAL KESELURUHAN</td>
+                <td class="p-2.5 text-center font-mono text-amber-400">${grandTotalDemo}</td>
+                <td class="p-2.5 text-center font-mono text-emerald-400">${grandTotalQty}</td>
+                <td class="p-2.5 text-center font-mono text-indigo-400">${grandConversion}%</td>
             `;
             tbody.appendChild(totalTr);
         }
