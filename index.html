@@ -201,13 +201,13 @@
                 </div>
 
                 <div class="space-y-2">
-    <h4 class="font-bold text-emerald-400 uppercase">📌 Ketentuan Pelaporan Harian</h4>
-    <p><b>1. Waktu Pengisian (End-Shift / Closing):</b> Form wajib diisi secara mandiri oleh masing-masing LOB Champion di akhir jam kerja / setelah proses <em>closing</em> toko selesai. Hal ini diperlukan agar rekap <b>Total Qty Store</b> dan pencapaian pribadi tercatat secara akurat berdasarkan data final harian.</p>
-    <p><b>2. Berlaku untuk Nama yang Ditunjuk:</b> Wajib diisi khusus bagi nama-nama personil yang telah ditunjuk resmi sebagai LOB Champion (termasuk Supervisor atau Store Trainer yang memang bertugas merangkap).</p>
-    <p><b>3. Pelaporan Qty Pribadi & Qty Store:</b> Melaporkan unit yang berhasil terjual oleh diri sendiri serta mencatatkan total keseluruhan unit yang terjual di toko untuk LOB tersebut secara kolektif.</p>
-    <p><b>4. Ketentuan Saat OFF / Libur:</b> Jika OFF/Libur, TIDAK PERLU mengisi form. Apabila kosong/tidak diisi padahal masuk, sistem otomatis menganggap LIBUR/OFF.</p>
-    <p><b>5. Aturan Pegang 2 LOB & Nilai 0:</b> Seluruh LOB yang dipegang wajib di-input semua meskipun nihil (0). Jika memegang 2 LOB, wajib submit terpisah.</p>
-</div>
+                    <h4 class="font-bold text-emerald-400 uppercase">📌 Ketentuan Pelaporan Harian</h4>
+                    <p><b>1. Waktu Pengisian (End-Shift / Closing):</b> Form wajib diisi secara mandiri oleh masing-masing LOB Champion di akhir jam kerja / setelah proses <em>closing</em> toko selesai. Hal ini diperlukan agar rekap <b>Total Qty Store</b> dan pencapaian pribadi tercatat secara akurat berdasarkan data final harian.</p>
+                    <p><b>2. Berlaku untuk Nama yang Ditunjuk:</b> Wajib diisi khusus bagi nama-nama personil yang telah ditunjuk resmi sebagai LOB Champion (termasuk Supervisor atau Store Trainer yang memang bertugas merangkap).</p>
+                    <p><b>3. Pelaporan Qty Pribadi &amp; Qty Store:</b> Melaporkan unit yang berhasil terjual oleh diri sendiri serta mencatatkan total keseluruhan unit yang terjual di toko untuk LOB tersebut secara kolektif.</p>
+                    <p><b>4. Ketentuan Saat OFF / Libur:</b> Jika OFF/Libur, TIDAK PERLU mengisi form. Apabila kosong/tidak diisi padahal masuk, sistem otomatis menganggap LIBUR/OFF.</p>
+                    <p><b>5. Aturan Pegang 2 LOB &amp; Nilai 0:</b> Seluruh LOB yang dipegang wajib di-input semua meskipun nihil (0). Jika memegang 2 LOB, wajib submit terpisah.</p>
+                </div>
             </div>
 
             <div class="pt-3 border-t border-gray-500/20 space-y-3">
@@ -1349,6 +1349,11 @@
         let complianceLogExportData = [];
         let isMobileMode = false;
         let currentSec = 'overview';
+        // Hindari request ganda ketika tombol refresh ditekan berulang.
+        let liveDataRequest = null;
+        let masterDataRequest = null;
+        const MASTER_CACHE_KEY = 'lobChampionMasterCache_v1';
+
 
         function updateProgress(percent, text) {
             const progressBar = document.getElementById('fetch-progress-bar');
@@ -1368,14 +1373,20 @@
         }
 
         function refreshData() {
-            fetchLiveData();
-            fetchMasterKaryawan();
+            return Promise.allSettled([fetchLiveData(), fetchMasterKaryawan()]);
         }
 
         function syncData() {
-            fetchLiveData();
-            fetchMasterKaryawan();
-            alert("Sinkronisasi data berhasil dijalankan secara manual!");
+            const syncButtons = document.querySelectorAll('button[onclick="syncData()"]');
+            syncButtons.forEach(btn => { btn.disabled = true; btn.classList.add('opacity-60', 'cursor-wait'); });
+            return Promise.allSettled([fetchLiveData(true), fetchMasterKaryawan(true)])
+                .then(results => {
+                    const failed = results.some(result => result.status === 'rejected');
+                    alert(failed
+                        ? "Sinkronisasi selesai dengan sebagian data gagal diperbarui. Periksa koneksi lalu coba lagi."
+                        : "Sinkronisasi data selesai. Data transaksi dan Master Karyawan sudah diperbarui.");
+                })
+                .finally(() => syncButtons.forEach(btn => { btn.disabled = false; btn.classList.remove('opacity-60', 'cursor-wait'); }));
         }
 
         function detectDeviceAndApplyMode() {
@@ -1733,46 +1744,87 @@
             applyFilters();
         }
 
-        function fetchLiveData() {
-            const url = GAS_WEB_APP_URL + "?action=getDataTransaksi&t=" + new Date().getTime();
-            updateProgress(25, "Memuat data...");
+        function fetchLiveData(forceRefresh = false) {
+            if (liveDataRequest) return liveDataRequest;
+            const url = GAS_WEB_APP_URL + "?action=getDataTransaksi&t=" + Date.now();
+            updateProgress(25, "Memuat data transaksi...");
 
-            fetch(url)
+            liveDataRequest = fetch(url, { cache: 'no-store' })
                 .then(response => {
-                    updateProgress(75, "Memuat data...");
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    updateProgress(70, "Memproses data transaksi...");
                     return response.json();
                 })
                 .then(data => {
-                    updateProgress(100, "Memuat data...");
+                    if (!Array.isArray(data)) throw new Error("Format data transaksi tidak sesuai (seharusnya array).");
                     rawCSVData = data;
                     populateDropdownFilters(rawCSVData);
                     setDefaultSubmitDate();
                     applyFilters();
+                    updateProgress(100, "Data transaksi siap");
+                    return data;
                 })
                 .catch(err => {
                     console.error('Error fetching data from GAS:', err);
-                    updateProgress(100, "Gagal Mengambil Data!");
-                    alert("Gagal mengambil data transaksi terbaru dari server GAS.");
-                });
+                    updateProgress(100, "Gagal mengambil data");
+                    throw err;
+                })
+                .finally(() => { liveDataRequest = null; });
+
+            return liveDataRequest;
         }
 
-        function fetchMasterKaryawan() {
-            fetch(MASTER_WEB_APP_URL + "?action=getMaster")
-                .then(response => response.json())
-                .then(data => {
-                    let datalist = document.getElementById('listKaryawan');
-                    if (!datalist) return;
-                    datalist.innerHTML = '';
-                    
-                    data.forEach(item => {
-                        let option = document.createElement('option');
-                        option.value = item.nama;
-                        datalist.appendChild(option);
-                    });
-                    
-                    window.masterKaryawanData = data;
+        function fetchMasterKaryawan(forceRefresh = false) {
+            // Tampilkan cache lebih dahulu agar autocomplete langsung tersedia,
+            // lalu perbarui diam-diam dari server.
+            const datalist = document.getElementById('listKaryawan');
+            if (!forceRefresh && !window.masterKaryawanData) {
+                try {
+                    const cached = localStorage.getItem(MASTER_CACHE_KEY);
+                    if (cached) {
+                        const parsedCache = JSON.parse(cached);
+                        if (Array.isArray(parsedCache) && parsedCache.length) {
+                            window.masterKaryawanData = parsedCache;
+                            if (datalist) {
+                                datalist.innerHTML = parsedCache.map(item =>
+                                    `<option value="${String(item.nama || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"></option>`
+                                ).join('');
+                            }
+                        }
+                    }
+                } catch (cacheError) {
+                    console.warn('Cache Master Karyawan tidak dapat dibaca:', cacheError);
+                }
+            }
+
+            if (masterDataRequest) return masterDataRequest;
+
+            masterDataRequest = fetch(MASTER_WEB_APP_URL + "?action=getMaster", { cache: 'no-store' })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
                 })
-                .catch(error => console.error('Error fetching master:', error));
+                .then(data => {
+                    if (!Array.isArray(data)) throw new Error("Format Master Karyawan tidak sesuai.");
+                    window.masterKaryawanData = data;
+                    if (datalist) {
+                        datalist.innerHTML = data.map(item =>
+                            `<option value="${String(item.nama || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"></option>`
+                        ).join('');
+                    }
+                    try { localStorage.setItem(MASTER_CACHE_KEY, JSON.stringify(data)); }
+                    catch (cacheError) { console.warn('Cache Master Karyawan tidak dapat disimpan:', cacheError); }
+                    return data;
+                })
+                .catch(error => {
+                    console.error('Error fetching master:', error);
+                    // Jika cache tersedia, dropdown tetap dapat dipakai saat server gagal.
+                    if (!window.masterKaryawanData) throw error;
+                    return window.masterKaryawanData;
+                })
+                .finally(() => { masterDataRequest = null; });
+
+            return masterDataRequest;
         }
 
         function onChampionSelect(namaInput) {
@@ -3617,9 +3669,9 @@
         }
 
         window.onload = function() {
-            fetchLiveData();
-            fetchMasterKaryawan();
             detectDeviceAndApplyMode();
+            // Dua sumber data dimuat paralel agar waktu tunggu tidak saling menumpuk.
+            Promise.allSettled([fetchLiveData(), fetchMasterKaryawan()]);
         };
     </script>
 </body>
