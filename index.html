@@ -624,8 +624,12 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block font-bold mb-1 opacity-90">Total Qty</label>
+                                    <label class="block font-bold mb-1 opacity-90">Total Qty (Pribadi)</label>
                                     <input type="number" id="submit-qty" min="0" required value="0" class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs">
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 opacity-90 text-cyan-400">Qty Store / Toko</label>
+                                    <input type="number" id="submit-store-qty" min="0" required value="0" class="w-full bg-slate-900/60 border border-gray-500/20 rounded-lg p-2.5 font-semibold text-xs" placeholder="Total unit store...">
                                 </div>
                                 <div>
                                     <label class="block font-bold mb-1 opacity-90">Positions</label>
@@ -1263,8 +1267,8 @@
         Chart.register(ChartDataLabels);
         lucide.createIcons();
 
-        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxJnV0IPUZEckp10T001lbjPYiSZ_81_ON-9DTcL3p2Xq9QzapotvHTx-pRwnta0ENj/exec';
-        const MASTER_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxJnV0IPUZEckp10T001lbjPYiSZ_81_ON-9DTcL3p2Xq9QzapotvHTx-pRwnta0ENj/exec';
+        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw9lvufQlI6Xo0LNMcOQSRwxHfBoDePWqRvZy2LwEhMGERwO5YT9vIR-z7kzXrgbiGQ/exec';
+        const MASTER_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw9lvufQlI6Xo0LNMcOQSRwxHfBoDePWqRvZy2LwEhMGERwO5YT9vIR-z7kzXrgbiGQ/exec';
 
         const LOB_COLORS = {
             mac: '#f59e0b',
@@ -1807,6 +1811,7 @@
             const date = document.getElementById('submit-date').value;
             const lob = document.getElementById('submit-lob').value;
             const qty = document.getElementById('submit-qty').value;
+            const storeQty = document.getElementById('submit-store-qty').value;
             const position = document.getElementById('submit-position').value;
             const shift = document.getElementById('submit-shift').value;
             const demoTarget = document.getElementById('submit-demo-target').value;
@@ -1824,6 +1829,7 @@
                 date: date,
                 lob: lob,
                 qty: qty,
+                storeQty: storeQty,
                 position: position,
                 shift: shift,
                 demoTarget: demoTarget
@@ -1891,6 +1897,7 @@
                     "Tanggal Transaksi": payload.date,
                     "Champion LOB": payload.lob,
                     "Total Qty": payload.qty,
+                    "Total Qty Store": payload.storeQty,
                     Positions: payload.position,
                     Shift: payload.shift,
                     "Total Demo Target": payload.demoTarget
