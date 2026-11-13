@@ -201,13 +201,13 @@
                 </div>
 
                 <div class="space-y-2">
-                    <h4 class="font-bold text-emerald-400 uppercase">📌 Ketentuan Pelaporan Harian</h4>
-                    <p><b>1. Waktu Pengisian (End-Shift):</b> Form wajib diisi secara mandiri oleh masing-masing LOB Champion di akhir jam kerja / sebelum pulang (end-shift). Shift Pagi menginput pencapaian pagi, Shift Middle menginput pencapaian middle, dan Shift Siang/Malam menginput pencapaian malam.</p>
-                    <p><b>2. Berlaku untuk Nama yang Ditunjuk:</b> Wajib diisi khusus bagi nama-nama personil yang telah ditunjuk resmi sebagai LOB Champion (termasuk Supervisor atau Store Trainer yang memang bertugas merangkap).</p>
-                    <p><b>3. Murni Hasil Penjualan Sendiri:</b> Hanya melaporkan unit yang berhasil terjual oleh LOB Champion bersangkutan.</p>
-                    <p><b>4. Ketentuan Saat OFF / Libur:</b> Jika OFF/Libur, TIDAK PERLU mengisi form. Apabila kosong/tidak diisi padahal masuk, sistem otomatis menganggap LIBUR/OFF.</p>
-                    <p><b>5. Aturan Pegang 2 LOB & Nilai 0:</b> Seluruh LOB yang dipegang wajib di-input semua meskipun nihil (0). Jika memegang 2 LOB, wajib submit terpisah.</p>
-                </div>
+    <h4 class="font-bold text-emerald-400 uppercase">📌 Ketentuan Pelaporan Harian</h4>
+    <p><b>1. Waktu Pengisian (End-Shift / Closing):</b> Form wajib diisi secara mandiri oleh masing-masing LOB Champion di akhir jam kerja / setelah proses <em>closing</em> toko selesai. Hal ini diperlukan agar rekap <b>Total Qty Store</b> dan pencapaian pribadi tercatat secara akurat berdasarkan data final harian.</p>
+    <p><b>2. Berlaku untuk Nama yang Ditunjuk:</b> Wajib diisi khusus bagi nama-nama personil yang telah ditunjuk resmi sebagai LOB Champion (termasuk Supervisor atau Store Trainer yang memang bertugas merangkap).</p>
+    <p><b>3. Pelaporan Qty Pribadi & Qty Store:</b> Melaporkan unit yang berhasil terjual oleh diri sendiri serta mencatatkan total keseluruhan unit yang terjual di toko untuk LOB tersebut secara kolektif.</p>
+    <p><b>4. Ketentuan Saat OFF / Libur:</b> Jika OFF/Libur, TIDAK PERLU mengisi form. Apabila kosong/tidak diisi padahal masuk, sistem otomatis menganggap LIBUR/OFF.</p>
+    <p><b>5. Aturan Pegang 2 LOB & Nilai 0:</b> Seluruh LOB yang dipegang wajib di-input semua meskipun nihil (0). Jika memegang 2 LOB, wajib submit terpisah.</p>
+</div>
             </div>
 
             <div class="pt-3 border-t border-gray-500/20 space-y-3">
@@ -1569,11 +1569,60 @@
             const keys = Object.keys(item);
             for (let k of keys) {
                 const cleanKey = k.trim().toLowerCase();
+                // Jangan pernah membaca Qty Store sebagai Qty Champion.
+                if (cleanKey.includes('store') || cleanKey.includes('toko')) continue;
                 if (cleanKey === 'total qty' || cleanKey.includes('qty') || cleanKey.includes('quantity') || cleanKey.includes('unit') || cleanKey.includes('jumlah')) {
                     return parseQuantity(item[k]);
                 }
             }
             return parseQuantity(item['Total Qty'] || item.Qty || item.Quantity || 0);
+        }
+
+        // Mengambil kuantitas penjualan seluruh toko dari kolom khusus Total Qty Store.
+        // Pencarian dibuat spesifik agar tidak tertukar dengan Total Qty pribadi Champion.
+        function extractStoreQuantity(item) {
+            if (!item) return 0;
+            const keys = Object.keys(item);
+            const storeQtyKey = keys.find(k => {
+                const normalizedKey = k.trim().toLowerCase().replace(/[\s_\-]+/g, '');
+                return normalizedKey === 'totalqtystore' || normalizedKey === 'qtystore' || normalizedKey === 'storeqty';
+            });
+            return storeQtyKey !== undefined ? parseQuantity(item[storeQtyKey]) : 0;
+        }
+
+        // Data laporan toko: sebelum November gunakan akumulasi Qty Champion (historis).
+        // Mulai November gunakan Total Qty Store dan deduplikasi per Store + Tanggal + LOB,
+        // karena nilai toko dapat muncul berulang pada baris Champion yang berbeda.
+        function getStoreQuantityRecords(data) {
+            const historicalRecords = [];
+            const currentStoreRecords = new Map();
+
+            (data || []).forEach((item, index) => {
+                const parsedDate = parseCustomDate(extractDate(item));
+                const isStoreQtyPeriod = parsedDate && parsedDate.getFullYear() === 2026 && parsedDate.getMonth() >= 10;
+                const qty = isStoreQtyPeriod ? extractStoreQuantity(item) : extractQuantity(item);
+
+                if (!isStoreQtyPeriod) {
+                    historicalRecords.push({ item, qty });
+                    return;
+                }
+
+                const store = extractStore(item).toLowerCase().trim();
+                const lob = extractLOB(item).toLowerCase().trim();
+                const dateKey = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
+                const key = `${store}___${dateKey}___${lob}`;
+
+                if (!currentStoreRecords.has(key)) {
+                    currentStoreRecords.set(key, { item, qty, _sourceIndex: index });
+                } else {
+                    const existing = currentStoreRecords.get(key);
+                    // Qty Store umumnya merupakan total berjalan toko dan berulang di tiap Champion.
+                    // Ambil nilai terbesar agar tidak dijumlahkan berkali-kali.
+                    if (qty > existing.qty) currentStoreRecords.set(key, { item, qty, _sourceIndex: index });
+                }
+            });
+
+            return historicalRecords.concat(Array.from(currentStoreRecords.values()));
         }
 
         function extractShift(item) {
@@ -2059,9 +2108,8 @@
 
             if (maxDay < 1) maxDay = 1;
 
-            data.forEach(item => {
+            getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                 const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
                 const rawDateStr = extractDate(item);
 
                 let isWithinRange = false;
@@ -2120,9 +2168,8 @@
             tbody.innerHTML = '';
 
             let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0, AirPods: 0 };
-            data.forEach(item => {
+            getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                 const lob = extractLOB(item).toLowerCase();
-                const qty = extractQuantity(item);
                 if (lob.includes('mac')) lobTotals.Mac += qty;
                 else if (lob.includes('iphone')) lobTotals.iPhone += qty;
                 else if (lob.includes('ipad')) lobTotals.iPad += qty;
@@ -2294,21 +2341,25 @@
             let lmData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
             let cmData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
 
-            rawCSVData.forEach(item => {
+            const momSourceData = rawCSVData.filter(item => {
                 const rowStore = extractStore(item).toLowerCase();
                 const rowLOB = extractLOB(item);
                 const rowShift = extractShift(item);
-                const rowDateStr = extractDate(item);
-
                 const matchStore = (storeVal === 'all' || storeVal === '' || rowStore.includes(storeVal) || storeVal.includes(rowStore));
                 const matchLOB = (lobVal === 'ALL' || rowLOB === lobVal);
                 const matchShift = (shiftVal === 'ALL' || rowShift === shiftVal);
+                return matchStore && matchLOB && matchShift;
+            });
 
-                if (matchStore && matchLOB && matchShift && rowDateStr) {
+            // Filter dahulu, baru deduplikasi agar pilihan shift/store tidak kehilangan baris sumber.
+            getStoreQuantityRecords(momSourceData).forEach(({ item, qty }) => {
+                const rowLOB = extractLOB(item);
+                const rowDateStr = extractDate(item);
+
+                if (rowDateStr) {
                     const parsedDate = parseCustomDate(rowDateStr);
                     if (parsedDate && parsedDate.getFullYear() === 2026) {
                         const m = parsedDate.getMonth();
-                        const qty = extractQuantity(item);
                         const lob = rowLOB.toLowerCase();
 
                         let targetObj = null;
@@ -2430,14 +2481,13 @@
                 };
             });
 
-            rawCSVData.forEach(item => {
+            getStoreQuantityRecords(rawCSVData).forEach(({ item, qty }) => {
                 const matchedStore = findMasterStore(extractStore(item));
                 if (matchedStore) {
                     const parsedDate = parseCustomDate(extractDate(item));
                     if (parsedDate && parsedDate.getFullYear() === 2026) {
                         const m = parsedDate.getMonth();
                         const lob = extractLOB(item).toLowerCase();
-                        const qty = extractQuantity(item);
                         
                         let monthKey = null;
                         if (m === currentMonthIdx) monthKey = 'cm';
@@ -2579,10 +2629,9 @@
                 storeBody.innerHTML = '';
                 const storePerfMap = {};
 
-                data.forEach(item => {
+                getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                     const store = extractStore(item);
                     const lob = extractLOB(item).toLowerCase();
-                    const qty = extractQuantity(item);
 
                     if (store && store !== '-') {
                         if (!storePerfMap[store]) {
@@ -2934,13 +2983,12 @@
             let lwData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
             let twData = { mac: 0, iphone: 0, ipad: 0, watch: 0, airpods: 0 };
 
-            data.forEach(item => {
+            getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                 const dateStr = extractDate(item);
                 const parsedDate = parseCustomDate(dateStr);
                 if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
                     const day = parsedDate.getDate();
                     const lob = extractLOB(item).toLowerCase();
-                    const qty = extractQuantity(item);
 
                     let targetObj = null;
                     if (day > 15) targetObj = twData;
@@ -3058,14 +3106,13 @@
                 };
             });
 
-            data.forEach(item => {
+            getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                 const matchedStore = findMasterStore(extractStore(item));
                 if (matchedStore) {
                     const parsedDate = parseCustomDate(extractDate(item));
                     if (parsedDate && parsedDate.getFullYear() === year && parsedDate.getMonth() === selectedMonthIdx) {
                         const day = parsedDate.getDate();
                         const lob = extractLOB(item).toLowerCase();
-                        const qty = extractQuantity(item);
                         
                         let weekKey = day > 15 ? 'tw' : 'lw';
 
@@ -3259,9 +3306,8 @@
             const ctxLOB = document.getElementById('chartLOB')?.getContext('2d');
             if (ctxLOB) {
                 let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0, AirPods: 0 };
-                data.forEach(item => {
+                getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                     const lob = extractLOB(item).toLowerCase();
-                    const qty = extractQuantity(item);
                     if (lob.includes('mac')) lobTotals.Mac += qty;
                     else if (lob.includes('iphone')) lobTotals.iPhone += qty;
                     else if (lob.includes('ipad')) lobTotals.iPad += qty;
@@ -3303,9 +3349,8 @@
             const ctxAvg = document.getElementById('chartAvgPerDay')?.getContext('2d');
             if (ctxAvg) {
                 let lobTotals = { Mac: 0, iPhone: 0, iPad: 0, Watch: 0, AirPods: 0 };
-                data.forEach(item => {
+                getStoreQuantityRecords(data).forEach(({ item, qty }) => {
                     const lob = extractLOB(item).toLowerCase();
-                    const qty = extractQuantity(item);
                     if (lob.includes('mac')) lobTotals.Mac += qty;
                     else if (lob.includes('iphone')) lobTotals.iPhone += qty;
                     else if (lob.includes('ipad')) lobTotals.iPad += qty;
